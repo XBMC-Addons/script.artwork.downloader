@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
     <category label="General">
-        <setting id="timer_amount" type="enum" values="1|3|6|12|24" label="30000" default="3" />
+        <setting id="timer_amount" type="enum" values="1|3|6|12|24" label="30000" default="2" />
     </category>
 </settings>
