@@ -76,4 +76,4 @@ timer_amounts['2'] = '360'
 timer_amounts['3'] = '720'
 timer_amounts['4'] = '1440'
 run_program = EFDL()
-xbmc.executebuiltin(AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader), timer_amounts[Addon.getSetting('timer_amount')], true))
+xbmc.executebuiltin('AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader),' + timer_amounts[Addon.getSetting('timer_amount')] +  ',true)')
