@@ -41,10 +41,11 @@ class EFDL:
                                 self.failcount = 0
                                 xbmc.log('EFDL: Downloaded fanart for %s: %s' % (self.show_name, fanarturl))
                     else:
+                        xbmc.log('EFDL: Processed \'%s\'' % self.show_name)
                         break
+        else:
+            xbmc.log('EFDL: Library Update is running: Aborting')
 
-
-        xbmc.log('EFDL: Extrafanart Downloader exiting')
 
     def TV_listing(self):
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
@@ -77,3 +78,4 @@ timer_amounts['3'] = '720'
 timer_amounts['4'] = '1440'
 run_program = EFDL()
 xbmc.executebuiltin('AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader),' + timer_amounts[Addon.getSetting('timer_amount')] +  ',true)')
+xbmc.log('EFDL: Extrafanart Downloader finished: Script will run again in %s minutes' % timer_amount)
