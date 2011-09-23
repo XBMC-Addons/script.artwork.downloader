@@ -1,15 +1,18 @@
 import urllib
+import urllib2
 import re
 import os
 import xbmc
 import xbmcaddon
 
 Addon = xbmcaddon.Addon(id='script.extrafanartdownloader')
+fanart_baseurl = 'http://www.thetvdb.com/banners/fanart/original/'
 
 class Main:
 
     def __init__(self):
 
+        xbmc.log('EFDL: Extrafanart Downloader initialising')
 #        xbmc.executebuiltin('CancelAlarm(extrafanart)')
 
 #        timer_amounts = {}
@@ -19,24 +22,41 @@ class Main:
 #        timer_amounts['3'] = '720'
 #        timer_amounts['4'] = '1440'
 
-        if(xbmc.Player().isPlaying() == False):
-            if (xbmc.getCondVisibility('Library.IsScanningVideo')  == False):
-                xbmc.log('getting tv listing')
-                self.TV_listing()
-                for currentshow in self.TVlist:
-                    self.show_path = currentshow["path"]
-                    self.tvdbid = currentshow["id"]
-                    self.show_name = currentshow["name"]
-#                    logmessage = self.show_name + ' ' + self.tvdbid + ' ' + self.show_path
-#                    xbmc.log(logmessage)
-                    xbmc.log('got tv show details')
-#                    xbmc.executebuiltin(AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader), timer_amounts[Addon.getSetting('timer_amount')], true))
+        if (xbmc.getCondVisibility('Library.IsScanningVideo')  == False):
+            self.TV_listing()
+            for currentshow in self.TVlist:
+                self.failcount = 0
+                self.show_path = currentshow["path"]
+                self.tvdbid = currentshow["id"]
+                self.show_name = currentshow["name"]
+                extrafanart_dir = os.path.join(self.show_path, 'extrafanart')
+                if not os.path.isdir(extrafanart_dir):
+                    os.makedirs(extrafanart_dir)
+                    xbmc.log('EFDL: Created extrafanart directory for %s: %s' % (self.show_name, extrafanart_dir))
+                for i in range(1000):
+                    if self.failcount < 3:
+                        x = i + 1
+                        fanartfile = self.tvdbid + '-' + str(x) + '.jpg'
+                        fanarturl = fanart_baseurl + fanartfile
+                        fanartpath = os.path.join(extrafanart_dir, fanartfile)
+                        if not os.path.exists(fanartpath):
+                            try:
+                                urllib2.urlopen(fanarturl)
+                            except:
+                                self.failcount = self.failcount + 1
+                            else:
+                                urllib.urlretrieve(fanarturl, fanartpath)
+                                self.failcount = 0
+                                xbmc.log('EFDL: Downloaded fanart for %s: %s' % (self.show_name, fanarturl))
+                    else:
+                        break
+
+#       xbmc.executebuiltin(AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader), timer_amounts[Addon.getSetting('timer_amount')], true))
+        xbmc.log('EFDL: Extrafanart Downloader exiting')
 
     def TV_listing(self):
-        xbmc.log('start tv listing')
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"fields": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
         json_response = re.compile( "{(.*?)}", re.DOTALL ).findall(json_query)
-        xbmc.log('got tv list')
         self.TVlist = []
         for tvshowitem in json_response:
             findtvshowname = re.search( '"label":"(.*?)","', tvshowitem )
@@ -56,6 +76,5 @@ class Main:
                     TVshow["path"] = path
                     self.TVlist.append(TVshow)
 
-#run the program
 run_program = Main()
              
