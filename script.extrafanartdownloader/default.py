@@ -10,31 +10,33 @@ class Main:
 
     def __init__(self):
 
-        xbmc.executebuiltin('CancelAlarm(extrafanart)')
+#        xbmc.executebuiltin('CancelAlarm(extrafanart)')
 
-        timer_amounts = {}
-        timer_amounts['0'] = '60'
-        timer_amounts['1'] = '180'
-        timer_amounts['2'] = '360'
-        timer_amounts['3'] = '720'
-        timer_amounts['4'] = '1440'
+#        timer_amounts = {}
+#        timer_amounts['0'] = '60'
+#        timer_amounts['1'] = '180'
+#        timer_amounts['2'] = '360'
+#        timer_amounts['3'] = '720'
+#        timer_amounts['4'] = '1440'
 
         if(xbmc.Player().isPlaying() == False):
             if (xbmc.getCondVisibility('Library.IsScanningVideo')  == False):
+                xbmc.log('getting tv listing')
                 self.TV_listing()
                 for currentshow in self.TVlist:
                     self.show_path = currentshow["path"]
                     self.tvdbid = currentshow["id"]
                     self.show_name = currentshow["name"]
-                    logmessage = self.show_name + ' ' + self.tvdbid + ' ' + self.show_path
-                    xbmc.log(logmessage)
-                    xbmc.log('testy test')
-                    xbmc.executebuiltin(AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader), timer_amounts[Addon.getSetting('timer_amount')], true))
+#                    logmessage = self.show_name + ' ' + self.tvdbid + ' ' + self.show_path
+#                    xbmc.log(logmessage)
+                    xbmc.log('got tv show details')
+#                    xbmc.executebuiltin(AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader), timer_amounts[Addon.getSetting('timer_amount')], true))
 
     def TV_listing(self):
-        # json statement for tv shows
+        xbmc.log('start tv listing')
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"fields": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
         json_response = re.compile( "{(.*?)}", re.DOTALL ).findall(json_query)
+        xbmc.log('got tv list')
         self.TVlist = []
         for tvshowitem in json_response:
             findtvshowname = re.search( '"label":"(.*?)","', tvshowitem )
