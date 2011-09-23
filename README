@@ -1,0 +1,9 @@
+XBMC Extrafanart Downloader
+
+This script will automatically download all of the fanart for every TV show in
+your XBMC library and place it in the 'extrafanart' directory to be used by
+skins which support this feature.
+
+TODO:
+
+- Add Movie Support
