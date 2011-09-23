@@ -26,6 +26,8 @@ class Main:
                     self.show_path = currentshow["path"]
                     self.tvdbid = currentshow["id"]
                     self.show_name = currentshow["name"]
+                    logmessage = self.show_name + ' ' + self.tvdbid + ' ' + self.show_path
+                    xbmc.log(logmessage)
                     xbmc.executebuiltin('AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader),' + timer_amounts[Addon.getSetting('timer_amount')] +  ',true)')
 
     def TV_listing(self):
