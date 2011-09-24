@@ -78,4 +78,4 @@ timer_amounts['3'] = '720'
 timer_amounts['4'] = '1440'
 run_program = EFDL()
 xbmc.executebuiltin('AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader),' + timer_amounts[Addon.getSetting('timer_amount')] +  ',true)')
-xbmc.log('EFDL: Extrafanart Downloader finished: Script will run again in %s minutes' % timer_amount)
+xbmc.log('EFDL: Extrafanart Downloader finished: Script will run again in %s minutes' % timer_amounts[Addon.getSetting('timer_amount')])
