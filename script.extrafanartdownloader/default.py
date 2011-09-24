@@ -7,12 +7,12 @@ import xbmcaddon
 
 Addon = xbmcaddon.Addon(id='script.extrafanartdownloader')
 fanart_baseurl = 'http://www.thetvdb.com/banners/fanart/original/'
-fanart_count = 0
 
 class EFDL:
 
     def __init__(self):
 
+        self.fanart_count = 0
         xbmc.log('EFDL: Extrafanart Downloader initialising')
         xbmc.executebuiltin("XBMC.Notification('Extrafanart Downloader','Starting',5000)")
 
@@ -42,7 +42,7 @@ class EFDL:
                                 urllib.urlretrieve(fanarturl, fanartpath)
                                 self.failcount = 0
                                 xbmc.log('EFDL: Downloaded fanart for %s: %s' % (self.show_name, fanarturl))
-                                fanart_count = fanart_count + 1
+                                self.fanart_count = self.fanart_count + 1
                     else:
                         xbmc.log('EFDL: Processed \'%s\'' % self.show_name)
                         break
@@ -82,12 +82,12 @@ timer_amounts['2'] = '360'
 timer_amounts['3'] = '720'
 timer_amounts['4'] = '1440'
 
-run_program = EFDL()
+EFDLrun = EFDL()
 
 xbmc.log('EFDL: Extrafanart Downloader finished: Script will run again in %s minutes' % timer_amounts[Addon.getSetting('timer_amount')])
 
 if fanart_count > 0:
-    xbmc.executebuiltin("XBMC.Notification('Extrafanart Downloader','Finished: %s extrafanart downloaded',5000)" % fanart_count)
+    xbmc.executebuiltin("XBMC.Notification('Extrafanart Downloader','Finished: %s extrafanart downloaded',5000)" % EFDLrun.fanart_count)
 
 xbmc.executebuiltin("XBMC.Notification('Extrafanart Downloader','Finished: Next run in %s minutes',3000)" % timer_amounts[Addon.getSetting('timer_amount')])
 
