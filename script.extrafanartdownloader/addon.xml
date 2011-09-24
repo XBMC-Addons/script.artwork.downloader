@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.extrafanartdownloader" name="XBMC Extrafanart Downloader" version="0.0.30" provider-name="paddycarey">
+<addon id="script.extrafanartdownloader" name="XBMC Extrafanart Downloader" version="0.0.31" provider-name="paddycarey">
   <requires>
     <import addon="xbmc.python" version="2.0"/>
   </requires>

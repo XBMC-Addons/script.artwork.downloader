@@ -86,7 +86,7 @@ EFDLrun = EFDL()
 
 xbmc.log('EFDL: Extrafanart Downloader finished: Script will run again in %s minutes' % timer_amounts[Addon.getSetting('timer_amount')])
 
-if fanart_count > 0:
+if EFDLrun.fanart_count > 0:
     xbmc.executebuiltin("XBMC.Notification('Extrafanart Downloader','Finished: %s extrafanart downloaded',5000)" % EFDLrun.fanart_count)
 
 xbmc.executebuiltin("XBMC.Notification('Extrafanart Downloader','Finished: Next run in %s minutes',3000)" % timer_amounts[Addon.getSetting('timer_amount')])
