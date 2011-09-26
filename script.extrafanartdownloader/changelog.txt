@@ -1,9 +1,0 @@
-0.0.24:
-- Fixed AlarmClock bug
-
-0.0.22:
-- First (rough) working version
-
-0.0.1:
-- Initial testing release
-- Based on initial code and ideas from script.libraryautoupdate and script.logodownloader
