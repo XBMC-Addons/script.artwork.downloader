@@ -15,22 +15,12 @@ class Main:
 
     def __init__(self):
         self.load_settings()
-        if (xbmc.getCondVisibility('Library.IsScanningVideo')  == True):
-            log('library update is running: Aborting')
-            xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Library update is running: Aborting,5000)")
-        else:
-            xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Starting,5000)")
-            self.download_tvfanart()
+        xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Starting,5000)")
+        self.download_tvfanart()
 
     def load_settings(self):
         self.fanart_baseurl = 'http://www.thetvdb.com/banners/fanart/original/'
         self.fanart_count = 0
-        self.timer_amounts = {}
-        self.timer_amounts['0'] = '0'
-        self.timer_amounts['1'] = '60'
-        self.timer_amounts['2'] = '180'
-        self.timer_amounts['3'] = '360'
-        self.timer_amounts['4'] = '720'
 
     def download_tvfanart(self):
         self.TV_listing()
@@ -82,14 +72,11 @@ class Main:
                                     self.fanart_count = self.fanart_count + 1
                 else:
                     break
-
         if xbmcvfs.exists(tempdir):
             xbmcvfs.rmdir(tempdir)
             log('Removed temporary directory: %s' % tempdir)
         log('Finished: %s extrafanart downloaded' % self.fanart_count)
         xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Finished: %s extrafanart downloaded,5000)" % self.fanart_count)
-        if not self.timer_amounts[__addon__.getSetting('timer_amount')] == '0':
-            xbmc.executebuiltin('AlarmClock(extrafanart,XBMC.RunScript(script.extrafanartdownloader),' + self.timer_amounts[__addon__.getSetting('timer_amount')] +  ',true)')
 
     def TV_listing(self):
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
@@ -111,9 +98,7 @@ class Main:
                         TVshow["path"] = path
                         self.TVlist.append(TVshow)
 
-
 if ( __name__ == "__main__" ):
     log('script version %s started' % __addonversion__)
-    xbmc.executebuiltin('CancelAlarm(extrafanart)')
     Main()
     log('script stopped')
