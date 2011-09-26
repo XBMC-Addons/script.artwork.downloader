@@ -20,6 +20,8 @@ class Main:
         xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Starting,5000)")
         if self.tvfanart == 'true':
             self.download_tvfanart()
+        else:
+            log('TV fanart disabled, skipping')
 
     ### load settings and initial values
     def load_settings(self):
