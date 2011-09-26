@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
     <category label="General">
-        <setting id="timer_amount" type="enum" values="0|1|3|6|12" label="30000" default="2" />
+		<setting id="moviefanart" type="bool" label="36001" default="true"/>
+		<setting id="tvfanart" type="bool" label="36002" default="true"/>
     </category>
 </settings>

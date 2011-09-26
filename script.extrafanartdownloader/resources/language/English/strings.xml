@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
     <!-- Plugin settings -->
-    <string id="30000">Hours between downloading runs (set to 0 to disable)</string>
+    <string id="36001">Download movie fanart</string>
+    <string id="36002">Download tv fanart</string>
 </strings>
