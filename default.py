@@ -37,9 +37,13 @@ class Main:
     ### download all tv show fanart
     def download_tvfanart(self):
         self.TV_listing()
-        tempdir = xbmc.translatePath('special://profile/addon_data/%s/temp/' % __addonid__)
+        addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
+        tempdir = os.path.join(addondir, 'temp')
         try:
             if not xbmcvfs.exists(tempdir):
+                if not xbmcvfs.exists(addondir):
+                    xbmcvfs.mkdir(addondir)
+                    log('Created addon directory: %s' % addondir)
                 xbmcvfs.mkdir(tempdir)
                 log('Created temporary directory: %s' % tempdir)
         except:
