@@ -9,7 +9,7 @@ __addonversion__ = __addon__.getAddonInfo('version')
 __language__ = __addon__.getLocalizedString
 
 ### adjust default timeout to stop script hanging
-timeout = 10
+timeout = 20
 socket.setdefaulttimeout(timeout)
 
 ### logging function
