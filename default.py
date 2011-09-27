@@ -102,7 +102,7 @@ class Main:
                 for x in os.listdir(tempdir):
                     tempfile = os.path.join(tempdir, x)
                     try:
-                        xbmcvfs.delete(temppath)
+                        xbmcvfs.delete(tempfile)
                     except:
                         log('Error deleting temp file: %s' % tempfile)
                 try:
