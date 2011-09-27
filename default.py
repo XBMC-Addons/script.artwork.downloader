@@ -82,21 +82,28 @@ class Main:
                                         log('Error copying temp file to library: %s -> %s' % (temppath, fanartpath))
                                         return False
                                     else:
-                                        ### delete temporary file if copy was successful
-                                        try:
-                                            xbmcvfs.delete(temppath)
-                                        except:
-                                            log('Error deleting temp file: %s' % temppath)
-                                            return False
                                         self.failcount = 0
                                         log('Downloaded fanart: %s %s' % (self.show_name, fanarturl))
                                         self.fanart_count = self.fanart_count + 1
                     else:
                         break
-            ### remove temporary directory
+            ### clean up
             if xbmcvfs.exists(tempdir):
-                xbmcvfs.rmdir(tempdir)
-                log('Removed temporary directory: %s' % tempdir)
+                log('Cleaning up')
+                for x in os.listdir(tempdir):
+                    tempfile = os.path.join(tempdir, x)
+                    try:
+                        xbmcvfs.delete(temppath)
+                    except:
+                        log('Error deleting temp file: %s' % tempfile)
+                    else:
+                        log('Deleted temp file: %s' % tempfile)
+                try:
+                    xbmcvfs.rmdir(tempdir)
+                except:
+                    log('Error deleting temp directory: %s' % tempdir)
+                else:
+                    log('Deleted temp directory: %s' % tempdir)
             ### log results and notify user
             log('Finished: %s extrafanart downloaded' % self.fanart_count)
             xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Finished: %s extrafanart downloaded,5000)" % self.fanart_count)
