@@ -34,6 +34,7 @@ class Main:
         self.tvfanart = __addon__.getSetting("tvfanart")
         self.dialog = xbmcgui.DialogProgress()
         self.dialog.create(__addonname__, 'Checking for extrafanart')
+        self.processeditems = 0
 
     ### download all tv show fanart
     def download_tvfanart(self):
@@ -59,7 +60,7 @@ class Main:
                 self.show_path = currentshow["path"]
                 self.tvdbid = currentshow["id"]
                 self.show_name = currentshow["name"]
-                self.dialog.update(0, 'Checking for extrafanart', self.show_name)
+                self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Checking for extrafanart', self.show_name)
                 extrafanart_dir = os.path.join(self.show_path, 'extrafanart')
                 if not xbmcvfs.exists(extrafanart_dir):
                     xbmcvfs.mkdir(extrafanart_dir)
@@ -78,6 +79,7 @@ class Main:
                             except:
                                 self.failcount = self.failcount + 1
                             else:
+                                self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Downloading extrafanart', self.show_name)
                                 ### download fanart to temp path
                                 try:
                                     urllib.urlretrieve(fanarturl, temppath)
@@ -97,10 +99,11 @@ class Main:
                                         log('Downloaded fanart: %s %s' % (self.show_name, fanarturl))
                                         self.fanart_count = self.fanart_count + 1
                     else:
+                        self.processeditems = self.processeditems + 1
                         break
             ### clean up
             if xbmcvfs.exists(tempdir):
-                self.dialog.update(0, 'Cleaning up')
+                self.dialog.update(100, 'Cleaning up')
                 log('Cleaning up')
                 for x in os.listdir(tempdir):
                     tempfile = os.path.join(tempdir, x)
@@ -115,7 +118,8 @@ class Main:
             ### log results and notify user
             log('Finished: %s extrafanart downloaded' % self.fanart_count)
             summary = 'Finished: %s extrafanart downloaded' % self.fanart_count
-            self.dialog.update(0, summary)
+            self.dialog.close()
+            xbmcgui.Dialog().ok(__addonname__, summary)
 
     ### get list of all tvshows and their imdbnumber from library
     def TV_listing(self):
