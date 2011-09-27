@@ -56,6 +56,10 @@ class Main:
                 if xbmc.abortRequested == True:
                     log('XBMC shutting down, aborting')
                     break
+                ### check if script has been cancelled by user
+                if self.dialog.iscanceled():
+                    self.dialog.close()
+                    break
                 self.failcount = 0
                 self.show_path = currentshow["path"]
                 self.tvdbid = currentshow["id"]
