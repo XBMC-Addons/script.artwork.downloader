@@ -50,6 +50,9 @@ class Main:
             log('Could not create temporary directory: %s' % tempdir)
         else:
             for currentshow in self.TVlist:
+                if xbmc.abortRequested == True:
+                    log('XBMC shutting down, aborting')
+                    break
                 self.failcount = 0
                 self.show_path = currentshow["path"]
                 self.tvdbid = currentshow["id"]
