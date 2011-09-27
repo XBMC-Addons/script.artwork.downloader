@@ -86,7 +86,7 @@ class Main:
                                     self.failcount = self.failcount + 1
                                 else:
                                     ### copy fanart from temp path to library
-                                    copy = xbmcvfs.copy(temppath, fanartpath)
+                                    xbmcvfs.copy(temppath, fanartpath)
                                     if not xbmcvfs.exists(fanartpath):
                                         log('Error copying temp file to library: %s -> %s' % (temppath, fanartpath))
                                     else:
