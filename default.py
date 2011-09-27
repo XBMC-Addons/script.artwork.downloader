@@ -101,13 +101,11 @@ class Main:
                 log('Cleaning up')
                 for x in os.listdir(tempdir):
                     tempfile = os.path.join(tempdir, x)
-                    try:
-                        xbmcvfs.delete(tempfile)
-                    except:
+                    xbmcvfs.delete(tempfile)
+                    if xbmcvfs.exists(tempfile):
                         log('Error deleting temp file: %s' % tempfile)
-                try:
-                    xbmcvfs.rmdir(tempdir)
-                except:
+                xbmcvfs.rmdir(tempdir)
+                if xbmcvfs.exists(tempdir):
                     log('Error deleting temp directory: %s' % tempdir)
                 else:
                     log('Deleted temp directory: %s' % tempdir)
