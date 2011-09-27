@@ -75,6 +75,9 @@ class Main:
                                 ### download fanart to temp path
                                 try:
                                     urllib.urlretrieve(fanarturl, temppath)
+                                except(socket.timeout):
+                                    log('Download timed out, skipping: %s %s' % (self.show_name, fanarturl))
+                                    self.failcount = self.failcount + 1
                                 except:
                                     log('Download failed, skipping: %s %s' % (self.show_name, fanarturl))
                                     self.failcount = self.failcount + 1
