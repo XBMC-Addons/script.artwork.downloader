@@ -1,4 +1,4 @@
-import urllib, urllib2, re, os
+import urllib, urllib2, re, os, socket
 import xbmc, xbmcaddon, xbmcvfs
 
 ### get addon info
@@ -7,6 +7,10 @@ __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
 __language__ = __addon__.getLocalizedString
+
+### adjust default timeout to stop script hanging
+timeout = 10
+socket.setdefaulttimeout(timeout)
 
 ### logging function
 def log(txt):
