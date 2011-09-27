@@ -80,7 +80,6 @@ class Main:
                                         copy = xbmcvfs.copy(temppath, fanartpath)
                                     except:
                                         log('Error copying temp file to library: %s -> %s' % (temppath, fanartpath))
-                                        return False
                                     else:
                                         self.failcount = 0
                                         log('Downloaded fanart: %s %s' % (self.show_name, fanarturl))
