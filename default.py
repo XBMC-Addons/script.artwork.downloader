@@ -1,5 +1,5 @@
 import urllib, urllib2, re, os, socket
-import xbmc, xbmcaddon, xbmcvfs
+import xbmc, xbmcaddon, xbmcvfs, xbmcgui
 
 ### get addon info
 __addon__ = xbmcaddon.Addon()
@@ -21,7 +21,6 @@ class Main:
 
     def __init__(self):
         self.load_settings()
-        xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Starting,5000)")
         if self.tvfanart == 'true':
             self.download_tvfanart()
         else:
@@ -33,6 +32,8 @@ class Main:
         self.fanart_count = 0
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
+        self.dialog = xbmcgui.DialogProgress()
+        self.dialog.create(__addonname__, 'Checking for extrafanart')
 
     ### download all tv show fanart
     def download_tvfanart(self):
@@ -50,6 +51,7 @@ class Main:
             log('Could not create temporary directory: %s' % tempdir)
         else:
             for currentshow in self.TVlist:
+                ### check if XBMC is shutting down
                 if xbmc.abortRequested == True:
                     log('XBMC shutting down, aborting')
                     break
@@ -57,6 +59,7 @@ class Main:
                 self.show_path = currentshow["path"]
                 self.tvdbid = currentshow["id"]
                 self.show_name = currentshow["name"]
+                self.dialog.update(0, 'Checking for extrafanart', self.show_name)
                 extrafanart_dir = os.path.join(self.show_path, 'extrafanart')
                 if not xbmcvfs.exists(extrafanart_dir):
                     xbmcvfs.mkdir(extrafanart_dir)
@@ -97,6 +100,7 @@ class Main:
                         break
             ### clean up
             if xbmcvfs.exists(tempdir):
+                self.dialog.update(0, 'Cleaning up')
                 log('Cleaning up')
                 for x in os.listdir(tempdir):
                     tempfile = os.path.join(tempdir, x)
@@ -110,7 +114,8 @@ class Main:
                     log('Deleted temp directory: %s' % tempdir)
             ### log results and notify user
             log('Finished: %s extrafanart downloaded' % self.fanart_count)
-            xbmc.executebuiltin("XBMC.Notification(Extrafanart Downloader,Finished: %s extrafanart downloaded,5000)" % self.fanart_count)
+            summary = 'Finished: %s extrafanart downloaded' % self.fanart_count
+            self.dialog.update(0, summary)
 
     ### get list of all tvshows and their imdbnumber from library
     def TV_listing(self):
