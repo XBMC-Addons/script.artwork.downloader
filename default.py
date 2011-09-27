@@ -99,8 +99,6 @@ class Main:
                         xbmcvfs.delete(temppath)
                     except:
                         log('Error deleting temp file: %s' % tempfile)
-                    else:
-                        log('Deleted temp file: %s' % tempfile)
                 try:
                     xbmcvfs.rmdir(tempdir)
                 except:
