@@ -1,5 +1,6 @@
 import urllib, urllib2, re, os, socket
 import xbmc, xbmcaddon, xbmcvfs, xbmcgui
+from xml.etree import ElementTree
 
 ### get addon info
 __addon__ = xbmcaddon.Addon()
@@ -16,6 +17,42 @@ socket.setdefaulttimeout(timeout)
 def log(txt):
     message = 'script.extrafanartdownloader: %s' % txt
     xbmc.log(msg=message, level=xbmc.LOGDEBUG)
+
+### TMDB API wrapper
+### Thanks to globald
+### http://forums.themoviedb.org/topic/1092/my-contribution-tmdb-api-wrapper-python/
+class TMDB(object):
+
+    def __init__(self, api_key, view='xml', lang='en'):
+        ''' TMDB Client '''
+        #view = yaml json xml
+        self.lang = lang
+        self.view = view
+        self.key = api_key
+        self.server = 'http://api.themoviedb.org'
+
+    def socket(self, url):
+        ''' Return URL Content '''
+
+        data = None
+        try:
+            client = urllib.urlopen(url)
+            data = client.read()
+            client.close()
+        except: pass
+        return data
+
+    def method(self, look, term):
+        ''' Methods => search, imdbLookup, getInfo, getImages'''
+
+        do = 'Movie.'+look
+        term = str(term) # int conversion
+        run = self.server+'/2.1/'+do+'/'+self.lang+'/'+self.view+'/'+self.key+'/'+term
+        return run
+
+    def tmdbImages(self, tmdb_Id):
+        ''' GetInfo Wrapper '''
+        return self.socket(self.method('getImages',tmdb_Id))
 
 class Main:
 
@@ -130,6 +167,7 @@ class Main:
             xbmcgui.Dialog().ok(__addonname__, summary)
 
     ### get list of all tvshows and their imdbnumber from library
+    ### copied from script.logo-downloader, thanks to it's authors
     def TV_listing(self):
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
         json_response = re.compile( "{(.*?)}", re.DOTALL ).findall(json_query)
