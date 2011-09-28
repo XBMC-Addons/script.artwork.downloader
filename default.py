@@ -15,7 +15,7 @@ socket.setdefaulttimeout(timeout)
 ### logging function
 def log(txt):
     message = 'script.extrafanartdownloader: %s' % txt
-    xbmc.log(msg=message, level=xbmc.LOGNOTICE)
+    xbmc.log(msg=message, level=xbmc.LOGDEBUG)
 
 class Main:
 
