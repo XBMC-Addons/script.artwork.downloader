@@ -84,16 +84,16 @@ class Main:
                             except:
                                 self.failcount = self.failcount + 1
                             else:
-                                self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Downloading extrafanart', self.show_name + ': ' + fanarturl)
-                                log('Downloading fanart: %s %s' % (self.show_name, fanarturl))
+                                self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Downloading extrafanart', self.show_name, fanarturl)
+                                log('Downloading fanart: %s' % fanarturl)
                                 ### download fanart to temp path
                                 try:
                                     urllib.urlretrieve(fanarturl, temppath)
                                 except(socket.timeout):
-                                    log('Download timed out, skipping: %s %s' % (self.show_name, fanarturl))
+                                    log('Download timed out, skipping: %s' % fanarturl)
                                     self.failcount = self.failcount + 1
                                 except:
-                                    log('Download failed, skipping: %s %s' % (self.show_name, fanarturl))
+                                    log('Download failed, skipping: %s' % fanarturl)
                                     self.failcount = self.failcount + 1
                                 else:
                                     ### copy fanart from temp path to library
@@ -102,7 +102,7 @@ class Main:
                                         log('Error copying temp file to library: %s -> %s' % (temppath, fanartpath))
                                     else:
                                         self.failcount = 0
-                                        log('Downloaded fanart: %s %s' % (self.show_name, fanarturl))
+                                        log('Downloaded successfully: %s' % fanarturl)
                                         self.fanart_count = self.fanart_count + 1
                     else:
                         self.processeditems = self.processeditems + 1
