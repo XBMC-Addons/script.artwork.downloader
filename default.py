@@ -65,6 +65,7 @@ class Main:
                 self.tvdbid = currentshow["id"]
                 self.show_name = currentshow["name"]
                 self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Checking for extrafanart', self.show_name)
+                log('Processing show: %s' % self.show_name)
                 extrafanart_dir = os.path.join(self.show_path, 'extrafanart')
                 if not xbmcvfs.exists(extrafanart_dir):
                     xbmcvfs.mkdir(extrafanart_dir)
@@ -83,7 +84,8 @@ class Main:
                             except:
                                 self.failcount = self.failcount + 1
                             else:
-                                self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Downloading extrafanart', self.show_name)
+                                self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Downloading extrafanart', self.show_name + ': ' + fanarturl)
+                                log('Downloading fanart: %s %s' % (self.show_name, fanarturl))
                                 ### download fanart to temp path
                                 try:
                                     urllib.urlretrieve(fanarturl, temppath)
@@ -114,6 +116,8 @@ class Main:
                     xbmcvfs.delete(tempfile)
                     if xbmcvfs.exists(tempfile):
                         log('Error deleting temp file: %s' % tempfile)
+                    else:
+                        log('Deleted temp file: %s' % tempfile)
                 xbmcvfs.rmdir(tempdir)
                 if xbmcvfs.exists(tempdir):
                     log('Error deleting temp directory: %s' % tempdir)
