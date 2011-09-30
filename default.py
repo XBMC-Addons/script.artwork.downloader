@@ -27,7 +27,7 @@ class getBackdrops(object):
     def __init__(self):
         self.tvdbbaseurl = 'http://www.thetvdb.com/banners/'
         self.tvdbkey = '1A41A145E2DA0053'
-        self.tmdbkey = '' # waiting on api key approval from tmdb
+        self.tmdbkey = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
 
     def tvdb(self, showid):
         bannerlist = []
@@ -67,8 +67,7 @@ class Main:
         else:
             log('TV fanart disabled, skipping')
         if self.moviefanart == 'true':
-            log('Movie fanart disabled, skipping')
-            # self.download_moviefanart()
+            self.download_moviefanart()
         else:
             log('Movie fanart disabled, skipping')
         self.cleanup()
