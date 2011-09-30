@@ -32,22 +32,26 @@ class getBackdrops(object):
     def tvdb(self, showid):
         bannerlist = []
         url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml' % (self.tvdbkey, showid)
+        log('Fetching: %s' % url)
         tree = self.socket(url)
         for banner in tree.findall('Banner'):
             if banner.find('BannerType').text == 'fanart':
                 fanarturl = self.tvdbbaseurl + banner.find('BannerPath').text
                 bannerlist.append(fanarturl)
+        log('Fanart list: %s' % str(bannerlist))
         return bannerlist
 
     def tmdb(self, tmdbid):
         bannerlist = []
         url = 'http://api.themoviedb.org/2.1/Movie.getImages/en/xml/%s/%s' % (self.tmdbkey, tmdbid)
+        log('Fetching: %s' % url)
         tree = self.socket(url)
         for backdrop in tree.getiterator('backdrop'):
             for image in backdrop.getiterator('image'):
                 if image.attrib['size'] == 'original':
                     fanarturl = image.attrib['url']
                     bannerlist.append(fanarturl)
+        log('Fanart list: %s' % str(bannerlist))
         return bannerlist
 
     def socket(self, url):
@@ -156,6 +160,8 @@ class Main:
             self.show_name = currentshow["name"]
             self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Checking for TV show extrafanart', self.show_name, '')
             log('Processing show: %s' % self.show_name)
+            log('ID: %s' % self.tvdbid)
+            log('Path: %s' % self.show_path)
             extrafanart_dir = os.path.join(self.show_path, 'extrafanart')
             if not xbmcvfs.exists(extrafanart_dir):
                 xbmcvfs.mkdir(extrafanart_dir)
@@ -219,6 +225,8 @@ class Main:
             self.movie_name = currentmovie["name"]
             self.dialog.update(int(float(self.processeditems) / float(len(self.Movielist)) * 100), 'Checking for movie extrafanart', self.movie_name, '')
             log('Processing movie: %s' % self.movie_name)
+            log('ID: %s' % self.tmdbid)
+            log('Path: %s' % self.movie_path)
             extrafanart_dir = os.path.join(self.movie_path, 'extrafanart')
             if not xbmcvfs.exists(extrafanart_dir):
                 xbmcvfs.mkdir(extrafanart_dir)
