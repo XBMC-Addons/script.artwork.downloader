@@ -22,44 +22,39 @@ def log(txt):
     xbmc.log(msg=message, level=xbmc.LOGDEBUG)
 
 
+class getBackdrops(object):
 
-### TMDB API wrapper
-### Thanks to globald
-### http://forums.themoviedb.org/topic/1092/my-contribution-tmdb-api-wrapper-python/
-class TMDB(object):
+    def __init__(self):
+        self.tvdbbaseurl = 'http://www.thetvdb.com/banners/'
+        self.tvdbkey = '1A41A145E2DA0053'
+        self.tmdbkey = '' # waiting on api key approval from tmdb
 
+    def tvdb(self, showid):
+        bannerlist = []
+        url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml' % (self.tvdbkey, showid)
+        tree = self.socket(url)
+        for banner in tree.findall('Banner'):
+            if banner.find('BannerType').text == 'fanart':
+                fanarturl = self.tvdbbaseurl + banner.find('BannerPath').text
+                bannerlist.append(fanarturl)
+        return bannerlist
 
-    def __init__(self, api_key, view='xml', lang='en'):
-        ''' TMDB Client '''
-        self.lang = lang
-        self.view = view
-        self.key = api_key
-        self.server = 'http://api.themoviedb.org'
-
+    def tmdb(self, tmdbid):
+        bannerlist = []
+        url = 'http://api.themoviedb.org/2.1/Movie.getImages/en/xml/%s/%s' % (self.tmdbkey, tmdbid)
+        tree = self.socket(url)
+        for backdrop in tree.getiterator('backdrop'):
+            for image in backdrop.getiterator('image'):
+                if image.attrib['size'] == 'original':
+                    fanarturl = image.attrib['url']
+                    bannerlist.append(fanarturl)
+        return bannerlist
 
     def socket(self, url):
-        ''' Return URL Content '''
-        data = None
-        try:
-            client = urllib.urlopen(url)
-            data = client.read()
-            client.close()
-        except: pass
-        return data
-
-
-    def method(self, look, term):
-        ''' Methods => search, imdbLookup, getInfo, getImages'''
-        do = 'Movie.'+look
-        term = str(term) # int conversion
-        run = self.server+'/2.1/'+do+'/'+self.lang+'/'+self.view+'/'+self.key+'/'+term
-        return run
-
-
-    def tmdbImages(self, tmdb_Id):
-        ''' GetInfo Wrapper '''
-        return self.socket(self.method('getImages',tmdb_Id))
-
+        client = urllib.urlopen(url)
+        data = client.read()
+        client.close()
+        return ElementTree.fromstring(data)
 
 
 class Main:
@@ -81,9 +76,8 @@ class Main:
 
     ### load settings and initialise needed directories
     def initialise(self):
-        self.fanart_baseurl = 'http://www.thetvdb.com/banners/fanart/original/'
+        self.getbackdrops = getBackdrops()
         self.fanart_count = 0
-        self.tmdbapikey = '' # waiting on api key approval from tmdb
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
         self.dialog = xbmcgui.DialogProgress()
@@ -167,34 +161,19 @@ class Main:
             if not xbmcvfs.exists(extrafanart_dir):
                 xbmcvfs.mkdir(extrafanart_dir)
                 log('Created directory: %s' % extrafanart_dir)
-            for i in range(1000):
-                ### check if XBMC is shutting down
-                if xbmc.abortRequested == True:
-                    log('XBMC shutting down, aborting')
-                    break
-                ### check if script has been cancelled by user
-                if self.dialog.iscanceled():
-                    self.dialog.close()
-                    break
-                if self.failcount < 3:
-                    x = i + 1
-                    fanartfile = self.tvdbid + '-' + str(x) + '.jpg'
-                    fanarturl = self.fanart_baseurl + fanartfile
+            try:
+                backdrops = self.getbackdrops.tvdb(self.tvdbid)
+            except:
+                log('Error getting data from TVDB, skipping')
+            else:
+                for fanarturl in backdrops:
+                    fanartfile = fanarturl.rsplit('/', 1)[1]
                     temppath = os.path.join(self.tempdir, fanartfile)
                     fanartpath = os.path.join(extrafanart_dir, fanartfile)
                     if not xbmcvfs.exists(fanartpath):
-                        ### check if fanart exists on tvdb
-                        try:
-                            urllib2.urlopen(fanarturl)
-                        except:
-                            self.failcount = self.failcount + 1
-                        else:
-                            self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Downloading TV show extrafanart', self.show_name, fanarturl)
-                            ### download fanart to temp path
-                            self.downloadimage(fanarturl, fanartpath, temppath)
-                else:
-                    self.processeditems = self.processeditems + 1
-                    break
+                        self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), 'Downloading TV show extrafanart', self.show_name, fanarturl)
+                        self.downloadimage(fanarturl, fanartpath, temppath)
+            self.processeditems = self.processeditems + 1
 
 
     ### get list of all tvshows and their imdbnumber from library
@@ -248,23 +227,18 @@ class Main:
             if self.tmdbid == '':
                 log('No TMDB ID found, skipping')
             else:
-                tmdb = TMDB(self.tmdbapikey, 'xml', 'en')
-                tmdb_images = tmdb.tmdbImages(self.tmdbid)
                 try:
-                    tree = ElementTree.XML(tmdb_images)
+                    backdrops = self.getbackdrops.tmdb(self.tmdbid)
                 except:
-                    log('Error parsing TMDB data')
+                    log('Error getting data from TMDB, skipping')
                 else:
-                    for subelement in tree.getiterator('backdrop'):
-                        for backdrop in subelement.getiterator('image'):
-                            if backdrop.attrib['size'] == 'original':
-                                fanarturl = backdrop.attrib['url']
-                                fanartfilename = fanarturl.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
-                                temppath = os.path.join(self.tempdir, fanartfilename)
-                                fanartpath = os.path.join(extrafanart_dir, fanartfilename)
-                                if not xbmcvfs.exists(fanartpath):
-                                    self.dialog.update(int(float(self.processeditems) / float(len(self.Movielist)) * 100), 'Downloading movie extrafanart', self.movie_name, fanarturl)
-                                    self.downloadimage(fanarturl, fanartpath, temppath)
+                    for fanarturl in backdrops:
+                        fanartfilename = fanarturl.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
+                        temppath = os.path.join(self.tempdir, fanartfilename)
+                        fanartpath = os.path.join(extrafanart_dir, fanartfilename)
+                        if not xbmcvfs.exists(fanartpath):
+                            self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), 'Downloading movie extrafanart', self.movie_name, fanarturl)
+                            self.downloadimage(fanarturl, fanartpath, temppath)
             self.processeditems = self.processeditems + 1
 
 
