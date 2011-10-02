@@ -84,7 +84,7 @@ class Main:
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
         self.dialog = xbmcgui.DialogProgress()
-        self.dialog.create(__addonname__, 'Checking for extrafanart')
+        self.dialog.create(__addonname__, __language__(36003))
         addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
         self.tempdir = os.path.join(addondir, 'temp')
         try:
@@ -101,7 +101,7 @@ class Main:
     ### clean up and 
     def cleanup(self):
         if xbmcvfs.exists(self.tempdir):
-            self.dialog.update(100, 'Cleaning up')
+            self.dialog.update(100, __language__(36004))
             log('Cleaning up')
             for x in os.listdir(self.tempdir):
                 tempfile = os.path.join(self.tempdir, x)
@@ -115,7 +115,8 @@ class Main:
                 log('Deleted temp directory: %s' % self.tempdir)
         ### log results and notify user
         log('Finished: %s extrafanart downloaded' % self.fanart_count)
-        summary = 'Finished: %s extrafanart downloaded' % self.fanart_count
+        summary_tmp = __language__(36009) + ': %s ' % self.fanart_count
+        summary = summary_tmp + __language__(36010)
         self.dialog.close()
         xbmcgui.Dialog().ok(__addonname__, summary)
 
@@ -158,7 +159,7 @@ class Main:
             self.show_path = currentshow["path"]
             self.tvdbid = currentshow["id"]
             self.show_name = currentshow["name"]
-            self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), 'Checking for TV show extrafanart', self.show_name, '')
+            self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), __language__(36005), self.show_name, '')
             log('Processing show: %s' % self.show_name)
             log('ID: %s' % self.tvdbid)
             log('Path: %s' % self.show_path)
@@ -176,7 +177,7 @@ class Main:
                     temppath = os.path.join(self.tempdir, fanartfile)
                     fanartpath = os.path.join(extrafanart_dir, fanartfile)
                     if not xbmcvfs.exists(fanartpath):
-                        self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), 'Downloading TV show extrafanart', self.show_name, fanarturl)
+                        self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), __language__(36006), self.show_name, fanarturl)
                         self.downloadimage(fanarturl, fanartpath, temppath)
             self.processeditems = self.processeditems + 1
 
@@ -223,7 +224,7 @@ class Main:
                 self.movie_path = os.path.split(currentmovie["path"])[0]
             self.tmdbid = currentmovie["id"]
             self.movie_name = currentmovie["name"]
-            self.dialog.update(int(float(self.processeditems) / float(len(self.Movielist)) * 100), 'Checking for movie extrafanart', self.movie_name, '')
+            self.dialog.update(int(float(self.processeditems) / float(len(self.Movielist)) * 100), __language__(36007), self.movie_name, '')
             log('Processing movie: %s' % self.movie_name)
             log('ID: %s' % self.tmdbid)
             log('Path: %s' % self.movie_path)
@@ -244,7 +245,7 @@ class Main:
                         temppath = os.path.join(self.tempdir, fanartfilename)
                         fanartpath = os.path.join(extrafanart_dir, fanartfilename)
                         if not xbmcvfs.exists(fanartpath):
-                            self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), 'Downloading movie extrafanart', self.movie_name, fanarturl)
+                            self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), __language__(36008), self.movie_name, fanarturl)
                             self.downloadimage(fanarturl, fanartpath, temppath)
             self.processeditems = self.processeditems + 1
 
