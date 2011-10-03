@@ -168,6 +168,7 @@ class Main:
                     self.TVlist = []
                     self.TVlist.append(currentitem)
                     self.download_tvfanart()
+                break
 
 
     ### download all tv show fanart
