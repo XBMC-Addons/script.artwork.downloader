@@ -66,16 +66,19 @@ class Main:
 
     def __init__(self):
         self.initialise()
-        if self.tvfanart == 'true':
-            self.TV_listing()
-            self.download_tvfanart()
+        if self.solomode == False:
+            if self.tvfanart == 'true':
+                self.TV_listing()
+                self.download_tvfanart()
+            else:
+                log('TV fanart disabled, skipping')
+            if self.moviefanart == 'true':
+                self.Movie_listing()
+                self.download_moviefanart()
+            else:
+                log('Movie fanart disabled, skipping')
         else:
-            log('TV fanart disabled, skipping')
-        if self.moviefanart == 'true':
-            self.Movie_listing()
-            self.download_moviefanart()
-        else:
-            log('Movie fanart disabled, skipping')
+            self.solo_mode(itemtype, itemname)
         self.cleanup()
 
 
@@ -83,6 +86,7 @@ class Main:
     def initialise(self):
         self.getbackdrops = getBackdrops()
         self.fanart_count = 0
+        self.solomode = False
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
         self.dialog = xbmcgui.DialogProgress()
@@ -142,6 +146,28 @@ class Main:
                 self.failcount = 0
                 log('Downloaded successfully: %s' % fanarturl)
                 self.fanart_count = self.fanart_count + 1
+
+    ### solo mode
+    def solo_mode(self, itemtype, itemname):
+        if itemtype == 'movie':
+            self.Movie_listing()
+            self.Itemlist = self.Movielist
+        elif itemtype == 'tvshow':
+            self.TV_listing()
+            self.Itemlist = self.TVlist
+        else:
+            log("Error: type must be one of 'movie' or 'tvshow', aborting")
+            return False
+        for currentitem in self.Itemlist:
+            if itemname == currentitem["name"]:
+                if itemtype == 'movie':
+                    self.Movielist = []
+                    self.Movielist.append(currentitem)
+                    self.download_moviefanart()
+                if itemtype == 'tvshow':
+                    self.TVlist = []
+                    self.TVlist.append(currentitem)
+                    self.download_tvfanart()
 
 
     ### download all tv show fanart
