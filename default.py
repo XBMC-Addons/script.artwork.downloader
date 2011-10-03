@@ -1,6 +1,6 @@
 import urllib, urllib2, re, os, socket
 import xbmc, xbmcaddon, xbmcvfs, xbmcgui
-from xml.etree import ElementTree
+from elementtree import ElementTree
 
 
 ### get addon info

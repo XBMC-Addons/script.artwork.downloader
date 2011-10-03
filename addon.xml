@@ -2,6 +2,7 @@
 <addon id="script.extrafanartdownloader" name="Extrafanart Downloader" version="0.3.6" provider-name="paddycarey">
   <requires>
     <import addon="xbmc.python" version="2.0"/>
+    <import addon="script.module.elementtree" version="1.2.7"/>
   </requires>
   <extension point="xbmc.python.script" library="default.py">
     <provides>executable</provides>
