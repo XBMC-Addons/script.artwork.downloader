@@ -111,7 +111,7 @@ class Main:
             log('Could not create temporary directory: %s' % self.tempdir)
 
 
-    ### clean up and 
+    ### clean up and
     def cleanup(self):
         if xbmcvfs.exists(self.tempdir):
             self.dialog.update(100, __language__(36004))
@@ -304,6 +304,60 @@ class Main:
                         Movie["id"] = imdbnumber
                         Movie["path"] = path
                         self.Movielist.append(Movie)
+
+    def setup_providers(self):
+        self.movie_providers = []
+        self.tv_providers = []
+
+        """
+        Setup provider for TheMovieDB.org
+        """
+        tmdb = Provider()
+        tmdb.name = 'TMDB'
+        tmdb.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
+        tmdb.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/%s/%s"
+        tmdb.re_pattern = '<image type="backdrop" url="(.*?)" size="original"'
+
+        """
+        Setup provider for TheTVDB.com
+        """
+        tvdb = Provider()
+        tvdb.name = 'TVDB'
+        tvdb.api_key = '1A41A145E2DA0053'
+        tvdb.url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml'
+        tvdb.url_prefix = 'http://www.thetvdb.com/banners/'
+        tvdb.re_pattern = '<BannerPath>(?P<url>.*?)</BannerPath>\s+<BannerType>fanart</BannerType>'
+
+        self.movie_providers.append(tmdb)
+        self.tv_providers.append(tvdb)
+
+"""
+Provider Class
+
+Creates general structure for all fanart providers.  This will allow us to
+very easily add multiple providers for the same media type.
+"""
+class Provider:
+    def __init__(self):
+        self.name = ''
+        self.api_key = ''
+        self.url = ''
+        self.re_pattern = ''
+        self.url_prefix = ''
+
+    def _get_xml(self, url):
+        client = urllib.urlopen(url)
+        data = client.read()
+        client.close()
+        return data
+
+    def get_image_list(self, media_id):
+        log(self.url % (self.api_key, media_id))
+        image_list = []
+        for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
+            print i.group(1)
+            image_list.append(self.url_prefix + i.group(1))
+        return image_list
 
 
 
