@@ -1,4 +1,4 @@
-import urllib, re, os, socket
+import urllib, re, os, socket, sys
 import xbmc, xbmcaddon, xbmcvfs, xbmcgui
 from elementtree import ElementTree
 
@@ -78,7 +78,7 @@ class Main:
             else:
                 log('Movie fanart disabled, skipping')
         else:
-            self.solo_mode(itemtype, itemname)
+            self.solo_mode(self.itemtype, self.itemname)
         self.cleanup()
 
 
@@ -89,6 +89,13 @@ class Main:
         self.solomode = False
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
+        try:
+            self.itemtype = sys.argv[1]
+            self.itemname = sys.argv[2]
+            self.solomode = True
+            log('Solo mode enabled')
+        except:
+            log('Bulk mode enabled')
         self.dialog = xbmcgui.DialogProgress()
         self.dialog.create(__addonname__, __language__(36003))
         addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
