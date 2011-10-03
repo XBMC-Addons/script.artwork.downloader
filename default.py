@@ -67,10 +67,12 @@ class Main:
     def __init__(self):
         self.initialise()
         if self.tvfanart == 'true':
+            self.TV_listing()
             self.download_tvfanart()
         else:
             log('TV fanart disabled, skipping')
         if self.moviefanart == 'true':
+            self.Movie_listing()
             self.download_moviefanart()
         else:
             log('Movie fanart disabled, skipping')
@@ -145,7 +147,6 @@ class Main:
     ### download all tv show fanart
     def download_tvfanart(self):
         self.processeditems = 0
-        self.TV_listing()
         for currentshow in self.TVlist:
             ### check if XBMC is shutting down
             if xbmc.abortRequested == True:
@@ -207,7 +208,6 @@ class Main:
 
     def download_moviefanart(self):
         self.processeditems = 0
-        self.Movie_listing()
         for currentmovie in self.Movielist:
             ### check if XBMC is shutting down
             if xbmc.abortRequested == True:
