@@ -1,4 +1,4 @@
-import urllib, urllib2, re, os, socket
+import urllib, re, os, socket
 import xbmc, xbmcaddon, xbmcvfs, xbmcgui
 from elementtree import ElementTree
 
