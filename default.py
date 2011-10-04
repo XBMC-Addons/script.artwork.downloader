@@ -1,6 +1,13 @@
-import urllib, re, os, socket, sys
-import xbmc, xbmcaddon, xbmcvfs, xbmcgui
-from elementtree import ElementTree
+import urllib2
+import re
+import os
+import socket
+import sys
+import xbmc
+import xbmcaddon
+import xbmcvfs
+import xbmcgui
+#from elementtree import ElementTree
 
 
 ### get addon info
@@ -22,59 +29,18 @@ def log(txt):
     xbmc.log(msg=message, level=xbmc.LOGDEBUG)
 
 
-class getBackdrops(object):
-
-    def __init__(self):
-        self.tvdbbaseurl = 'http://www.thetvdb.com/banners/'
-        self.tvdbkey = '1A41A145E2DA0053'
-        self.tmdbkey = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
-
-    def tvdb(self, showid):
-        bannerlist = []
-        url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml' % (self.tvdbkey, showid)
-        log('Fetching: %s' % url)
-        tree = self.socket(url)
-        for banner in tree.findall('Banner'):
-            if banner.find('BannerType').text == 'fanart':
-                fanarturl = self.tvdbbaseurl + banner.find('BannerPath').text
-                bannerlist.append(fanarturl)
-        log('Fanart list: %s' % str(bannerlist))
-        return bannerlist
-
-    def tmdb(self, tmdbid):
-        bannerlist = []
-        url = 'http://api.themoviedb.org/2.1/Movie.getImages/en/xml/%s/%s' % (self.tmdbkey, tmdbid)
-        log('Fetching: %s' % url)
-        tree = self.socket(url)
-        for backdrop in tree.getiterator('backdrop'):
-            for image in backdrop.getiterator('image'):
-                if image.attrib['size'] == 'original':
-                    fanarturl = image.attrib['url']
-                    bannerlist.append(fanarturl)
-        log('Fanart list: %s' % str(bannerlist))
-        return bannerlist
-
-    def socket(self, url):
-        client = urllib.urlopen(url)
-        data = client.read()
-        client.close()
-        return ElementTree.fromstring(data)
-
-
 class Main:
-
-
     def __init__(self):
         self.initialise()
         if self.solomode == False:
             if self.tvfanart == 'true':
-                self.TV_listing()
-                self.download_tvfanart()
+                self.Media_listing('TVShows')
+                self.download_fanart(self.Medialist, self.tv_providers)
             else:
                 log('TV fanart disabled, skipping')
             if self.moviefanart == 'true':
-                self.Movie_listing()
-                self.download_moviefanart()
+                self.Media_listing('Movies')
+                self.download_fanart(self.Medialist, self.movie_providers)
             else:
                 log('Movie fanart disabled, skipping')
         else:
@@ -84,8 +50,9 @@ class Main:
 
     ### load settings and initialise needed directories
     def initialise(self):
-        self.getbackdrops = getBackdrops()
+        self.setup_providers()
         self.fanart_count = 0
+        self.current_fanart = 0
         self.solomode = False
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
@@ -137,7 +104,12 @@ class Main:
     ### download a given image to a given destination
     def downloadimage(self, fanarturl, fanartpath, temppath):
         try:
-            urllib.urlretrieve(fanarturl, temppath)
+            url = fanarturl.replace(" ", "%20")
+            temp_file = open(temppath, "wb")
+            response = urllib2.urlopen(url)
+            temp_file.write(response.read())
+            temp_file.close()
+            response.close()
         except(socket.timeout):
             log('Download timed out, skipping: %s' % fanarturl)
             self.failcount = self.failcount + 1
@@ -157,31 +129,28 @@ class Main:
     ### solo mode
     def solo_mode(self, itemtype, itemname):
         if itemtype == 'movie':
-            self.Movie_listing()
-            self.Itemlist = self.Movielist
+            self.Media_listing('Movies')
         elif itemtype == 'tvshow':
-            self.TV_listing()
-            self.Itemlist = self.TVlist
+            self.Media_listing('TVShows')
         else:
             log("Error: type must be one of 'movie' or 'tvshow', aborting")
             return False
-        for currentitem in self.Itemlist:
+        for currentitem in self.Medialist:
             if itemname == currentitem["name"]:
                 if itemtype == 'movie':
-                    self.Movielist = []
-                    self.Movielist.append(currentitem)
-                    self.download_moviefanart()
+                    self.Medialist = []
+                    self.Medialist.append(currentitem)
+                    self.download_fanart(self.Medialist, self.movie_providers)
                 if itemtype == 'tvshow':
-                    self.TVlist = []
-                    self.TVlist.append(currentitem)
-                    self.download_tvfanart()
+                    self.Medialist = []
+                    self.Medialist.append(currentitem)
+                    self.download_fanart(self.Medialist, self.tv_providers)
                 break
 
-
-    ### download all tv show fanart
-    def download_tvfanart(self):
+    ### download media fanart
+    def download_fanart(self, media_list, providers):
         self.processeditems = 0
-        for currentshow in self.TVlist:
+        for currentmedia in media_list:
             ### check if XBMC is shutting down
             if xbmc.abortRequested == True:
                 log('XBMC shutting down, aborting')
@@ -191,119 +160,66 @@ class Main:
                 self.dialog.close()
                 break
             self.failcount = 0
-            self.show_path = currentshow["path"]
-            self.tvdbid = currentshow["id"]
-            self.show_name = currentshow["name"]
-            self.dialog.update(int(float(self.processeditems) / float(len(self.TVlist)) * 100), __language__(36005), self.show_name, '')
-            log('Processing show: %s' % self.show_name)
-            log('ID: %s' % self.tvdbid)
-            log('Path: %s' % self.show_path)
-            extrafanart_dir = os.path.join(self.show_path, 'extrafanart')
+            try:
+                self.media_path = os.path.split(currentmedia["path"])[0].rsplit(' , ', 1)[1]
+            except:
+                self.media_path = os.path.split(currentmedia["path"])[0]
+            self.media_id = currentmedia["id"]
+            self.media_name = currentmedia["name"]
+            self.dialog.update(int(float(self.processeditems) / float(len(media_list)) * 100.0), __language__(36005), self.media_name, '')
+            log('Processing media: %s' % self.media_name)
+            log('ID: %s' % self.media_id)
+            log('Path: %s' % self.media_path)
+            extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
             if not xbmcvfs.exists(extrafanart_dir):
                 xbmcvfs.mkdir(extrafanart_dir)
                 log('Created directory: %s' % extrafanart_dir)
-            try:
-                backdrops = self.getbackdrops.tvdb(self.tvdbid)
-            except:
-                log('Error getting data from TVDB, skipping')
+            if self.media_id == '':
+                log('%s: No ID found, skipping' % self.media_name)
             else:
-                for fanarturl in backdrops:
-                    fanartfile = fanarturl.rsplit('/', 1)[1]
-                    temppath = os.path.join(self.tempdir, fanartfile)
-                    fanartpath = os.path.join(extrafanart_dir, fanartfile)
-                    if not xbmcvfs.exists(fanartpath):
-                        self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), __language__(36006), self.show_name, fanarturl)
-                        self.downloadimage(fanarturl, fanartpath, temppath)
+                for provider in providers:
+                    try:
+                        backdrops = provider.get_image_list(self.media_id)
+                    except:
+                        log('Error getting data from %s, skipping' % provider.name)
+                    else:
+                        self.current_fanart = 0
+                        for fanarturl in backdrops:
+                            ### check if script has been cancelled by user
+                            if self.dialog.iscanceled():
+                                self.dialog.close()
+                                break
+                            fanartfile = provider.get_filename(fanarturl)
+                            temppath = os.path.join(self.tempdir, fanartfile)
+                            fanartpath = os.path.join(extrafanart_dir, fanartfile)
+                            self.current_fanart = self.current_fanart + 1
+                            self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
+                            if not xbmcvfs.exists(fanartpath):
+                                self.downloadimage(fanarturl, fanartpath, temppath)
             self.processeditems = self.processeditems + 1
 
 
-    ### get list of all tvshows and their imdbnumber from library
+    ### get list of all tvshows and movies with their imdbnumber from library
     ### copied from script.logo-downloader, thanks to it's authors
-    def TV_listing(self):
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
+    def Media_listing(self, media_type):
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.Get%s", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}' % media_type)
         json_response = re.compile( "{(.*?)}", re.DOTALL ).findall(json_query)
-        self.TVlist = []
-        for tvshowitem in json_response:
-            findtvshowname = re.search( '"label":"(.*?)","', tvshowitem )
-            if findtvshowname:
-                tvshowname = ( findtvshowname.group(1) )
-                findpath = re.search( '"file":"(.*?)","', tvshowitem )
+        self.Medialist = []
+        for mediaitem in json_response:
+            findmedianame = re.search( '"label":"(.*?)","', mediaitem )
+            if findmedianame:
+                medianame = ( findmedianame.group(1) )
+                findpath = re.search( '"file":"(.*?)","', mediaitem )
                 if findpath:
                     path = (findpath.group(1))
-                    findimdbnumber = re.search( '"imdbnumber":"(.*?)","', tvshowitem )
+                    findimdbnumber = re.search( '"imdbnumber":"(.*?)","', mediaitem )
                     if findimdbnumber:
                         imdbnumber = (findimdbnumber.group(1))
-                        TVshow = {}
-                        TVshow["name"] = tvshowname
-                        TVshow["id"] = imdbnumber
-                        TVshow["path"] = path
-                        self.TVlist.append(TVshow)
-
-
-    def download_moviefanart(self):
-        self.processeditems = 0
-        for currentmovie in self.Movielist:
-            ### check if XBMC is shutting down
-            if xbmc.abortRequested == True:
-                log('XBMC shutting down, aborting')
-                break
-            ### check if script has been cancelled by user
-            if self.dialog.iscanceled():
-                self.dialog.close()
-                break
-            self.failcount = 0
-            try:
-                self.movie_path = os.path.split(currentmovie["path"])[0].rsplit(' , ', 1)[1]
-            except:
-                self.movie_path = os.path.split(currentmovie["path"])[0]
-            self.tmdbid = currentmovie["id"]
-            self.movie_name = currentmovie["name"]
-            self.dialog.update(int(float(self.processeditems) / float(len(self.Movielist)) * 100), __language__(36007), self.movie_name, '')
-            log('Processing movie: %s' % self.movie_name)
-            log('ID: %s' % self.tmdbid)
-            log('Path: %s' % self.movie_path)
-            extrafanart_dir = os.path.join(self.movie_path, 'extrafanart')
-            if not xbmcvfs.exists(extrafanart_dir):
-                xbmcvfs.mkdir(extrafanart_dir)
-                log('Created directory: %s' % extrafanart_dir)
-            if self.tmdbid == '':
-                log('No TMDB ID found, skipping')
-            else:
-                try:
-                    backdrops = self.getbackdrops.tmdb(self.tmdbid)
-                except:
-                    log('Error getting data from TMDB, skipping')
-                else:
-                    for fanarturl in backdrops:
-                        fanartfilename = fanarturl.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
-                        temppath = os.path.join(self.tempdir, fanartfilename)
-                        fanartpath = os.path.join(extrafanart_dir, fanartfilename)
-                        if not xbmcvfs.exists(fanartpath):
-                            self.dialog.update(int(float(self.processeditems) / float(len(backdrops)) * 100), __language__(36008), self.movie_name, fanarturl)
-                            self.downloadimage(fanarturl, fanartpath, temppath)
-            self.processeditems = self.processeditems + 1
-
-
-    ### get list of all movies and their imdbnumber from library
-    def Movie_listing(self):
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
-        json_response = re.compile( "{(.*?)}", re.DOTALL ).findall(json_query)
-        self.Movielist = []
-        for movieitem in json_response:
-            findmoviename = re.search( '"label":"(.*?)","', movieitem )
-            if findmoviename:
-                moviename = ( findmoviename.group(1) )
-                findpath = re.search( '"file":"(.*?)","', movieitem )
-                if findpath:
-                    path = (findpath.group(1))
-                    findimdbnumber = re.search( '"imdbnumber":"(.*?)","', movieitem )
-                    if findimdbnumber:
-                        imdbnumber = (findimdbnumber.group(1))
-                        Movie = {}
-                        Movie["name"] = moviename
-                        Movie["id"] = imdbnumber
-                        Movie["path"] = path
-                        self.Movielist.append(Movie)
+                        Media = {}
+                        Media["name"] = medianame
+                        Media["id"] = imdbnumber
+                        Media["path"] = path
+                        self.Medialist.append(Media)
 
     def setup_providers(self):
         self.movie_providers = []
@@ -317,6 +233,9 @@ class Main:
         tmdb.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
         tmdb.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/%s/%s"
         tmdb.re_pattern = '<image type="backdrop" url="(.*?)" size="original"'
+        tmdb.get_filename = lambda url: url.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
+
+        self.movie_providers.append(tmdb)
 
         """
         Setup provider for TheTVDB.com
@@ -328,7 +247,6 @@ class Main:
         tvdb.url_prefix = 'http://www.thetvdb.com/banners/'
         tvdb.re_pattern = '<BannerPath>(?P<url>.*?)</BannerPath>\s+<BannerType>fanart</BannerType>'
 
-        self.movie_providers.append(tmdb)
         self.tv_providers.append(tvdb)
 
 """
@@ -344,9 +262,10 @@ class Provider:
         self.url = ''
         self.re_pattern = ''
         self.url_prefix = ''
+        self.get_filename = lambda url: url.rsplit('/', 1)[1]
 
     def _get_xml(self, url):
-        client = urllib.urlopen(url)
+        client = urllib2.urlopen(url)
         data = client.read()
         client.close()
         return data
@@ -355,7 +274,6 @@ class Provider:
         log(self.url % (self.api_key, media_id))
         image_list = []
         for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
-            print i.group(1)
             image_list.append(self.url_prefix + i.group(1))
         return image_list
 
