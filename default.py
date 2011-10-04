@@ -134,6 +134,7 @@ class Main:
         else:
             log("Error: type must be one of 'movie' or 'tvshow', aborting")
             return False
+        log('Retrieving fanart for: %s' % itemname)
         for currentitem in self.Medialist:
             if itemname == currentitem["name"]:
                 if itemtype == 'movie':
