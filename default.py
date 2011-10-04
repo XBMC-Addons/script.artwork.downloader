@@ -193,9 +193,11 @@ class Main:
                             temppath = os.path.join(self.tempdir, fanartfile)
                             fanartpath = os.path.join(extrafanart_dir, fanartfile)
                             self.current_fanart = self.current_fanart + 1
-                            self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
                             if not xbmcvfs.exists(fanartpath):
                                 self.downloadimage(fanarturl, fanartpath, temppath)
+                                self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
+                            else:                                
+                                self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, "")
             self.processeditems = self.processeditems + 1
 
 
