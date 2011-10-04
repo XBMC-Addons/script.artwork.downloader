@@ -224,6 +224,7 @@ class Main:
     def setup_providers(self):
         self.movie_providers = []
         self.tv_providers = []
+        self.music_providers = []
 
         """
         Setup provider for TheMovieDB.org
@@ -248,6 +249,26 @@ class Main:
         tvdb.re_pattern = '<BannerPath>(?P<url>.*?)</BannerPath>\s+<BannerType>fanart</BannerType>'
 
         self.tv_providers.append(tvdb)
+
+        """
+        Setup provider for fanart.tv - TV API
+        """
+        ftvt = Provider()
+        ftvt.name = 'fanart.tv - TV API'
+        ftvt.url = 'http://fanart.tv/api/fanart.php?id=%s&type=tvthumb'
+        ftvt.re_pattern = ''
+
+        #self.tv_providers.append(ftvt)
+
+        """
+        Setup provider for fanart.tv - Music API
+        """
+        ftvm = Provider()
+        ftvm.name = 'fanart.tv - Music API'
+        ftvm.url = 'http://fanart.tv/api/music.php?id=%s&type=background'
+        ftvm.re_pattern = '<background>(.*?)</background>'
+        
+        #self.music_providers.append(ftvm)
 
 """
 Provider Class
