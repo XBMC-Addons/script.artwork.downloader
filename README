@@ -9,10 +9,11 @@ Current Features:
 - Movie fanart
 - Bulk mode (download all extrafanart for every tv show/movie)
 - Solo mode (download all extrafanart for only one tv show/movie)
-- Eden support
+- Eden support (Master branch)
+- Dharma support (Dharma branch)
 
-Todo:
-- Dharma support.
+Todos:
+- Music fanart
 
 The script can now be downloaded from the official repo for eden-pre.
 
