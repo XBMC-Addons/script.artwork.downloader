@@ -7,7 +7,6 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 import xbmcgui
-#from elementtree import ElementTree
 
 
 ### get addon info
