@@ -31,7 +31,19 @@ def log(txt):
 class Main:
     def __init__(self):
         self.initialise()
-        if self.solomode == False:
+        if not self.mediatype == '':
+            if not self.medianame == '':
+                self.solo_mode(self.mediatype, self.medianame)
+            else:
+                if self.mediatype == 'tvshow':
+                    self.Media_listing('TVShows')
+                    self.download_fanart(self.Medialist, self.tv_providers)
+                elif self.mediatype == 'movie':
+                    self.Media_listing('Movies')
+                    self.download_fanart(self.Medialist, self.movie_providers)
+                elif self.mediatype == 'artist':
+                    log('Music fanart not yet implemented')
+        else:
             if self.tvfanart == 'true':
                 self.Media_listing('TVShows')
                 self.download_fanart(self.Medialist, self.tv_providers)
@@ -42,8 +54,6 @@ class Main:
                 self.download_fanart(self.Medialist, self.movie_providers)
             else:
                 log('Movie fanart disabled, skipping')
-        else:
-            self.solo_mode(self.itemtype, self.itemname)
         self.cleanup()
 
 
@@ -52,20 +62,30 @@ class Main:
         self.setup_providers()
         self.fanart_count = 0
         self.current_fanart = 0
-        self.solomode = False
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
-        try:
-            self.itemtype = sys.argv[1]
-            self.itemname = sys.argv[2]
-            self.solomode = True
-            log('Solo mode enabled')
-        except:
-            log('Bulk mode enabled')
         self.dialog = xbmcgui.DialogProgress()
         self.dialog.create(__addonname__, __language__(36003))
         addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
         self.tempdir = os.path.join(addondir, 'temp')
+        self.mediatype = ''
+        self.medianame = ''
+        for item in sys.argv:
+            match = re.search("mediatype=(.*)" , item)
+            if match:
+                self.mediatype = match.group(1)
+                if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'artist':
+                    pass
+                else:
+                    self.mediatype = ''
+                    log('Error: invalid mediatype, must be one of movie, tvshow or artist')
+            else:
+                pass
+            match = re.search("medianame=" , item)
+            if match:
+                self.medianame = item.replace( "medianame=" , "" )
+            else:
+                pass
         try:
             if not xbmcvfs.exists(self.tempdir):
                 if not xbmcvfs.exists(addondir):
