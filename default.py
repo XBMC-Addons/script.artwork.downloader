@@ -193,7 +193,11 @@ class Main:
             extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
             if not xbmcvfs.exists(extrafanart_dir):
                 xbmcvfs.mkdir(extrafanart_dir)
-                log('Created directory: %s' % extrafanart_dir, xbmc.LOGINFO)
+                if xbmcvfs.exists(extrafanart_dir):
+                    log('Created directory: %s' % extrafanart_dir, xbmc.LOGINFO)
+                else:
+                    log('Error creating directory, skipping: %s' % extrafanart_dir, xbmc.LOGERROR)
+                    break
             if self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
