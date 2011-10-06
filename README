@@ -22,12 +22,17 @@ To run the script in bulk mode simply click on it in the 'Addons' or 'Programs' 
 If you wish to run the script in solo mode you can do so by calling the script with 2 arguments.
 The first must be either 'movie' or 'tvshow' and the second should be the name of the movie or show, e.g.
 
-Code to run script:
+Code to run script solo:
 
 	XBMC.runscript(script.extrafanartdownloader, mediatype=tvshow, medianame=House)
 or
 	XBMC.runscript(script.extrafanartdownloader, mediatype=movie, medianame=50 First Dates)
 
+Code to run script bulk mode:
+
+	XBMC.runscript(script.extrafanartdownloader, mediatype=tvshow)
+or
+	XBMC.runscript(script.extrafanartdownloader, mediatype=movie)
 
 Real world code example Dharma10.1:
   <item id="10">
