@@ -30,30 +30,32 @@ def log(txt, severity=xbmc.LOGDEBUG):
 
 class Main:
     def __init__(self):
-        self.initialise()
-        if not self.mediatype == '':
-            if not self.medianame == '':
-                self.solo_mode(self.mediatype, self.medianame)
+        if self.initialise():
+            if not self.mediatype == '':
+                if not self.medianame == '':
+                    self.solo_mode(self.mediatype, self.medianame)
+                else:
+                    if self.mediatype == 'tvshow':
+                        self.Media_listing('TVShows')
+                        self.download_fanart(self.Medialist, self.tv_providers)
+                    elif self.mediatype == 'movie':
+                        self.Media_listing('Movies')
+                        self.download_fanart(self.Medialist, self.movie_providers)
+                    elif self.mediatype == 'artist':
+                        log('Music fanart not yet implemented', xbmc.LOGNOTICE)
             else:
-                if self.mediatype == 'tvshow':
+                if self.tvfanart == 'true':
                     self.Media_listing('TVShows')
                     self.download_fanart(self.Medialist, self.tv_providers)
-                elif self.mediatype == 'movie':
+                else:
+                    log('TV fanart disabled, skipping', xbmc.LOGINFO)
+                if self.moviefanart == 'true':
                     self.Media_listing('Movies')
                     self.download_fanart(self.Medialist, self.movie_providers)
-                elif self.mediatype == 'artist':
-                    log('Music fanart not yet implemented', xbmc.LOGNOTICE)
+                else:
+                    log('Movie fanart disabled, skipping', xbmc.LOGINFO)
         else:
-            if self.tvfanart == 'true':
-                self.Media_listing('TVShows')
-                self.download_fanart(self.Medialist, self.tv_providers)
-            else:
-                log('TV fanart disabled, skipping', xbmc.LOGINFO)
-            if self.moviefanart == 'true':
-                self.Media_listing('Movies')
-                self.download_fanart(self.Medialist, self.movie_providers)
-            else:
-                log('Movie fanart disabled, skipping', xbmc.LOGINFO)
+            log('Initialisation error, script aborting', xbmc.LOGERROR)
         self.cleanup()
 
 
@@ -77,8 +79,8 @@ class Main:
                 if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'artist':
                     pass
                 else:
-                    self.mediatype = ''
                     log('Error: invalid mediatype, must be one of movie, tvshow or artist', xbmc.LOGERROR)
+                    return False
             else:
                 pass
             match = re.search("medianame=" , item)
@@ -95,6 +97,8 @@ class Main:
                 log('Created temporary directory: %s' % self.tempdir)
         except:
             log('Could not create temporary directory: %s' % self.tempdir, xbmc.LOGERROR)
+            return False
+        return True
 
 
     ### clean up and
