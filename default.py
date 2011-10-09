@@ -27,6 +27,20 @@ def log(txt, severity=xbmc.LOGDEBUG):
     message = 'script.extrafanartdownloader: %s' % txt
     xbmc.log(msg=message, level=severity)
 
+### recursively create directories
+def _makedirs( _path ):
+    success = False
+    if ( xbmcvfs.exists( _path ) ): return True
+    # temp path
+    tmppath = _path
+    # loop thru and create each folder
+    while ( not xbmcvfs.exists( tmppath ) ):
+        success = xbmcvfs.mkdir( tmppath )
+    if not success:
+        tmppath = os.path.dirname( tmppath )
+        # call function until path exists
+        _makedirs( _path )
+
 
 class Main:
     def __init__(self):
@@ -46,11 +60,13 @@ class Main:
             else:
                 if self.tvfanart == 'true':
                     self.Media_listing('TVShows')
+                    self.mediatype = 'tvshow'
                     self.download_fanart(self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
                 if self.moviefanart == 'true':
                     self.Media_listing('Movies')
+                    self.mediatype = 'movie'
                     self.download_fanart(self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
@@ -66,6 +82,28 @@ class Main:
         self.current_fanart = 0
         self.moviefanart = __addon__.getSetting("moviefanart")
         self.tvfanart = __addon__.getSetting("tvfanart")
+        self.centralize = __addon__.getSetting("centralize")
+        self.central_movies = __addon__.getSetting("central_movies")
+        self.central_tv = __addon__.getSetting("central_tv")
+
+        if self.centralize:
+            if not self.central_movies:
+                self.central_movies = os.path.join(os.path.expanduser('~'),'fanart','movie')
+            if not os.path.exists(self.central_movies):
+                log("Creating central directory: %s" % self.central_movies)
+                if not _makedirs(self.central_movies):
+                    log("Could not create directory: %s" % self.central_movies)
+                    log("Disabling centralized fanart!")
+                    self.centralize = False
+            if not self.central_tv:
+                self.central_tv = os.path.join(os.path.expanduser('~'),'fanart','tvshow')
+            if not os.path.exists(self.central_tv):
+                log("Creating TV central directory: %s" % self.central_tv)
+                if not _makedirs(self.central_tv):
+                    log("Could not create directory: %s" % self.central_tv)
+                    log("Disabling centralized fanart!")
+                    self.centralize = False
+
         self.dialog = xbmcgui.DialogProgress()
         self.dialog.create(__addonname__, __language__(36003))
         addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
@@ -221,10 +259,24 @@ class Main:
                             temppath = os.path.join(self.tempdir, fanartfile)
                             fanartpath = os.path.join(extrafanart_dir, fanartfile)
                             self.current_fanart = self.current_fanart + 1
+
+                            ###  Centralize fanart for each media type
+                            if self.centralize:
+                                if self.mediatype == 'tvshow':
+                                    centralpath = os.path.join(self.central_tv, fanartfile)
+                                elif self.mediatype == 'movie':
+                                    centralpath = os.path.join(self.central_movies, fanartfile)
+
                             if not xbmcvfs.exists(fanartpath):
                                 self.downloadimage(fanarturl, fanartpath, temppath)
+                                if self.centralize and xbmcvfs.exists(fanartpath) and not xbmcvfs.exists(centralpath):
+                                    log("Copying to central directory: %s" % fanartfile)
+                                    xbmcvfs.copy(fanartpath, centralpath)
                                 self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
                             else:
+                                if self.centralize and not xbmcvfs.exists(centralpath):
+                                    log("Copying to central directory: %s" % fanartfile)
+                                    xbmcvfs.copy(fanartpath, centralpath)
                                 self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, "")
             self.processeditems = self.processeditems + 1
 

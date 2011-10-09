@@ -3,5 +3,8 @@
     <category label="General">
 		<setting id="moviefanart" type="bool" label="36001" default="true"/>
 		<setting id="tvfanart" type="bool" label="36002" default="true"/>
+		<setting id="centralize" type="bool" label="36030" default="false"/>
+		<setting id="central_movies" type="string" label="36031" default=""/>
+		<setting id="central_tv" type="string" label="36032" default=""/>
     </category>
 </settings>
