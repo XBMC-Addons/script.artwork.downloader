@@ -78,6 +78,7 @@ class Main:
     ### load settings and initialise needed directories
     def initialise(self):
         self.setup_providers()
+        self.failcount = 0
         self.fanart_count = 0
         self.fanart_centralized = 0
         self.current_fanart = 0
@@ -227,9 +228,11 @@ class Main:
                 break
             ### check if script has been cancelled by user
             if self.dialog.iscanceled():
-                self.dialog.close()
                 break
-            self.failcount = 0
+            if not self.failcount < 3:
+                self.dialog.close()
+                xbmcgui.Dialog().ok(__addonname__, __language__(36007), __language__(36008))
+                break
             try:
                 self.media_path = os.path.split(currentmedia["path"])[0].rsplit(' , ', 1)[1]
             except:
@@ -255,13 +258,17 @@ class Main:
                     try:
                         backdrops = provider.get_image_list(self.media_id)
                     except:
+                        self.failcount = self.failcount + 1
                         log('Error getting data from %s, skipping' % provider.name, xbmc.LOGERROR)
                     else:
+                        self.failcount = 0
                         self.current_fanart = 0
                         for fanarturl in backdrops:
                             ### check if script has been cancelled by user
                             if self.dialog.iscanceled():
                                 self.dialog.close()
+                                break
+                            if not self.failcount < 3:
                                 break
                             fanartfile = provider.get_filename(fanarturl)
                             temppath = os.path.join(self.tempdir, fanartfile)
