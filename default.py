@@ -58,13 +58,13 @@ class Main:
                     elif self.mediatype == 'artist':
                         log('Music fanart not yet implemented', xbmc.LOGNOTICE)
             else:
-                if self.tvfanart == 'true':
+                if self.tvfanart:
                     self.Media_listing('TVShows')
                     self.mediatype = 'tvshow'
                     self.download_fanart(self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
-                if self.moviefanart == 'true':
+                if self.moviefanart:
                     self.Media_listing('Movies')
                     self.mediatype = 'movie'
                     self.download_fanart(self.Medialist, self.movie_providers)
@@ -80,9 +80,9 @@ class Main:
         self.setup_providers()
         self.fanart_count = 0
         self.current_fanart = 0
-        self.moviefanart = __addon__.getSetting("moviefanart")
-        self.tvfanart = __addon__.getSetting("tvfanart")
-        self.centralize = __addon__.getSetting("centralize")
+        self.moviefanart = True if __addon__.getSetting("moviefanart") == 'true' else False
+        self.tvfanart = True if __addon__.getSetting("tvfanart") == 'true' else False
+        self.centralize = True if __addon__.getSetting("centralize") == 'true' else False
         self.central_movies = __addon__.getSetting("central_movies")
         self.central_tv = __addon__.getSetting("central_tv")
 
