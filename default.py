@@ -165,6 +165,8 @@ class Main:
         summary2_tmp = __language__(36009) + ': %s ' % self.fanart_centralized
         summary2 = summary2_tmp + __language__(36011)
         self.dialog.close()
+        if not self.failcount < 3:
+            xbmcgui.Dialog().ok(__addonname__, __language__(36007), __language__(36008))
         if self.centralize:
             xbmcgui.Dialog().ok(__addonname__, summary, summary2)
         else:
@@ -230,8 +232,6 @@ class Main:
             if self.dialog.iscanceled():
                 break
             if not self.failcount < 3:
-                self.dialog.close()
-                xbmcgui.Dialog().ok(__addonname__, __language__(36007), __language__(36008))
                 break
             try:
                 self.media_path = os.path.split(currentmedia["path"])[0].rsplit(' , ', 1)[1]
