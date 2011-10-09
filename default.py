@@ -79,6 +79,7 @@ class Main:
     def initialise(self):
         self.setup_providers()
         self.failcount = 0
+        self.failthreshold = 3
         self.fanart_count = 0
         self.fanart_centralized = 0
         self.current_fanart = 0
@@ -165,7 +166,7 @@ class Main:
         summary2_tmp = __language__(36009) + ': %s ' % self.fanart_centralized
         summary2 = summary2_tmp + __language__(36011)
         self.dialog.close()
-        if not self.failcount < 3:
+        if not self.failcount < self.failthreshold:
             xbmcgui.Dialog().ok(__addonname__, __language__(36007), __language__(36008))
         if self.centralize:
             xbmcgui.Dialog().ok(__addonname__, summary, summary2)
@@ -231,7 +232,7 @@ class Main:
             ### check if script has been cancelled by user
             if self.dialog.iscanceled():
                 break
-            if not self.failcount < 3:
+            if not self.failcount < self.failthreshold:
                 break
             try:
                 self.media_path = os.path.split(currentmedia["path"])[0].rsplit(' , ', 1)[1]
