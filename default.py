@@ -16,30 +16,15 @@ __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
 __language__ = __addon__.getLocalizedString
 
+BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __addon__.getAddonInfo('path'), 'resources' ) )
+sys.path.append( os.path.join( BASE_RESOURCE_PATH, "lib" ) )
+
+import utils
+import exceptions
 
 ### adjust default timeout to stop script hanging
 timeout = 20
 socket.setdefaulttimeout(timeout)
-
-
-### logging function
-def log(txt, severity=xbmc.LOGDEBUG):
-    message = 'script.extrafanartdownloader: %s' % txt
-    xbmc.log(msg=message, level=severity)
-
-### recursively create directories
-def _makedirs(_path):
-    success = False
-    if (xbmcvfs.exists(_path)): return True
-    # temp path
-    tmppath = _path
-    # loop thru and create each folder
-    while (not xbmcvfs.exists(tmppath)):
-        success = xbmcvfs.mkdir(tmppath)
-        if not success:
-            tmppath = os.path.dirname(tmppath)
-     # call function until path exists
-    _makedirs(_path)
 
 
 class Main:
@@ -56,22 +41,22 @@ class Main:
                         self.Media_listing('Movies')
                         self.download_fanart(self.Medialist, self.movie_providers)
                     elif self.mediatype == 'artist':
-                        log('Music fanart not yet implemented', xbmc.LOGNOTICE)
+                        utils._log('Music fanart not yet implemented', xbmc.LOGNOTICE)
             else:
                 if self.tvfanart:
                     self.Media_listing('TVShows')
                     self.mediatype = 'tvshow'
                     self.download_fanart(self.Medialist, self.tv_providers)
                 else:
-                    log('TV fanart disabled, skipping', xbmc.LOGINFO)
+                    utils._log('TV fanart disabled, skipping', xbmc.LOGINFO)
                 if self.moviefanart:
                     self.Media_listing('Movies')
                     self.mediatype = 'movie'
                     self.download_fanart(self.Medialist, self.movie_providers)
                 else:
-                    log('Movie fanart disabled, skipping', xbmc.LOGINFO)
+                    utils._log('Movie fanart disabled, skipping', xbmc.LOGINFO)
         else:
-            log('Initialisation error, script aborting', xbmc.LOGERROR)
+            utils._log('Initialisation error, script aborting', xbmc.LOGERROR)
         self.cleanup()
 
 
@@ -88,31 +73,8 @@ class Main:
         self.centralize = __addon__.getSetting("centralize") == 'true'
         self.central_movies = __addon__.getSetting("central_movies")
         self.central_tv = __addon__.getSetting("central_tv")
-
-        if self.centralize:
-            if not self.central_movies:
-                self.central_movies = os.path.join(os.path.expanduser('~'),'fanart','movie')
-            if not os.path.exists(self.central_movies):
-                log("Creating central directory: %s" % self.central_movies)
-                _makedirs(self.central_movies)
-                if not xbmcvfs.exists(self.central_movies):
-                    log("Could not create directory: %s" % self.central_movies)
-                    log("Disabling centralized fanart!")
-                    self.centralize = False
-            if not self.central_tv:
-                self.central_tv = os.path.join(os.path.expanduser('~'),'fanart','tvshow')
-            if not os.path.exists(self.central_tv):
-                log("Creating TV central directory: %s" % self.central_tv)
-                _makedirs(self.central_tv)
-                if not xbmcvfs.exists(self.central_tv):
-                    log("Could not create directory: %s" % self.central_tv)
-                    log("Disabling centralized fanart!")
-                    self.centralize = False
-
         self.dialog = xbmcgui.DialogProgress()
         self.dialog.create(__addonname__, __language__(36003))
-        addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
-        self.tempdir = os.path.join(addondir, 'temp')
         self.mediatype = ''
         self.medianame = ''
         for item in sys.argv:
@@ -122,7 +84,7 @@ class Main:
                 if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'artist':
                     pass
                 else:
-                    log('Error: invalid mediatype, must be one of movie, tvshow or artist', xbmc.LOGERROR)
+                    utils._log('Error: invalid mediatype, must be one of movie, tvshow or artist', xbmc.LOGERROR)
                     return False
             else:
                 pass
@@ -132,35 +94,31 @@ class Main:
             else:
                 pass
         try:
-            if not xbmcvfs.exists(self.tempdir):
-                if not xbmcvfs.exists(addondir):
-                    xbmcvfs.mkdir(addondir)
-                    log('Created addon directory: %s' % addondir)
-                xbmcvfs.mkdir(self.tempdir)
-                log('Created temporary directory: %s' % self.tempdir)
-        except:
-            log('Could not create temporary directory: %s' % self.tempdir, xbmc.LOGERROR)
+            self.fileops = utils.fileops()
+        except exceptions.CreateDirectoryError as e:
+            utils._log(("Could not create directory: %s" % str(e))
             return False
-        return True
+        else:
+            return True
 
 
     ### clean up and
     def cleanup(self):
         if xbmcvfs.exists(self.tempdir):
             self.dialog.update(100, __language__(36004))
-            log('Cleaning up')
+            utils._log('Cleaning up')
             for x in os.listdir(self.tempdir):
                 tempfile = os.path.join(self.tempdir, x)
                 xbmcvfs.delete(tempfile)
                 if xbmcvfs.exists(tempfile):
-                    log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
+                    utils._log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
             xbmcvfs.rmdir(self.tempdir)
             if xbmcvfs.exists(self.tempdir):
-                log('Error deleting temp directory: %s' % self.tempdir, xbmc.LOGERROR)
+                utils._log('Error deleting temp directory: %s' % self.tempdir, xbmc.LOGERROR)
             else:
-                log('Deleted temp directory: %s' % self.tempdir, xbmc.LOGNOTICE)
+                utils._log('Deleted temp directory: %s' % self.tempdir, xbmc.LOGNOTICE)
         ### log results and notify user
-        log('Finished: %s extrafanart downloaded' % self.fanart_count, xbmc.LOGNOTICE)
+        utils._log('Finished: %s extrafanart downloaded' % self.fanart_count, xbmc.LOGNOTICE)
         summary_tmp = __language__(36009) + ': %s ' % self.fanart_count
         summary = summary_tmp + __language__(36010)
         summary2_tmp = __language__(36009) + ': %s ' % self.fanart_centralized
@@ -173,32 +131,6 @@ class Main:
         else:
             xbmcgui.Dialog().ok(__addonname__, summary)
 
-
-    ### download a given image to a given destination
-    def downloadimage(self, fanarturl, fanartpath, temppath):
-        try:
-            url = fanarturl.replace(" ", "%20")
-            temp_file = open(temppath, "wb")
-            response = urllib2.urlopen(url)
-            temp_file.write(response.read())
-            temp_file.close()
-            response.close()
-        except(socket.timeout):
-            log('Download timed out, skipping: %s' % fanarturl, xbmc.LOGWARNING)
-            self.failcount = self.failcount + 1
-        except:
-            log('Download failed, skipping: %s' % fanarturl, xbmc.LOGWARNING)
-            self.failcount = self.failcount + 1
-        else:
-            ### copy fanart from temp path to library
-            xbmcvfs.copy(temppath, fanartpath)
-            if not xbmcvfs.exists(fanartpath):
-                log('Error copying temp file to library: %s -> %s' % (temppath, fanartpath), xbmc.LOGERROR)
-            else:
-                self.failcount = 0
-                log('Downloaded successfully: %s' % fanarturl, xbmc.LOGNOTICE)
-                self.fanart_count = self.fanart_count + 1
-
     ### solo mode
     def solo_mode(self, itemtype, itemname):
         if itemtype == 'movie':
@@ -206,9 +138,9 @@ class Main:
         elif itemtype == 'tvshow':
             self.Media_listing('TVShows')
         else:
-            log("Error: type must be one of 'movie' or 'tvshow', aborting", xbmc.LOGERROR)
+            utils._log("Error: type must be one of 'movie' or 'tvshow', aborting", xbmc.LOGERROR)
             return False
-        log('Retrieving fanart for: %s' % itemname)
+        utils._log('Retrieving fanart for: %s' % itemname)
         for currentitem in self.Medialist:
             if itemname == currentitem["name"]:
                 if itemtype == 'movie':
@@ -227,7 +159,7 @@ class Main:
         for currentmedia in media_list:
             ### check if XBMC is shutting down
             if xbmc.abortRequested == True:
-                log('XBMC shutting down, aborting')
+                utils._log('XBMC shutting down, aborting')
                 break
             ### check if script has been cancelled by user
             if self.dialog.iscanceled():
@@ -241,26 +173,26 @@ class Main:
             self.media_id = currentmedia["id"]
             self.media_name = currentmedia["name"]
             self.dialog.update(int(float(self.processeditems) / float(len(media_list)) * 100.0), __language__(36005), self.media_name, '')
-            log('Processing media: %s' % self.media_name)
-            log('ID: %s' % self.media_id)
-            log('Path: %s' % self.media_path)
+            utils._log('Processing media: %s' % self.media_name)
+            utils._log('ID: %s' % self.media_id)
+            utils._log('Path: %s' % self.media_path)
+            targetdirs = []
             extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
-            if not xbmcvfs.exists(extrafanart_dir):
-                xbmcvfs.mkdir(extrafanart_dir)
-                if xbmcvfs.exists(extrafanart_dir):
-                    log('Created directory: %s' % extrafanart_dir, xbmc.LOGINFO)
-                else:
-                    log('Error creating directory, skipping: %s' % extrafanart_dir, xbmc.LOGERROR)
-                    break
+            targetdirs.append(extrafanart_dir)
+            if self.centralize:
+                if self.mediatype == 'tvshow':
+                    targetdirs.append(self.central_tv)
+                elif self.mediatype == 'movie':
+                    targetdirs.append(self.central_movies)
             if self.media_id == '':
-                log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
+                utils._log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
                 for provider in providers:
                     try:
                         backdrops = provider.get_image_list(self.media_id)
                     except:
                         self.failcount = self.failcount + 1
-                        log('Error getting data from %s, skipping' % provider.name, xbmc.LOGERROR)
+                        utils._log('Error getting data from %s, skipping' % provider.name, xbmc.LOGERROR)
                     else:
                         self.failcount = 0
                         self.current_fanart = 0
@@ -272,31 +204,13 @@ class Main:
                             if not self.failcount < 3:
                                 break
                             fanartfile = provider.get_filename(fanarturl)
-                            temppath = os.path.join(self.tempdir, fanartfile)
-                            fanartpath = os.path.join(extrafanart_dir, fanartfile)
                             self.current_fanart = self.current_fanart + 1
-                            centralpath = None
-
-                            ###  Centralize fanart for each media type
-                            if self.centralize:
-                                if self.mediatype == 'tvshow':
-                                    centralpath = os.path.join(self.central_tv, fanartfile)
-                                elif self.mediatype == 'movie':
-                                    centralpath = os.path.join(self.central_movies, fanartfile)
-
-                            if not xbmcvfs.exists(fanartpath):
-                                self.downloadimage(fanarturl, fanartpath, temppath)
-                                if self.centralize and xbmcvfs.exists(fanartpath) and not xbmcvfs.exists(centralpath):
-                                    log("Copying to central directory: %s" % fanartfile)
-                                    xbmcvfs.copy(fanartpath, centralpath)
-                                    self.fanart_centralized += 1
-                                self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
-                            else:
-                                if self.centralize and not xbmcvfs.exists(centralpath):
-                                    log("Copying to central directory: %s" % fanartfile)
-                                    xbmcvfs.copy(fanartpath, centralpath)
-                                    self.fanart_centralized += 1
-                                self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, "")
+                            try:
+                                self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
+                            except exceptions.DownloadError as e:
+                                utils._log(("Error downloading file: %s" % str(e), xbmc.LOGERROR)
+                                self.failcount = self.failcount + 1
+                            self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
 
 
@@ -393,7 +307,7 @@ class Provider:
         return data
 
     def get_image_list(self, media_id):
-        log(self.url % (self.api_key, media_id))
+        utils._log(self.url % (self.api_key, media_id))
         image_list = []
         for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
             image_list.append(self.url_prefix + i.group(1))
@@ -402,6 +316,6 @@ class Provider:
 
 
 if ( __name__ == "__main__" ):
-    log('script version %s started' % __addonversion__)
+    utils._log('script version %s started' % __addonversion__)
     Main()
-    log('script stopped')
+    utils._log('script stopped')
