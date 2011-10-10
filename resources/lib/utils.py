@@ -1,6 +1,7 @@
 import os
 import urllib2
 import xbmc
+import xbmcaddon
 import xbmcvfs
 import script_exceptions
 
