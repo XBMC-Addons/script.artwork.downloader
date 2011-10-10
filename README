@@ -32,7 +32,7 @@ You can change the settings if you wish in the addon settings page.
 This script has some different run modes. Please check the files as described below.
 
 Code for skin intergration:
-Check "runscript.xml"
+Check "runscript.txt"
 	
 Real world code example Dharma10.1:
 Check "dharma.xml"
