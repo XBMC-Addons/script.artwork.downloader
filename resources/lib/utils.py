@@ -34,6 +34,7 @@ class fileops():
 
         """Initialise needed directories/vars for fileops"""
 
+        self.downloadcount = 0
         addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
         self.tempdir = os.path.join(addondir, 'temp')
         if not xbmcvfs.exists(self.tempdir):
@@ -57,6 +58,8 @@ class fileops():
                 raise script_exceptions.CreateDirectoryError(targetdir)
         if not xbmcvfs.copy(sourcepath, targetpath):
             raise script_exceptions.CopyError(targetpath)
+        else:
+            _log("Copied successfully: %s" % targetpath)
 
 
     def _downloadfile(self, url, filename, targetdirs):
@@ -90,6 +93,8 @@ class fileops():
                 raise script_exceptions.DownloadError(url)
             else:
                 for filenotexistspath in filenotexistspaths:
+                    _log("Downloaded successfully: %s" % fanarturl, xbmc.LOGNOTICE)
+                    self.downloadcount = self.downloadcount + 1
                     self._copyfile(temppath, filenotexistspath)
         elif not False in fileexists:
             pass

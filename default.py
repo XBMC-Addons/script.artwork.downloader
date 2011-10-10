@@ -65,7 +65,6 @@ class Main:
         self.setup_providers()
         self.failcount = 0
         self.failthreshold = 3
-        self.fanart_count = 0
         self.fanart_centralized = 0
         self.current_fanart = 0
         self.moviefanart = __addon__.getSetting("moviefanart") == 'true'
@@ -118,8 +117,8 @@ class Main:
             else:
                 utils._log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
         ### log results and notify user
-        utils._log('Finished: %s extrafanart downloaded' % self.fanart_count, xbmc.LOGNOTICE)
-        summary_tmp = __language__(36009) + ': %s ' % self.fanart_count
+        utils._log('Finished: %s extrafanart downloaded' % self.fileops.downloadcount, xbmc.LOGNOTICE)
+        summary_tmp = __language__(36009) + ': %s ' % self.fileops.downloadcount
         summary = summary_tmp + __language__(36010)
         self.dialog.close()
         if not self.failcount < self.failthreshold:
@@ -205,8 +204,6 @@ class Main:
                             except script_exceptions.DownloadError as e:
                                 utils._log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
-                            else:
-                                utils._log("Downloaded successfully: %s" % fanarturl, xbmc.LOGNOTICE)
                             self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
 
