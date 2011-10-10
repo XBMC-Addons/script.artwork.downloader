@@ -27,7 +27,7 @@ class fileops(self):
     files, copying files etc.)
     """
 
-    def __init__(self)
+    def __init__(self):
 
         """Initialise needed directories/vars for fileops"""
 
