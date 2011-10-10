@@ -16,8 +16,7 @@ Current Features:
 	- Skin integration: Bulk mode (download all extrafanart for every tv show/movie)
 	- Skin integration: Solo mode (download all extrafanart for only one tv show/movie)
 	- Eden support (Master branch)
-	- Dharma support (Dharma branch)
-				!!!!(on smb:// shares you must manually create the "extrafanart" folders)!!!!
+	- Dharma support (Dharma branch) !!!!(on smb:// shares you must manually create the "extrafanart" folders)!!!!
 
 Todos:
 	- Music fanart
