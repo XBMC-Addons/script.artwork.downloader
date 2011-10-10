@@ -2,7 +2,7 @@ import os
 import urllib2
 import xbmc
 import xbmcvfs
-import script_script_exceptions
+import script_exceptions
 
 
 """
