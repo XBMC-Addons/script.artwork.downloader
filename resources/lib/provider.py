@@ -1,10 +1,14 @@
-"""
-Provider Class
+import re
+import urllib2
+import utils
 
-Creates general structure for all fanart providers.  This will allow us to
-very easily add multiple providers for the same media type.
-"""
 class Provider:
+
+    """
+    Creates general structure for all fanart providers.  This will allow us to
+    very easily add multiple providers for the same media type.
+    """
+
     def __init__(self):
         self.name = ''
         self.api_key = ''
