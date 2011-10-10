@@ -19,7 +19,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
     xbmc.log(msg=message, level=severity)
 
 
-class fileops(self):
+class fileops():
     
     """
     This class handles all types of file operations needed by
