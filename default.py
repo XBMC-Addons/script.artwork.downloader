@@ -96,7 +96,7 @@ class Main:
         try:
             self.fileops = utils.fileops()
         except exceptions.CreateDirectoryError as e:
-            utils._log(("Could not create directory: %s" % str(e))
+            utils._log("Could not create directory: %s" % str(e))
             return False
         else:
             return True
