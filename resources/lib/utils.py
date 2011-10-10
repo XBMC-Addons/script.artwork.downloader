@@ -87,9 +87,9 @@ class fileops(self):
                 raise exceptions.DownloadError(url)
             else:
                 for filenotexistspath in filenotexistspaths:
-                    self._copyfile(temppath, filenotexistspath):
+                    self._copyfile(temppath, filenotexistspath)
         elif not False in fileexists:
             pass
         else:
             for filenotexistspath in filenotexistspaths:
-                self._copyfile(existspath, filenotexistspath):
+                self._copyfile(existspath, filenotexistspath)
