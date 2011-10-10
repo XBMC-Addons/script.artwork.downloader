@@ -121,15 +121,10 @@ class Main:
         utils._log('Finished: %s extrafanart downloaded' % self.fanart_count, xbmc.LOGNOTICE)
         summary_tmp = __language__(36009) + ': %s ' % self.fanart_count
         summary = summary_tmp + __language__(36010)
-        summary2_tmp = __language__(36009) + ': %s ' % self.fanart_centralized
-        summary2 = summary2_tmp + __language__(36011)
         self.dialog.close()
         if not self.failcount < self.failthreshold:
             xbmcgui.Dialog().ok(__addonname__, __language__(36007), __language__(36008))
-        if self.centralize:
-            xbmcgui.Dialog().ok(__addonname__, summary, summary2)
-        else:
-            xbmcgui.Dialog().ok(__addonname__, summary)
+        xbmcgui.Dialog().ok(__addonname__, summary)
 
     ### solo mode
     def solo_mode(self, itemtype, itemname):
