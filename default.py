@@ -175,9 +175,15 @@ class Main:
             targetdirs.append(extrafanart_dir)
             if self.centralize:
                 if self.mediatype == 'tvshow':
-                    targetdirs.append(self.central_tv)
+                    if not self.central_tv == '':
+                        targetdirs.append(self.central_tv)
+                    else:
+                        utils._log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
                 elif self.mediatype == 'movie':
-                    targetdirs.append(self.central_movies)
+                    if not self.central_movies == '':
+                        targetdirs.append(self.central_movies)
+                    else:
+                        utils._log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
             if self.media_id == '':
                 utils._log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
