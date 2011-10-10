@@ -210,6 +210,8 @@ class Main:
                             except script_exceptions.DownloadError as e:
                                 utils._log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
+                            else:
+                                utils._log("Downloaded successfully: %s" % fanarturl, xbmc.LOGNOTICE)
                             self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
 
