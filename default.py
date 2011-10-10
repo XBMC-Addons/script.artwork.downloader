@@ -21,6 +21,7 @@ sys.path.append( os.path.join( BASE_RESOURCE_PATH, "lib" ) )
 
 import utils
 import script_exceptions
+from provider import Provider
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -175,9 +176,15 @@ class Main:
             targetdirs.append(extrafanart_dir)
             if self.centralize:
                 if self.mediatype == 'tvshow':
-                    targetdirs.append(self.central_tv)
+                    if not self.central_tv == '':
+                        targetdirs.append(self.central_tv)
+                    else:
+                        utils._log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
                 elif self.mediatype == 'movie':
-                    targetdirs.append(self.central_movies)
+                    if not self.central_movies == '':
+                        targetdirs.append(self.central_movies)
+                    else:
+                        utils._log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
             if self.media_id == '':
                 utils._log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
@@ -278,34 +285,6 @@ class Main:
         ftvm.re_pattern = '<background>(.*?)</background>'
 
         #self.music_providers.append(ftvm)
-
-"""
-Provider Class
-
-Creates general structure for all fanart providers.  This will allow us to
-very easily add multiple providers for the same media type.
-"""
-class Provider:
-    def __init__(self):
-        self.name = ''
-        self.api_key = ''
-        self.url = ''
-        self.re_pattern = ''
-        self.url_prefix = ''
-        self.get_filename = lambda url: url.rsplit('/', 1)[1]
-
-    def _get_xml(self, url):
-        client = urllib2.urlopen(url)
-        data = client.read()
-        client.close()
-        return data
-
-    def get_image_list(self, media_id):
-        utils._log(self.url % (self.api_key, media_id))
-        image_list = []
-        for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
-            image_list.append(self.url_prefix + i.group(1))
-        return image_list
 
 
 
