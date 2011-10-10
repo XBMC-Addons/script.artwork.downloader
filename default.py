@@ -208,7 +208,7 @@ class Main:
                             try:
                                 self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
                             except exceptions.DownloadError as e:
-                                utils._log(("Error downloading file: %s" % str(e), xbmc.LOGERROR)
+                                utils._log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
                             self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
