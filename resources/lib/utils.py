@@ -92,9 +92,9 @@ class fileops():
             except:
                 raise script_exceptions.DownloadError(url)
             else:
+                _log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
+                self.downloadcount = self.downloadcount + 1
                 for filenotexistspath in filenotexistspaths:
-                    _log("Downloaded successfully: %s" % fanarturl, xbmc.LOGNOTICE)
-                    self.downloadcount = self.downloadcount + 1
                     self._copyfile(temppath, filenotexistspath)
         elif not False in fileexists:
             pass
