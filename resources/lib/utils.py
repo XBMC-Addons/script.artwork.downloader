@@ -10,6 +10,8 @@ This module contains helper classes and functions to assist in the
 operation of script.extrafanartdownloader
 """
 
+__addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
+__addonid__ = __addon__.getAddonInfo('id')
 
 def _log(txt, severity=xbmc.LOGDEBUG):
 
