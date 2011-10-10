@@ -2,7 +2,7 @@ import os
 import urllib2
 import xbmc
 import xbmcvfs
-import exceptions
+import script_script_exceptions
 
 
 """
@@ -36,9 +36,9 @@ class fileops():
         if not xbmcvfs.exists(self.tempdir):
             if not xbmcvfs.exists(addondir):
                 if not xbmcvfs.mkdir(addondir):
-                    raise exceptions.CreateDirectoryError(addondir)
+                    raise script_exceptions.CreateDirectoryError(addondir)
             if not xbmcvfs.mkdir(self.tempdir):
-                raise exceptions.CreateDirectoryError(self.tempdir)
+                raise script_exceptions.CreateDirectoryError(self.tempdir)
 
 
     def _copyfile(self, sourcepath, targetpath):
@@ -51,9 +51,9 @@ class fileops():
         targetdir = os.path.dirname(targetpath)
         if not xbmcvfs.exists(targetdir):
             if not xbmcvfs.mkdir(targetdir):
-                raise exceptions.CreateDirectoryError(targetdir)
+                raise script_exceptions.CreateDirectoryError(targetdir)
         if not xbmcvfs.copy(sourcepath, targetpath):
-            raise exceptions.CopyError(targetpath)
+            raise script_exceptions.CopyError(targetpath)
 
 
     def _downloadfile(self, url, filename, targetdirs):
@@ -84,7 +84,7 @@ class fileops():
                 tempfile.close()
                 response.close()
             except:
-                raise exceptions.DownloadError(url)
+                raise script_exceptions.DownloadError(url)
             else:
                 for filenotexistspath in filenotexistspaths:
                     self._copyfile(temppath, filenotexistspath)

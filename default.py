@@ -20,7 +20,7 @@ BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __addon__.getAddonInfo('p
 sys.path.append( os.path.join( BASE_RESOURCE_PATH, "lib" ) )
 
 import utils
-import exceptions
+import script_exceptions
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -95,7 +95,7 @@ class Main:
                 pass
         try:
             self.fileops = utils.fileops()
-        except exceptions.CreateDirectoryError as e:
+        except script_exceptions.CreateDirectoryError as e:
             utils._log("Could not create directory: %s" % str(e))
             return False
         else:
@@ -207,7 +207,7 @@ class Main:
                             self.current_fanart = self.current_fanart + 1
                             try:
                                 self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
-                            except exceptions.DownloadError as e:
+                            except script_exceptions.DownloadError as e:
                                 utils._log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
                             self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
