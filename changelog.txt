@@ -1,0 +1,13 @@
+[B]0.3.8[/B]
+****     Current development version        *****
+- Added option cetralized fanart storage
+- Splitting code into libraries
+
+
+[B]0.3.7[/B]
+- Added skin integration options (see readme file)
+- Added to skin: Aeon Nox (made by: Big Noid)
+
+[B]0.3.6[/B]
+- Initial commit
+- Added to official XBMC-repo
