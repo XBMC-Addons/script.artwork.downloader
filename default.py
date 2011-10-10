@@ -104,19 +104,19 @@ class Main:
 
     ### clean up and
     def cleanup(self):
-        if xbmcvfs.exists(self.tempdir):
+        if xbmcvfs.exists(self.fileops.tempdir):
             self.dialog.update(100, __language__(36004))
             utils._log('Cleaning up')
-            for x in os.listdir(self.tempdir):
-                tempfile = os.path.join(self.tempdir, x)
+            for x in os.listdir(self.fileops.tempdir):
+                tempfile = os.path.join(self.fileops.tempdir, x)
                 xbmcvfs.delete(tempfile)
                 if xbmcvfs.exists(tempfile):
                     utils._log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
-            xbmcvfs.rmdir(self.tempdir)
-            if xbmcvfs.exists(self.tempdir):
-                utils._log('Error deleting temp directory: %s' % self.tempdir, xbmc.LOGERROR)
+            xbmcvfs.rmdir(self.fileops.tempdir)
+            if xbmcvfs.exists(self.fileops.tempdir):
+                utils._log('Error deleting temp directory: %s' % self.fileops.tempdir, xbmc.LOGERROR)
             else:
-                utils._log('Deleted temp directory: %s' % self.tempdir, xbmc.LOGNOTICE)
+                utils._log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
         ### log results and notify user
         utils._log('Finished: %s extrafanart downloaded' % self.fanart_count, xbmc.LOGNOTICE)
         summary_tmp = __language__(36009) + ': %s ' % self.fanart_count
