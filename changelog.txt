@@ -1,6 +1,9 @@
-[B]0.3.8[/B]
+[B]0.3.9[/B]
 ****     Current development version        *****
-- Added option cetralized fanart storage
+- Added half second sleep to stay within API limits
+
+[B]0.3.8[/B]
+- Added option to centralize fanart storage
 - Splitting code into libraries
 
 
