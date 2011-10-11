@@ -1,6 +1,7 @@
 import urllib2
 import re
 import os
+import time
 import socket
 import sys
 import xbmc
@@ -190,6 +191,8 @@ class Main:
             else:
                 for provider in providers:
                     try:
+                        utils._log('Sleeping to respect API limits')
+                        time.sleep(.5)
                         backdrops = provider.get_image_list(self.media_id)
                     except:
                         self.failcount = self.failcount + 1

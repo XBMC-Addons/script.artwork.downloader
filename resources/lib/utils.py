@@ -4,6 +4,7 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 import script_exceptions
+from urllib2 import URLError
 
 
 """
@@ -23,7 +24,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 
 
 class fileops():
-    
+
     """
     This class handles all types of file operations needed by
     script.extrafanartdownloader (creating directories, downloading
@@ -63,7 +64,7 @@ class fileops():
 
 
     def _downloadfile(self, url, filename, targetdirs):
-        
+
         """
         Download url to filename and place in all targetdirs.  If file
         already exists in any of the targetdirs it is copied from there
@@ -89,8 +90,11 @@ class fileops():
                 tempfile.write(response.read())
                 tempfile.close()
                 response.close()
-            except:
-                raise script_exceptions.DownloadError(url)
+            except URLError, e:
+                if e.code == 404:
+                    pass
+                else:
+                    raise script_exceptions.DownloadError(url)
             else:
                 _log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
