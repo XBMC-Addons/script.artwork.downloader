@@ -212,6 +212,8 @@ class Main:
                                 break
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
+                            if self.limit_extrafanart_max and self.current_fanart > self.limit_extrafanart_max:
+                                break
                             try:
                                 self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
                             except HTTP404Error as e:
