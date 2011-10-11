@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
     <category label="General">
-		<setting id="moviefanart" type="bool" label="36001" default="true"/>
-		<setting id="tvfanart" type="bool" label="36002" default="true"/>
+		<setting label="36001" id="moviefanart" type="bool"  default="true"/>
+		<setting label="36002" id="tvfanart" type="bool"  default="true"/>
 		<setting type="sep" />
-		<setting id="centralize" type="bool" label="36030" default="false"/>
-		<setting id="central_movies" subsetting="true" type="folder" label="36031" default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
-		<setting id="central_tv" subsetting="true" type="folder" label="36032" default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
+		<setting label="36030" id="centralize" type="bool"  default="false"/>
+		<setting label="36031" id="central_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
+		<setting label="36032" id="central_tv" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
 		<setting type="sep" />
-		<setting id="limit_extrafanart" type="bool" label="36033" default="false"/>
-		<setting id="limit_extrafanart_max" type="slider" enable="eq(-1,true)" visible="eq(-1,true)" label="36034" range="1,5,50" default="20" format="%1.f"/>
-		<setting id="limit_extrafanart_rating" type="slider" enable="eq(-2,true)" visible="eq(-2,true)" label="36035" range="1,10" default="5" />
+		<setting label="36033" id="limit_extrafanart" type="bool"  default="false"/>
+		<setting label="36034" id="limit_extrafanart_max" subsetting="true" type="slider" enable="eq(-1,true)" visible="eq(-1,true)"  range="0,5,50" default="20" />
+		<setting label="36035" id="limit_extrafanart_rating" subsetting="true" type="slider" enable="eq(-2,true)" visible="eq(-2,true)"  range="1,10" default="5" />
 	</category>
 </settings>
