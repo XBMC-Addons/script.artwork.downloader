@@ -68,12 +68,14 @@ class Main:
         self.failcount = 0
         self.failthreshold = 3
         self.fanart_centralized = 0
-        self.current_fanart = 0
         self.moviefanart = __addon__.getSetting("moviefanart") == 'true'
         self.tvfanart = __addon__.getSetting("tvfanart") == 'true'
         self.centralize = __addon__.getSetting("centralize") == 'true'
         self.central_movies = __addon__.getSetting("central_movies")
         self.central_tv = __addon__.getSetting("central_tv")
+        self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
+        self.limit_extrafanart_max = __addon__.getSetting("limit_extrafanart_max")
+        self.limit_extrafanart_rating = __addon__.getSetting("limit_extrafanart_rating")
         self.dialog = xbmcgui.DialogProgress()
         self.dialog.create(__addonname__, __language__(36003))
         self.mediatype = ''
