@@ -3,7 +3,7 @@ import urllib2
 import xbmc
 import xbmcaddon
 import xbmcvfs
-import script_exceptions
+from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error
 from urllib2 import URLError
 
 
@@ -41,9 +41,9 @@ class fileops():
         if not xbmcvfs.exists(self.tempdir):
             if not xbmcvfs.exists(addondir):
                 if not xbmcvfs.mkdir(addondir):
-                    raise script_exceptions.CreateDirectoryError(addondir)
+                    raise CreateDirectoryError(addondir)
             if not xbmcvfs.mkdir(self.tempdir):
-                raise script_exceptions.CreateDirectoryError(self.tempdir)
+                raise CreateDirectoryError(self.tempdir)
 
 
     def _copyfile(self, sourcepath, targetpath):
@@ -56,9 +56,9 @@ class fileops():
         targetdir = os.path.dirname(targetpath)
         if not xbmcvfs.exists(targetdir):
             if not xbmcvfs.mkdir(targetdir):
-                raise script_exceptions.CreateDirectoryError(targetdir)
+                raise CreateDirectoryError(targetdir)
         if not xbmcvfs.copy(sourcepath, targetpath):
-            raise script_exceptions.CopyError(targetpath)
+            raise CopyError(targetpath)
         else:
             _log("Copied successfully: %s" % targetpath)
 
@@ -92,9 +92,9 @@ class fileops():
                 response.close()
             except URLError, e:
                 if e.code == 404:
-                    pass
+                    raise HTTP404Error(url)
                 else:
-                    raise script_exceptions.DownloadError(url)
+                    raise DownloadError(url)
             else:
                 _log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
