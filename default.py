@@ -232,7 +232,10 @@ class Main:
                             except DownloadError as e:
                                 log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
-                            self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
+                            if self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops):
+                                self.dialog.update(int(float(self.current_fanart) / float(self.limit_extrafanart_max) * 100.0), __language__(36006), self.media_name, fanarturl)
+                            else:
+                                self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
 
 
