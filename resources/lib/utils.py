@@ -2,9 +2,17 @@ import os
 import urllib2
 import xbmc
 import xbmcaddon
-import xbmcvfs
+import platform
 from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error
 from urllib2 import URLError
+
+__python_version__ = platform.python_version_tuple()
+if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
+    __xbmc_version__ = 'Eden'
+    import xbmcvfs
+else:
+    __xbmc_version__ = 'Dharma'
+    import shutil as xbmcvfs
 
 
 """
@@ -23,7 +31,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
     xbmc.log(msg=message, level=severity)
 
 
-class fileops():
+class fileops:
 
     """
     This class handles all types of file operations needed by
