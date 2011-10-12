@@ -1,7 +1,7 @@
 import re
 import xbmc
 from urllib2 import URLError, urlopen
-from script_exceptions import HTTP404Error, DownloadError
+from script_exceptions import HTTP404Error, HTTP503Error, DownloadError
 
 def log(txt, severity=xbmc.LOGDEBUG):
     """Log to txt xbmc.log at specified severity"""
@@ -33,6 +33,8 @@ class Provider:
         except URLError, e:
             if e.code == 404:
                 raise HTTP404Error(url)
+            if e.code == 503:
+                raise HTTP503Error(url)
             else:
                 raise DownloadError(url)
 

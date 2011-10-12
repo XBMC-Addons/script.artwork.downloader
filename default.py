@@ -32,7 +32,7 @@ else:
 from provider import Provider, _setup_providers
 from utils import _log as log
 from utils import fileops
-from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error
+from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error, HTTP503Error
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -224,7 +224,9 @@ class Main:
                             time.sleep(.5)
                         backdrops = provider.get_image_list(self.media_id)
                     except HTTP404Error, e:
-                        log('Error getting data from %s (404), skipping' % provider.name, xbmc.LOGERROR)
+                        log('Error getting data from %s (404: File not found), skipping' % provider.name, xbmc.LOGERROR)
+                    except HTTP503Error, e:
+                        log('Error getting data from %s (503: API Limit Exceeded), skipping' % provider.name, xbmc.LOGERROR)
                     except:
                         self.failcount = self.failcount + 1
                         log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
