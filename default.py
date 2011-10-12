@@ -74,8 +74,8 @@ class Main:
         self.central_movies = __addon__.getSetting("central_movies")
         self.central_tv = __addon__.getSetting("central_tv")
         self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
-        self.limit_extrafanart_max = '{0:g}'.format(__addon__.getSetting("limit_extrafanart_max"))
-        self.limit_extrafanart_rating = '{0:g}'.format(__addon__.getSetting("limit_extrafanart_rating"))
+        self.limit_extrafanart_max = __addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.')
+        self.limit_extrafanart_rating = __addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.')
         self.dialog = xbmcgui.DialogProgress()
         self.dialog.create(__addonname__, __language__(36003))
         self.mediatype = ''
