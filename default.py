@@ -6,15 +6,8 @@ import socket
 import sys
 import xbmc
 import xbmcaddon
-import xbmcvfs
 import xbmcgui
 import platform
-
-__python_version__ = platform.python_version_tuple()
-if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
-    __xbmc_version__ = 'Eden'
-else:
-    __xbmc_version__ = 'Dharma'
 
 ### get addon info
 __addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
@@ -26,8 +19,19 @@ __language__ = __addon__.getLocalizedString
 BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __addon__.getAddonInfo('path'), 'resources' ) )
 sys.path.append( os.path.join( BASE_RESOURCE_PATH, "lib" ) )
 
-from provider import Provider
-from utils import _log as log, fileops
+__python_version__ = platform.python_version_tuple()
+if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
+    __xbmc_version__ = 'Eden'
+    import xbmcvfs
+    from media_setup import eden_media_listing as Media_listing
+else:
+    __xbmc_version__ = 'Dharma'
+    import shutil as xbmcvfs
+    from media_setup import dharma_media_listing as Media_listing
+
+from provider import Provider, _setup_providers
+from utils import _log as log
+from utils import fileops
 from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error
 
 ### adjust default timeout to stop script hanging
@@ -43,22 +47,22 @@ class Main:
                     self.solo_mode(self.mediatype, self.medianame)
                 else:
                     if self.mediatype == 'tvshow':
-                        self.Media_listing('TVShows')
+                        self.Medialist = Media_listing('TVShows')
                         self.download_fanart(self.Medialist, self.tv_providers)
                     elif self.mediatype == 'movie':
-                        self.Media_listing('Movies')
+                        self.Medialist = Media_listing('Movies')
                         self.download_fanart(self.Medialist, self.movie_providers)
                     elif self.mediatype == 'artist':
                         log('Music fanart not yet implemented', xbmc.LOGNOTICE)
             else:
                 if self.tvfanart:
-                    self.Media_listing('TVShows')
+                    self.Medialist = Media_listing('TVShows')
                     self.mediatype = 'tvshow'
                     self.download_fanart(self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
                 if self.moviefanart:
-                    self.Media_listing('Movies')
+                    self.Medialist = Media_listing('Movies')
                     self.mediatype = 'movie'
                     self.download_fanart(self.Medialist, self.movie_providers)
                 else:
@@ -70,7 +74,10 @@ class Main:
 
     ### load settings and initialise needed directories
     def initialise(self):
-        self.setup_providers()
+        providers = _setup_providers()
+        self.movie_providers = providers['movie_providers']
+        self.tv_providers = providers['tv_providers']
+        self.music_providers = providers['music_providers']
         self.failcount = 0
         self.failthreshold = 3
         self.fanart_centralized = 0
@@ -115,7 +122,7 @@ class Main:
                 pass
         try:
             self.fileops = fileops()
-        except CreateDirectoryError as e:
+        except CreateDirectoryError, e:
             log("Could not create directory: %s" % str(e))
             return False
         else:
@@ -149,9 +156,9 @@ class Main:
     ### solo mode
     def solo_mode(self, itemtype, itemname):
         if itemtype == 'movie':
-            self.Media_listing('Movies')
+            self.Medialist = Media_listing('Movies')
         elif itemtype == 'tvshow':
-            self.Media_listing('TVShows')
+            self.Medialist = Media_listing('TVShows')
         else:
             log("Error: type must be one of 'movie' or 'tvshow', aborting", xbmc.LOGERROR)
             return False
@@ -233,87 +240,16 @@ class Main:
                                 break
                             try:
                                 self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
-                            except HTTP404Error as e:
+                            except HTTP404Error, e:
                                 log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-                            except DownloadError as e:
+                            except DownloadError, e:
                                 log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
-                            download_max = self.limit_extrafanart_max if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)) else len(backdrops)
+                            if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
+                                download_max = self.limit_extrafanart_max
+                            else: download_max = len(backdrops)
                             self.dialog.update(int(float(self.current_fanart) / float(download_max) * 100.0), __language__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
-
-
-    ### get list of all tvshows and movies with their imdbnumber from library
-    ### copied from script.logo-downloader, thanks to it's authors
-    def Media_listing(self, media_type):
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.Get%s", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}' % media_type)
-        json_response = re.compile( "{(.*?)}", re.DOTALL ).findall(json_query)
-        self.Medialist = []
-        for mediaitem in json_response:
-            findmedianame = re.search( '"label":"(.*?)","', mediaitem )
-            if findmedianame:
-                medianame = ( findmedianame.group(1) )
-                findpath = re.search( '"file":"(.*?)","', mediaitem )
-                if findpath:
-                    path = (findpath.group(1))
-                    findimdbnumber = re.search( '"imdbnumber":"(.*?)","', mediaitem )
-                    if findimdbnumber:
-                        imdbnumber = (findimdbnumber.group(1))
-                        Media = {}
-                        Media["name"] = medianame
-                        Media["id"] = imdbnumber
-                        Media["path"] = path
-                        self.Medialist.append(Media)
-
-    def setup_providers(self):
-        self.movie_providers = []
-        self.tv_providers = []
-        self.music_providers = []
-
-        """
-        Setup provider for TheMovieDB.org
-        """
-        tmdb = Provider()
-        tmdb.name = 'TMDB'
-        tmdb.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
-        tmdb.api_limits = True
-        tmdb.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/%s/%s"
-        tmdb.re_pattern = '<image type="backdrop" url="(.*?)" size="original"'
-        tmdb.get_filename = lambda url: url.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
-
-        self.movie_providers.append(tmdb)
-
-        """
-        Setup provider for TheTVDB.com
-        """
-        tvdb = Provider()
-        tvdb.name = 'TVDB'
-        tvdb.api_key = '1A41A145E2DA0053'
-        tvdb.url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml'
-        tvdb.url_prefix = 'http://www.thetvdb.com/banners/'
-        tvdb.re_pattern = '<BannerPath>(?P<url>.*?)</BannerPath>\s+<BannerType>fanart</BannerType>'
-
-        self.tv_providers.append(tvdb)
-
-        """
-        Setup provider for fanart.tv - TV API
-        """
-        ftvt = Provider()
-        ftvt.name = 'fanart.tv - TV API'
-        ftvt.url = 'http://fanart.tv/api/fanart.php?id=%s&type=tvthumb'
-        ftvt.re_pattern = ''
-
-        #self.tv_providers.append(ftvt)
-
-        """
-        Setup provider for fanart.tv - Music API
-        """
-        ftvm = Provider()
-        ftvm.name = 'fanart.tv - Music API'
-        ftvm.url = 'http://fanart.tv/api/music.php?id=%s&type=background'
-        ftvm.re_pattern = '<background>(.*?)</background>'
-
-        #self.music_providers.append(ftvm)
 
 
 
