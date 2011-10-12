@@ -214,6 +214,8 @@ class Main:
                         log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
             if self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
+            elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
+                log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
                 for provider in providers:
                     try:
