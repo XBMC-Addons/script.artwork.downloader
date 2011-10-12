@@ -1,7 +1,7 @@
 import re
 import xbmc
 from urllib2 import URLError, urlopen
-from script_exceptions import HTTP404Error, HTTP503Error, DownloadError
+from script_exceptions import HTTP404Error, HTTP503Error, DownloadError, NoFanartError
 
 def log(txt, severity=xbmc.LOGDEBUG):
     """Log to txt xbmc.log at specified severity"""
@@ -41,9 +41,13 @@ class Provider:
     def get_image_list(self, media_id):
         log(self.url % (self.api_key, media_id))
         image_list = []
-        for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
-            image_list.append(self.url_prefix + i.group(1))
-        return image_list
+        try:
+            for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
+                image_list.append(self.url_prefix + i.group(1))
+        except:
+            raise NoFanartError(media_id)
+        else:
+            return image_list
 
 
 

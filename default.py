@@ -32,7 +32,7 @@ else:
 from provider import Provider, _setup_providers
 from utils import _log as log
 from utils import fileops
-from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error, HTTP503Error
+from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -239,6 +239,8 @@ class Main:
                     except:
                         self.failcount = self.failcount + 1
                         log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
+                    except NoFanartError, e:
+                        log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
                     else:
                         got_image_list = True
                     if got_image_list:
