@@ -8,7 +8,13 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 import xbmcgui
+import platform
 
+__python_version__ = platform.python_version_tuple()
+if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
+    __xbmc_version__ = 'Eden'
+else:
+    __xbmc_version__ = 'Dharma'
 
 ### get addon info
 __addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
@@ -80,7 +86,7 @@ class Main:
         self.dialog.create(__addonname__, __language__(36003))
         self.mediatype = ''
         self.medianame = ''
-        
+
         # Print out settings to log to help with debugging
         log('Setting: moviefanart = %s' % str(self.moviefanart))
         log('Setting: tvfanart = %s' % str(self.tvfanart))
@@ -232,10 +238,8 @@ class Main:
                             except DownloadError as e:
                                 log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
-                            if self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops):
-                                self.dialog.update(int(float(self.current_fanart) / float(self.limit_extrafanart_max) * 100.0), __language__(36006), self.media_name, fanarturl)
-                            else:
-                                self.dialog.update(int(float(self.current_fanart) / float(len(backdrops)) * 100.0), __language__(36006), self.media_name, fanarturl)
+                            download_max = self.limit_extrafanart_max if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)) else len(backdrops)
+                            self.dialog.update(int(float(self.current_fanart) / float(download_max) * 100.0), __language__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
 
 
@@ -314,6 +318,7 @@ class Main:
 
 
 if ( __name__ == "__main__" ):
-    log('script version %s started' % __addonversion__)
+    log('XBMC Version: %s' % __xbmc_version__, xbmc.LOGNOTICE)
+    log('script version %s started' % __addonversion__, xbmc.LOGNOTICE)
     Main()
     log('script stopped')
