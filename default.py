@@ -178,6 +178,7 @@ class Main:
     ### download media fanart
     def download_fanart(self, media_list, providers):
         self.processeditems = 0
+        got_image_list = False
         for currentmedia in media_list:
             ### check if XBMC is shutting down
             if xbmc.abortRequested == True:
@@ -226,11 +227,21 @@ class Main:
                     except HTTP404Error, e:
                         log('Error getting data from %s (404: File not found), skipping' % provider.name, xbmc.LOGERROR)
                     except HTTP503Error, e:
-                        log('Error getting data from %s (503: API Limit Exceeded), skipping' % provider.name, xbmc.LOGERROR)
+                        log('Error getting data from %s (503: API Limit Exceeded), trying again' % provider.name, xbmc.LOGERROR)
+                        time.sleep(3)
+                        try:
+                            backdrops = provider.get_image_list(self.media_id)
+                        except:
+                            self.failcount = self.failcount + 1
+                            log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
+                        else:
+                            got_image_list = True
                     except:
                         self.failcount = self.failcount + 1
                         log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
                     else:
+                        got_image_list = True
+                    if got_image_list:
                         self.failcount = 0
                         self.current_fanart = 0
                         for fanarturl in backdrops:
