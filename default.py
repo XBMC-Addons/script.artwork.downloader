@@ -80,6 +80,17 @@ class Main:
         self.dialog.create(__addonname__, __language__(36003))
         self.mediatype = ''
         self.medianame = ''
+        
+        # Print out settings to log to help with debugging
+        log('Setting: moviefanart = %s' % str(self.moviefanart))
+        log('Setting: tvfanart = %s' % str(self.tvfanart))
+        log('Setting: centralize = %s' % str(self.centralize))
+        log('Setting: central_movies = %s' % str(self.central_movies))
+        log('Setting: central_tv = %s' % str(self.central_tv))
+        log('Setting: limit_extrafanart = %s' % str(self.limit_extrafanart))
+        log('Setting: limit_extrafanart_max = %s' % str(self.limit_extrafanart_max))
+        log('Setting: limit_extrafanart_rating = %s' % str(self.limit_extrafanart_rating))
+
         for item in sys.argv:
             match = re.search("mediatype=(.*)" , item)
             if match:
