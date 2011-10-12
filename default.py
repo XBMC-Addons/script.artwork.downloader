@@ -236,11 +236,11 @@ class Main:
                             log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
                         else:
                             got_image_list = True
+                    except NoFanartError, e:
+                        log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
                     except:
                         self.failcount = self.failcount + 1
                         log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
-                    except NoFanartError, e:
-                        log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
                     else:
                         got_image_list = True
                     if got_image_list:
