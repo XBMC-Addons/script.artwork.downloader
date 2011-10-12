@@ -221,9 +221,11 @@ class Main:
                             log('Sleeping to respect API limits: %s' % provider.name)
                             time.sleep(.5)
                         backdrops = provider.get_image_list(self.media_id)
+                    except HTTP404Error, e:
+                        log('Error getting data from %s (404), skipping' % provider.name, xbmc.LOGERROR)
                     except:
                         self.failcount = self.failcount + 1
-                        log('Error getting data from %s, skipping' % provider.name, xbmc.LOGERROR)
+                        log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
                     else:
                         self.failcount = 0
                         self.current_fanart = 0
