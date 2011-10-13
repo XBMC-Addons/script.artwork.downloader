@@ -269,6 +269,7 @@ class Main:
                                 download_max = self.limit_extrafanart_max
                             else: download_max = len(backdrops)
                             self.dialog.update(int(float(self.current_fanart) / float(download_max) * 100.0), __localize__(36006), self.media_name, fanarturl)
+            log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1
 
 
