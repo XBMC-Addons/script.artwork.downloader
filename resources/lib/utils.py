@@ -68,7 +68,7 @@ def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', backgrou
                 msg = line1
             else:
                 msg = line1 + ': ' + line2
-            xbmc.executebuiltin("XBMC.Notification(%s, %s, 10000)" %s (__addonname__, msg))
+            xbmc.executebuiltin("XBMC.Notification(%s, %s, 10000)" % (__addonname__, msg))
 
 
 class fileops:
