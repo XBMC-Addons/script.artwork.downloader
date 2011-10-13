@@ -48,8 +48,10 @@ class Provider:
         image_list = []
         for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
             image_list.append(self.url_prefix + i.group(1))
-        return image_list
-
+        if image_list == []:
+            raise NoFanartError(media_id)
+        else:
+            return image_list
 
 
 def _setup_providers():
