@@ -4,7 +4,9 @@
 		<setting label="36001" id="moviefanart" type="bool"  default="true"/>
 		<setting label="36002" id="tvfanart" type="bool"  default="true"/>
 		<setting type="sep" />
-		<setting label="36030" id="centralize" type="bool"  default="false"/>
+		<setting label="36012" id="background" type="bool"  default="true"/>
+		<setting type="sep" />
+        <setting label="36030" id="centralize" type="bool"  default="false"/>
 		<setting label="36031" id="central_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
 		<setting label="36032" id="central_tv" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
 		<setting type="sep" />

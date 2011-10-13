@@ -46,13 +46,13 @@ def get_short_language():
         return 'en'
 
 
-def _progressdialog(self, action, percentage=0, status='', media_name='', url='', background=False):
+def _dialog(self, action, percentage=0, line1='', line2='', line3='', background=False):
     if not background:
         if action == 'create':
             dialog = xbmcgui.DialogProgress()
-            dialog.create(__addonname__, status)
+            dialog.create(__addonname__, line1)
         if action == 'update':
-            dialog.update(percentage, status, media_name, url)
+            dialog.update(percentage, line1, line2, line3)
         if action == 'close':
             dialog.close()
         if action == 'iscanceled':
@@ -61,13 +61,13 @@ def _progressdialog(self, action, percentage=0, status='', media_name='', url=''
             else:
                 return False
         if action == 'okdialog':
-            xbmcgui.Dialog().ok(__addonname__, status, media_name)
+            xbmcgui.Dialog().ok(__addonname__, line1, line2)
     if background:
         if (action == 'create' or action == 'okdialog'):
             if media_name == '':
-                msg = status
+                msg = line1
             else:
-                msg = status + ': ' + media_name
+                msg = line1 + ': ' + line2
             xbmc.executebuiltin("XBMC.Notification('%s','%s',10000)" %s (__addonname__, msg))
 
 

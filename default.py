@@ -30,6 +30,7 @@ else:
 
 from provider import _setup_providers
 from utils import _log as log
+from utils import _dialog as dialog
 from utils import fileops, get_short_language
 from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
 
@@ -87,8 +88,8 @@ class Main:
         self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
         self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
-        self.dialog = xbmcgui.DialogProgress()
-        self.dialog.create(__addonname__, __localize__(36003))
+        self.background = __addon__.getSetting("background") == 'true'
+        dialog('create', line1 = __localize__(36003), background = self.background)
         self.mediatype = ''
         self.medianame = ''
 
@@ -136,7 +137,7 @@ class Main:
     ### clean up and
     def cleanup(self):
         if self.fileops._exists(self.fileops.tempdir):
-            self.dialog.update(100, __localize__(36004))
+            dialog('update', percentage = 100, line1 = __localize__(36004), background = self.background)
             log('Cleaning up')
             for x in os.listdir(self.fileops.tempdir):
                 tempfile = os.path.join(self.fileops.tempdir, x)
@@ -152,11 +153,11 @@ class Main:
         log('Finished: %s extrafanart downloaded' % self.fileops.downloadcount, xbmc.LOGNOTICE)
         summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
         summary = summary_tmp + __localize__(36010)
-        self.dialog.close()
+        dialog('close', background = self.background)
         if not self.failcount < self.failthreshold:
             log('Network error detected, script aborted', xbmc.LOGERROR)
-            xbmcgui.Dialog().ok(__addonname__, __localize__(36007), __localize__(36008))
-        xbmcgui.Dialog().ok(__addonname__, summary)
+            dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.background)
+        dialog('okdialog', line1 = summary, background = self.background)
 
     ### solo mode
     def solo_mode(self, itemtype, itemname):
@@ -189,7 +190,7 @@ class Main:
                 log('XBMC shutting down, aborting')
                 break
             ### check if script has been cancelled by user
-            if self.dialog.iscanceled():
+            if dialog('iscanceled', background = self.background):
                 break
             if not self.failcount < self.failthreshold:
                 break
@@ -199,7 +200,7 @@ class Main:
                 self.media_path = os.path.split(currentmedia["path"])[0]
             self.media_id = currentmedia["id"]
             self.media_name = currentmedia["name"]
-            self.dialog.update(int(float(self.processeditems) / float(len(media_list)) * 100.0), __localize__(36005), self.media_name, '')
+            dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = __localize__(36005), line2 = self.media_name, line3 = '', background = self.background)
             log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
             log('ID: %s' % self.media_id)
             log('Path: %s' % self.media_path)
@@ -250,8 +251,8 @@ class Main:
                         self.current_fanart = 0
                         for fanarturl in backdrops:
                             ### check if script has been cancelled by user
-                            if self.dialog.iscanceled():
-                                self.dialog.close()
+                            if dialog('iscanceled', background = self.background):
+                                dialog('close', background = self.background)
                                 break
                             if not self.failcount < 3:
                                 break
@@ -272,7 +273,7 @@ class Main:
                             if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
                                 download_max = self.limit_extrafanart_max
                             else: download_max = len(backdrops)
-                            self.dialog.update(int(float(self.current_fanart) / float(download_max) * 100.0), __localize__(36006), self.media_name, fanarturl)
+                            dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanarturl, background = self.background)
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1
 
