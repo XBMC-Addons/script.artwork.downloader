@@ -1,4 +1,3 @@
-import urllib2
 import re
 import os
 import time
@@ -16,23 +15,24 @@ __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
 __language__ = __addon__.getLocalizedString
 
-BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __addon__.getAddonInfo('path'), 'resources' ) )
-sys.path.append( os.path.join( BASE_RESOURCE_PATH, "lib" ) )
+BASE_RESOURCE_PATH = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources'))
+sys.path.append(os.path.join(BASE_RESOURCE_PATH, "lib"))
+
+
+import media_setup
 
 __python_version__ = platform.python_version_tuple()
 if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
     __xbmc_version__ = 'Eden'
-    import xbmcvfs
-    from media_setup import eden_media_listing as Media_listing
+    Media_listing = media_setup.eden_media_listing
 else:
     __xbmc_version__ = 'Dharma'
-    import shutil as xbmcvfs
-    from media_setup import dharma_media_listing as Media_listing
+    Media_listing = media_setup.dharma_media_listing
 
-from provider import Provider, _setup_providers
+from provider import _setup_providers
 from utils import _log as log
 from utils import fileops
-from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
+from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -117,7 +117,7 @@ class Main:
                 pass
             match = re.search("medianame=" , item)
             if match:
-                self.medianame = item.replace( "medianame=" , "" )
+                self.medianame = item.replace("medianame=" , "")
             else:
                 pass
         try:
@@ -131,16 +131,16 @@ class Main:
 
     ### clean up and
     def cleanup(self):
-        if xbmcvfs.exists(self.fileops.tempdir):
+        if self.fileops._exists(self.fileops.tempdir):
             self.dialog.update(100, __language__(36004))
             log('Cleaning up')
             for x in os.listdir(self.fileops.tempdir):
                 tempfile = os.path.join(self.fileops.tempdir, x)
-                xbmcvfs.delete(tempfile)
-                if xbmcvfs.exists(tempfile):
+                self.fileops._delete(tempfile)
+                if self.fileops._exists(tempfile):
                     log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
-            xbmcvfs.rmdir(self.fileops.tempdir)
-            if xbmcvfs.exists(self.fileops.tempdir):
+            self.fileops._rmdir(self.fileops.tempdir)
+            if self.fileops._exists(self.fileops.tempdir):
                 log('Error deleting temp directory: %s' % self.fileops.tempdir, xbmc.LOGERROR)
             else:
                 log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
@@ -272,7 +272,7 @@ class Main:
 
 
 
-if ( __name__ == "__main__" ):
+if (__name__ == "__main__"):
     log('XBMC Version: %s' % __xbmc_version__, xbmc.LOGNOTICE)
     log('script version %s started' % __addonversion__, xbmc.LOGNOTICE)
     Main()
