@@ -41,10 +41,9 @@ class Provider:
     def get_image_list(self, media_id):
         log(self.url % (self.api_key, media_id))
         image_list = []
-        try:
-            for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
-                image_list.append(self.url_prefix + i.group(1))
-        except:
+        for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
+            image_list.append(self.url_prefix + i.group(1))
+        if image_list == []:
             raise NoFanartError(media_id)
         else:
             return image_list
