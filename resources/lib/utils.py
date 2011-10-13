@@ -3,7 +3,7 @@ import urllib2
 import xbmc
 import xbmcaddon
 import platform
-from script_exceptions import CopyError, DownloadError, XmlError, MediatypeError, DeleteError, CreateDirectoryError, HTTP404Error
+from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error
 from urllib2 import URLError
 
 __python_version__ = platform.python_version_tuple()
@@ -12,7 +12,7 @@ if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
     import xbmcvfs
 else:
     __xbmc_version__ = 'Dharma'
-    import shutil as xbmcvfs
+    import shutil
 
 
 """
@@ -32,7 +32,6 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 
 
 class fileops:
-
     """
     This class handles all types of file operations needed by
     script.extrafanartdownloader (creating directories, downloading
@@ -43,15 +42,67 @@ class fileops:
 
         """Initialise needed directories/vars for fileops"""
 
+        _log("Setting up fileops")
+
+        if __xbmc_version__ == 'Eden':
+            self._exists = lambda path: xbmcvfs.exists(path)
+            self._rmdir = lambda path: xbmcvfs.rmdir(path)
+            self._mkdir = lambda path: xbmcvfs.mkdir(path)
+            self._delete = lambda path: xbmcvfs.delete(path)
+
         self.downloadcount = 0
         addondir = xbmc.translatePath('special://profile/addon_data/%s' % __addonid__)
         self.tempdir = os.path.join(addondir, 'temp')
-        if not xbmcvfs.exists(self.tempdir):
-            if not xbmcvfs.exists(addondir):
-                if not xbmcvfs.mkdir(addondir):
+        if not self._exists(self.tempdir):
+            if not self._exists(addondir):
+                if not self._mkdir(addondir):
                     raise CreateDirectoryError(addondir)
-            if not xbmcvfs.mkdir(self.tempdir):
+            if not self._mkdir(self.tempdir):
                 raise CreateDirectoryError(self.tempdir)
+
+
+    if __xbmc_version__ == 'Eden':
+        def _copy(self, source, target):
+            return xbmcvfs.copy(source, target)
+
+    ###  Dharma file functions
+    else:
+        def _exists(self, path):
+            return os.path.exists(path)
+        def _copy(self, source, target):
+            try:
+                shutil.copy(source, target)
+            except:
+                if os.path.exists(target):
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        def _mkdir(self, path):
+            try:
+                os.makedirs(path)
+            except:
+                if os.path.exists(path):
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        def _delete(self, path):
+            try:
+                os.remove(path)
+            except:
+                return False
+            else:
+                return True
+        def _rmdir(self, path):
+            try:
+                os.rmdir(path)
+            except:
+                return False
+            else:
+                return True
 
 
     def _copyfile(self, sourcepath, targetpath):
@@ -62,10 +113,10 @@ class fileops:
         """
 
         targetdir = os.path.dirname(targetpath)
-        if not xbmcvfs.exists(targetdir):
-            if not xbmcvfs.mkdir(targetdir):
+        if not self._exists(targetdir):
+            if not self._mkdir(targetdir):
                 raise CreateDirectoryError(targetdir)
-        if not xbmcvfs.copy(sourcepath, targetpath):
+        if not self._copy(sourcepath, targetpath):
             raise CopyError(targetpath)
         else:
             _log("Copied successfully: %s" % targetpath)
@@ -83,7 +134,7 @@ class fileops:
         filenotexistspaths = []
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
-            if xbmcvfs.exists(path):
+            if self._exists(path):
                 fileexists.append(True)
                 existspath = path
             else:
