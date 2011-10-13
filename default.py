@@ -229,7 +229,7 @@ class Main:
                         log('Error getting data from %s (404: File not found), skipping' % provider.name, xbmc.LOGERROR)
                     except HTTP503Error, e:
                         log('Error getting data from %s (503: API Limit Exceeded), trying again' % provider.name, xbmc.LOGERROR)
-                        time.sleep(3)
+                        time.sleep(5)
                         try:
                             backdrops = provider.get_image_list(self.media_id)
                         except:
