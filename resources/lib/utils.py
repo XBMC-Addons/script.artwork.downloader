@@ -46,7 +46,7 @@ def get_short_language():
         return 'en'
 
 
-def _dialog(self, action, percentage=0, line1='', line2='', line3='', background=False):
+def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', background = False):
     if not background:
         if action == 'create':
             dialog = xbmcgui.DialogProgress()
