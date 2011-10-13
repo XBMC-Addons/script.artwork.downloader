@@ -64,7 +64,7 @@ def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', backgrou
             xbmcgui.Dialog().ok(__addonname__, line1, line2)
     if background:
         if (action == 'create' or action == 'okdialog'):
-            if media_name == '':
+            if line2 == '':
                 msg = line1
             else:
                 msg = line1 + ': ' + line2
