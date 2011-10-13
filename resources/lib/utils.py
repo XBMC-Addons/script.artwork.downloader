@@ -1,6 +1,7 @@
 import os
 import urllib2
 import xbmc
+import xbmcgui
 import xbmcaddon
 import platform
 from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error
@@ -22,6 +23,8 @@ operation of script.extrafanartdownloader
 
 __addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
 __addonid__ = __addon__.getAddonInfo('id')
+__addonname__ = __addon__.getAddonInfo('name')
+__localize__ = __addon__.getLocalizedString
 
 def _log(txt, severity=xbmc.LOGDEBUG):
 
@@ -116,6 +119,30 @@ class fileops:
             else:
                 return True
 
+    def _progressdialog(self, action, percentage=0, status='', media_name='', url='', background=False):
+        if not background:
+            if action == 'create':
+                dialog = xbmcgui.DialogProgress()
+                dialog.create(__addonname__, status)
+            if action == 'update':
+                dialog.update(percentage, status, media_name, url)
+            if action == 'close':
+                dialog.close()
+            if action == 'iscanceled':
+                if dialog.iscanceled():
+                    return True
+                else:
+                    return False
+            if action == 'okdialog':
+                xbmcgui.Dialog().ok(__addonname__, status, media_name)
+        if background:
+            if (action == 'create' or action == 'okdialog'):
+                if media_name == '':
+                    msg = status
+                else:
+                    msg = status + ': ' + media_name
+                xbmc.executebuiltin("XBMC.Notification('%s','%s',10000)" %s (__addonname__, msg))
+            
 
     def _copyfile(self, sourcepath, targetpath):
 
