@@ -154,6 +154,7 @@ class Main:
         summary = summary_tmp + __localize__(36010)
         self.dialog.close()
         if not self.failcount < self.failthreshold:
+            log('Network error detected, script aborted', xbmc.LOGERROR)
             xbmcgui.Dialog().ok(__addonname__, __localize__(36007), __localize__(36008))
         xbmcgui.Dialog().ok(__addonname__, summary)
 
