@@ -262,6 +262,9 @@ class Main:
                                 self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
                             except HTTP404Error, e:
                                 log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+                            except CreateDirectoryError, e:
+                                log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                                break
                             except DownloadError, e:
                                 log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                 self.failcount = self.failcount + 1
