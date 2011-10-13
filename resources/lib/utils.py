@@ -26,6 +26,8 @@ __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __localize__ = __addon__.getLocalizedString
 
+dialog = xbmcgui.DialogProgress()
+
 def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
@@ -49,7 +51,6 @@ def get_short_language():
 def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', background = False):
     if not background:
         if action == 'create':
-            dialog = xbmcgui.DialogProgress()
             dialog.create(__addonname__, line1)
         if action == 'update':
             dialog.update(percentage, line1, line2, line3)
@@ -143,7 +144,7 @@ class fileops:
                 return False
             else:
                 return True
-            
+
 
     def _copyfile(self, sourcepath, targetpath):
 
