@@ -178,7 +178,6 @@ class Main:
     ### download media fanart
     def download_fanart(self, media_list, providers):
         self.processeditems = 0
-        got_image_list = False
         for currentmedia in media_list:
             ### check if XBMC is shutting down
             if xbmc.abortRequested == True:
@@ -219,10 +218,8 @@ class Main:
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
                 for provider in providers:
+                    got_image_list = False
                     try:
-                        if provider.api_limits:
-                            log('Sleeping to respect API limits: %s' % provider.name)
-                            time.sleep(.5)
                         backdrops = provider.get_image_list(self.media_id)
                     except HTTP404Error, e:
                         log('Error getting data from %s (404: File not found), skipping' % provider.name, xbmc.LOGERROR)
