@@ -12,7 +12,7 @@ __addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
 __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
-__language__ = __addon__.getLocalizedString
+__localize__ = __addon__.getLocalizedString
 
 BASE_RESOURCE_PATH = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources'))
 sys.path.append(os.path.join(BASE_RESOURCE_PATH, "lib"))
@@ -30,8 +30,10 @@ else:
 
 from provider import _setup_providers
 from utils import _log as log
-from utils import fileops
+from utils import fileops, get_short_language
 from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
+
+__language__ = get_short_language()
 
 
 class Main:
@@ -84,12 +86,17 @@ class Main:
         self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
         self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
         self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
+        self.limit_language = __addon__.getSetting("limit_language") == 'true'
         self.dialog = xbmcgui.DialogProgress()
-        self.dialog.create(__addonname__, __language__(36003))
+        self.dialog.create(__addonname__, __localize__(36003))
         self.mediatype = ''
         self.medianame = ''
 
         # Print out settings to log to help with debugging
+        log('Setting: __addonid__ = %s' % str(__addonid__))
+        log('Setting: __addonname__ = %s' % str(__addonname__))
+        log('Setting: __addonversion__ = %s' % str(__addonversion__))
+        log('Setting: __language__ = %s' % str(__language__))
         log('Setting: moviefanart = %s' % str(self.moviefanart))
         log('Setting: tvfanart = %s' % str(self.tvfanart))
         log('Setting: centralize = %s' % str(self.centralize))
@@ -98,6 +105,8 @@ class Main:
         log('Setting: limit_extrafanart = %s' % str(self.limit_extrafanart))
         log('Setting: limit_extrafanart_max = %s' % str(self.limit_extrafanart_max))
         log('Setting: limit_extrafanart_rating = %s' % str(self.limit_extrafanart_rating))
+        log('Setting: limit_language = %s' % str(self.limit_language))
+
 
         for item in sys.argv:
             match = re.search("mediatype=(.*)" , item)
@@ -127,7 +136,7 @@ class Main:
     ### clean up and
     def cleanup(self):
         if self.fileops._exists(self.fileops.tempdir):
-            self.dialog.update(100, __language__(36004))
+            self.dialog.update(100, __localize__(36004))
             log('Cleaning up')
             for x in os.listdir(self.fileops.tempdir):
                 tempfile = os.path.join(self.fileops.tempdir, x)
@@ -141,11 +150,11 @@ class Main:
                 log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
         ### log results and notify user
         log('Finished: %s extrafanart downloaded' % self.fileops.downloadcount, xbmc.LOGNOTICE)
-        summary_tmp = __language__(36009) + ': %s ' % self.fileops.downloadcount
-        summary = summary_tmp + __language__(36010)
+        summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
+        summary = summary_tmp + __localize__(36010)
         self.dialog.close()
         if not self.failcount < self.failthreshold:
-            xbmcgui.Dialog().ok(__addonname__, __language__(36007), __language__(36008))
+            xbmcgui.Dialog().ok(__addonname__, __localize__(36007), __localize__(36008))
         xbmcgui.Dialog().ok(__addonname__, summary)
 
     ### solo mode
@@ -189,7 +198,7 @@ class Main:
                 self.media_path = os.path.split(currentmedia["path"])[0]
             self.media_id = currentmedia["id"]
             self.media_name = currentmedia["name"]
-            self.dialog.update(int(float(self.processeditems) / float(len(media_list)) * 100.0), __language__(36005), self.media_name, '')
+            self.dialog.update(int(float(self.processeditems) / float(len(media_list)) * 100.0), __localize__(36005), self.media_name, '')
             log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
             log('ID: %s' % self.media_id)
             log('Path: %s' % self.media_path)
@@ -259,7 +268,7 @@ class Main:
                             if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
                                 download_max = self.limit_extrafanart_max
                             else: download_max = len(backdrops)
-                            self.dialog.update(int(float(self.current_fanart) / float(download_max) * 100.0), __language__(36006), self.media_name, fanarturl)
+                            self.dialog.update(int(float(self.current_fanart) / float(download_max) * 100.0), __localize__(36006), self.media_name, fanarturl)
             self.processeditems = self.processeditems + 1
 
 
