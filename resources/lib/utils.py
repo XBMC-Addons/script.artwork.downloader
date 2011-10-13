@@ -46,6 +46,31 @@ def get_short_language():
         return 'en'
 
 
+def _progressdialog(self, action, percentage=0, status='', media_name='', url='', background=False):
+    if not background:
+        if action == 'create':
+            dialog = xbmcgui.DialogProgress()
+            dialog.create(__addonname__, status)
+        if action == 'update':
+            dialog.update(percentage, status, media_name, url)
+        if action == 'close':
+            dialog.close()
+        if action == 'iscanceled':
+            if dialog.iscanceled():
+                return True
+            else:
+                return False
+        if action == 'okdialog':
+            xbmcgui.Dialog().ok(__addonname__, status, media_name)
+    if background:
+        if (action == 'create' or action == 'okdialog'):
+            if media_name == '':
+                msg = status
+            else:
+                msg = status + ': ' + media_name
+            xbmc.executebuiltin("XBMC.Notification('%s','%s',10000)" %s (__addonname__, msg))
+
+
 class fileops:
     """
     This class handles all types of file operations needed by
@@ -118,30 +143,6 @@ class fileops:
                 return False
             else:
                 return True
-
-    def _progressdialog(self, action, percentage=0, status='', media_name='', url='', background=False):
-        if not background:
-            if action == 'create':
-                dialog = xbmcgui.DialogProgress()
-                dialog.create(__addonname__, status)
-            if action == 'update':
-                dialog.update(percentage, status, media_name, url)
-            if action == 'close':
-                dialog.close()
-            if action == 'iscanceled':
-                if dialog.iscanceled():
-                    return True
-                else:
-                    return False
-            if action == 'okdialog':
-                xbmcgui.Dialog().ok(__addonname__, status, media_name)
-        if background:
-            if (action == 'create' or action == 'okdialog'):
-                if media_name == '':
-                    msg = status
-                else:
-                    msg = status + ': ' + media_name
-                xbmc.executebuiltin("XBMC.Notification('%s','%s',10000)" %s (__addonname__, msg))
             
 
     def _copyfile(self, sourcepath, targetpath):
