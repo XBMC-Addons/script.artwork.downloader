@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
-    <category label="General">
+    <category label="36037">
 		<setting label="36001" id="moviefanart" type="bool"  default="true"/>
 		<setting label="36002" id="tvfanart" type="bool"  default="true"/>
 		<setting type="sep" />
