@@ -1,7 +1,12 @@
 import re
+import socket
 import xbmc
 from urllib2 import URLError, urlopen
 from script_exceptions import HTTP404Error, HTTP503Error, DownloadError, NoFanartError
+
+### adjust default timeout to stop script hanging
+timeout = 20
+socket.setdefaulttimeout(timeout)
 
 def log(txt, severity=xbmc.LOGDEBUG):
     """Log to txt xbmc.log at specified severity"""
@@ -43,10 +48,7 @@ class Provider:
         image_list = []
         for i in re.finditer(self.re_pattern, self._get_xml(self.url % (self.api_key, media_id))):
             image_list.append(self.url_prefix + i.group(1))
-        if image_list == []:
-            raise NoFanartError(media_id)
-        else:
-            return image_list
+        return image_list
 
 
 

@@ -1,7 +1,6 @@
 import re
 import os
 import time
-import socket
 import sys
 import xbmc
 import xbmcaddon
@@ -33,10 +32,6 @@ from provider import _setup_providers
 from utils import _log as log
 from utils import fileops
 from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
-
-### adjust default timeout to stop script hanging
-timeout = 20
-socket.setdefaulttimeout(timeout)
 
 
 class Main:
