@@ -93,20 +93,23 @@ class Main:
         self.medianame = ''
 
         # Print out settings to log to help with debugging
-        log('Setting: __addonid__ = %s' % str(__addonid__))
-        log('Setting: __addonname__ = %s' % str(__addonname__))
-        log('Setting: __addonversion__ = %s' % str(__addonversion__))
-        log('Setting: __language__ = %s' % str(__language__))
-        log('Setting: moviefanart = %s' % str(self.moviefanart))
-        log('Setting: tvfanart = %s' % str(self.tvfanart))
-        log('Setting: background = %s' % str(self.background))
-        log('Setting: centralize = %s' % str(self.centralize))
-        log('Setting: central_movies = %s' % str(self.central_movies))
-        log('Setting: central_tv = %s' % str(self.central_tv))
-        log('Setting: limit_extrafanart = %s' % str(self.limit_extrafanart))
-        log('Setting: limit_extrafanart_max = %s' % str(self.limit_extrafanart_max))
-        log('Setting: limit_extrafanart_rating = %s' % str(self.limit_extrafanart_rating))
-        log('Setting: limit_language = %s' % str(self.limit_language))
+        log("######## Extrafanart Downloader: Initializing...............................")
+        log("######## Extrafanart Downloader: Settings...................................")
+        log('## Add-on ID = %s' % str(__addonid__))
+        log('## Add-on Name= %s' % str(__addonname__))
+        log('## Add-on Version = %s' % str(__addonversion__))
+        log('## Language Used = %s' % str(__language__))
+        log('## Download Movie Fanart= %s' % str(self.moviefanart))
+        log('## Download TV Show  Fanart = %s' % str(self.tvfanart))
+        log('## Background Run = %s' % str(self.background))
+        log('## Centralize Extrafanart = %s' % str(self.centralize))
+        log('## Central Movies Folder = %s' % str(self.central_movies))
+        log('## Central TV Show Folder = %s' % str(self.central_tv))
+        log('## Limit Extrafanart = %s' % str(self.limit_extrafanart))
+        log('## Limit Extrafanart Max = %s' % str(self.limit_extrafanart_max))
+        log('## Limit Extrafanart Rating = %s' % str(self.limit_extrafanart_rating))
+        log('## Limit Language = %s' % str(self.limit_language))
+        log("######## Extrafanart Downloader: Starting download.........................")
 
 
         for item in sys.argv:
