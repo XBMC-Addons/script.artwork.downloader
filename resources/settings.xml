@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
     <category label="36037">
-		<setting label="36001" id="moviefanart" type="bool"  default="true"/>
-		<setting label="36002" id="tvfanart" type="bool"  default="true"/>
-		<setting type="sep" />
-		<setting label="36012" id="background" type="bool"  default="false"/>
-		<setting type="sep" />
-        <setting label="36030" id="centralize" type="bool"  default="false"/>
-		<setting label="36031" id="central_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
-		<setting label="36032" id="central_tv" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
-		<setting type="sep" />
-		<setting label="36033" id="limit_extrafanart" type="bool"  default="false"/>
-		<setting label="36034" id="limit_extrafanart_max" subsetting="true" type="slider" enable="eq(-1,true)" visible="eq(-1,true)"  range="5,5,50" default="20" option="int" />
-		<setting label="36035" id="limit_extrafanart_rating" subsetting="true" type="slider" enable="eq(-2,true)" visible="eq(-2,true)"  range="1,10" default="5" option="int" />
-		<setting label="36036" id="limit_language" subsetting="true" type="bool" enable="eq(-3,true)" visible="eq(-3,true)" default="true" />
-	</category>
+	<setting label="36001" id="moviefanart" type="bool"  default="true"/>
+	<setting label="36002" id="tvfanart" type="bool"  default="true"/>
+	<setting type="sep" />
+	<setting label="36012" id="background" type="bool"  default="false"/>
+	<setting type="sep" />
+	<setting label="36030" id="centralize" type="bool"  default="false"/>
+	<setting label="36031" id="central_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
+	<setting label="36032" id="central_tv" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
+	<setting type="sep" />
+	<setting label="36033" id="limit_extrafanart" type="bool"  default="false"/>
+	<setting label="36034" id="limit_extrafanart_max" subsetting="true" type="slider" enable="eq(-1,true)" visible="eq(-1,true)"  range="5,5,50" default="20" option="int" />
+	<setting label="36035" id="limit_extrafanart_rating" subsetting="true" type="slider" enable="eq(-2,true)" visible="eq(-2,true)"  range="1,10" default="5" option="int" />
+	<setting label="36036" id="limit_language" subsetting="true" type="bool" enable="eq(-3,true)" visible="eq(-3,true)" default="true" />		
+    </category>
+    <category label="36038">
+	<setting type="sep" />
+	<setting label="36039" type="lsep" />
+	<setting type="sep" />
+	<setting label="" type="lsep" />
+	<setting label="36040" type="bool" id="protectedshare" default="false" />
+	<setting label="36041" type="text" id="samba_user" enable="eq(-1,true)" default="" />
+	<setting label="36042" type="text" option="hidden" id="samba_pass" enable="eq(-2,true)" default="" />
+    </category>
 </settings>
