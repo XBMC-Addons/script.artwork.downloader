@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
     <!-- Plugin settings -->
-    <string id="36001">Download Movie fanart</string>
-    <string id="36002">Download TV fanart</string>
-    <string id="36003">Checking for extrafanart</string>
-    <string id="36004">Cleaning up</string>
-    <string id="36005">Checking for extrafanart</string>
-    <string id="36006">Downloading extrafanart</string>
-    <string id="36007">Add-on aborted</string>
-    <string id="36008">Network error detected</string>
-    <string id="36009">Finished</string>
-    <string id="36010">extrafanart downloaded</string>
+	<string id="36001">Download Movie fanart</string>
+	<string id="36002">Download TV fanart</string>
+	<string id="36003">Checking for extrafanart</string>
+	<string id="36004">Cleaning up</string>
+	<string id="36005">Checking for extrafanart</string>
+	<string id="36006">Downloading extrafanart</string>
+	<string id="36007">Add-on aborted</string>
+	<string id="36008">Network error detected</string>
+	<string id="36009">Finished</string>
+	<string id="36010">extrafanart downloaded</string>
 	<string id="36011">extrafanart centralized</string>
 	<string id="36012">Run in background</string>
 	<string id="36030">Centralize fanart</string>
@@ -21,4 +21,9 @@
 	<string id="36035">Minimum rating</string>
 	<string id="36036">Current language only</string>
 	<string id="36037">General settings</string>
+	<string id="36038">Advanced settings</string>
+	<string id="36039">Only for Dharma</string>
+	<string id="36040">Using protected share</string>
+	<string id="36041">Username</string>
+	<string id="36042">Password</string>
 </strings>
