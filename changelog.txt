@@ -1,15 +1,18 @@
 [B]0.3.9[/B]
 ****     Current development version        *****
-- Added half second sleep to stay within API limits
+- Added 5 second sleep if API limits is reached
+- Added silent downloading in background
+- Added Extrafanart limiter (amount of images per title) 
+- Merged Dharma & Eden into one add-on
+- More extensive debug logging
+- Updated skin integration examples
 
 [B]0.3.8[/B]
 - Added option to centralize fanart storage
 - Splitting code into libraries
 
-
 [B]0.3.7[/B]
 - Added skin integration options (see readme file)
-- Added to skin: Aeon Nox (made by: Big Noid)
 
 [B]0.3.6[/B]
 - Initial commit
