@@ -100,6 +100,7 @@ class Main:
         log('Setting: __language__ = %s' % str(__language__))
         log('Setting: moviefanart = %s' % str(self.moviefanart))
         log('Setting: tvfanart = %s' % str(self.tvfanart))
+        log('Setting: background = %s' % str(self.background))
         log('Setting: centralize = %s' % str(self.centralize))
         log('Setting: central_movies = %s' % str(self.central_movies))
         log('Setting: central_tv = %s' % str(self.central_tv))
@@ -157,7 +158,10 @@ class Main:
         if not self.failcount < self.failthreshold:
             log('Network error detected, script aborted', xbmc.LOGERROR)
             dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.background)
-        dialog('okdialog', line1 = summary, background = self.background)
+        if not xbmc.abortRequested:
+            dialog('okdialog', line1 = summary, background = self.background)
+        else:
+            dialog('okdialog', line1 = __localize__(36007), line2 = summary, background = self.background)
 
     ### solo mode
     def solo_mode(self, itemtype, itemname):
@@ -186,8 +190,8 @@ class Main:
         self.processeditems = 0
         for currentmedia in media_list:
             ### check if XBMC is shutting down
-            if xbmc.abortRequested == True:
-                log('XBMC shutting down, aborting')
+            if xbmc.abortRequested:
+                log('XBMC abort requested, aborting')
                 break
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.background):
