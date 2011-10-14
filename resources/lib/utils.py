@@ -144,6 +144,17 @@ class fileops:
                 return False
             else:
                 return True
+            
+            
+    def _delete_file_in_dirs(self, filename, targetdirs):
+        """
+        Delete file from all targetdirs
+        """
+        
+        for targetdir in targetdirs:
+            path = os.path.join(targetdir, filename)
+            if self._exists(path):
+                self._delete(path)
 
 
     def _copyfile(self, sourcepath, targetpath):

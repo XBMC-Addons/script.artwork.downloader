@@ -4,7 +4,6 @@ import time
 import sys
 import xbmc
 import xbmcaddon
-import xbmcgui
 import platform
 
 ### get addon info
@@ -253,7 +252,12 @@ class Main:
                     if got_image_list:
                         self.failcount = 0
                         self.current_fanart = 0
-                        for fanarturl in backdrops:
+                        if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
+                            download_max = self.limit_extrafanart_max
+                        else: download_max = len(backdrops)
+                        
+                        for fanart in backdrops:
+                            fanarturl = fanart['url']
                             ### check if script has been cancelled by user
                             if dialog('iscanceled', background = self.background):
                                 dialog('close', background = self.background)
@@ -262,22 +266,31 @@ class Main:
                                 break
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
+                            
+                            rating = 'rating' in fanart
+                            language = 'language' in fanart
+                            
                             if self.limit_extrafanart and self.current_fanart > self.limit_extrafanart_max:
-                                break
-                            try:
-                                self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
-                            except HTTP404Error, e:
-                                log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-                            except CreateDirectoryError, e:
-                                log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
-                                break
-                            except DownloadError, e:
-                                log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
-                                self.failcount = self.failcount + 1
-                            if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
-                                download_max = self.limit_extrafanart_max
-                            else: download_max = len(backdrops)
-                            dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanarturl, background = self.background)
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                                continue
+                            if self.limit_extrafanart and rating and fanart['rating'] < self.limit_extrafanart_rating:
+                                log('Cleanup %s with low rating: %s' % (fanartfile, fanart['rating']), xbmc.LOGNOTICE)
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                            elif self.limit_extrafanart and self.limit_language and language and fanart['language'] != __language__:
+                                log('Cleanup %s with language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                            else:
+                                try:
+                                    self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
+                                except HTTP404Error, e:
+                                    log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+                                except CreateDirectoryError, e:
+                                    log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                                    break
+                                except DownloadError, e:
+                                    log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
+                                    self.failcount = self.failcount + 1
+                            dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanartfile, background = self.background)
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1
 
