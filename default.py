@@ -103,7 +103,7 @@ class Main:
         log('## Download Movie Fanart= %s' % str(self.moviefanart))
         log('## Download TV Show  Fanart = %s' % str(self.tvfanart))
         log('## Background Run = %s' % str(self.background))
-        log('## Centralize Extrafanart = %s' % str(self.centralize))
+        log('## Centralize Extrafanart = %s' % str(self.centralize_enable))
         log('## Central Movies Folder = %s' % str(self.centralfolder_movies))
         log('## Central TV Show Folder = %s' % str(self.centralfolder_tvshows))
         log('## Limit Extrafanart = %s' % str(self.limit_extrafanart))
