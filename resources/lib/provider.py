@@ -3,7 +3,7 @@ import os
 import sys
 import xbmc
 import xbmcaddon
-from urllib2 import HTTPError, urlopen
+from urllib2 import HTTPError, URLError, urlopen
 from utils import get_short_language
 from script_exceptions import HTTP404Error, HTTP503Error, DownloadError, NoFanartError
 
@@ -49,7 +49,7 @@ class Provider:
             data = client.read()
             client.close()
             return data
-        except HTTPError, e:
+        except (URLError, HTTPError), e:
             try:
                 if e.code == 404:
                     raise HTTP404Error(url)
