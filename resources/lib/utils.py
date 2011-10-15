@@ -6,7 +6,7 @@ import xbmcgui
 import xbmcaddon
 import platform
 from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error
-from urllib2 import URLError
+from urllib2 import HTTPError
 
 __python_version__ = platform.python_version_tuple()
 if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
@@ -205,7 +205,7 @@ class fileops:
                 tempfile.write(response.read())
                 tempfile.close()
                 response.close()
-            except URLError, e:
+            except HTTPError, e:
                 try:
                     if e.code == 404:
                         raise HTTP404Error(url)
