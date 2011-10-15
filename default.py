@@ -78,11 +78,12 @@ class Main:
         self.failcount = 0
         self.failthreshold = 3
         self.fanart_centralized = 0
-        self.moviefanart = __addon__.getSetting("moviefanart") == 'true'
-        self.tvfanart = __addon__.getSetting("tvfanart") == 'true'
+        self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
+        self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
         self.centralize = __addon__.getSetting("centralize") == 'true'
-        self.central_movies = __addon__.getSetting("central_movies")
-        self.central_tv = __addon__.getSetting("central_tv")
+        self.centralfolder_split = __addon__.getSetting("centralfolder_split")
+        self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
+        self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
         self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
         self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
         self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
@@ -103,8 +104,8 @@ class Main:
         log('## Download TV Show  Fanart = %s' % str(self.tvfanart))
         log('## Background Run = %s' % str(self.background))
         log('## Centralize Extrafanart = %s' % str(self.centralize))
-        log('## Central Movies Folder = %s' % str(self.central_movies))
-        log('## Central TV Show Folder = %s' % str(self.central_tv))
+        log('## Central Movies Folder = %s' % str(self.centralfolder_movies))
+        log('## Central TV Show Folder = %s' % str(self.centralfolder_tvshows))
         log('## Limit Extrafanart = %s' % str(self.limit_extrafanart))
         log('## Limit Extrafanart Max = %s' % str(self.limit_extrafanart_max))
         log('## Limit Extrafanart Rating = %s' % str(self.limit_extrafanart_rating))
@@ -215,13 +216,13 @@ class Main:
             targetdirs.append(extrafanart_dir)
             if self.centralize:
                 if self.mediatype == 'tvshow':
-                    if not self.central_tv == '':
-                        targetdirs.append(self.central_tv)
+                    if not self.centralfolder_tvshows == '':
+                        targetdirs.append(self.centralfolder_tvshows)
                     else:
                         log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
                 elif self.mediatype == 'movie':
-                    if not self.central_movies == '':
-                        targetdirs.append(self.central_movies)
+                    if not self.centralfolder_movies == '':
+                        targetdirs.append(self.centralfolder_movies)
                     else:
                         log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
             if self.media_id == '':
