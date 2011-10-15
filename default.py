@@ -283,7 +283,7 @@ class Main:
                             if self.limit_extrafanart and rating and fanart['rating'] < self.limit_extrafanart_rating:
                                 log('Cleanup %s with low rating: %s' % (fanartfile, fanart['rating']), xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
-                            elif self.limit_extrafanart and series_name and self.limit_notext:
+                            elif self.limit_extrafanart and series_name and self.limit_notext and fanart['series_name']:
                                 log('Cleanup %s with text' % fanartfile, xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                             elif self.limit_extrafanart and self.limit_language and language and fanart['language'] != __language__:
