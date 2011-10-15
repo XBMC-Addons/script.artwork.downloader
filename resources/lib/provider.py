@@ -44,7 +44,6 @@ class Provider:
 
     def _get_xml(self, url):
         try:
-            print url
             client = urlopen(url)
             data = client.read()
             client.close()
