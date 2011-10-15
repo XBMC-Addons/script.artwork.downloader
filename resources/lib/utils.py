@@ -206,9 +206,12 @@ class fileops:
                 tempfile.close()
                 response.close()
             except URLError, e:
-                if e.code == 404:
-                    raise HTTP404Error(url)
-                else:
+                try:
+                    if e.code == 404:
+                        raise HTTP404Error(url)
+                    else:
+                        raise DownloadError(url)
+                except:
                     raise DownloadError(url)
             except socket.timeout:
                 raise DownloadError(url)
