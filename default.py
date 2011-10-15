@@ -219,12 +219,12 @@ class Main:
                     if not self.centralfolder_tvshows == '':
                         targetdirs.append(self.centralfolder_tvshows)
                     else:
-                        log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
+                        log('Error: Central fanart enabled but TV Show folder not set, skipping', xbmc.LOGERROR)
                 elif self.mediatype == 'movie':
                     if not self.centralfolder_movies == '':
                         targetdirs.append(self.centralfolder_movies)
                     else:
-                        log('Error: Central fanart enabled but directory not set, skipping', xbmc.LOGERROR)
+                        log('Error: Central fanart enabled but Movies folder not set, skipping', xbmc.LOGERROR)
             if self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):

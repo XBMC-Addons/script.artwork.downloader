@@ -79,7 +79,7 @@ def _setup_providers():
     tmdb.get_filename = lambda url: url.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
     
     def _temp(media_id):
-        log(tmdb.url % (tmdb.api_key, media_id))
+        log('API: %s ' % tmdb.url % (tmdb.api_key, media_id))
         image_list = []
         data = tmdb._get_xml(tmdb.url % (tmdb.api_key, media_id))
         tree = ET.fromstring(data)
@@ -114,7 +114,7 @@ def _setup_providers():
     tvdb.xml_root = 'Banner'
     
     def _temp2(media_id):
-        log(tvdb.url % (tvdb.api_key, media_id))
+        log('API: %s ' % tvdb.url % (tvdb.api_key, media_id))
         image_list = []
         data = tvdb._get_xml(tvdb.url % (tvdb.api_key, media_id))
         tree = ET.fromstring(data)
