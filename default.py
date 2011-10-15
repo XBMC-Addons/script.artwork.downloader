@@ -156,7 +156,7 @@ class Main:
         ### log results and notify user
         log('Finished: %s extrafanart downloaded' % self.fileops.downloadcount, xbmc.LOGNOTICE)
         summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
-        summary = summary_tmp + __localize__(36010)
+        summary = summary_tmp + __localize__(36013)
         dialog('close', background = self.background)
         if not self.failcount < self.failthreshold:
             log('Network error detected, script aborted', xbmc.LOGERROR)
