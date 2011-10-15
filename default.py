@@ -290,9 +290,6 @@ class Main:
                                 log('Cleanup %s not matching language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                             else:
-                                targets = targetdirs
-                                if self.use_cache and not self.cache_directory == '':
-                                    targets.append(self.cache_directory)
                                 try:
                                     self.fileops._downloadfile(fanarturl, fanartfile, targets)
                                 except HTTP404Error, e:
