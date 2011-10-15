@@ -35,6 +35,7 @@
     <!-- Plugin settings: TV Show section -->
 		<string id="36061">TV Shows</string>
 		<string id="36062">Options for downloading TV Show artwork</string>
+        <string id="36063">Exclude fanart that has text</string>
 
 	
     <!-- Plugin settings: Music section -->

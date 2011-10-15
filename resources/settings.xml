@@ -39,7 +39,8 @@
         <setting label="36010" type="bool" id="tvshow_enable" default="true" />
         <setting label="36101" type="bool" id="tvshow_fanart" subsetting= "true"  enable="eq(-1,true)" default="false" visible="false" />
         <setting label="36102" type="bool" id="tvshow_extrafanart" subsetting= "true"  enable="eq(-2,true)" default="false" visible="false" />
-        <setting label="36105" type="bool" id="tvshow_clearart" subsetting= "true"  enable="eq(-3,true)" default="false" visible="false" />
+        <setting label="36063" type="bool" id="tvshow_extrafanart_graphical" subsetting= "true"  enable="eq(-3,true)" default="true" />
+        <setting label="36005" type="bool" id="tvshow_clearart" subsetting= "true"  enable="eq(-3,true)" default="false" visible="false" />
         <setting label="36106" type="bool" id="tvshow_logo" subsetting= "true"  enable="eq(-4,true)" default="false" visible="false" />
         <setting label="36108" type="bool" id="tvshow_poster" subsetting= "true"  enable="eq(-5,true)" default="false" visible="false" />
         <setting label="36103" type="bool" id="tvshow_showbanner" subsetting= "true"  enable="eq(-6,true)" default="false" visible="false" />
@@ -60,12 +61,12 @@
     </category> -->
     
 <!-- Plugin settings: Advanced section -->
-    <category label="36081">
+ <!--   <category label="36081">
         <setting type="sep" />
         <setting label="36082" id="using_dharma" type="lsep" />
         <setting type="sep" />
         <setting label="36083" type="bool" id="protectedshare" default="false" />
         <setting label="36084" type="text" id="samba_user" enable="eq(-1,true)" default="" />
         <setting label="36085" type="text" option="hidden" id="samba_pass" enable="eq(-2,true)" default="" />
-    </category>
+    </category> -->
 </settings>
