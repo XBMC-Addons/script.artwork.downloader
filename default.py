@@ -283,7 +283,7 @@ class Main:
                                 log('Cleanup %s with text' % fanartfile, xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                             elif self.limit_extrafanart and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
-                                log('Cleanup %s with language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
+                                log('Cleanup %s not matching language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                             else:
                                 try:
