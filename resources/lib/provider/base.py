@@ -1,6 +1,6 @@
 import socket
-from urllib2 import HTTPError, urlopen
-from script_exceptions import HTTP404Error, HTTP503Error, DownloadError
+from urllib2 import HTTPError, URLError, urlopen
+from script_exceptions import HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
 
 
 ### adjust default timeout to stop script hanging
@@ -39,6 +39,13 @@ class BaseProvider:
                 raise HTTP503Error(url)
             else:
                 raise DownloadError(url)
+        except URLError, e:
+            if isinstance(e.reason, socket.timeout):
+                raise HTTPTimeout(url)
+            else:
+                raise DownloadError(url)
+
+
 
 
     def get_image_list(self, media_id):

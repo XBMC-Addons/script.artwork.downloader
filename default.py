@@ -30,7 +30,7 @@ else:
 import provider
 from utils import _log as log
 from utils import _dialog as dialog
-from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
+from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout
 import language
 from fileops import fileops
 
@@ -253,6 +253,9 @@ class Main:
                             got_image_list = True
                     except NoFanartError, e:
                         log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
+                    except HTTPTimeout, e:
+                        self.failcount = self.failcount + 1
+                        log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
                     except:
                         self.failcount = self.failcount + 1
                         log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
@@ -295,6 +298,9 @@ class Main:
                                     self.fileops._downloadfile(fanarturl, fanartfile, targets)
                                 except HTTP404Error, e:
                                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+                                except HTTPTimeout, e:
+                                    self.failcount = self.failcount + 1
+                                    log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
                                 except CreateDirectoryError, e:
                                     log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
                                     break

@@ -2,8 +2,8 @@ import os
 import socket
 import urllib2
 import xbmc
-from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error
-from urllib2 import HTTPError
+from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout
+from urllib2 import HTTPError, URLError
 import utils
 
 xbmc_version = utils.get_xbmc_version()
@@ -13,6 +13,10 @@ else:
     import shutil
 
 log = utils._log
+
+### adjust default timeout to stop script hanging
+timeout = 20
+socket.setdefaulttimeout(timeout)
 
 class fileops:
     """
@@ -148,8 +152,11 @@ class fileops:
                     raise HTTP404Error(url)
                 else:
                     raise DownloadError(url)
-            except socket.timeout:
-                raise DownloadError(url)
+            except URLError, e:
+                if isinstance(e.reason, socket.timeout):
+                    raise HTTPTimeout(url)
+                else:
+                    raise DownloadError(url)
             else:
                 log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
