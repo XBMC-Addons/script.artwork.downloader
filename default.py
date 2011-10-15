@@ -115,6 +115,8 @@ class Main:
         log('## Limit Extrafanart Rating = %s' % str(self.limit_extrafanart_rating))
         log('## Limit Language = %s' % str(self.limit_language))
         log('## Limit Fanart with no text = %s' % str(self.limit_notext))
+        log('## Backup downloaded fanart= %s' % str(self.use_cache))
+        log('## Backup folder = %s' % str(self.cache_directory))
         log("######## Extrafanart Downloader: Starting download.........................")
 
 
