@@ -88,6 +88,7 @@ class Main:
         self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
         self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
+        self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
         self.background = __addon__.getSetting("background") == 'true'
         dialog('create', line1 = __localize__(36003), background = self.background)
         self.mediatype = ''
@@ -110,6 +111,7 @@ class Main:
         log('## Limit Extrafanart Max = %s' % str(self.limit_extrafanart_max))
         log('## Limit Extrafanart Rating = %s' % str(self.limit_extrafanart_rating))
         log('## Limit Language = %s' % str(self.limit_language))
+        log('## Limit Fanart with no text = %s' % str(self.limit_notext))
         log("######## Extrafanart Downloader: Starting download.........................")
 
 
@@ -273,12 +275,16 @@ class Main:
                             
                             rating = 'rating' in fanart
                             language = 'language' in fanart
+                            series_name = 'series_name' in fanart
                             
                             if self.limit_extrafanart and self.current_fanart > self.limit_extrafanart_max:
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                                 continue
                             if self.limit_extrafanart and rating and fanart['rating'] < self.limit_extrafanart_rating:
                                 log('Cleanup %s with low rating: %s' % (fanartfile, fanart['rating']), xbmc.LOGNOTICE)
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                            if self.limit_extrafanart and series_name and self.limit_notext:
+                                log('Cleanup %s with text' % fanartfile, xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                             elif self.limit_extrafanart and self.limit_language and language and fanart['language'] != __language__:
                                 log('Cleanup %s with language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
