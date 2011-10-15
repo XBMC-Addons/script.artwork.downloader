@@ -273,20 +273,16 @@ class Main:
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
                             
-                            rating = 'rating' in fanart
-                            language = 'language' in fanart
-                            series_name = 'series_name' in fanart
-                            
                             if self.limit_extrafanart and self.current_fanart > self.limit_extrafanart_max:
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                                 continue
-                            if self.limit_extrafanart and rating and fanart['rating'] < self.limit_extrafanart_rating:
+                            if self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
                                 log('Cleanup %s with low rating: %s' % (fanartfile, fanart['rating']), xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
-                            elif self.limit_extrafanart and series_name and self.limit_notext and fanart['series_name']:
+                            elif self.limit_extrafanart and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
                                 log('Cleanup %s with text' % fanartfile, xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
-                            elif self.limit_extrafanart and self.limit_language and language and fanart['language'] != __language__:
+                            elif self.limit_extrafanart and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
                                 log('Cleanup %s with language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                             else:

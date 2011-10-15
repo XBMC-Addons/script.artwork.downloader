@@ -3,7 +3,7 @@ import os
 import sys
 import xbmc
 import xbmcaddon
-from urllib2 import HTTPError, URLError, urlopen
+from urllib2 import HTTPError, urlopen
 from utils import get_short_language
 from script_exceptions import HTTP404Error, HTTP503Error, DownloadError, NoFanartError
 
