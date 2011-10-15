@@ -17,14 +17,22 @@ Current Features:
 	- Skin integration: Solo mode (download all extrafanart for only one tv show/movie)
 	- Eden support (Master branch)
 	- Dharma support (Dharma branch) !!!!(on smb:// shares you must manually create the "extrafanart" folders)!!!!
+	- Limit fanart by: maximum amount/ minimum rating / language used
+	- Centralized fanart folder to be used as multi-image background folder
+	
 
 Todos:
 	- Music fanart
 
 Skins using this Add-On:
-	- Aeon Nox (pre-Eden 11.0) made by Big Noid
-	- Cirrus Extended (pre-Eden 11.0) made by Butchabay
-	- Transparency [T!] (pre-Eden 11.0) made by Ronie
+	Eden 11.0
+	- Aeon Nox (made by Big Noid)
+	- Cirrus Extended (made by Butchabay)
+	- Transparency [T!] (made by Ronie)
+	
+	Dharma 10.1
+	- Cirrus Extended (made by Butchabay)
+	- Aeon Nox (made by Big Noid) ![patched by: Machine-Sanctum]
 
 ----------------------------------------------------------------------------------------------
 To run the script in bulk mode simply click on it in the 'Addons' or 'Programs' menu in XBMC.
@@ -34,7 +42,7 @@ This script has some different run modes. Please check the files as described be
 
 Code for skin intergration:
 Check "resources/docs/runscript.txt"
-	
+
 Real world code example Dharma10.1:
 Check "resources/docs/dharma.xml"
 

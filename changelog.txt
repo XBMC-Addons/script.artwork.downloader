@@ -2,7 +2,7 @@
 ****     Current development version        *****
 - Added 5 second sleep if API limits is reached
 - Added silent downloading in background
-- Added Extrafanart limiter (amount of images per title/language) 
+- Added Extrafanart limiter (amount of images per title/language/no text) 
 - Merged Dharma & Eden into one add-on
 - More extensive debug logging
 - Updated skin integration examples
