@@ -133,6 +133,8 @@ def _setup_providers():
                 info['series_name'] = image.findtext('SeriesName') == 'true'
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
                     info['rating'] = float(image.findtext('Rating'))
+                else:
+                    info['rating'] = 0
             if info:            
                 image_list.append(info) 
         if image_list == []:
