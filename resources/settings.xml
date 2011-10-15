@@ -12,6 +12,9 @@
         <setting label="36031" id="centralfolder_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
         <setting label="36032" id="centralfolder_tvshows" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-3,true)" visible="eq(-3,true)"/>
         <setting type="sep" />
+        <setting label="36200" id="use_cache" type="bool"  default="false"/>
+        <setting label="36201" id="cache_directory" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting type="sep" />
         <setting label="36033" id="limit_extrafanart" type="bool" default="false"/>
         <setting label="36034" id="limit_extrafanart_max" subsetting="true" type="slider" enable="eq(-1,true)" visible="eq(-1,true)"  range="5,5,100" default="20" option="int" />
         <setting label="36035" id="limit_extrafanart_rating" subsetting="true" type="slider" enable="eq(-2,true)" visible="eq(-2,true)"  range="0,10" default="5" option="int" />

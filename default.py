@@ -89,6 +89,8 @@ class Main:
         self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
+        self.use_cache = __addon__.getSetting("use_cache") == 'true'
+        self.cache_directory = __addon__.getSetting("cache_directory")
         self.background = __addon__.getSetting("background") == 'true'
         dialog('create', line1 = __localize__(36003), background = self.background)
         self.mediatype = ''
@@ -286,8 +288,11 @@ class Main:
                                 log('Cleanup %s not matching language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                             else:
+                                targets = targetdirs
+                                if self.use_cache and not self.cache_directory == '':
+                                    targets.append(self.cache_directory)
                                 try:
-                                    self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
+                                    self.fileops._downloadfile(fanarturl, fanartfile, targets)
                                 except HTTP404Error, e:
                                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                                 except CreateDirectoryError, e:
