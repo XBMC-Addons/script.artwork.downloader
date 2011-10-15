@@ -263,7 +263,7 @@ class Main:
                         if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
                             download_max = self.limit_extrafanart_max
                         else: download_max = len(backdrops)
-                        targets = list(targetdirs)
+                        targets = targetdirs[:]
                         if self.use_cache and not self.cache_directory == '':
                             targets.append(self.cache_directory)
                         for fanart in backdrops:
