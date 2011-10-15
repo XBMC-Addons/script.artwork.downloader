@@ -80,7 +80,7 @@ class Main:
         self.fanart_centralized = 0
         self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
         self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
-        self.centralize = __addon__.getSetting("centralize") == 'true'
+        self.centralize_enable = __addon__.getSetting("centralize_enable") == 'true'
         self.centralfolder_split = __addon__.getSetting("centralfolder_split")
         self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
@@ -214,7 +214,7 @@ class Main:
             targetdirs = []
             extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
             targetdirs.append(extrafanart_dir)
-            if self.centralize:
+            if self.centralize_enable:
                 if self.mediatype == 'tvshow':
                     if not self.centralfolder_tvshows == '':
                         targetdirs.append(self.centralfolder_tvshows)
