@@ -10,7 +10,7 @@ class TMDBProvider(BaseProvider):
     Setup provider for TheMovieDB.org
     """
     def __init__(self):
-        self.name = 'self'
+        self.name = 'TMDB'
         self.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
         self.api_limits = True
         self.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/" + language.get_abbrev() + "/xml/%s/%s"
