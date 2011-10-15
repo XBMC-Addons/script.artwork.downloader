@@ -50,12 +50,15 @@ class Provider:
             client.close()
             return data
         except URLError, e:
-            if e.code == 404:
-                raise HTTP404Error(url)
-            if e.code == 503:
-                raise HTTP503Error(url)
-            else:
-                raise DownloadError(url)            
+            try:
+                if e.code == 404:
+                    raise HTTP404Error(url)
+                if e.code == 503:
+                    raise HTTP503Error(url)
+                else:
+                    raise DownloadError(url)
+            except:
+                raise DownloadError(url)
 
     def get_image_list(self, media_id):
         pass
