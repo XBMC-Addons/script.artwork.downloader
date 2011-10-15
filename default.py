@@ -27,13 +27,14 @@ else:
     __xbmc_version__ = 'Dharma'
     Media_listing = media_setup.dharma_media_listing
 
-from provider import _setup_providers
+import provider
 from utils import _log as log
 from utils import _dialog as dialog
-from utils import fileops, get_short_language
 from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
+import language
+from fileops import fileops
 
-__language__ = get_short_language()
+__language__ = language.get_abbrev()
 
 
 class Main:
@@ -71,7 +72,7 @@ class Main:
 
     ### load settings and initialise needed directories
     def initialise(self):
-        providers = _setup_providers()
+        providers = provider.get_providers()
         self.movie_providers = providers['movie_providers']
         self.tv_providers = providers['tv_providers']
         self.music_providers = providers['music_providers']
