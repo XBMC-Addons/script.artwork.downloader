@@ -1,4 +1,5 @@
 import os
+import socket
 import urllib2
 import xbmc
 import xbmcgui
@@ -27,6 +28,9 @@ __addonname__ = __addon__.getAddonInfo('name')
 __localize__ = __addon__.getLocalizedString
 
 dialog = xbmcgui.DialogProgress()
+
+timeout = 20
+socket.setdefaulttimeout(timeout)
 
 def _log(txt, severity=xbmc.LOGDEBUG):
 
@@ -206,6 +210,8 @@ class fileops:
                     raise HTTP404Error(url)
                 else:
                     raise DownloadError(url)
+            except socket.timeout:
+                raise DownloadError(url)
             else:
                 _log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
