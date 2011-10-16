@@ -43,7 +43,7 @@ __language__ = language.get_abbrev()
 
 class Main:
     def __init__(self):
-            if not os.path.isfile(settings_file):
+        if not os.path.isfile(settings_file):
             dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
             log('Settings.xml File not found. Opening settings window.')
             __addon__.openSettings()
