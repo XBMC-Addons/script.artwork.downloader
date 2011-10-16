@@ -311,7 +311,7 @@ class Main:
                             self.current_fanart = self.current_fanart + 1
                             
                             if self.limit_extrafanart and self.current_fanart > self.limit_extrafanart_max:
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                                 continue
                             if self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
                                 reason = 'Rating too low: %s' % fanart['rating']
