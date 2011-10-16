@@ -92,7 +92,7 @@ class fileops:
                 return True
             
             
-    def _delete_file_in_dirs(self, filename, targetdirs):
+    def _delete_file_in_dirs(self, filename, targetdirs, reason):
         """
         Delete file from all targetdirs
         """
@@ -101,6 +101,9 @@ class fileops:
             path = os.path.join(targetdir, filename)
             if self._exists(path):
                 self._delete(path)
+                log("Deleted (%s): %s" % (reason, path), xbmc.LOGNOTICE)
+            else:
+                log("Ignoring (%s): %s" % (reason, path), xbmc.LOGINFO)
 
 
     def _copyfile(self, sourcepath, targetpath):

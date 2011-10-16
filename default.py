@@ -305,14 +305,14 @@ class Main:
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
                                 continue
                             if self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
-                                log('Cleanup %s with low rating: %s' % (fanartfile, fanart['rating']), xbmc.LOGNOTICE)
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                                reason = 'Rating too low: %s' % fanart['rating']
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             elif self.limit_extrafanart and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
-                                log('Cleanup %s with text' % fanartfile, xbmc.LOGNOTICE)
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                                reason = 'Has text'
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             elif self.limit_extrafanart and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
-                                log('Cleanup %s not matching language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                                reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             else:
                                 try:
                                     self.fileops._downloadfile(fanarturl, fanartfile, targets)
