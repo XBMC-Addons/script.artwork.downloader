@@ -2,7 +2,7 @@ import os
 import socket
 import urllib2
 import xbmc
-from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout
+from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
 import utils
 

@@ -1,5 +1,5 @@
 from base import BaseProvider
-from script_exceptions import NoFanartError
+from script_exceptions import NoFanartError, ItemNotFoundError
 from utils import _log as log
 import language
 
@@ -26,17 +26,21 @@ class TMDBProvider(BaseProvider):
         data = self.get_xml(xml_url)
         tree = ET.fromstring(data)
         tree = tree.findall('movies')[0]
-        tree = tree.findall('movie')[0]
-        tree = tree.findall('images')[0]
-        for image in tree.findall('image'):
-            info = {}
-            if image.get('type') == 'backdrop' and image.get('size') == 'original' and image.get('url'):
-                info['url'] = image.get('url')
-                info['height'] = int(image.get('height'))
-                info['width'] = int(image.get('width'))
-            if info:            
-                image_list.append(info) 
-        if image_list == []:
-            raise NoFanartError(media_id)
+        try:
+            tree = tree.findall('movie')[0]
+        except IndexError, e:
+            raise ItemNotFoundError(media_id)
         else:
-            return image_list 
+            tree = tree.findall('images')[0]
+            for image in tree.findall('image'):
+                info = {}
+                if image.get('type') == 'backdrop' and image.get('size') == 'original' and image.get('url'):
+                    info['url'] = image.get('url')
+                    info['height'] = int(image.get('height'))
+                    info['width'] = int(image.get('width'))
+                if info:            
+                    image_list.append(info) 
+            if image_list == []:
+                raise NoFanartError(media_id)
+            else:
+                return image_list 
