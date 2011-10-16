@@ -251,7 +251,7 @@ class Main:
                 for provider in providers:
                     backdrops_result = ''
                     while not backdrops_result == 'pass' and not backdrops_result == 'skipping':
-                        if backdrops_result = 'retrying':
+                        if backdrops_result == 'retrying':
                             time.sleep(10)
                         try:
                             backdrops = provider.get_image_list(self.media_id)
@@ -280,7 +280,7 @@ class Main:
                             backdrops_result = 'skipping'
                         else:
                             backdrops_result = 'pass'
-                        if not backdrops_result = 'pass':
+                        if not backdrops_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (provider.name, errmsg, backdrops_result))
                     if backdrops_result == 'pass':
                         self.failcount = 0
