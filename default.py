@@ -303,7 +303,7 @@ class Main:
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
                             
-                            if self.limit_extrafanart and self.downloaded_fanart > self.limit_extrafanart_max:
+                            if self.limit_extrafanart and self.downloaded_fanart >= self.limit_extrafanart_max:
                                 reason = 'Already downloaded %s extrafanart' % self.downloaded_fanart
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             elif self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
