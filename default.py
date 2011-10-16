@@ -27,13 +27,16 @@ else:
     __xbmc_version__ = 'Dharma'
     Media_listing = media_setup.dharma_media_listing
 
-from provider import _setup_providers
+import provider
 from utils import _log as log
 from utils import _dialog as dialog
-from utils import fileops, get_short_language
-from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError
+from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
+import language
+from fileops import fileops
+from ElementTree import ParseError
 
-__language__ = get_short_language()
+
+__language__ = language.get_abbrev()
 
 
 class Main:
@@ -71,7 +74,7 @@ class Main:
 
     ### load settings and initialise needed directories
     def initialise(self):
-        providers = _setup_providers()
+        providers = provider.get_providers()
         self.movie_providers = providers['movie_providers']
         self.tv_providers = providers['tv_providers']
         self.music_providers = providers['music_providers']
@@ -114,6 +117,8 @@ class Main:
         log('## Limit Extrafanart Rating = %s' % str(self.limit_extrafanart_rating))
         log('## Limit Language = %s' % str(self.limit_language))
         log('## Limit Fanart with no text = %s' % str(self.limit_notext))
+        log('## Backup downloaded fanart= %s' % str(self.use_cache))
+        log('## Backup folder = %s' % str(self.cache_directory))
         log("######## Extrafanart Downloader: Starting download.........................")
 
 
@@ -245,16 +250,26 @@ class Main:
                         time.sleep(5)
                         try:
                             backdrops = provider.get_image_list(self.media_id)
-                        except:
+                        except DownloadError, e:
                             self.failcount = self.failcount + 1
-                            log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
+                            log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
+                        except HTTP503Error, e:
+                            self.failcount = self.failcount + 1
+                            log('Error getting data from %s (503: API Limit Exceeded), skipping' % provider.name, xbmc.LOGERROR)
                         else:
                             got_image_list = True
                     except NoFanartError, e:
                         log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
-                    except:
+                    except ItemNotFoundError, e:
+                        log('%s not found on %s, skipping' % (self.media_id, provider.name), xbmc.LOGERROR)
+                    except ParseError, e:
+                        log('Error parsing xml: %s, skipping' % str(e), xbmc.LOGERROR)
+                    except HTTPTimeout, e:
                         self.failcount = self.failcount + 1
-                        log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
+                        log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
+                    except DownloadError, e:
+                        self.failcount = self.failcount + 1
+                        log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
                     else:
                         got_image_list = True
                     if got_image_list:
@@ -294,12 +309,15 @@ class Main:
                                     self.fileops._downloadfile(fanarturl, fanartfile, targets)
                                 except HTTP404Error, e:
                                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+                                except HTTPTimeout, e:
+                                    self.failcount = self.failcount + 1
+                                    log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
                                 except CreateDirectoryError, e:
                                     log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
                                     break
                                 except DownloadError, e:
-                                    log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                     self.failcount = self.failcount + 1
+                                    log('Error downloading file: %s (Possible network error: %s), skipping' % (fanarturl, str(e)), xbmc.LOGERROR)
                             dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanartfile, background = self.background)
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1
