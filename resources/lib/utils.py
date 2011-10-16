@@ -14,6 +14,7 @@ __addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
 __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __localize__ = __addon__.getLocalizedString
+__icon__ = __addon__.getAddonInfo('icon')
 
 dialog = xbmcgui.DialogProgress()
 
@@ -56,4 +57,4 @@ def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', backgrou
                 msg = line1
             else:
                 msg = line1 + ': ' + line2
-            xbmc.executebuiltin("XBMC.Notification(%s, %s, 10000)" % (__addonname__, msg))
+            xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (__addonname__, msg, __icon__))
