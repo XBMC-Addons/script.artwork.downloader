@@ -163,12 +163,12 @@ class fileops:
                 else:
                     raise DownloadError(str(e))
             else:
-                log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
+                log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
                 for filenotexistspath in filenotexistspaths:
                     self._copyfile(temppath, filenotexistspath)
         elif not False in fileexists:
-            pass
+            log("Ignoring (Exists in all target directories): %s" % filename, xbmc.LOGINFO)
         else:
             for filenotexistspath in filenotexistspaths:
                 self._copyfile(existspath, filenotexistspath)
