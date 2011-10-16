@@ -33,6 +33,8 @@ from utils import _dialog as dialog
 from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
 import language
 from fileops import fileops
+from ElementTree import ParseError
+
 
 __language__ = language.get_abbrev()
 
@@ -260,6 +262,8 @@ class Main:
                         log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
                     except ItemNotFoundError, e:
                         log('%s not found on %s, skipping' % (self.media_id, provider.name), xbmc.LOGERROR)
+                    except ParseError, e:
+                        log('Error parsing xml: %s, skipping' % str(e), xbmc.LOGERROR)
                     except HTTPTimeout, e:
                         self.failcount = self.failcount + 1
                         log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
