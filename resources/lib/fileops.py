@@ -151,12 +151,12 @@ class fileops:
                 if e.code == 404:
                     raise HTTP404Error(url)
                 else:
-                    raise DownloadError(url)
+                    raise DownloadError(str(e))
             except URLError, e:
                 if isinstance(e.reason, socket.timeout):
                     raise HTTPTimeout(url)
                 else:
-                    raise DownloadError(url)
+                    raise DownloadError(str(e))
             else:
                 log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1

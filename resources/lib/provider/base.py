@@ -38,12 +38,12 @@ class BaseProvider:
             elif e.code == 503:
                 raise HTTP503Error(url)
             else:
-                raise DownloadError(url)
+                raise DownloadError(str(e))
         except URLError, e:
             if isinstance(e.reason, socket.timeout):
                 raise HTTPTimeout(url)
             else:
-                raise DownloadError(url)
+                raise DownloadError(str(e))
 
 
 

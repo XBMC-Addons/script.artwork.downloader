@@ -248,9 +248,12 @@ class Main:
                         time.sleep(5)
                         try:
                             backdrops = provider.get_image_list(self.media_id)
-                        except:
+                        except DownloadError, e:
                             self.failcount = self.failcount + 1
-                            log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
+                            log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
+                        except HTTP503Error, e:
+                            self.failcount = self.failcount + 1
+                            log('Error getting data from %s (503: API Limit Exceeded), skipping' % provider.name, xbmc.LOGERROR)
                         else:
                             got_image_list = True
                     except NoFanartError, e:
@@ -258,9 +261,9 @@ class Main:
                     except HTTPTimeout, e:
                         self.failcount = self.failcount + 1
                         log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
-                    except:
+                    except DownloadError, e:
                         self.failcount = self.failcount + 1
-                        log('Error getting data from %s (Possible network error), skipping' % provider.name, xbmc.LOGERROR)
+                        log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
                     else:
                         got_image_list = True
                     if got_image_list:
@@ -309,6 +312,7 @@ class Main:
                                 except DownloadError, e:
                                     log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                     self.failcount = self.failcount + 1
+                            self.allfanartlist
                             dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanartfile, background = self.background)
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1
