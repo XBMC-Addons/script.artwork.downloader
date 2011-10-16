@@ -97,13 +97,15 @@ class fileops:
         Delete file from all targetdirs
         """
         
+        isdeleted = False
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
             if self._exists(path):
                 self._delete(path)
                 log("Deleted (%s): %s" % (reason, path), xbmc.LOGNOTICE)
-            else:
-                log("Ignoring (%s): %s" % (reason, path), xbmc.LOGINFO)
+                isdeleted = True
+        if not isdeleted:
+            log("Ignoring (%s): %s" % (reason, path), xbmc.LOGINFO)
 
 
     def _copyfile(self, sourcepath, targetpath):
