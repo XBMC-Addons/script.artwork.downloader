@@ -105,7 +105,7 @@ class fileops:
                 log("Deleted (%s): %s" % (reason, path), xbmc.LOGNOTICE)
                 isdeleted = True
         if not isdeleted:
-            log("Ignoring (%s): %s" % (reason, path), xbmc.LOGINFO)
+            log("Ignoring (%s): %s" % (reason, filename), xbmc.LOGINFO)
 
 
     def _copyfile(self, sourcepath, targetpath):
