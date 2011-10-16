@@ -15,7 +15,9 @@ __localize__ = __addon__.getLocalizedString
 
 BASE_RESOURCE_PATH = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources'))
 sys.path.append(os.path.join(BASE_RESOURCE_PATH, "lib"))
-
+addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
+settings_file = os.path.join(addondir, "settings.xml")
+first_run = False
 
 import media_setup
 
@@ -41,6 +43,13 @@ __language__ = language.get_abbrev()
 
 class Main:
     def __init__(self):
+            if not os.path.isfile(settings_file):
+            dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
+            log('Settings.xml File not found. Opening settings window.')
+            __addon__.openSettings()
+            first_run = True
+        else:
+            log('Settings.xml File found. Continue with initializing.')
         if self.initialise():
             if not self.mediatype == '':
                 if not self.medianame == '':
