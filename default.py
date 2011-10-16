@@ -293,6 +293,7 @@ class Main:
                     if got_image_list:
                         self.failcount = 0
                         self.current_fanart = 0
+                        self.downloaded_fanart = 0
                         if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
                             download_max = self.limit_extrafanart_max
                         else: download_max = len(backdrops)
@@ -310,10 +311,10 @@ class Main:
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
                             
-                            if self.limit_extrafanart and self.current_fanart > self.limit_extrafanart_max:
+                            if self.limit_extrafanart and self.downloaded_fanart > self.limit_extrafanart_max:
+                                reason = 'Already downloaded %s extrafanart' % self.downloaded_fanart
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                continue
-                            if self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
+                            elif self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
                                 reason = 'Rating too low: %s' % fanart['rating']
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             elif self.limit_extrafanart and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
@@ -336,6 +337,8 @@ class Main:
                                 except DownloadError, e:
                                     self.failcount = self.failcount + 1
                                     log('Error downloading file: %s (Possible network error: %s), skipping' % (fanarturl, str(e)), xbmc.LOGERROR)
+                                else:
+                                    self.downloaded_fanart = self.downloaded_fanart + 1
                             dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanartfile, background = self.background)
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1
