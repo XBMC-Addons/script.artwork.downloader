@@ -247,15 +247,24 @@ class Main:
                         log('Error getting data from %s (404: File not found), skipping' % provider.name, xbmc.LOGERROR)
                     except HTTP503Error, e:
                         log('Error getting data from %s (503: API Limit Exceeded), trying again' % provider.name, xbmc.LOGERROR)
-                        time.sleep(5)
+                        time.sleep(8)
                         try:
                             backdrops = provider.get_image_list(self.media_id)
-                        except DownloadError, e:
-                            self.failcount = self.failcount + 1
-                            log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
                         except HTTP503Error, e:
                             self.failcount = self.failcount + 1
                             log('Error getting data from %s (503: API Limit Exceeded), skipping' % provider.name, xbmc.LOGERROR)
+                        except NoFanartError, e:
+                            log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
+                        except ItemNotFoundError, e:
+                            log('%s not found on %s, skipping' % (self.media_id, provider.name), xbmc.LOGERROR)
+                        except ParseError, e:
+                            log('Error parsing xml: %s, skipping' % str(e), xbmc.LOGERROR)
+                        except HTTPTimeout, e:
+                            self.failcount = self.failcount + 1
+                            log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
+                        except DownloadError, e:
+                            self.failcount = self.failcount + 1
+                            log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
                         else:
                             got_image_list = True
                     except NoFanartError, e:
