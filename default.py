@@ -310,8 +310,8 @@ class Main:
                                     log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
                                     break
                                 except DownloadError, e:
-                                    log("Error downloading file: %s" % str(e), xbmc.LOGERROR)
                                     self.failcount = self.failcount + 1
+                                    log('Error downloading file: %s (Possible network error: %s), skipping' % (fanarturl, str(e)), xbmc.LOGERROR)
                             dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanartfile, background = self.background)
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1
