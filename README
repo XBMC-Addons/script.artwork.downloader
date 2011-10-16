@@ -8,7 +8,7 @@ The script also supports a 'solo mode' which allows it to be run from inside a s
 pre-Eden:
 	The script can now be downloaded from the official repo XBMC-repo (pre-Eden)
 	This script requires an xbmc nightly build of September 21st or later
-	Current stable version : 0.3.7
+	Current stable version : 0.4.0
 
 Current Features:
 	- TV Extrafanart
@@ -19,6 +19,7 @@ Current Features:
 	- Dharma support (Dharma branch) !!!!(on smb:// shares you must manually create the "extrafanart" folders)!!!!
 	- Limit fanart by: maximum amount/ minimum rating / language used
 	- Centralized fanart folder to be used as multi-image background folder
+	- Fanart download backup folder
 	
 
 Todos:
