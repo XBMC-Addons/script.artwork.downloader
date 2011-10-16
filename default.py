@@ -249,48 +249,40 @@ class Main:
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
                 for provider in providers:
-                    got_image_list = False
-                    try:
-                        backdrops = provider.get_image_list(self.media_id)
-                    except HTTP404Error, e:
-                        log('Error getting data from %s (404: File not found), skipping' % provider.name, xbmc.LOGERROR)
-                    except HTTP503Error, e:
-                        log('Error getting data from %s (503: API Limit Exceeded), trying again' % provider.name, xbmc.LOGERROR)
-                        time.sleep(8)
+                    backdrops_result = ''
+                    while not backdrops_result == 'pass' and not backdrops_result == 'skipping':
+                        if backdrops_result = 'retrying':
+                            time.sleep(10)
                         try:
                             backdrops = provider.get_image_list(self.media_id)
+                        except HTTP404Error, e:
+                            errmsg = '404: File not found'
+                            backdrops_result = 'skipping'
                         except HTTP503Error, e:
-                            self.failcount = self.failcount + 1
-                            log('Error getting data from %s (503: API Limit Exceeded), skipping' % provider.name, xbmc.LOGERROR)
+                            errmsg = '503: API Limit Exceeded'
+                            backdrops_result = 'retrying'
                         except NoFanartError, e:
-                            log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
+                            errmsg = 'No fanart found'
+                            backdrops_result = 'skipping'
                         except ItemNotFoundError, e:
-                            log('%s not found on %s, skipping' % (self.media_id, provider.name), xbmc.LOGERROR)
+                            errmsg = '%s not found' % self.media_id
+                            backdrops_result = 'skipping'
                         except ParseError, e:
-                            log('Error parsing xml: %s, skipping' % str(e), xbmc.LOGERROR)
+                            errmsg = 'Error parsing xml: %s' % str(e)
+                            backdrops_result = 'retrying'
                         except HTTPTimeout, e:
                             self.failcount = self.failcount + 1
-                            log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
+                            errmsg = 'Timed out'
+                            backdrops_result = 'skipping'
                         except DownloadError, e:
                             self.failcount = self.failcount + 1
-                            log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
+                            errmsg = 'Possible network error: %s' % str(e)
+                            backdrops_result = 'skipping'
                         else:
-                            got_image_list = True
-                    except NoFanartError, e:
-                        log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
-                    except ItemNotFoundError, e:
-                        log('%s not found on %s, skipping' % (self.media_id, provider.name), xbmc.LOGERROR)
-                    except ParseError, e:
-                        log('Error parsing xml: %s, skipping' % str(e), xbmc.LOGERROR)
-                    except HTTPTimeout, e:
-                        self.failcount = self.failcount + 1
-                        log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
-                    except DownloadError, e:
-                        self.failcount = self.failcount + 1
-                        log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
-                    else:
-                        got_image_list = True
-                    if got_image_list:
+                            backdrops_result = 'pass'
+                        if not backdrops_result = 'pass':
+                            log('Error getting data from %s (%s): %s' % (provider.name, errmsg, backdrops_result))
+                    if backdrops_result == 'pass':
                         self.failcount = 0
                         self.current_fanart = 0
                         self.downloaded_fanart = 0
