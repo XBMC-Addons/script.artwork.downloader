@@ -5,7 +5,7 @@ in your XBMC library and place it in an 'extrafanart' directory to be used by sk
 
 The script also supports a 'solo mode' which allows it to be run from inside a skin and download the fanart for only 1 tv show or movie at a time.
 
-pre-Eden:
+pre-Eden 11.0:
 	The script can now be downloaded from the official repo XBMC-repo (pre-Eden)
 	This script requires an xbmc nightly build of September 21st or later
 	Current stable version : 0.4.0
@@ -15,13 +15,12 @@ Current Features:
 	- Movie Extrafanart
 	- Skin integration: Bulk mode (download all extrafanart for every tv show/movie)
 	- Skin integration: Solo mode (download all extrafanart for only one tv show/movie)
-	- Eden support (Master branch)
-	- Dharma support (Dharma branch) !!!!(on smb:// shares you must manually create the "extrafanart" folders)!!!!
+	- Eden 11.0 support
+	- Dharma 10.1 support !!!!(on smb:// shares you must manually create the "extrafanart" folders)!!!!
 	- Limit fanart by: maximum amount/ minimum rating / language used
 	- Centralized fanart folder to be used as multi-image background folder
 	- Fanart download backup folder
 	
-
 Todos:
 	- Music fanart
 
