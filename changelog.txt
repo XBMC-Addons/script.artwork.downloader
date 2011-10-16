@@ -1,6 +1,3 @@
-[B]0.4.1[/B]
-****     Current development version        *****
-
 [B]0.4.0[/B]
 - Added silent downloading in background
 - Added Extrafanart limiter (maximum fanart/language/no text) 
@@ -9,6 +6,7 @@
 - More extensive error checking
 - More extensive debug logging
 - Updated skin integration examples
+- Open Settings on first run
 
 [B]0.3.8[/B]
 - Added option to centralize fanart storage
