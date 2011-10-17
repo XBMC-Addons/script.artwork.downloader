@@ -13,13 +13,11 @@ __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
 __localize__ = __addon__.getLocalizedString
 
-BASE_RESOURCE_PATH = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources'))
-sys.path.append(os.path.join(BASE_RESOURCE_PATH, "lib"))
 addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 settings_file = os.path.join(addondir, "settings.xml")
 first_run = False
 
-import media_setup
+from resources.lib import media_setup
 
 __python_version__ = platform.python_version_tuple()
 if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
@@ -29,13 +27,14 @@ else:
     __xbmc_version__ = 'Dharma'
     Media_listing = media_setup.dharma_media_listing
 
-import provider
-from utils import _log as log
-from utils import _dialog as dialog
-from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
-import language
-from fileops import fileops
-from ElementTree import ParseError
+from resources.lib import provider
+from resources.lib.utils import _log as log
+from resources.lib.utils import _dialog as dialog
+from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
+from resources.lib import language
+from resources.lib.fileops import fileops
+     
+from resources.lib.ElementTree import ParseError
 
 
 __language__ = language.get_abbrev()

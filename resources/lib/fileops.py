@@ -2,9 +2,9 @@ import os
 import socket
 import urllib2
 import xbmc
-from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
+from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
-import utils
+from resources.lib import utils
 
 xbmc_version = utils.get_xbmc_version()
 if xbmc_version == 'Eden':

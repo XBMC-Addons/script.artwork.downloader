@@ -1,9 +1,9 @@
-from base import BaseProvider
-from script_exceptions import NoFanartError, ItemNotFoundError
-from utils import _log as log
-import language
+from resources.lib.provider.base import BaseProvider
+from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
+from resources.lib.utils import _log as log
+from resources.lib import language
 
-import ElementTree as ET
+from resources.lib import ElementTree as ET
 
 class TMDBProvider(BaseProvider):
     """
@@ -28,7 +28,7 @@ class TMDBProvider(BaseProvider):
         tree = tree.findall('movies')[0]
         try:
             tree = tree.findall('movie')[0]
-        except IndexError, e:
+        except IndexError:
             raise ItemNotFoundError(media_id)
         else:
             tree = tree.findall('images')[0]
