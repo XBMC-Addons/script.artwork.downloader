@@ -6,6 +6,7 @@
 - More extensive error checking
 - More extensive debug logging
 - Updated skin integration examples
+- Open Settings on first run
 
 [B]0.3.8[/B]
 - Added option to centralize fanart storage

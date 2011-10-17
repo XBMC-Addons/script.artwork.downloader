@@ -1,6 +1,6 @@
 import socket
 from urllib2 import HTTPError, URLError, urlopen
-from script_exceptions import HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
+from resources.lib.script_exceptions import HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
 
 
 ### adjust default timeout to stop script hanging

@@ -13,11 +13,11 @@ __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
 __localize__ = __addon__.getLocalizedString
 
-BASE_RESOURCE_PATH = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources'))
-sys.path.append(os.path.join(BASE_RESOURCE_PATH, "lib"))
+addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
+settings_file = os.path.join(addondir, "settings.xml")
+first_run = False
 
-
-import media_setup
+from resources.lib import media_setup
 
 __python_version__ = platform.python_version_tuple()
 if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
@@ -27,13 +27,14 @@ else:
     __xbmc_version__ = 'Dharma'
     Media_listing = media_setup.dharma_media_listing
 
-import provider
-from utils import _log as log
-from utils import _dialog as dialog
-from script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
-import language
-from fileops import fileops
-from ElementTree import ParseError
+from resources.lib import provider
+from resources.lib.utils import _log as log
+from resources.lib.utils import _dialog as dialog
+from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
+from resources.lib import language
+from resources.lib.fileops import fileops
+     
+from resources.lib.ElementTree import ParseError
 
 
 __language__ = language.get_abbrev()
@@ -41,6 +42,13 @@ __language__ = language.get_abbrev()
 
 class Main:
     def __init__(self):
+        if not os.path.isfile(settings_file):
+            dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
+            log('Settings.xml File not found. Opening settings window.')
+            __addon__.openSettings()
+            first_run = True
+        else:
+            log('Settings.xml File found. Continue with initializing.')
         if self.initialise():
             if not self.mediatype == '':
                 if not self.medianame == '':
@@ -240,50 +248,50 @@ class Main:
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
                 for provider in providers:
-                    got_image_list = False
-                    try:
-                        backdrops = provider.get_image_list(self.media_id)
-                    except HTTP404Error, e:
-                        log('Error getting data from %s (404: File not found), skipping' % provider.name, xbmc.LOGERROR)
-                    except HTTP503Error, e:
-                        log('Error getting data from %s (503: API Limit Exceeded), trying again' % provider.name, xbmc.LOGERROR)
-                        time.sleep(8)
+                    if not self.failcount < self.failthreshold:
+                        break
+                    backdrops_result = ''
+                    self.xmlfailcount = 0
+                    while not backdrops_result == 'pass' and not backdrops_result == 'skipping':
+                        if backdrops_result == 'retrying':
+                            time.sleep(10)
                         try:
                             backdrops = provider.get_image_list(self.media_id)
+                        except HTTP404Error, e:
+                            errmsg = '404: File not found'
+                            backdrops_result = 'skipping'
                         except HTTP503Error, e:
-                            self.failcount = self.failcount + 1
-                            log('Error getting data from %s (503: API Limit Exceeded), skipping' % provider.name, xbmc.LOGERROR)
+                            self.xmlfailcount = self.xmlfailcount + 1
+                            errmsg = '503: API Limit Exceeded'
+                            backdrops_result = 'retrying'
                         except NoFanartError, e:
-                            log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
+                            errmsg = 'No fanart found'
+                            backdrops_result = 'skipping'
                         except ItemNotFoundError, e:
-                            log('%s not found on %s, skipping' % (self.media_id, provider.name), xbmc.LOGERROR)
+                            errmsg = '%s not found' % self.media_id
+                            backdrops_result = 'skipping'
                         except ParseError, e:
-                            log('Error parsing xml: %s, skipping' % str(e), xbmc.LOGERROR)
+                            self.xmlfailcount = self.xmlfailcount + 1
+                            errmsg = 'Error parsing xml: %s' % str(e)
+                            backdrops_result = 'retrying'
                         except HTTPTimeout, e:
                             self.failcount = self.failcount + 1
-                            log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
+                            errmsg = 'Timed out'
+                            backdrops_result = 'skipping'
                         except DownloadError, e:
                             self.failcount = self.failcount + 1
-                            log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
+                            errmsg = 'Possible network error: %s' % str(e)
+                            backdrops_result = 'skipping'
                         else:
-                            got_image_list = True
-                    except NoFanartError, e:
-                        log('No fanart found on %s, skipping' % provider.name, xbmc.LOGINFO)
-                    except ItemNotFoundError, e:
-                        log('%s not found on %s, skipping' % (self.media_id, provider.name), xbmc.LOGERROR)
-                    except ParseError, e:
-                        log('Error parsing xml: %s, skipping' % str(e), xbmc.LOGERROR)
-                    except HTTPTimeout, e:
-                        self.failcount = self.failcount + 1
-                        log('Error getting data from %s (Timed out), skipping' % provider.name, xbmc.LOGERROR)
-                    except DownloadError, e:
-                        self.failcount = self.failcount + 1
-                        log('Error getting data from %s (Possible network error: %s), skipping' % (provider.name, str(e)), xbmc.LOGERROR)
-                    else:
-                        got_image_list = True
-                    if got_image_list:
+                            backdrops_result = 'pass'
+                        if not self.xmlfailcount < self.failthreshold:
+                            backdrops_result = 'skipping'
+                        if not backdrops_result == 'pass':
+                            log('Error getting data from %s (%s): %s' % (provider.name, errmsg, backdrops_result))
+                    if backdrops_result == 'pass':
                         self.failcount = 0
                         self.current_fanart = 0
+                        self.downloaded_fanart = 0
                         if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
                             download_max = self.limit_extrafanart_max
                         else: download_max = len(backdrops)
@@ -296,23 +304,23 @@ class Main:
                             if dialog('iscanceled', background = self.background):
                                 dialog('close', background = self.background)
                                 break
-                            if not self.failcount < 3:
+                            if not self.failcount < self.failthreshold:
                                 break
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
                             
-                            if self.limit_extrafanart and self.current_fanart > self.limit_extrafanart_max:
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
-                                continue
-                            if self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
-                                log('Cleanup %s with low rating: %s' % (fanartfile, fanart['rating']), xbmc.LOGNOTICE)
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                            if self.limit_extrafanart and self.downloaded_fanart >= self.limit_extrafanart_max:
+                                reason = 'Max number fanart reached: %s' % self.downloaded_fanart
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
+                            elif self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
+                                reason = 'Rating too low: %s' % fanart['rating']
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             elif self.limit_extrafanart and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
-                                log('Cleanup %s with text' % fanartfile, xbmc.LOGNOTICE)
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                                reason = 'Has text'
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             elif self.limit_extrafanart and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
-                                log('Cleanup %s not matching language: %s' % (fanartfile, xbmc.getLanguage()), xbmc.LOGNOTICE)
-                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs)
+                                reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+                                self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             else:
                                 try:
                                     self.fileops._downloadfile(fanarturl, fanartfile, targets)
@@ -327,6 +335,8 @@ class Main:
                                 except DownloadError, e:
                                     self.failcount = self.failcount + 1
                                     log('Error downloading file: %s (Possible network error: %s), skipping' % (fanarturl, str(e)), xbmc.LOGERROR)
+                                else:
+                                    self.downloaded_fanart = self.downloaded_fanart + 1
                             dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006), line2 = self.media_name, line3 = fanartfile, background = self.background)
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
             self.processeditems = self.processeditems + 1

@@ -2,9 +2,9 @@ import os
 import socket
 import urllib2
 import xbmc
-from script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
+from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
-import utils
+from resources.lib import utils
 
 xbmc_version = utils.get_xbmc_version()
 if xbmc_version == 'Eden':
@@ -92,15 +92,20 @@ class fileops:
                 return True
             
             
-    def _delete_file_in_dirs(self, filename, targetdirs):
+    def _delete_file_in_dirs(self, filename, targetdirs, reason):
         """
         Delete file from all targetdirs
         """
         
+        isdeleted = False
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
             if self._exists(path):
                 self._delete(path)
+                log("Deleted (%s): %s" % (reason, path), xbmc.LOGNOTICE)
+                isdeleted = True
+        if not isdeleted:
+            log("Ignoring (%s): %s" % (reason, filename), xbmc.LOGINFO)
 
 
     def _copyfile(self, sourcepath, targetpath):
@@ -158,12 +163,12 @@ class fileops:
                 else:
                     raise DownloadError(str(e))
             else:
-                log("Downloaded successfully: %s" % url, xbmc.LOGNOTICE)
+                log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
                 for filenotexistspath in filenotexistspaths:
                     self._copyfile(temppath, filenotexistspath)
         elif not False in fileexists:
-            pass
+            log("Ignoring (Exists in all target directories): %s" % filename, xbmc.LOGINFO)
         else:
             for filenotexistspath in filenotexistspaths:
                 self._copyfile(existspath, filenotexistspath)

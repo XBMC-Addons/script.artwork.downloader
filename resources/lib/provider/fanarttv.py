@@ -1,4 +1,4 @@
-from base import BaseProvider
+from resources.lib.provider.base import BaseProvider
 #from script_exceptions import NoFanartError
 #from utils import _log as log
 

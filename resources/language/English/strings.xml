@@ -22,7 +22,9 @@
 		<string id="36034">Maximum downloads per title</string>
 		<string id="36035">Minimum rating</string>
 		<string id="36036">Current language only</string>
-    
+        <string id="36037">No settings found!</string>
+        <string id="36038">Select your preferences and press OK to save</string>
+        
     <!-- Plugin settings: General section -->
         <string id="36021">General settings</string>
 		<string id="36022">General settings used in Extrafanart Downloader</string>
@@ -46,6 +48,7 @@
         <string id="36086">Some advanced settings to be used</string>
         <string id="36200">Keep backup of all downloaded fanart</string>
 		<string id="36201">Backup folder</string>
+        <string id="36202">[I]Warning: foldersize can get very large[/I]</string>
 		<string id="36082">Dharma settings</string>
 		<string id="36083">Using protected Samba share</string>
 		<string id="36084">Username</string>
