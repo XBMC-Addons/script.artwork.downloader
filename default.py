@@ -248,7 +248,10 @@ class Main:
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
             else:
                 for provider in providers:
+                    if not self.failcount < self.failthreshold:
+                        break
                     backdrops_result = ''
+                    self.xmlfailcount = 0
                     while not backdrops_result == 'pass' and not backdrops_result == 'skipping':
                         if backdrops_result == 'retrying':
                             time.sleep(10)
@@ -258,6 +261,7 @@ class Main:
                             errmsg = '404: File not found'
                             backdrops_result = 'skipping'
                         except HTTP503Error, e:
+                            self.xmlfailcount = self.xmlfailcount + 1
                             errmsg = '503: API Limit Exceeded'
                             backdrops_result = 'retrying'
                         except NoFanartError, e:
@@ -267,6 +271,7 @@ class Main:
                             errmsg = '%s not found' % self.media_id
                             backdrops_result = 'skipping'
                         except ParseError, e:
+                            self.xmlfailcount = self.xmlfailcount + 1
                             errmsg = 'Error parsing xml: %s' % str(e)
                             backdrops_result = 'retrying'
                         except HTTPTimeout, e:
@@ -279,6 +284,8 @@ class Main:
                             backdrops_result = 'skipping'
                         else:
                             backdrops_result = 'pass'
+                        if not self.xmlfailcount < self.failthreshold:
+                            backdrops_result = 'skipping'
                         if not backdrops_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (provider.name, errmsg, backdrops_result))
                     if backdrops_result == 'pass':
@@ -297,7 +304,7 @@ class Main:
                             if dialog('iscanceled', background = self.background):
                                 dialog('close', background = self.background)
                                 break
-                            if not self.failcount < 3:
+                            if not self.failcount < self.failthreshold:
                                 break
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
