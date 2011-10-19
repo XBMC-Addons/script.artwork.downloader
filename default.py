@@ -33,8 +33,7 @@ from resources.lib.utils import _dialog as dialog
 from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
 from resources.lib import language
 from resources.lib.fileops import fileops
-     
-#from elementtree.ElementTree import ParseError
+from xml.parsers.expat import ExpatError
 
 
 __language__ = language.get_abbrev()
@@ -270,10 +269,10 @@ class Main:
                         except ItemNotFoundError, e:
                             errmsg = '%s not found' % self.media_id
                             backdrops_result = 'skipping'
-#                        except ParseError, e:
-#                            self.xmlfailcount = self.xmlfailcount + 1
-#                            errmsg = 'Error parsing xml: %s' % str(e)
-#                            backdrops_result = 'retrying'
+                        except ExpatError, e:
+                            self.xmlfailcount = self.xmlfailcount + 1
+                            errmsg = 'Error parsing xml: %s' % str(e)
+                            backdrops_result = 'retrying'
                         except HTTPTimeout, e:
                             self.failcount = self.failcount + 1
                             errmsg = 'Timed out'
