@@ -87,6 +87,7 @@ class Main:
         self.music_providers = providers['music_providers']
         self.failcount = 0
         self.failthreshold = 3
+        self.xmlfailthreshold = 5
         self.fanart_centralized = 0
         self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
         self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
@@ -283,7 +284,7 @@ class Main:
                             backdrops_result = 'skipping'
                         else:
                             backdrops_result = 'pass'
-                        if not self.xmlfailcount < self.failthreshold:
+                        if not self.xmlfailcount < self.xmlfailthreshold:
                             backdrops_result = 'skipping'
                         if not backdrops_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (provider.name, errmsg, backdrops_result))
