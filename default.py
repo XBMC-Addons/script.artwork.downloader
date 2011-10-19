@@ -34,7 +34,7 @@ from resources.lib.script_exceptions import DownloadError, CreateDirectoryError,
 from resources.lib import language
 from resources.lib.fileops import fileops
      
-from resources.lib.ElementTree import ParseError
+from elementtree.ElementTree import ParseError
 
 
 __language__ = language.get_abbrev()
