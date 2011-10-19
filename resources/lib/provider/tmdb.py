@@ -3,7 +3,7 @@ from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
 from resources.lib import language
 
-from resources.lib import ElementTree as ET
+from elementtree import ElementTree as ET
 
 class TMDBProvider(BaseProvider):
     """
