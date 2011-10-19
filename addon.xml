@@ -6,6 +6,7 @@
 	provider-name="paddycarey, putneyj, Machine-Sanctum">
   <requires>
     <import addon="xbmc.python" version="2.0"/>
+    <import addon="script.module.elementtree"/>
   </requires>
   <extension point="xbmc.python.script" library="default.py">
     <provides>executable</provides>

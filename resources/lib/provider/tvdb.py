@@ -2,7 +2,7 @@ from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import _log as log
 
-from resources.lib import ElementTree as ET
+from elementtree import ElementTree as ET
 
 class TVDBProvider(BaseProvider):
     """

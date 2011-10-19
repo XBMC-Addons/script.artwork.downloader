@@ -33,8 +33,7 @@ from resources.lib.utils import _dialog as dialog
 from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
 from resources.lib import language
 from resources.lib.fileops import fileops
-     
-from resources.lib.ElementTree import ParseError
+from xml.parsers.expat import ExpatError
 
 
 __language__ = language.get_abbrev()
@@ -88,6 +87,7 @@ class Main:
         self.music_providers = providers['music_providers']
         self.failcount = 0
         self.failthreshold = 3
+        self.xmlfailthreshold = 5
         self.fanart_centralized = 0
         self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
         self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
@@ -270,7 +270,7 @@ class Main:
                         except ItemNotFoundError, e:
                             errmsg = '%s not found' % self.media_id
                             backdrops_result = 'skipping'
-                        except ParseError, e:
+                        except ExpatError, e:
                             self.xmlfailcount = self.xmlfailcount + 1
                             errmsg = 'Error parsing xml: %s' % str(e)
                             backdrops_result = 'retrying'
@@ -284,7 +284,7 @@ class Main:
                             backdrops_result = 'skipping'
                         else:
                             backdrops_result = 'pass'
-                        if not self.xmlfailcount < self.failthreshold:
+                        if not self.xmlfailcount < self.xmlfailthreshold:
                             backdrops_result = 'skipping'
                         if not backdrops_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (provider.name, errmsg, backdrops_result))
