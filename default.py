@@ -43,11 +43,31 @@ class Main:
     def __init__(self):
         if not os.path.isfile(settings_file):
             dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
-            log('Settings.xml File not found. Opening settings window.')
+            log('Settings.xml file not found. Opening settings window.')
             __addon__.openSettings()
             first_run = True
         else:
-            log('Settings.xml File found. Continue with initializing.')
+            log('Settings.xml file found. Continue with initializing.')
+        ### Check for script starting arguments used by skins
+        log("## Checking for arguments used by skins")
+        try: log( "## arg 0: %s" % sys.argv[0] )
+        except:   log( "## no arg0" )
+        try: log( "## arg 1: %s" % sys.argv[1] )
+        except:   log( "## no arg1" )
+        try: log( "## arg 2: %s" % sys.argv[2] )
+        except:   log( "## no arg2" )
+        try: log( "## arg 3: %s" % sys.argv[3] )
+        except:   log( "## no arg3" )
+        try: log( "## arg 4: %s" % sys.argv[4] )
+        except:   log( "## no arg4" )
+        try: log( "arg 5: %s" % sys.argv[5] )
+        except:   log( "## no arg5" )
+        try: log( "## arg 6: %s" % sys.argv[6] )
+        except:   log( "## no arg6" )
+        try: log( "## arg 7: %s" % sys.argv[7] )
+        except:   log( "## no arg7" )
+        try: log( "## arg 8: %s" % sys.argv[8] )
+        except:   log( "## no arg8" )
         if self.initialise():
             if not self.mediatype == '':
                 if not self.medianame == '':
@@ -55,12 +75,14 @@ class Main:
                 else:
                     if self.mediatype == 'tvshow':
                         self.Medialist = Media_listing('TVShows')
+                        log("Bulk mode: TV Shows")
                         self.download_fanart(self.Medialist, self.tv_providers)
                     elif self.mediatype == 'movie':
                         self.Medialist = Media_listing('Movies')
+                        log("Bulk mode: Movies")
                         self.download_fanart(self.Medialist, self.movie_providers)
-                    elif self.mediatype == 'artist':
-                        log('Music fanart not yet implemented', xbmc.LOGNOTICE)
+                    elif self.mediatype == 'music':
+                        log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
             else:
                 if self.tvfanart:
                     self.Medialist = Media_listing('TVShows')
@@ -108,11 +130,7 @@ class Main:
         self.medianame = ''
 
         # Print out settings to log to help with debugging
-        log("######## Extrafanart Downloader: Initializing...............................")
-        log("######## Extrafanart Downloader: Settings...................................")
-        log('## Add-on ID = %s' % str(__addonid__))
-        log('## Add-on Name= %s' % str(__addonname__))
-        log('## Add-on Version = %s' % str(__addonversion__))
+        log("## Settings...")
         log('## Language Used = %s' % str(__language__))
         log('## Download Movie Fanart= %s' % str(self.moviefanart))
         log('## Download TV Show  Fanart = %s' % str(self.tvfanart))
@@ -127,17 +145,18 @@ class Main:
         log('## Limit Fanart with no text = %s' % str(self.limit_notext))
         log('## Backup downloaded fanart= %s' % str(self.use_cache))
         log('## Backup folder = %s' % str(self.cache_directory))
-        log("######## Extrafanart Downloader: Starting download.........................")
+        log("## End of Settings...")
 
-
+        
         for item in sys.argv:
+            log("## Checking for downloading mode...")
             match = re.search("mediatype=(.*)" , item)
             if match:
                 self.mediatype = match.group(1)
-                if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'artist':
+                if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'music':
                     pass
                 else:
-                    log('Error: invalid mediatype, must be one of movie, tvshow or artist', xbmc.LOGERROR)
+                    log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
                     return False
             else:
                 pass
@@ -159,7 +178,7 @@ class Main:
     def cleanup(self):
         if self.fileops._exists(self.fileops.tempdir):
             dialog('update', percentage = 100, line1 = __localize__(36004), background = self.background)
-            log('Cleaning up')
+            log('Cleaning up temp files')
             for x in os.listdir(self.fileops.tempdir):
                 tempfile = os.path.join(self.fileops.tempdir, x)
                 self.fileops._delete(tempfile)
@@ -186,11 +205,16 @@ class Main:
     ### solo mode
     def solo_mode(self, itemtype, itemname):
         if itemtype == 'movie':
+            log("## Solo mode: Movie...")
             self.Medialist = Media_listing('Movies')
         elif itemtype == 'tvshow':
             self.Medialist = Media_listing('TVShows')
+            log("## Solo mode: TV Show...")
+        elif itemtype == '':
+            self.Medialist = Media_listing('Music')
+            log("## Solo mode: Music...")
         else:
-            log("Error: type must be one of 'movie' or 'tvshow', aborting", xbmc.LOGERROR)
+            log("Error: type must be one of 'movie', 'tvshow' or 'music', aborting", xbmc.LOGERROR)
             return False
         log('Retrieving fanart for: %s' % itemname)
         for currentitem in self.Medialist:
@@ -344,7 +368,9 @@ class Main:
 
 
 if (__name__ == "__main__"):
-    log('XBMC Version: %s' % __xbmc_version__, xbmc.LOGNOTICE)
-    log('script version %s started' % __addonversion__, xbmc.LOGNOTICE)
+    log("######## Extrafanart Downloader: Initializing...............................")
+    log('## Add-on ID = %s' % str(__addonid__))
+    log('## Add-on Name= %s' % str(__addonname__))
+    log('## Add-on Version = %s' % str(__addonversion__))
     Main()
     log('script stopped')
