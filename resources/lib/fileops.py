@@ -67,16 +67,6 @@ class fileops:
                     return False
             else:
                 return True
-#        def _mkdir(self, path):
-#            try:
-#               os.mkdir(path)
-#            except:
-#                if os.path.exists(path):
-#                    return True
-#                else:
-#                    return False
-#            else:
-#                return True
         def _delete(self, path):
             try:
                 os.remove(path)
