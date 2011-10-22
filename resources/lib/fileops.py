@@ -32,12 +32,6 @@ class fileops:
 
         log("Setting up fileops")
 
-        if xbmc_version == 'Eden':
-            self._exists = lambda path: xbmcvfs.exists(path)
-            self._rmdir = lambda path: xbmcvfs.rmdir(path)
-            self._mkdir = lambda path: xbmcvfs.mkdir(path)
-            self._delete = lambda path: xbmcvfs.delete(path)
-
         self.downloadcount = 0
         addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
         self.tempdir = os.path.join(addondir, 'temp')
@@ -49,12 +43,7 @@ class fileops:
                 raise CreateDirectoryError(self.tempdir)
 
 
-    if xbmc_version == 'Eden':
-        def _copy(self, source, target):
-            return xbmcvfs.copy(source, target)
-
-    ###  Dharma file functions
-    else:
+    if xbmc_version == 'Dharma':
         def _exists(self, path):
             return os.path.exists(path)
         def _copy(self, source, target):
