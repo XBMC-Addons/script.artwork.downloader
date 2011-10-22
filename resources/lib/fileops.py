@@ -7,11 +7,8 @@ from urllib2 import HTTPError, URLError
 from resources.lib import utils
 
 xbmc_version = utils.get_xbmc_version()
-if xbmc_version == 'Eden':
-    import xbmcvfs
-else:
-    import shutil
-    from resources.lib.smbclient import smbclient
+import shutil
+from resources.lib.smbclient import smbclient
 
 log = utils._log
 
