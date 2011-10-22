@@ -73,6 +73,7 @@ class fileops:
             if os.path.exists(path):
                 return True
             else:
+                orig_path = path
                 log( "Building Directory", xbmc.LOGDEBUG )
                 if path.startswith( "smb://" ) and not os.environ.get( "OS", "win32" ) in ("win32", "Windows_NT"):
                     self._smb_mkdir( path )
@@ -88,15 +89,21 @@ class fileops:
                 tmppath = path
                 # loop thru and create each folder
                 while ( not os.path.isdir( tmppath ) ):
+                    if tmppath == "\\\\": break
                     try:
                         os.mkdir( tmppath )
                     except:
                         tmppath = os.path.dirname( tmppath )
                 # call function until path exists
-                self._mkdir( path )
-                if os.path.exists(path):
+                if tmppath == "\\\\": return False
+                if os.path.exists(orig_path):
                     log('Succesfully created folder on Samba Share Directory')
                     return True
+                else:
+                    if tmppath == "\\\\":
+                        return False
+                    else:
+                        self._mkdir( orig_path )
         else:
             return True 
 
