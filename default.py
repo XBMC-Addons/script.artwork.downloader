@@ -12,16 +12,13 @@ __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
 __localize__ = __addon__.getLocalizedString
+__xbmc_version__ = 'Eden'
 
 addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 settings_file = os.path.join(addondir, "settings.xml")
 first_run = False
 
 from resources.lib import media_setup
-
-__xbmc_version__ = 'Eden'
-Media_listing = media_setup.media_listing
-
 from resources.lib import provider
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
@@ -30,9 +27,8 @@ from resources.lib import language
 from resources.lib.fileops import fileops
 from xml.parsers.expat import ExpatError
 
-
+Media_listing = media_setup.media_listing
 __language__ = language.get_abbrev()
-
 
 class Main:
     def __init__(self):
@@ -366,6 +362,7 @@ if (__name__ == "__main__"):
     log("######## Extrafanart Downloader: Initializing...............................")
     log('## Add-on ID = %s' % str(__addonid__))
     log('## Add-on Name= %s' % str(__addonname__))
+    log('## Add-on Branch= %s' % str(__xbmc_version__))
     log('## Add-on Version = %s' % str(__addonversion__))
     Main()
     log('script stopped')
