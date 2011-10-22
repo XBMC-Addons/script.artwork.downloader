@@ -48,10 +48,6 @@
         <string id="36200">Keep backup of all downloaded fanart</string>
         <string id="36201">Backup folder</string>
         <string id="36202">[I]Warning: folder can increase to considerable size[/I]</string>
-        <string id="36082">Dharma settings</string>
-        <string id="36083">Using protected Samba share</string>
-        <string id="36084">Username</string>
-        <string id="36085">Password</string>
 
     <!-- Plugin settings: Image types -->
         <string id="36101">Fanart</string>

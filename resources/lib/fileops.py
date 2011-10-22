@@ -2,16 +2,11 @@ import os
 import socket
 import urllib2
 import xbmc
+import xbmcvfs
 from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
 from resources.lib import utils
 
-xbmc_version = utils.get_xbmc_version()
-if xbmc_version == 'Eden':
-    import xbmcvfs
-else:
-    import shutil
-    from resources.lib.smbclient import smbclient
 
 log = utils._log
 
@@ -32,11 +27,10 @@ class fileops:
 
         log("Setting up fileops")
 
-        if xbmc_version == 'Eden':
-            self._exists = lambda path: xbmcvfs.exists(path)
-            self._rmdir = lambda path: xbmcvfs.rmdir(path)
-            self._mkdir = lambda path: xbmcvfs.mkdir(path)
-            self._delete = lambda path: xbmcvfs.delete(path)
+        self._exists = lambda path: xbmcvfs.exists(path)
+        self._rmdir = lambda path: xbmcvfs.rmdir(path)
+        self._mkdir = lambda path: xbmcvfs.mkdir(path)
+        self._delete = lambda path: xbmcvfs.delete(path)
 
         self.downloadcount = 0
         addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
@@ -49,115 +43,9 @@ class fileops:
                 raise CreateDirectoryError(self.tempdir)
 
 
-    if xbmc_version == 'Eden':
-        def _copy(self, source, target):
-            return xbmcvfs.copy(source, target)
+    def _copy(self, source, target):
+        return xbmcvfs.copy(source, target)
 
-    ###  Dharma file functions
-    else:
-        def _exists(self, path):
-            return os.path.exists(path)
-        def _copy(self, source, target):
-            try:
-                shutil.copy(source, target)
-            except:
-                if os.path.exists(target):
-                    return True
-                else:
-                    return False
-            else:
-                return True
-        def _delete(self, path):
-            try:
-                os.remove(path)
-            except:
-                return False
-            else:
-                return True
-        def _rmdir(self, path):
-            try:
-                os.rmdir(path)
-            except:
-                return False
-            else:
-                return True
-        def _mkdir( self, path ):
-            try:
-               os.mkdir(path)
-            except:
-                if os.path.exists(path):
-                    return True
-                else:
-                    log( "Building Directory", xbmc.LOGDEBUG )
-                    if path.startswith( "smb://" ) and not os.environ.get( "OS", "win32" ) in ("win32", "Windows_NT"):
-                        self._smb_mkdir( path )
-                        return True
-                    if ( path.startswith( "smb://" ) and os.environ.get( "OS", "win32" ) in ("win32", "Windows_NT") ):
-                        log( "Building Samba Share Directory on Windows System", xbmc.LOGDEBUG )
-                        if "@" in path:
-                            path = "\\\\" + path.split("@")[1]
-                        path = path.replace( "/", "\\" ).replace( "smb:", "" )
-                    # no need to create folders
-                    if ( os.path.isdir( path ) ): return True
-                    # temp path
-                    tmppath = path
-                    # loop thru and create each folder
-                    while ( not os.path.isdir( tmppath ) ):
-                        try:
-                            os.mkdir( tmppath )
-                        except:
-                            tmppath = os.path.dirname( tmppath )
-                    # call function until path exists
-                    self._mkdir( path )
-                    if os.path.exists(path):
-                        log('Succesfully created folder on Samba Share Directory')
-                        return True
-            else:
-                return True 
-
-        def _smb_mkdir( self, path ):
-            log( "Building Samba Directory on Non Windows System", xbmc.LOGDEBUG )
-            if self._exists( path ):
-                return
-            # setup for samba communication
-            samba_list = path.split( "/" )
-            print samba_list
-            remote_share = samba_list[ 3 ]
-            if "@" in samba_list[ 2 ]:
-                remote_name = samba_list[ 2 ].split( "@" )[1]
-                samba_user = ( samba_list[ 2 ].split( "@" )[0] ).split( ":" )[0]
-                samba_pass = ( samba_list[ 2 ].split( "@" )[0] ).split( ":" )[1]
-            else:
-                remote_name = samba_list[ 2 ]
-                try:
-                    if utils.__addon__.getSetting( "protectedshare" ) == "true":
-                        samba_user = utils.__addon__.getSetting( "samba_user" )
-                        samba_pass = utils.__addon__.getSetting( "samba_pass" )
-                    else:
-                        # default to guest if no user/pass is given
-                        samba_user = None
-                        samba_pass = None
-                except:
-                    samba_user = None
-                    samba_pass = None
-            log( "Samba - Remote Name: %s" % remote_name, xbmc.LOGDEBUG )
-            log( "Samba - Remote Share: %s" % remote_share, xbmc.LOGDEBUG )
-            log( "Samba - Username: %s" % samba_user, xbmc.LOGDEBUG )
-            log( "Samba - Password: %s" % samba_pass, xbmc.LOGDEBUG )
-            smb = smbclient.SambaClient( server=remote_name, share=remote_share,
-                                        username=samba_user, password=samba_pass )
-            path2 = "smb://" + remote_name + "/" + "/".join( samba_list[3:] )
-            tmppath = "/".join( samba_list[4:] )
-            while( not ( self._exists( path2 ) or path2 == "smb:" ) ):
-                print path2
-                try:
-                    log( "Attempting making direcory: %s" % tmppath, xbmc.LOGDEBUG )
-                    smb.mkdir( get_unicode( tmppath ) )
-                except:
-                    tmppath = os.path.dirname( tmppath )
-                    # need to strip the same part from a true path for the exists option
-                    path2 = os.path.dirname( path2 )
-            self._smb_mkdir( path )
 
     def _delete_file_in_dirs(self, filename, targetdirs, reason):
         """

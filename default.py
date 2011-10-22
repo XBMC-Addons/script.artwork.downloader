@@ -19,13 +19,8 @@ first_run = False
 
 from resources.lib import media_setup
 
-__python_version__ = platform.python_version_tuple()
-if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
-    __xbmc_version__ = 'Eden'
-    Media_listing = media_setup.eden_media_listing
-else:
-    __xbmc_version__ = 'Dharma'
-    Media_listing = media_setup.dharma_media_listing
+__xbmc_version__ = 'Eden'
+Media_listing = media_setup.media_listing
 
 from resources.lib import provider
 from resources.lib.utils import _log as log
