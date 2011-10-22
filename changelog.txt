@@ -1,4 +1,5 @@
-[B]0.4.0[/B]
+[B]0.2.0[/B]
+Initial realease of Dharma version
 - Added some basic support for smb:// sources
 - Added silent downloading in background
 - Added Extrafanart limiter (maximum fanart/language/no text) 
@@ -7,14 +8,8 @@
 - More extensive debug logging
 - Updated skin integration examples
 - Open Settings on first run
-
-[B]0.3.8[/B]
 - Added option to centralize fanart storage
 - Splitting code into libraries
-
-[B]0.3.7[/B]
 - Added skin integration options (see readme file)
-
-[B]0.3.6[/B]
 - Initial commit
 - Added to official XBMC-repo
