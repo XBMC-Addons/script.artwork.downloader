@@ -68,11 +68,5 @@
         <setting label="36200" id="use_cache" type="bool"  default="false"/>
         <setting label="36202" type="lsep" visible="eq(-1,true)"/>
         <setting label="36201" id="cache_directory" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>   
-        <setting type="sep" />
-<!--    <setting label="36082" id="using_dharma" type="lsep" />
-        <setting type="sep" />
-        <setting label="36083" type="bool" id="protectedshare" default="false" />
-        <setting label="36084" type="text" id="samba_user" enable="eq(-1,true)" default="" />
-        <setting label="36085" type="text" option="hidden" id="samba_pass" enable="eq(-2,true)" default="" /> -->
     </category>
 </settings>

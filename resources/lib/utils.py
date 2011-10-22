@@ -21,13 +21,6 @@ dialog = xbmcgui.DialogProgress()
 timeout = 20
 socket.setdefaulttimeout(timeout)
 
-def get_xbmc_version():
-    __python_version__ = platform.python_version_tuple()
-    if (int(__python_version__[0]) == 2 and int(__python_version__[1]) > 4):
-        return 'Eden'
-    else:
-        return 'Dharma'
-
 def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""

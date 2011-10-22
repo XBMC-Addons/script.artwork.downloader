@@ -2,15 +2,11 @@ import os
 import socket
 import urllib2
 import xbmc
+import xbmcvfs
 from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
 from resources.lib import utils
 
-xbmc_version = utils.get_xbmc_version()
-if xbmc_version == 'Eden':
-    import xbmcvfs
-else:
-    import shutil
 
 log = utils._log
 
@@ -31,14 +27,13 @@ class fileops:
 
         log("Setting up fileops")
 
-        if xbmc_version == 'Eden':
-            self._exists = lambda path: xbmcvfs.exists(path)
-            self._rmdir = lambda path: xbmcvfs.rmdir(path)
-            self._mkdir = lambda path: xbmcvfs.mkdir(path)
-            self._delete = lambda path: xbmcvfs.delete(path)
+        self._exists = lambda path: xbmcvfs.exists(path)
+        self._rmdir = lambda path: xbmcvfs.rmdir(path)
+        self._mkdir = lambda path: xbmcvfs.mkdir(path)
+        self._delete = lambda path: xbmcvfs.delete(path)
 
         self.downloadcount = 0
-        addondir = xbmc.translatePath('special://profile/addon_data/%s' % utils.__addonid__)
+        addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
         self.tempdir = os.path.join(addondir, 'temp')
         if not self._exists(self.tempdir):
             if not self._exists(addondir):
@@ -48,50 +43,10 @@ class fileops:
                 raise CreateDirectoryError(self.tempdir)
 
 
-    if xbmc_version == 'Eden':
-        def _copy(self, source, target):
-            return xbmcvfs.copy(source, target)
+    def _copy(self, source, target):
+        return xbmcvfs.copy(source, target)
 
-    ###  Dharma file functions
-    else:
-        def _exists(self, path):
-            return os.path.exists(path)
-        def _copy(self, source, target):
-            try:
-                shutil.copy(source, target)
-            except:
-                if os.path.exists(target):
-                    return True
-                else:
-                    return False
-            else:
-                return True
-        def _mkdir(self, path):
-            try:
-                os.makedirs(path)
-            except:
-                if os.path.exists(path):
-                    return True
-                else:
-                    return False
-            else:
-                return True
-        def _delete(self, path):
-            try:
-                os.remove(path)
-            except:
-                return False
-            else:
-                return True
-        def _rmdir(self, path):
-            try:
-                os.rmdir(path)
-            except:
-                return False
-            else:
-                return True
-            
-            
+
     def _delete_file_in_dirs(self, filename, targetdirs, reason):
         """
         Delete file from all targetdirs
