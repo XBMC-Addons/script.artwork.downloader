@@ -12,7 +12,6 @@ __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
 __localize__ = __addon__.getLocalizedString
-__xbmc_version__ = 'Eden'
 
 addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 settings_file = os.path.join(addondir, "settings.xml")
@@ -362,7 +361,6 @@ if (__name__ == "__main__"):
     log("######## Extrafanart Downloader: Initializing...............................")
     log('## Add-on ID = %s' % str(__addonid__))
     log('## Add-on Name= %s' % str(__addonname__))
-    log('## Add-on Branch= %s' % str(__xbmc_version__))
     log('## Add-on Version = %s' % str(__addonversion__))
     Main()
     log('script stopped')
