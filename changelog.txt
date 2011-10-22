@@ -1,8 +1,8 @@
 [B]0.4.0[/B]
+- Added some basic support for smb:// sources
 - Added silent downloading in background
 - Added Extrafanart limiter (maximum fanart/language/no text) 
 - Added download backup folder for fanart
-- Merged Dharma & Eden into one add-on
 - More extensive error checking
 - More extensive debug logging
 - Updated skin integration examples
