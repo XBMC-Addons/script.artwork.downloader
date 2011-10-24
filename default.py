@@ -245,6 +245,7 @@ class Main:
             targetdirs = []
             extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
             targetdirs.append(extrafanart_dir)
+            ### Check if using the centralize option
             if self.centralize_enable:
                 if self.mediatype == 'tvshow':
                     if not self.centralfolder_tvshows == '':
@@ -256,6 +257,9 @@ class Main:
                         targetdirs.append(self.centralfolder_movies)
                     else:
                         log('Error: Central fanart enabled but Movies folder not set, skipping', xbmc.LOGERROR)
+            ### Check if using the cache option
+            if self.use_cache and not self.cache_directory == '':
+                targetdirs.append(self.cache_directory)
             if self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
@@ -309,9 +313,6 @@ class Main:
                         if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
                             download_max = self.limit_extrafanart_max
                         else: download_max = len(backdrops)
-                        targets = targetdirs[:]
-                        if self.use_cache and not self.cache_directory == '':
-                            targets.append(self.cache_directory)
                         for fanart in backdrops:
                             fanarturl = fanart['url']
                             ### check if script has been cancelled by user
@@ -322,7 +323,7 @@ class Main:
                                 break
                             fanartfile = provider.get_filename(fanarturl)
                             self.current_fanart = self.current_fanart + 1
-                            
+                            ### Check for set limits
                             if self.limit_extrafanart and self.downloaded_fanart >= self.limit_extrafanart_max:
                                 reason = 'Max number fanart reached: %s' % self.downloaded_fanart
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
@@ -337,7 +338,7 @@ class Main:
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             else:
                                 try:
-                                    self.fileops._downloadfile(fanarturl, fanartfile, targets)
+                                    self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
                                 except HTTP404Error, e:
                                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                                 except HTTPTimeout, e:
