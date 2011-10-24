@@ -256,6 +256,9 @@ class Main:
                         targetdirs.append(self.centralfolder_movies)
                     else:
                         log('Error: Central fanart enabled but Movies folder not set, skipping', xbmc.LOGERROR)
+            targets = targetdirs[:]
+            if self.use_cache and not self.cache_directory == '':
+                targets.append(self.cache_directory)
             if self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
@@ -309,9 +312,6 @@ class Main:
                         if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
                             download_max = self.limit_extrafanart_max
                         else: download_max = len(backdrops)
-                        targets = targetdirs[:]
-                        if self.use_cache and not self.cache_directory == '':
-                            targets.append(self.cache_directory)
                         for fanart in backdrops:
                             fanarturl = fanart['url']
                             ### check if script has been cancelled by user
