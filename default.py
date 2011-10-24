@@ -258,8 +258,9 @@ class Main:
                     else:
                         log('Error: Central fanart enabled but Movies folder not set, skipping', xbmc.LOGERROR)
             ### Check if using the cache option
+            targets = targetdirs[:]
             if self.use_cache and not self.cache_directory == '':
-                targetdirs.append(self.cache_directory)
+                targets.append(self.cache_directory)
             if self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
@@ -338,7 +339,7 @@ class Main:
                                 self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                             else:
                                 try:
-                                    self.fileops._downloadfile(fanarturl, fanartfile, targetdirs)
+                                    self.fileops._downloadfile(fanarturl, fanartfile, targets)
                                 except HTTP404Error, e:
                                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                                 except HTTPTimeout, e:
