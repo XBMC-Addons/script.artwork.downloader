@@ -1,3 +1,11 @@
+[B]1.0.0[/B]
+- Major version bump to distinguish from Eden
+-
+-
+-
+-
+
+
 [B]0.2.0[/B]
 Initial realease of Dharma version
 - Added some basic support for smb:// sources

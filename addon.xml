@@ -2,7 +2,7 @@
 <addon
 	id="script.extrafanartdownloader"
 	name="Extrafanart Downloader"
-	version="0.2.0"
+	version="1.0.0"
 	provider-name="paddycarey, putneyj, Machine-Sanctum">
   <requires>
     <import addon="xbmc.python" version="1.0"/>

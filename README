@@ -5,6 +5,9 @@ in your XBMC library and place it in an 'extrafanart' directory to be used by sk
 
 The script also supports a 'solo mode' which allows it to be run from inside a skin and download the fanart for only 1 tv show or movie at a time.
 
+Dharma 10.1:
+    Current stable version 0.2.0
+
 Current Features:
 	- TV Extrafanart
 	- Movie Extrafanart
