@@ -37,9 +37,6 @@ This script has some different run modes. Please check the files as described be
 Code for skin intergration:
 Check "resources/docs/runscript.txt"
 
-Real world code example Dharma10.1 (available in Dharma version):
-Check "resources/docs/dharma.xml"
-
 Real world code example Eden 11.0 (available in Eden version):
 Check "resources/docs/pre-eden.xml"
 

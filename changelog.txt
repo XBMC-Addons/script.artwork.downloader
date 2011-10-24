@@ -1,3 +1,10 @@
+[B]2.0.0[/B]
+- Major version bump to distinguish from Dharma
+-
+-
+-
+
+
 [B]0.4.0[/B]
 - Added silent downloading in background
 - Added Extrafanart limiter (maximum fanart/language/no text) 
