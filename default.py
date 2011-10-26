@@ -108,8 +108,8 @@ class Main:
         self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
         self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
-        self.limit_extrafanart_max = float(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
-        self.limit_extrafanart_rating = float(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
+        self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
+        self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
         self.use_cache = __addon__.getSetting("use_cache") == 'true'
