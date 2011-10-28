@@ -19,7 +19,7 @@ class TMDBProvider(BaseProvider):
     def get_filename(self, url):
         return url.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
         
-    def get_image_list(self, media_id, size):
+    def get_image_list(self, media_id):
         xml_url = self.url % (self.api_key, media_id)
         log('API: %s ' % xml_url)
         image_list = []
@@ -34,7 +34,8 @@ class TMDBProvider(BaseProvider):
             tree = tree.findall('images')[0]
             for image in tree.findall('image'):
                 info = {}
-                if image.get('type') == 'backdrop' and image.get('url') and image.get('size') == size:
+                if image.get('type') == 'backdrop' and image.get('url'):
+                    info['size'] = image.get('size')
                     info['url'] = image.get('url')
                     info['height'] = int(image.get('height'))
                     info['width'] = int(image.get('width'))

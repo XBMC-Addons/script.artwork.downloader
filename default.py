@@ -290,8 +290,7 @@ class Main:
                         if backdrops_result == 'retrying':
                             time.sleep(10)
                         try:
-                            backdrops = provider.get_image_list(self.media_id, 'original')
-                            thumbs = provider.get_image_list(self.media_id, 'thumb')
+                            image_list = provider.get_image_list(self.media_id)
                         except HTTP404Error, e:
                             errmsg = '404: File not found'
                             backdrops_result = 'skipping'
@@ -329,100 +328,104 @@ class Main:
                         self.current_extrathumbs = 0
                         self.downloaded_fanart = 0
                         self.downloaded_extrathumbs = 0
-                        if (self.limit_extrafanart and self.limit_extrafanart_max < len(backdrops)):
+                        if (self.limit_extrafanart and self.limit_extrafanart_max < len(image_list)):
                             download_max = self.limit_extrafanart_max
-                        else: download_max = len(backdrops)
-                        if (self.limit_extrathumbs and self.limit_extrathumbs_max < len(thumbs)):
+                        else: download_max = len(image_list)
+                        if (self.limit_extrathumbs and self.limit_extrathumbs_max < len(image_list)):
                             download_thumbsmax = self.limit_extrathumbs_max
-                        else: download_thumbsmax = len(thumbs)
+                        else: download_thumbsmax = len(image_list)
                         ### Extrafanart downloading
-                        if self.movie_extrafanart == 'true' or self.tvshow_extrafanart == 'true':
+                        if self.movie_extrafanart or self.tvshow_extrafanart:
                             log('Extrafanart enabled. Processing')
-                            for fanart in backdrops:
+                            for fanart in image_list:
+                                size = 'original'
                                 fanarturl = fanart['url']
-                                ### check if script has been cancelled by user
-                                if dialog('iscanceled', background = self.background):
-                                    dialog('close', background = self.background)
-                                    break
-                                if not self.failcount < self.failthreshold:
-                                    break
-                                fanartfile = provider.get_filename(fanarturl)
-                                self.current_fanart = self.current_fanart + 1
-                                ### Check for set limits
-                                if self.limit_extrafanart and self.downloaded_fanart >= self.limit_extrafanart_max:
-                                    reason = 'Max number fanart reached: %s' % self.downloaded_fanart
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                elif self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
-                                    reason = 'Rating too low: %s' % fanart['rating']
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                elif self.limit_extrafanart and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
-                                    reason = 'Has text'
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                elif self.limit_extrafanart and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
-                                    reason = "Doesn't match current language: %s" % xbmc.getLanguage()
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                else:
-                                    try:
-                                        self.fileops._downloadfile(fanarturl, fanartfile, targets)
-                                    except HTTP404Error, e:
-                                        log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-                                    except HTTPTimeout, e:
-                                        self.failcount = self.failcount + 1
-                                        log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
-                                    except CreateDirectoryError, e:
-                                        log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                                if size in fanart['size']:
+                                    ### check if script has been cancelled by user
+                                    if dialog('iscanceled', background = self.background):
+                                        dialog('close', background = self.background)
                                         break
-                                    except DownloadError, e:
-                                        self.failcount = self.failcount + 1
-                                        log('Error downloading file: %s (Possible network error: %s), skipping' % (fanarturl, str(e)), xbmc.LOGERROR)
+                                    if not self.failcount < self.failthreshold:
+                                        break
+                                    fanartfile = provider.get_filename(fanarturl)
+                                    self.current_fanart = self.current_fanart + 1
+                                    ### Check for set limits
+                                    if self.limit_extrafanart and self.downloaded_fanart >= self.limit_extrafanart_max:
+                                        reason = 'Max number fanart reached: %s' % self.downloaded_fanart
+                                        self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
+                                    elif self.limit_extrafanart and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
+                                        reason = 'Rating too low: %s' % fanart['rating']
+                                        self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
+                                    elif self.limit_extrafanart and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
+                                        reason = 'Has text'
+                                        self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
+                                    elif self.limit_extrafanart and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
+                                        reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+                                        self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
                                     else:
-                                        self.downloaded_fanart = self.downloaded_fanart + 1
-                                dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36102), line2 = self.media_name, line3 = fanartfile, background = self.background)
+                                        try:
+                                            self.fileops._downloadfile(fanarturl, fanartfile, targets)
+                                        except HTTP404Error, e:
+                                            log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+                                        except HTTPTimeout, e:
+                                            self.failcount = self.failcount + 1
+                                            log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
+                                        except CreateDirectoryError, e:
+                                            log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                                            break
+                                        except DownloadError, e:
+                                            self.failcount = self.failcount + 1
+                                            log('Error downloading file: %s (Possible network error: %s), skipping' % (fanarturl, str(e)), xbmc.LOGERROR)
+                                        else:
+                                            self.downloaded_fanart = self.downloaded_fanart + 1
+                                    dialog('update', percentage = int(float(self.current_fanart) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36102), line2 = self.media_name, line3 = fanartfile, background = self.background)
                         else:    
                             log('Extrafanart disabled. skipping')
                         ### Movie extrathumbs downloading
                         if self.movie_extrathumb and self.mediatype == 'movie':
                             log('Movie extrathumbs enabled. Processing')
-                            for extrathumbs in thumbs:
+                            for extrathumbs in image_list:
+                                size = 'thumb'
                                 extrathumbsurl = extrathumbs['url']
-                                ### check if script has been cancelled by user
-                                if dialog('iscanceled', background = self.background):
-                                    dialog('close', background = self.background)
-                                    break
-                                if not self.failcount < self.failthreshold:
-                                    break
-                                extrathumbsfile = ('thumb%s.jpg' % str(self.current_extrathumbs+1))
-                                self.current_extrathumbs = self.current_extrathumbs + 1
-                                ### Check for set limits
-                                if self.limit_extrathumbs and self.downloaded_extrathumbs >= self.limit_extrathumbs_max:
-                                    reason = 'Max number extrathumbs reached: %s' % self.downloaded_extrathumbs
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                elif self.limit_extrathumbs and 'rating' in extrathumbs and extrathumbs['rating'] < self.limit_extrathumbs_rating:
-                                    reason = 'Rating too low: %s' % extrathumbs['rating']
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                elif self.limit_extrathumbs and 'series_name' in extrathumbs and self.limit_notext and extrathumbs['series_name']:
-                                    reason = 'Has text'
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                elif self.limit_extrathumbs and self.limit_language and 'language' in extrathumbs and extrathumbs['language'] != __language__:
-                                    reason = "Doesn't match current language: %s" % xbmc.getLanguage()
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                else:
-                                    try:
-                                        self.fileops._downloadfile(extrathumbsurl, extrathumbsfile, targetthumbsdirs)
-                                    except HTTP404Error, e:
-                                        log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-                                    except HTTPTimeout, e:
-                                        self.failcount = self.failcount + 1
-                                        log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
-                                    except CreateDirectoryError, e:
-                                        log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                                if size in extrathumbs['size']:
+                                    ### check if script has been cancelled by user
+                                    if dialog('iscanceled', background = self.background):
+                                        dialog('close', background = self.background)
                                         break
-                                    except DownloadError, e:
-                                        self.failcount = self.failcount + 1
-                                        log('Error downloading file: %s (Possible network error: %s), skipping' % (extrathumbsurl, str(e)), xbmc.LOGERROR)
+                                    if not self.failcount < self.failthreshold:
+                                        break
+                                    extrathumbsfile = ('thumb%s.jpg' % str(self.current_extrathumbs+1))
+                                    self.current_extrathumbs = self.current_extrathumbs + 1
+                                    ### Check for set limits
+                                    if self.limit_extrathumbs and self.downloaded_extrathumbs >= self.limit_extrathumbs_max:
+                                        reason = 'Max number extrathumbs reached: %s' % self.downloaded_extrathumbs
+                                        self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
+                                    elif self.limit_extrathumbs and 'rating' in extrathumbs and extrathumbs['rating'] < self.limit_extrathumbs_rating:
+                                        reason = 'Rating too low: %s' % extrathumbs['rating']
+                                        self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
+                                    elif self.limit_extrathumbs and 'series_name' in extrathumbs and self.limit_notext and extrathumbs['series_name']:
+                                        reason = 'Has text'
+                                        self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
+                                    elif self.limit_extrathumbs and self.limit_language and 'language' in extrathumbs and extrathumbs['language'] != __language__:
+                                        reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+                                        self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
                                     else:
-                                        self.downloaded_extrathumbs = self.downloaded_extrathumbs + 1
-                                dialog('update', percentage = int(float(self.current_extrathumbs) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36110), line2 = self.media_name, line3 = extrathumbsfile, background = self.background)
+                                        try:
+                                            self.fileops._downloadfile(extrathumbsurl, extrathumbsfile, targetthumbsdirs)
+                                        except HTTP404Error, e:
+                                            log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+                                        except HTTPTimeout, e:
+                                            self.failcount = self.failcount + 1
+                                            log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
+                                        except CreateDirectoryError, e:
+                                            log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                                            break
+                                        except DownloadError, e:
+                                            self.failcount = self.failcount + 1
+                                            log('Error downloading file: %s (Possible network error: %s), skipping' % (extrathumbsurl, str(e)), xbmc.LOGERROR)
+                                        else:
+                                            self.downloaded_extrathumbs = self.downloaded_extrathumbs + 1
+                                    dialog('update', percentage = int(float(self.current_extrathumbs) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36110), line2 = self.media_name, line3 = extrathumbsfile, background = self.background)
                         else:    
                             log('Extrathumbs disabled. skipping')
             log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
