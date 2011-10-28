@@ -11,8 +11,9 @@ Eden 11.0:
     Current stable version : 0.4.0
 
 Current Features:
-    - TV Extrafanart
-    - Movie Extrafanart
+    - TV ExtraFanart
+    - Movie ExtraFanart
+    - Movie ExtraThumbs
     - Skin integration: Bulk mode (download all extrafanart for every tv show/movie)
     - Skin integration: Solo mode (download all extrafanart for only one tv show/movie)
     - Limit fanart by: maximum amount/ minimum rating / language used

@@ -14,7 +14,7 @@ class TVDBProvider(BaseProvider):
         self.url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml'
         self.url_prefix = 'http://www.thetvdb.com/banners/'
     
-    def get_image_list(self, media_id):
+    def get_image_list(self, media_id, size):
         xml_url = self.url % (self.api_key, media_id)
         log('API: %s ' % xml_url)
         image_list = []
@@ -25,7 +25,7 @@ class TVDBProvider(BaseProvider):
             if image.findtext('BannerType') == 'fanart' and image.findtext('BannerPath'):
                 info['url'] = self.url_prefix + image.findtext('BannerPath')
                 info['language'] = image.findtext('Language')
-                if image.findtext('BannerType2'):
+                if image.findtext('BannerType2') :
                     x,y = image.findtext('BannerType2').split('x')
                     info['height'] = int(x)
                     info['width'] = int(y)

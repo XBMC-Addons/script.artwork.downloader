@@ -1,6 +1,6 @@
 [B]2.0.0[/B]
 - Major version bump to distinguish from Dharma
--
+- Added Extrathumbs support for Movies
 -
 -
 
