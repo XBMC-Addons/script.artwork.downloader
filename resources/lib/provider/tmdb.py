@@ -34,7 +34,8 @@ class TMDBProvider(BaseProvider):
             tree = tree.findall('images')[0]
             for image in tree.findall('image'):
                 info = {}
-                if image.get('type') == 'backdrop' and image.get('size') == 'original' and image.get('url'):
+                if image.get('type') == 'backdrop' and image.get('url'):
+                    info['size'] = image.get('size')
                     info['url'] = image.get('url')
                     info['height'] = int(image.get('height'))
                     info['width'] = int(image.get('width'))

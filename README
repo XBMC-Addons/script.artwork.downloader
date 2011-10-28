@@ -6,11 +6,12 @@ in your XBMC library and place it in an 'extrafanart' directory to be used by sk
 The script also supports a 'solo mode' which allows it to be run from inside a skin and download the fanart for only 1 tv show or movie at a time.
 
 Dharma 10.1:
-    Current stable version 0.2.0
+    Current stable version 1.0.0
 
 Current Features:
 	- TV Extrafanart
 	- Movie Extrafanart
+    - Movie Extrathumbs
 	- Skin integration: Bulk mode (download all extrafanart for every tv show/movie)
 	- Skin integration: Solo mode (download all extrafanart for only one tv show/movie)
 	- Limit fanart by: maximum amount/ minimum rating / language used
