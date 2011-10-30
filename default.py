@@ -29,36 +29,162 @@ from xml.parsers.expat import ExpatError
 Media_listing = media_setup.media_listing
 __language__ = language.get_abbrev()
 
+### clean up and
+def cleanup(self):
+    if self.fileops._exists(self.fileops.tempdir):
+        dialog('update', percentage = 100, line1 = __localize__(36004), background = self.background)
+        log('Cleaning up temp files')
+        for x in os.listdir(self.fileops.tempdir):
+            tempfile = os.path.join(self.fileops.tempdir, x)
+            self.fileops._delete(tempfile)
+            if self.fileops._exists(tempfile):
+                log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
+        self.fileops._rmdir(self.fileops.tempdir)
+        if self.fileops._exists(self.fileops.tempdir):
+            log('Error deleting temp directory: %s' % self.fileops.tempdir, xbmc.LOGERROR)
+        else:
+            log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
+    ### log results and notify user
+    log('Finished: Total of %s artwork downloaded' % self.fileops.downloadcount, xbmc.LOGNOTICE)
+    summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
+    summary = summary_tmp + __localize__(36013)
+    dialog('close', background = self.background)
+    if not self.failcount < self.failthreshold:
+        log('Network error detected, script aborted', xbmc.LOGERROR)
+        dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.background)
+    if not xbmc.abortRequested:
+        dialog('okdialog', line1 = summary, background = self.background)
+    else:
+        dialog('okdialog', line1 = __localize__(36007), line2 = summary, background = self.background)
+
+### check if settings.xml excist
+def settings_excist(self):
+    if not os.path.isfile(settings_file):
+        dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
+        log('## Settings.xml file not found. Opening settings window.')
+        __addon__.openSettings()
+        first_run = True
+    else:
+        log('Settings.xml file found. Continue with initializing.')
+  
+### get settings from settings.xml
+def settings_get(self):
+    self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
+    self.movie_extrafanart = __addon__.getSetting("movie_extrafanart") == 'true'
+    self.movie_extrathumb = __addon__.getSetting("movie_extrathumb") == 'true'
+    self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
+    self.tvshow_extrafanart = __addon__.getSetting("tvshow_extrafanart") == 'true'
+    self.centralize_enable = __addon__.getSetting("centralize_enable") == 'true'
+    self.centralfolder_split = __addon__.getSetting("centralfolder_split")
+    self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
+    self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
+    self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
+    self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
+    self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
+    self.limit_extrathumbs = self.limit_extrafanart
+    self.limit_extrathumbs_max = 4
+    self.limit_extrathumbs_rating = self.limit_extrafanart_rating
+    self.limit_language = __addon__.getSetting("limit_language") == 'true'
+    self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
+    self.use_cache = __addon__.getSetting("use_cache") == 'true'
+    self.cache_directory = __addon__.getSetting("cache_directory")
+    self.background = __addon__.getSetting("background") == 'true'
+
+### declare some starting variables
+def settings_vars(self):
+    self.mediatype = ''
+    self.medianame = ''
+    providers = provider.get_providers()
+    self.movie_providers = providers['movie_providers']
+    self.tv_providers = providers['tv_providers']
+    self.music_providers = providers['music_providers']
+    self.failcount = 0
+    self.failthreshold = 3
+    self.xmlfailthreshold = 5
+    self.fanart_centralized = 0        
+
+# Print out settings to log to help with debugging
+def settings_log(self):
+    log("## Settings...")
+    log('## Language Used = %s' % str(__language__))
+    log('## Download Movie Artwork= %s' % str(self.moviefanart))
+    log('## Download Movie ExtraFanart= %s' % str(self.movie_extrafanart))
+    log('## Download Movie ExtraThumbs= %s' % str(self.movie_extrathumb))
+    log('## Download TV Show Artwork = %s' % str(self.tvfanart))
+    log('## Download TV Show ExtraFanart = %s' % str(self.tvshow_extrafanart))
+    log('## Background Run = %s' % str(self.background))
+    log('## Centralize Extrafanart = %s' % str(self.centralize_enable))
+    log('## Central Movies Folder = %s' % str(self.centralfolder_movies))
+    log('## Central TV Show Folder = %s' % str(self.centralfolder_tvshows))
+    log('## Limit Extrafanart = %s' % str(self.limit_extrafanart))
+    log('## Limit Extrafanart Max = %s' % str(self.limit_extrafanart_max))
+    log('## Limit Extrafanart Rating = %s' % str(self.limit_extrafanart_rating))
+    log('## Limit Extrathumbs = %s' % str(self.limit_extrathumbs))
+    log('## Limit Extrathumbs Max = %s' % str(self.limit_extrathumbs_max))
+    log('## Limit Extrathumbs Rating = %s' % str(self.limit_extrathumbs_rating))
+    log('## Limit Language = %s' % str(self.limit_language))
+    log('## Limit Fanart with no text = %s' % str(self.limit_notext))
+    log('## Backup downloaded fanart= %s' % str(self.use_cache))
+    log('## Backup folder = %s' % str(self.cache_directory))
+    log("## End of Settings...")
+
+### Check for script starting arguments used by skins
+def runmode_args(self):
+    log("## Checking for arguments used by skins")
+    try: log( "## arg 0: %s" % sys.argv[0] )
+    except:   log( "## no arg0" )
+    try: log( "## arg 1: %s" % sys.argv[1] )
+    except:   log( "## no arg1" )
+    try: log( "## arg 2: %s" % sys.argv[2] )
+    except:   log( "## no arg2" )
+    try: log( "## arg 3: %s" % sys.argv[3] )
+    except:   log( "## no arg3" )
+    try: log( "## arg 4: %s" % sys.argv[4] )
+    except:   log( "## no arg4" )
+    try: log( "arg 5: %s" % sys.argv[5] )
+    except:   log( "## no arg5" )
+    try: log( "## arg 6: %s" % sys.argv[6] )
+    except:   log( "## no arg6" )
+    try: log( "## arg 7: %s" % sys.argv[7] )
+    except:   log( "## no arg7" )
+    try: log( "## arg 8: %s" % sys.argv[8] )
+    except:   log( "## no arg8" )
+
+### initial check before exicuting
+def initialise(self):
+    dialog('create', line1 = __localize__(36005), background = self.background)
+    for item in sys.argv:
+        log("## Checking for downloading mode...")
+        match = re.search("mediatype=(.*)" , item)
+        if match:
+            self.mediatype = match.group(1)
+            if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'music':
+                pass
+            else:
+                log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
+                return False
+        else:
+            pass
+        match = re.search("medianame=" , item)
+        if match:
+            self.medianame = item.replace("medianame=" , "")
+        else:
+            pass
+    try:
+        self.fileops = fileops()
+    except CreateDirectoryError, e:
+        log("Could not create directory: %s" % str(e))
+        return False
+    else:
+        return True
 class Main:
     def __init__(self):
-        if not os.path.isfile(settings_file):
-            dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
-            log('Settings.xml file not found. Opening settings window.')
-            __addon__.openSettings()
-            first_run = True
-        else:
-            log('Settings.xml file found. Continue with initializing.')
-        ### Check for script starting arguments used by skins
-        log("## Checking for arguments used by skins")
-        try: log( "## arg 0: %s" % sys.argv[0] )
-        except:   log( "## no arg0" )
-        try: log( "## arg 1: %s" % sys.argv[1] )
-        except:   log( "## no arg1" )
-        try: log( "## arg 2: %s" % sys.argv[2] )
-        except:   log( "## no arg2" )
-        try: log( "## arg 3: %s" % sys.argv[3] )
-        except:   log( "## no arg3" )
-        try: log( "## arg 4: %s" % sys.argv[4] )
-        except:   log( "## no arg4" )
-        try: log( "arg 5: %s" % sys.argv[5] )
-        except:   log( "## no arg5" )
-        try: log( "## arg 6: %s" % sys.argv[6] )
-        except:   log( "## no arg6" )
-        try: log( "## arg 7: %s" % sys.argv[7] )
-        except:   log( "## no arg7" )
-        try: log( "## arg 8: %s" % sys.argv[8] )
-        except:   log( "## no arg8" )
-        if self.initialise():
+        settings_excist(self)
+        settings_get(self)
+        settings_vars(self)
+        settings_log(self)
+        runmode_args(self)
+        if initialise(self):
             if not self.mediatype == '':
                 if not self.medianame == '':
                     self.solo_mode(self.mediatype, self.medianame)
@@ -88,121 +214,10 @@ class Main:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
-        self.cleanup()
+        cleanup(self)
 
 
-    ### load settings and initialise needed directories
-    def initialise(self):
-        providers = provider.get_providers()
-        self.movie_providers = providers['movie_providers']
-        self.tv_providers = providers['tv_providers']
-        self.music_providers = providers['music_providers']
-        self.failcount = 0
-        self.failthreshold = 3
-        self.xmlfailthreshold = 5
-        self.fanart_centralized = 0
-        self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
-        self.movie_extrafanart = __addon__.getSetting("movie_extrafanart") == 'true'
-        self.movie_extrathumb = __addon__.getSetting("movie_extrathumb") == 'true'
-        self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
-        self.tvshow_extrafanart = __addon__.getSetting("tvshow_extrafanart") == 'true'
-        self.centralize_enable = __addon__.getSetting("centralize_enable") == 'true'
-        self.centralfolder_split = __addon__.getSetting("centralfolder_split")
-        self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
-        self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
-        self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
-        self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
-        self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
-        self.limit_extrathumbs = self.limit_extrafanart
-        self.limit_extrathumbs_max = 4
-        self.limit_extrathumbs_rating = self.limit_extrafanart_rating
-        self.limit_language = __addon__.getSetting("limit_language") == 'true'
-        self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
-        self.use_cache = __addon__.getSetting("use_cache") == 'true'
-        self.cache_directory = __addon__.getSetting("cache_directory")
-        self.background = __addon__.getSetting("background") == 'true'
-        dialog('create', line1 = __localize__(36005), background = self.background)
-        self.mediatype = ''
-        self.medianame = ''
 
-        # Print out settings to log to help with debugging
-        log("## Settings...")
-        log('## Language Used = %s' % str(__language__))
-        log('## Download Movie Artwork= %s' % str(self.moviefanart))
-        log('## Download Movie ExtraFanart= %s' % str(self.movie_extrafanart))
-        log('## Download Movie ExtraThumbs= %s' % str(self.movie_extrathumb))
-        log('## Download TV Show Artwork = %s' % str(self.tvfanart))
-        log('## Download TV Show ExtraFanart = %s' % str(self.tvshow_extrafanart))
-        log('## Background Run = %s' % str(self.background))
-        log('## Centralize Extrafanart = %s' % str(self.centralize_enable))
-        log('## Central Movies Folder = %s' % str(self.centralfolder_movies))
-        log('## Central TV Show Folder = %s' % str(self.centralfolder_tvshows))
-        log('## Limit Extrafanart = %s' % str(self.limit_extrafanart))
-        log('## Limit Extrafanart Max = %s' % str(self.limit_extrafanart_max))
-        log('## Limit Extrafanart Rating = %s' % str(self.limit_extrafanart_rating))
-        log('## Limit Extrathumbs = %s' % str(self.limit_extrathumbs))
-        log('## Limit Extrathumbs Max = %s' % str(self.limit_extrathumbs_max))
-        log('## Limit Extrathumbs Rating = %s' % str(self.limit_extrathumbs_rating))
-        log('## Limit Language = %s' % str(self.limit_language))
-        log('## Limit Fanart with no text = %s' % str(self.limit_notext))
-        log('## Backup downloaded fanart= %s' % str(self.use_cache))
-        log('## Backup folder = %s' % str(self.cache_directory))
-        log("## End of Settings...")
-
-        
-        for item in sys.argv:
-            log("## Checking for downloading mode...")
-            match = re.search("mediatype=(.*)" , item)
-            if match:
-                self.mediatype = match.group(1)
-                if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'music':
-                    pass
-                else:
-                    log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
-                    return False
-            else:
-                pass
-            match = re.search("medianame=" , item)
-            if match:
-                self.medianame = item.replace("medianame=" , "")
-            else:
-                pass
-        try:
-            self.fileops = fileops()
-        except CreateDirectoryError, e:
-            log("Could not create directory: %s" % str(e))
-            return False
-        else:
-            return True
-
-
-    ### clean up and
-    def cleanup(self):
-        if self.fileops._exists(self.fileops.tempdir):
-            dialog('update', percentage = 100, line1 = __localize__(36004), background = self.background)
-            log('Cleaning up temp files')
-            for x in os.listdir(self.fileops.tempdir):
-                tempfile = os.path.join(self.fileops.tempdir, x)
-                self.fileops._delete(tempfile)
-                if self.fileops._exists(tempfile):
-                    log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
-            self.fileops._rmdir(self.fileops.tempdir)
-            if self.fileops._exists(self.fileops.tempdir):
-                log('Error deleting temp directory: %s' % self.fileops.tempdir, xbmc.LOGERROR)
-            else:
-                log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
-        ### log results and notify user
-        log('Finished: Total of %s artwork downloaded' % self.fileops.downloadcount, xbmc.LOGNOTICE)
-        summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
-        summary = summary_tmp + __localize__(36013)
-        dialog('close', background = self.background)
-        if not self.failcount < self.failthreshold:
-            log('Network error detected, script aborted', xbmc.LOGERROR)
-            dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.background)
-        if not xbmc.abortRequested:
-            dialog('okdialog', line1 = summary, background = self.background)
-        else:
-            dialog('okdialog', line1 = __localize__(36007), line2 = summary, background = self.background)
 
     ### solo mode
     def solo_mode(self, itemtype, itemname):
