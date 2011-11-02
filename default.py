@@ -71,7 +71,7 @@ def settings_excist(self):
 def settings_get(self):
     self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
     self.movie_extrafanart = __addon__.getSetting("movie_extrafanart") == 'true'
-    self.movie_extrathumb = __addon__.getSetting("movie_extrathumb") == 'true'
+    self.movie_extrathumbs = __addon__.getSetting("movie_extrathumbs") == 'true'
     self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
     self.tvshow_extrafanart = __addon__.getSetting("tvshow_extrafanart") == 'true'
     self.centralize_enable = __addon__.getSetting("centralize_enable") == 'true'
@@ -79,8 +79,8 @@ def settings_get(self):
     self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
     self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
     self.limit_extrafanart = __addon__.getSetting("limit_extrafanart") == 'true'
-    self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
-    self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
+    self.limit_extrafanart_max = int(float(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.')))
+    self.limit_extrafanart_rating = int(float(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.')))
     self.limit_extrathumbs = self.limit_extrafanart
     self.limit_extrathumbs_max = 4
     self.limit_extrathumbs_rating = self.limit_extrafanart_rating
@@ -109,7 +109,7 @@ def settings_log(self):
     log('## Language Used = %s' % str(__language__))
     log('## Download Movie Artwork= %s' % str(self.moviefanart))
     log('## Download Movie ExtraFanart= %s' % str(self.movie_extrafanart))
-    log('## Download Movie ExtraThumbs= %s' % str(self.movie_extrathumb))
+    log('## Download Movie ExtraThumbs= %s' % str(self.movie_extrathumbs))
     log('## Download TV Show Artwork = %s' % str(self.tvfanart))
     log('## Download TV Show ExtraFanart = %s' % str(self.tvshow_extrafanart))
     log('## Background Run = %s' % str(self.background))
@@ -200,13 +200,13 @@ class Main:
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
             else:
-                if self.tvfanart:
+                if self.tvfanart and self.tvshow_extrafanart:
                     self.Medialist = Media_listing('TVShows')
                     self.mediatype = 'tvshow'
                     self.download_fanart(self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
-                if self.moviefanart:
+                if self.moviefanart and (self.movie_extrafanart or self.movie_extrathumbs):
                     self.Medialist = Media_listing('Movies')
                     self.mediatype = 'movie'
                     self.download_fanart(self.Medialist, self.movie_providers)
@@ -397,7 +397,7 @@ class Main:
                         else:    
                             log('Extrafanart disabled. skipping')
                         ### Movie extrathumbs downloading
-                        if self.movie_extrathumb and self.mediatype == 'movie':
+                        if self.movie_extrathumbs and self.mediatype == 'movie':
                             log('Movie extrathumbs enabled. Processing')
                             for extrathumbs in image_list:
                                 size = 'thumb'
