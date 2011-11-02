@@ -362,7 +362,10 @@ class Main:
                                         break
                                     if not self.failcount < self.failthreshold:
                                         break
-                                    fanartfile = provider.get_filename(fanarturl)
+                                    if self.mediatype == 'movie':
+                                        fanartfile = provider.get_filename(fanart['id'])
+                                    else:
+                                        fanartfile = provider.get_filename(fanarturl)
                                     self.current_fanart = self.current_fanart + 1
                                     ### Check for set limits
                                     if self.limit_extrafanart and self.downloaded_fanart >= self.limit_extrafanart_max:
