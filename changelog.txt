@@ -1,6 +1,7 @@
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies
 - Fixed: New TMDB image locations on site
+         Advisable is to delete all existing movie extrafanart folders
 
 [B]0.4.0[/B]
 - Added: silent downloading in background
