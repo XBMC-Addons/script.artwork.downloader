@@ -17,7 +17,11 @@ class TMDBProvider(BaseProvider):
         
         
     def get_filename(self, url):
-        return url.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
+        try:
+            filename = url.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
+        except:
+            filename = url.rsplit('/', 1)[1]
+        return filename
         
     def get_image_list(self, media_id):
         xml_url = self.url % (self.api_key, media_id)
