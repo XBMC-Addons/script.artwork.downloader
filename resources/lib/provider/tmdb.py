@@ -16,11 +16,8 @@ class TMDBProvider(BaseProvider):
         self.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/" + language.get_abbrev() + "/xml/%s/%s"
         
         
-    def get_filename(self, url):
-        try:
-            filename = url.split('backdrops', 1)[1].replace('/', '-').lstrip('-')
-        except:
-            filename = url.rsplit('/', 1)[1]
+    def get_filename(self, imageid):
+        filename = imageid + '.jpg'
         return filename
         
     def get_image_list(self, media_id):
@@ -40,6 +37,7 @@ class TMDBProvider(BaseProvider):
                 info = {}
                 if image.get('type') == 'backdrop' and image.get('url'):
                     info['size'] = image.get('size')
+                    info['id'] = image.get('id')
                     info['url'] = image.get('url')
                     info['height'] = int(image.get('height'))
                     info['width'] = int(image.get('width'))
