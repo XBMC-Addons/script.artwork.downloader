@@ -18,7 +18,7 @@
         <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
         <string id="36031">Central Movie fanart directory</string>
         <string id="36032">Central TV fanart directory</string>
-        <string id="36033">Limit download: Extrafanart</string>
+        <string id="36033">Limit Artwork</string>
         <string id="36034">Maximum downloads per title</string>
         <string id="36035">Minimum rating</string>
         <string id="36036">Current language only</string>
@@ -60,6 +60,7 @@
         <string id="36108">Poster</string>
         <string id="36109">Thumb</string>
         <string id="36110">Extrathumbs</string>
+        <string id="36111">Disc Art</string>
 
     <!-- Messages settings: Possible messages to use -->
         <string id="32121">Please help us to get more art on</string>
