@@ -8,22 +8,17 @@ from resources.lib.utils import _log as log
 
 def media_listing(media_type):
         if media_type == 'TVShows':
-            log('Using JSON for retrieving info')
+            log('Using JSON for retrieving TV Show info')
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.Get%s", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}' % media_type)
             jsonobject = simplejson.loads(json_response)
             Medialist = []
-            log('Checking for JSON results')
             if jsonobject['result'].has_key('tvshows'):
-                log('Processing JSON objects')
                 for item in jsonobject['result']['tvshows']:
                     Media = {}
                     Media['name'] = item['label']
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['tvshowid'] = item['tvshowid']
-                    log('Media name: %s' %Media['name'])
-                    log('Media path: %s' %Media['path'])
-                    log('Media IMDB: %s' %Media['id'])
                     ### Search for season numbers
                     json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
                     jsonobject_season = simplejson.loads(json_response_season)
@@ -34,13 +29,11 @@ def media_listing(media_type):
                         Media['seasonend'] = limits['end']
                     Medialist.append(Media)
         elif media_type == 'Movies':
-            log('Using JSON for retrieving info')
+            log('Using JSON for retrieving: Movie info')
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.Get%s", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}' % media_type)
             jsonobject = simplejson.loads(json_response)
             Medialist = []
-            log('Checking for JSON results')
             if jsonobject['result'].has_key('movies'):
-                log('Processing JSON objects')
                 for item in jsonobject['result']['movies']:
                     Media = {}
                     Media['name'] = item['label']
