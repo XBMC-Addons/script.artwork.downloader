@@ -26,20 +26,12 @@ def media_listing(media_type):
                     log('Media IMDB: %s' %Media['id'])
                     ### Search for season numbers
                     json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
-                    log('JSON Respons seasons: %s' %json_response)
-                    log('')
                     jsonobject_season = simplejson.loads(json_response_season)
-                    log('JSON Object seasons: %s' %jsonobject_season)
-                    log('')
-                    if jsonobject_season['result'].has_key('label'):
-                        for item in jsonobject_season['result']['label']:
-                            log('')
-                            Media['seasontotal'] = item['label']
-                            log('Season total: %s' %Media['seasontotal'])
-                            #Media['seasonstart'] = item['start']
-                            #log('Season start: %s' %Media['seasonstart'])                            
-                            #Media['seasonend'] = item['end']
-                            #log('Season end: %s' %Media['seasonend'])
+                    if jsonobject_season['result'].has_key('limits'):
+                        limits = jsonobject_season['result']['limits']
+                        Media['seasontotal'] = limits['total']
+                        Media['seasonstart'] = limits['start']
+                        Media['seasonend'] = limits['end']
                     Medialist.append(Media)
         elif media_type == 'Movies':
             log('Using JSON for retrieving info')
