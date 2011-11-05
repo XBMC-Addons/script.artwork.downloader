@@ -7,11 +7,11 @@ from resources.lib.utils import _log as log
 ### get list of all tvshows and movies with their imdbnumber from library
 
 def media_listing(media_type):
-        if media_type == 'TVShows':
-            log('Using JSON for retrieving TV Show info')
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.Get%s", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}' % media_type)
+        log('Using JSON for retrieving %s info' %media_type)
+        Medialist = []
+        if media_type == 'tvshows':
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
             jsonobject = simplejson.loads(json_response)
-            Medialist = []
             if jsonobject['result'].has_key('tvshows'):
                 for item in jsonobject['result']['tvshows']:
                     Media = {}
@@ -28,11 +28,9 @@ def media_listing(media_type):
                         Media['seasonstart'] = limits['start']
                         Media['seasonend'] = limits['end']
                     Medialist.append(Media)
-        elif media_type == 'Movies':
-            log('Using JSON for retrieving: Movie info')
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.Get%s", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}' % media_type)
+        elif media_type == 'movies':
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
             jsonobject = simplejson.loads(json_response)
-            Medialist = []
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
                     Media = {}
@@ -42,5 +40,5 @@ def media_listing(media_type):
                     Media['movieid'] = item['movieid']
                     Medialist.append(Media)
         else:
-            log('No results found')
+            log('No JSON results found')
         return Medialist

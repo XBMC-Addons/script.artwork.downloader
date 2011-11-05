@@ -42,25 +42,25 @@ class Main:
                 if not self.medianame == '':
                     solo_mode(self, self.mediatype, self.medianame)
                 else:
-                    if self.mediatype == 'tvshow':
-                        self.Medialist = Media_listing('TVShows')
+                    if self.mediatype == 'tvshows':
+                        self.Medialist = Media_listing('tvshows')
                         log("Bulk mode: TV Shows")
                         download_artwork(self, self.Medialist, self.tv_providers)
                     elif self.mediatype == 'movie':
-                        self.Medialist = Media_listing('Movies')
-                        log("Bulk mode: Movies")
+                        self.Medialist = Media_listing('movies')
+                        log("Bulk mode: movies")
                         download_artwork(self, self.Medialist, self.movie_providers)
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
             else:
                 if self.tvfanart and (self.tvshow_extrafanart or self.tvshow_poster):
-                    self.Medialist = Media_listing('TVShows')
-                    self.mediatype = 'tvshow'
+                    self.Medialist = Media_listing('tvshows')
+                    self.mediatype = 'tvshows'
                     download_artwork(self, self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
                 if self.moviefanart and (self.movie_extrafanart or self.movie_extrathumbs or self.movie_poster):
-                    self.Medialist = Media_listing('Movies')
+                    self.Medialist = Media_listing('movies')
                     self.mediatype = 'movie'
                     download_artwork(self, self.Medialist, self.movie_providers)
                 else:
@@ -225,15 +225,15 @@ def cleanup(self):
 def solo_mode(self, itemtype, itemname):
     if itemtype == 'movie':
         log("## Solo mode: Movie...")
-        self.Medialist = Media_listing('Movies')
-    elif itemtype == 'tvshow':
-        self.Medialist = Media_listing('TVShows')
+        self.Medialist = Media_listing('movies')
+    elif itemtype == 'tvshows':
+        self.Medialist = Media_listing('tvshows')
         log("## Solo mode: TV Show...")
     elif itemtype == '':
         self.Medialist = Media_listing('Music')
         log("## Solo mode: Music...")
     else:
-        log("Error: type must be one of 'movie', 'tvshow' or 'music', aborting", xbmc.LOGERROR)
+        log("Error: type must be one of 'movie', 'tvshows' or 'music', aborting", xbmc.LOGERROR)
         return False
     log('Retrieving fanart for: %s' % itemname)
     for currentitem in self.Medialist:
@@ -242,7 +242,7 @@ def solo_mode(self, itemtype, itemname):
                 self.Medialist = []
                 self.Medialist.append(currentitem)
                 download_artwork(self, self.Medialist, self.movie_providers)
-            if itemtype == 'tvshow':
+            if itemtype == 'tvshows':
                 self.Medialist = []
                 self.Medialist.append(currentitem)
                 download_artwork(self, self.Medialist, self.tv_providers)
@@ -255,10 +255,10 @@ def initialise(self):
         match = re.search("mediatype=(.*)" , item)
         if match:
             self.mediatype = match.group(1)
-            if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'music':
+            if self.mediatype == 'tvshows' or self.mediatype == 'movie' or self.mediatype == 'music':
                 pass
             else:
-                log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
+                log('Error: invalid mediatype, must be one of movie, tvshows or music', xbmc.LOGERROR)
                 return False
         else:
             pass
@@ -308,7 +308,7 @@ def download_artwork(self, media_list, providers):
         target_artworkdir.append(self.media_path)
         ### Check if using the centralize option
         if self.centralize_enable:
-            if self.mediatype == 'tvshow':
+            if self.mediatype == 'tvshows':
                 if not self.centralfolder_tvshows == '':
                     targetdirs.append(self.centralfolder_tvshows)
                 else:
@@ -317,14 +317,14 @@ def download_artwork(self, media_list, providers):
                 if not self.centralfolder_movies == '':
                     targetdirs.append(self.centralfolder_movies)
                 else:
-                    log('Error: Central fanart enabled but Movies folder not set, skipping', xbmc.LOGERROR)
+                    log('Error: Central fanart enabled but movies folder not set, skipping', xbmc.LOGERROR)
         ### Check if using the cache option
         targets = targetdirs[:]
         if self.use_cache and not self.cache_directory == '':
             targets.append(self.cache_directory)
         if self.media_id == '':
             log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
-        elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
+        elif self.mediatype == 'tvshows' and self.media_id.startswith('tt'):
             log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
         else:
             for provider in providers:
