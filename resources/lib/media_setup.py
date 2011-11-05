@@ -32,9 +32,9 @@ def media_listing(media_type):
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['tvshowid'] = item['tvshowid']
-                    log('Media name: %s' %Media['name'])
-                    log('Media path: %s' %Media['path'])
-                    log('Media IMDB: %s' %Media['id'])
+                    #log('Media name: %s' %Media['name'])
+                    #log('Media path: %s' %Media['path'])
+                    #log('Media IMDB: %s' %Media['id'])
                     Medialist.append(Media)
         elif media_type == 'Movies':
             log('Using JSON for retrieving info')
