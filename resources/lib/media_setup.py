@@ -9,7 +9,7 @@ from resources.lib.utils import _log as log
 def media_listing(media_type):
         log('Using JSON for retrieving %s info' %media_type)
         Medialist = []
-        if media_type == 'tvshows':
+        if media_type == 'tvshow':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('tvshows'):
@@ -28,7 +28,7 @@ def media_listing(media_type):
                         Media['seasonstart'] = limits['start']
                         Media['seasonend'] = limits['end']
                     Medialist.append(Media)
-        elif media_type == 'movies':
+        elif media_type == 'movie':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('movies'):
