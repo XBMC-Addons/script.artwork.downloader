@@ -48,6 +48,9 @@ def cleanup(self):
     summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
     summary = summary_tmp + __localize__(36013)
     dialog('close', background = self.background)
+    if self.notify:
+        log('Notify on finished/error enabled')
+        self.background = False
     if not self.failcount < self.failthreshold:
         log('Network error detected, script aborted', xbmc.LOGERROR)
         dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.background)
@@ -81,13 +84,13 @@ class Main:
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
             else:
-                if self.moviefanart and (self.movie_extrafanart or self.movie_extrathumbs or self.movie_poster):
+                if self.movie_enable and (self.movie_extrafanart or self.movie_extrathumbs):
                     self.Medialist = Media_listing('movie')
                     self.mediatype = 'movie'
                     download_artwork(self, self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
-                if self.tvfanart and (self.tvshow_extrafanart or self.tvshow_poster):
+                if self.tvshow_enable and (self.tvshow_extrafanart):
                     self.Medialist = Media_listing('tvshow')
                     self.mediatype = 'tvshow'
                     download_artwork(self, self.Medialist, self.tv_providers)
@@ -110,7 +113,7 @@ def settings_exist(self):
 
 ### Get settings from settings.xml
 def settings_get(self):
-    self.moviefanart = __addon__.getSetting("movie_enable") == 'true'
+    self.movie_enable = __addon__.getSetting("movie_enable") == 'true'
     self.movie_poster = __addon__.getSetting("movie_poster") == 'true'
     self.movie_fanart = __addon__.getSetting("movie_fanart") == 'true'
     self.movie_extrafanart = __addon__.getSetting("movie_extrafanart") == 'true'
@@ -118,7 +121,7 @@ def settings_get(self):
     self.movie_logo = __addon__.getSetting("movie_logo") == 'true'
     self.movie_discart = __addon__.getSetting("movie_discart") == 'true'
     
-    self.tvfanart = __addon__.getSetting("tvshow_enable") == 'true'
+    self.tvshow_enable = __addon__.getSetting("tvshow_enable") == 'true'
     self.tvshow_poster = __addon__.getSetting("tvshow_poster") == 'true'
     self.tvshow_fanart = __addon__.getSetting("tvshow_fanart") == 'true'
     self.tvshow_extrafanart = __addon__.getSetting("tvshow_extrafanart") == 'true'
@@ -145,6 +148,7 @@ def settings_get(self):
     self.use_cache = __addon__.getSetting("use_cache") == 'true'
     self.cache_directory = __addon__.getSetting("cache_directory")
     self.background = __addon__.getSetting("background") == 'true'
+    self.notify = __addon__.getSetting("notify") == 'true'
 
   
     
@@ -170,8 +174,9 @@ def settings_log(self):
     log("## Settings...")
     log('## Language Used = %s' % str(__language__))
     log('## Background Run = %s' % str(self.background))
+    log('## - Notify when finished/error = %s' % str(self.notify))
     
-    log('## Download Movie Artwork= %s' % str(self.moviefanart))
+    log('## Download Movie Artwork= %s' % str(self.movie_enable))
     log('## - Movie Poster= %s' % str(self.movie_poster))
     log('## - Movie Fanart= %s' % str(self.movie_fanart))
     log('## - Movie ExtraFanart= %s' % str(self.movie_extrafanart))
@@ -179,7 +184,7 @@ def settings_log(self):
     log('## - Movie Logo= %s' % str(self.movie_logo))
     log('## - Movie DiscArt= %s' % str(self.movie_discart))
     
-    log('## Download TV Show Artwork = %s' % str(self.tvfanart))
+    log('## Download TV Show Artwork = %s' % str(self.tvshow_enable))
     log('## - TV Show Poster = %s' % str(self.tvshow_poster))
     log('## - TV Show Fanart = %s' % str(self.tvshow_fanart))
     log('## - TV Show ExtraFanart = %s' % str(self.tvshow_extrafanart))
