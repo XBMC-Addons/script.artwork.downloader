@@ -29,8 +29,8 @@ class TVDBProvider(BaseProvider):
                     info['type'] = image.findtext('BannerType')
                     try:
                         x,y = image.findtext('BannerType2').split('x')
-                        info['height'] = int(x)
-                        info['width'] = int(y)
+                        info['width'] = int(x)
+                        info['height'] = int(y)
                     except:
                         info['type2'] = image.findtext('BannerType')
                     info['size'] = 'original'
