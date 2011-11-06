@@ -12,20 +12,32 @@
         <setting label="36031" id="centralfolder_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
         <setting label="36032" id="centralfolder_tvshows" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-3,true)" visible="eq(-3,true)"/>
         <setting type="sep" />
+
+    </category>
+
+<!-- Plugin settings: Movie section -->
+    <category label="36033">
+        <setting type="sep" />
+        <setting label="36052" type="lsep" />
+        <setting type="sep" />
         <setting label="36033" id="limit_artwork" type="bool" default="false"/>
         <setting label="36034" id="limit_extrafanart_max" subsetting="true" type="slider" enable="eq(-1,true)" visible="eq(-1,true)"  range="5,5,100" default="20" option="int" />
         <setting label="36035" id="limit_extrafanart_rating" subsetting="true" type="slider" enable="eq(-2,true)" visible="eq(-2,true)"  range="0,10" default="5" option="int" />
         <setting label="36036" id="limit_language" subsetting="true" type="bool" enable="eq(-3,true)" visible="eq(-3,true)" default="true" />
         <setting label="36063" id="limit_notext" subsetting="true" type="bool" enable="eq(-4,true)" visible="eq(-4,true)" default="true" />
+        <setting label="36039" id="limit_size_moviefanart" subsetting="true" type="labelenum" lvalues="36043|36042|36041" enable="eq(-5,true)" visible="eq(-5,true)" default="true" />
+        <setting label="36040" id="limit_size_tvshowfanart" subsetting="true" type="labelenum" lvalues="36043|36042|36041" enable="eq(-6,true)" visible="eq(-6,true)" default="true" />
     </category>
-    
+
+
+
 <!-- Plugin settings: Movie section -->
     <category label="36051">
         <setting type="sep" />
         <setting label="36052" type="lsep" />
         <setting type="sep" />
         <setting label="36010" type="bool" id="movie_enable" default="true" />
-        <setting label="36108" type="bool" id="movie_poster" subsetting= "true" enable="eq(-1,true)" default="false" />
+        <setting label="36108" type="bool" id="movie_poster" subsetting= "true" enable="eq(-1,true)" default="false" visible="false" />
         <setting label="36101" type="bool" id="movie_fanart" subsetting= "true"  enable="eq(-2,true)" default="true" visible="false" />
         <setting label="36102" type="bool" id="movie_extrafanart" subsetting= "true"  enable="eq(-3,true)" default="false"  />
         <setting label="36110" type="bool" id="movie_extrathumbs" subsetting= "true"  enable="eq(-4,true)" default="false" />
@@ -39,7 +51,7 @@
         <setting label="36062" type="lsep" />
         <setting type="sep" />
         <setting label="36010" type="bool" id="tvshow_enable" default="true" />
-        <setting label="36108" type="bool" id="tvshow_poster" subsetting= "true"  enable="eq(-1,true)" default="false"/>
+        <setting label="36108" type="bool" id="tvshow_poster" subsetting= "true"  enable="eq(-1,true)" default="false" visible="false" />
         <setting label="36101" type="bool" id="tvshow_fanart" subsetting= "true"  enable="eq(-2,true)" default="false" visible="false" />
         <setting label="36102" type="bool" id="tvshow_extrafanart" subsetting= "true"  enable="eq(-3,true)" default="false" />
         <setting label="36005" type="bool" id="tvshow_clearart" subsetting= "true"  enable="eq(-4,true)" default="false" visible="false" />

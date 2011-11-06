@@ -18,16 +18,24 @@
         <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
         <string id="36031">Central Movie fanart directory</string>
         <string id="36032">Central TV fanart directory</string>
-        <string id="36033">Limit Artwork</string>
-        <string id="36034">Maximum downloads per title</string>
-        <string id="36035">Minimum rating</string>
-        <string id="36036">Current language only</string>
         <string id="36037">No settings found!</string>
         <string id="36038">Select your preferences and press OK to save</string>
-
+        <string id="36041">1080</string>
+        <string id="36042">720</string>
+        <string id="36043">480</string>
+        
     <!-- Plugin settings: General section -->
         <string id="36021">General settings</string>
         <string id="36022">General settings used in Extrafanart Downloader</string>
+
+    <!-- Plugin settings: Limit section -->
+        <string id="36033">Limit Artwork</string>
+        <string id="36044">Options for limiting downloaded artwork</string>
+        <string id="36034">Maximum extrafanart</string>
+        <string id="36035">Minimum rating</string>
+        <string id="36036">Current language only</string>
+        <string id="36039">Minimum fanart size: Movies</string>
+        <string id="36040">Minimum fanart size: TV Show</string>
 
     <!-- Plugin settings: Movie section -->
         <string id="36051">Movies</string>
