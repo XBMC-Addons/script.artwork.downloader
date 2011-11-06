@@ -8,12 +8,12 @@ The script also supports a 'solo mode' which allows it to be run from inside a s
 Eden 11.0:
     The script can now be downloaded from the official repo XBMC-repo (pre-Eden)
     This script requires an xbmc nightly build of September 21st or later
-    Current stable version : 0.4.1
 
 Current Features:
     - TV ExtraFanart
     - Movie ExtraFanart
     - Movie ExtraThumbs
+    - Limit fanart on: maximum, rating, without text, language, image size
     - Skin integration: Bulk mode (download all extrafanart for every tv show/movie)
     - Skin integration: Solo mode (download all extrafanart for only one tv show/movie)
     - Limit fanart by: maximum amount/ minimum rating / language used

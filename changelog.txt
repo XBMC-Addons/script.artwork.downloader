@@ -1,3 +1,8 @@
+[B]0.4.2[/B]
+- Fixed: Refactored JSON query to prevent reg-ex problems
+- Added: Limit extrafanart on image size
+- Added: Dialog on finished when run in background
+
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies
 - Fixed: New TMDB image locations on site

@@ -14,11 +14,12 @@ class TMDBProvider(BaseProvider):
         self.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
         self.api_limits = True
         self.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/" + language.get_abbrev() + "/xml/%s/%s"
-        
-        
+       
+
     def get_filename(self, imageid):
         filename = imageid + '.jpg'
         return filename
+
         
     def get_image_list(self, media_id):
         xml_url = self.url % (self.api_key, media_id)
@@ -35,12 +36,17 @@ class TMDBProvider(BaseProvider):
             tree = tree.findall('images')[0]
             for image in tree.findall('image'):
                 info = {}
-                if image.get('type') == 'backdrop' and image.get('url'):
-                    info['size'] = image.get('size')
-                    info['id'] = image.get('id')
-                    info['url'] = image.get('url')
-                    info['height'] = int(image.get('height'))
-                    info['width'] = int(image.get('width'))
+                if image.get('type') == 'backdrop':
+                    info['type'] = 'fanart'
+                elif image.get('type') == 'poster':
+                    info['type'] = 'poster'
+                else:
+                    info['type'] = ''
+                info['size'] = image.get('size')
+                info['id'] = image.get('id')
+                info['url'] = image.get('url')
+                info['height'] = int(image.get('height'))
+                info['width'] = int(image.get('width'))
                 if info:            
                     image_list.append(info) 
             if image_list == []:
