@@ -70,29 +70,29 @@ class Main:
                 if not self.medianame == '':
                     solo_mode(self, self.mediatype, self.medianame)
                 else:
-                    if self.mediatype == 'tvshow':
-                        self.Medialist = Media_listing('tvshow')
-                        log("Bulk mode: TV Shows")
-                        download_artwork(self, self.Medialist, self.tv_providers)
-                    elif self.mediatype == 'movie':
+                    if self.mediatype == 'movie':
                         self.Medialist = Media_listing('movie')
                         log("Bulk mode: movie")
                         download_artwork(self, self.Medialist, self.movie_providers)
+                    elif self.mediatype == 'tvshow':
+                        self.Medialist = Media_listing('tvshow')
+                        log("Bulk mode: TV Shows")
+                        download_artwork(self, self.Medialist, self.tv_providers)
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
             else:
-                if self.tvfanart and (self.tvshow_extrafanart or self.tvshow_poster):
-                    self.Medialist = Media_listing('tvshow')
-                    self.mediatype = 'tvshow'
-                    download_artwork(self, self.Medialist, self.tv_providers)
-                else:
-                    log('TV fanart disabled, skipping', xbmc.LOGINFO)
                 if self.moviefanart and (self.movie_extrafanart or self.movie_extrathumbs or self.movie_poster):
                     self.Medialist = Media_listing('movie')
                     self.mediatype = 'movie'
                     download_artwork(self, self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
+                if self.tvfanart and (self.tvshow_extrafanart or self.tvshow_poster):
+                    self.Medialist = Media_listing('tvshow')
+                    self.mediatype = 'tvshow'
+                    download_artwork(self, self.Medialist, self.tv_providers)
+                else:
+                    log('TV fanart disabled, skipping', xbmc.LOGINFO)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         cleanup(self)
@@ -140,7 +140,6 @@ def settings_get(self):
     self.limit_size_tvshowfanart = int(__addon__.getSetting("limit_size_tvshowfanart"))
     self.limit_extrathumbs = self.limit_artwork
     self.limit_extrathumbs_max = 4
-    self.limit_extrathumbs_rating = self.limit_extrafanart_rating
     self.limit_language = __addon__.getSetting("limit_language") == 'true'
     self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
     self.use_cache = __addon__.getSetting("use_cache") == 'true'
@@ -201,7 +200,6 @@ def settings_log(self):
     log('## - TV Show Fanart Size = %s' % str(self.limit_size_tvshowfanart))
     log('## - Extrathumbs = %s' % str(self.limit_extrathumbs))
     log('## - Extrathumbs Max = %s' % str(self.limit_extrathumbs_max))
-    log('## - Extrathumbs Rating = %s' % str(self.limit_extrathumbs_rating))
     log('## - Language = %s' % str(self.limit_language))
     log('## - Fanart with no text = %s' % str(self.limit_notext))
     
@@ -253,7 +251,7 @@ def solo_mode(self, itemtype, itemname):
     elif itemtype == 'tvshow':
         self.Medialist = Media_listing('tvshow')
         log("## Solo mode: TV Show...")
-    elif itemtype == '':
+    elif itemtype == 'music':
         self.Medialist = Media_listing('music')
         log("## Solo mode: Music...")
     else:
@@ -484,18 +482,13 @@ def download_artwork(self, media_list, providers):
                                 extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
                                 ### Check for set limits
+                                # limit on maximum
                                 if self.downloaded_artwork >= self.limit_extrathumbs_max:
                                     reason = 'Max number extrathumbs reached: %s' % self.downloaded_artwork
                                     self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                elif self.limit_extrathumbs and 'rating' in extrathumbs and extrathumbs['rating'] < self.limit_extrathumbs_rating:
-                                    reason = 'Rating too low: %s' % extrathumbs['rating']
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                elif self.limit_extrathumbs and 'series_name' in extrathumbs and self.limit_notext and extrathumbs['series_name']:
-                                    reason = 'Has text'
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                elif self.limit_extrathumbs and self.limit_language and 'language' in extrathumbs and extrathumbs['language'] != __language__:
-                                    reason = "Doesn't match current language: %s" % xbmc.getLanguage()
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
+                                # limit on size
+                                elif self.limit_extrathumbs and 'height' in extrathumbs and extrathumbs['height'] < int('169'):
+                                    reason = 'Size was to small: %s' % extrathumbs['height'] 
                                 else:
                                     try:
                                         self.fileops._downloadfile(imageurl, extrathumbsfile, targetthumbsdirs)
