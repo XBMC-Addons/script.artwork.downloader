@@ -16,10 +16,10 @@
 
     </category>
 
-<!-- Plugin settings: Movie section -->
+<!-- Plugin settings: Limit section -->
     <category label="36033">
         <setting type="sep" />
-        <setting label="36052" type="lsep" />
+        <setting label="36045" type="lsep" />
         <setting type="sep" />
         <setting label="36033" id="limit_artwork" type="bool" default="false"/>
         <setting label="36034" id="limit_extrafanart_max" subsetting="true" type="slider" enable="eq(-1,true)" visible="eq(-1,true)"  range="5,5,100" default="20" option="int" />

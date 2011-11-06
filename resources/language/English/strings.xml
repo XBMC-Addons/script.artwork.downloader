@@ -31,7 +31,7 @@
 
     <!-- Plugin settings: Limit section -->
         <string id="36033">Limit Artwork</string>
-        <string id="36044">Options for limiting downloaded artwork</string>
+        <string id="36045">Options for limiting downloaded artwork</string>
         <string id="36034">Maximum extrafanart</string>
         <string id="36035">Minimum rating</string>
         <string id="36036">Current language only</string>
