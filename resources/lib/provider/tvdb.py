@@ -22,14 +22,17 @@ class TVDBProvider(BaseProvider):
         tree = ET.fromstring(data)
         for image in tree.findall('Banner'):
             info = {}
-            if image.findtext('BannerType') == 'fanart' and image.findtext('BannerPath'):
+            if image.findtext('BannerPath'):
                 info['url'] = self.url_prefix + image.findtext('BannerPath')
                 info['language'] = image.findtext('Language')
                 if image.findtext('BannerType2') :
-                    x,y = image.findtext('BannerType2').split('x')
-                    info['BannerType'] = image.findtext('BannerType')
-                    info['height'] = int(x)
-                    info['width'] = int(y)
+                    info['type'] = image.findtext('BannerType')
+                    try:
+                        x,y = image.findtext('BannerType2').split('x')
+                        info['height'] = int(x)
+                        info['width'] = int(y)
+                    except:
+                        info['type2'] = image.findtext('BannerType')
                     info['size'] = 'original'
                 info['series_name'] = image.findtext('SeriesName') == 'true'
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
