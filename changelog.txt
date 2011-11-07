@@ -2,6 +2,7 @@
 - Fixed: Refactored JSON query to prevent reg-ex problems
 - Added: Limit extrafanart on image size
 - Added: Dialog on finished when run in background
+- Added: Version check between settings and addon
 
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies
