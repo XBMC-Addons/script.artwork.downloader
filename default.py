@@ -15,7 +15,7 @@ __localize__ = __addon__.getLocalizedString
 
 addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 settings_file = os.path.join(addondir, "settings.xml")
-first_run = False
+
 
 from resources.lib import media_setup
 from resources.lib import provider
@@ -101,15 +101,28 @@ class Main:
         cleanup(self)
         finished_log(self)
 
-### Check if settings.xml exist
+### Check if settings.xml exist and version check
 def settings_exist(self):
-    if not os.path.isfile(settings_file):
-        dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
-        log('Settings.xml file not found. Opening settings window.')
-        __addon__.openSettings()
-        first_run = True
-    else:
-        log('Settings.xml file found. Continue with initializing.')
+    first_run = True
+    while first_run:
+        # no settings.xml found
+        if not os.path.isfile(settings_file):
+            dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
+            log('Settings.xml file not found. Opening settings window.')
+            __addon__.openSettings()
+            if os.path.isfile(settings_file):
+                __addon__.setSetting(id="addon_version", value=__addonversion__)
+        # different version settings.xml found
+        if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __addonversion__:
+            dialog('okdialog', line1 = __localize__(36045), line2 = __localize__(36038))
+            log('Addon version is different. Opening settings window.')
+            __addon__.openSettings()
+            __addon__.setSetting(id="addon_version", value=__addonversion__)
+        else:
+            first_run = False
+    __addon__.setSetting(id="addon_version", value=__addonversion__)
+    log('Correct version of settings.xml file found. Continue with initializing.') 
+
 
 ### Get settings from settings.xml
 def settings_get(self):
