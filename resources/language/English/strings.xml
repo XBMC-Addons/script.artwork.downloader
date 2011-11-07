@@ -24,6 +24,7 @@
         <string id="36042">720</string>
         <string id="36043">480</string>
         <string id="36044">Dialog on finished/errors</string>
+        <string id="36045">Different settings version found!</string>
         
     <!-- Plugin settings: General section -->
         <string id="36021">General settings</string>
