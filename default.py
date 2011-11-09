@@ -425,18 +425,18 @@ def download_artwork(self, media_list, providers):
                                 if not self.failcount < self.failthreshold:
                                     break
                                 if self.mediatype == 'movie':
-                                    fanartfile = provider.get_filename(artwork['id'])
+                                    artworkfile = provider.get_filename(artwork['id'])
                                 else:
-                                    fanartfile = provider.get_filename(imageurl)
+                                    artworkfile = provider.get_filename(imageurl)
                                 self.current_artwork = self.current_artwork + 1
                                 ### Check for set limits
                                 #limit on maximum
                                 limited = self.filters.do_filter('extrafanart', self.mediatype, artwork, self.downloaded_artwork)
                                 if limited[0]:
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, limited[1])
+                                    self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
                                 else:
                                     try:
-                                        self.fileops._downloadfile(imageurl, fanartfile, targets)
+                                        self.fileops._downloadfile(imageurl, artworkfile, targets)
                                     except HTTP404Error, e:
                                         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                                     except HTTPTimeout, e:
@@ -450,7 +450,7 @@ def download_artwork(self, media_list, providers):
                                         log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                                     else:
                                         self.downloaded_artwork = self.downloaded_artwork + 1
-                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36102), line2 = self.media_name, line3 = fanartfile, background = self.background)
+                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36102), line2 = self.media_name, line3 = artworkfile, background = self.background)
                         if self.mediatype == 'movie': self.count_movie_extrafanart = self.count_movie_extrafanart + self.downloaded_artwork
                         if self.mediatype == 'tvshow': self.count_tvshow_extrafanart = self.count_tvshow_extrafanart + self.downloaded_artwork
                         log('Finished with %s extrafanart' %self.mediatype)
@@ -474,14 +474,14 @@ def download_artwork(self, media_list, providers):
                                     break
                                 if not self.failcount < self.failthreshold:
                                     break
-                                extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
+                                artworkfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
                                 limited = self.filters.do_filter('extrathumbs', self.mediatype, artwork, self.downloaded_artwork)
                                 if limited[0]:
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, limited[1])
+                                    self.fileops._delete_file_in_dirs(artworkfile, targetthumbsdirs, limited[1])
                                 else:
                                     try:
-                                        self.fileops._downloadfile(imageurl, extrathumbsfile, targetthumbsdirs)
+                                        self.fileops._downloadfile(imageurl, artworkfile, targetthumbsdirs)
                                     except HTTP404Error, e:
                                         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                                     except HTTPTimeout, e:
@@ -495,7 +495,7 @@ def download_artwork(self, media_list, providers):
                                         log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                                     else:
                                         self.downloaded_artwork = self.downloaded_artwork + 1
-                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36110), line2 = self.media_name, line3 = extrathumbsfile, background = self.background)
+                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36110), line2 = self.media_name, line3 = artworkfile, background = self.background)
                         ### Add to total counter
                         self.count_movie_extrathumbs = self.count_movie_extrathumbs + self.downloaded_artwork
                         log('Finished with %s extrathumbs' %self.mediatype)
