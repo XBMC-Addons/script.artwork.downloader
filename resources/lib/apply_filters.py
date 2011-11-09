@@ -1,11 +1,10 @@
 import xbmc
 import xbmcaddon
 from resources.lib.fileops import fileops
-from resources.lib import utils
+from resources.lib import language
 
 __addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
-
-log = utils._log
+__language__ = language.get_abbrev()
 
 class apply_filters:
 
