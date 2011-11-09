@@ -19,16 +19,6 @@ class apply_filters:
         self.limit_extrathumbs_max = 4
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
-        
-        log('## Limit Artwork = %s' % str(self.limit_artwork))
-        log('## - Extrafanart Max = %s' % str(self.limit_extrafanart_max))
-        log('## - Fanart Rating = %s' % str(self.limit_extrafanart_rating))
-        log('## - Movie Fanart Size = %s' % str(self.limit_size_moviefanart))
-        log('## - TV Show Fanart Size = %s' % str(self.limit_size_tvshowfanart))
-        log('## - Extrathumbs = %s' % str(self.limit_extrathumbs))
-        log('## - Extrathumbs Max = %s' % str(self.limit_extrathumbs_max))
-        log('## - Language = %s' % str(self.limit_language))
-        log('## - Fanart with no text = %s' % str(self.limit_notext))
 
     def do_filter(self, art_type, artwork, downloaded_artwork):
         if art_type == 'fanart':
