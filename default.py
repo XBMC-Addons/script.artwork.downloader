@@ -25,6 +25,7 @@ from resources.lib.script_exceptions import DownloadError, CreateDirectoryError,
 from resources.lib import language
 from resources.lib.fileops import fileops
 from xml.parsers.expat import ExpatError
+from resources.lib.apply_filters import apply_filters
 
 Media_listing = media_setup.media_listing
 __language__ = language.get_abbrev()
@@ -149,15 +150,6 @@ def settings_get(self):
     self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
     self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
     
-    self.limit_artwork = __addon__.getSetting("limit_artwork") == 'true'
-    self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
-    self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
-    self.limit_size_moviefanart = int(__addon__.getSetting("limit_size_moviefanart"))
-    self.limit_size_tvshowfanart = int(__addon__.getSetting("limit_size_tvshowfanart"))
-    self.limit_extrathumbs = self.limit_artwork
-    self.limit_extrathumbs_max = 4
-    self.limit_language = __addon__.getSetting("limit_language") == 'true'
-    self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
     self.use_cache = __addon__.getSetting("use_cache") == 'true'
     self.cache_directory = __addon__.getSetting("cache_directory")
     self.background = __addon__.getSetting("background") == 'true'
@@ -168,6 +160,7 @@ def settings_get(self):
 ### Declare standard vars   
 def settings_vars(self):
     providers = provider.get_providers()
+    filters = apply_filters.apply_filters()
     self.movie_providers = providers['movie_providers']
     self.tv_providers = providers['tv_providers']
     self.music_providers = providers['music_providers']
@@ -438,25 +431,9 @@ def download_artwork(self, media_list, providers):
                                 self.current_artwork = self.current_artwork + 1
                                 ### Check for set limits
                                 #limit on maximum
-                                if self.limit_artwork and self.downloaded_artwork >= self.limit_extrafanart_max:
-                                    reason = 'Max number fanart reached: %s' % self.limit_extrafanart_max
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit on size
-                                elif self.limit_artwork and 'height' in fanart and (self.mediatype == 'movie' and fanart['height'] < self.limit_size_moviefanart) or (self.mediatype == 'tvshow' and fanart['height'] < self.limit_size_tvshowfanart):
-                                    reason = 'Size was to small: %s' % fanart['height'] 
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit on rating
-                                elif self.limit_artwork and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
-                                    reason = 'Rating too low: %s' % fanart['rating']
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit without text
-                                elif self.limit_artwork and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
-                                    reason = 'Has text'
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit on language
-                                elif self.limit_artwork and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
-                                    reason = "Doesn't match current language: %s" % xbmc.getLanguage()
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
+                                limited = filters.do_filter('fanart', fanart, self.downloaded_artwork)
+                                if limited[0]:
+                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, limited[1])
                                 else:
                                     try:
                                         self.fileops._downloadfile(imageurl, fanartfile, targets)
@@ -499,14 +476,9 @@ def download_artwork(self, media_list, providers):
                                     break
                                 extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
-                                ### Check for set limits
-                                # limit on maximum
-                                if self.downloaded_artwork >= self.limit_extrathumbs_max:
-                                    reason = 'Max number extrathumbs reached: %s' % self.downloaded_artwork
+                                limited = filters.do_filter('extrathumbs', fanart, self.downloaded_artwork)
+                                if limited:
                                     self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                # limit on size
-                                elif self.limit_extrathumbs and 'height' in extrathumbs and extrathumbs['height'] < int('169'):
-                                    reason = 'Size was to small: %s' % extrathumbs['height'] 
                                 else:
                                     try:
                                         self.fileops._downloadfile(imageurl, extrathumbsfile, targetthumbsdirs)
