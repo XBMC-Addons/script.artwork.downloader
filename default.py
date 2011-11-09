@@ -160,7 +160,7 @@ def settings_get(self):
 ### Declare standard vars   
 def settings_vars(self):
     providers = provider.get_providers()
-    filters = apply_filters.apply_filters()
+    filters = apply_filters()
     self.movie_providers = providers['movie_providers']
     self.tv_providers = providers['tv_providers']
     self.music_providers = providers['music_providers']
