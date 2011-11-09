@@ -120,17 +120,17 @@ class _settings:
             # no settings.xml found
             if not os.path.isfile(settings_file):
                 dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
-                log('Settings.xml file not found. Opening settings window.')
+                log('## Settings.xml file not found. Opening settings window.')
                 __addon__.openSettings()
                 if os.path.isfile(settings_file):
                     __addon__.setSetting(id="addon_version", value=__addonversion__)
             # different version settings.xml found
             if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __addonversion__:
                 dialog('okdialog', line1 = __localize__(36003), line2 = __localize__(36038))
-                log('Addon version is different. Opening settings window.')
+                log('## Addon version is different. Opening settings window.')
                 __addon__.openSettings()
                 __addon__.setSetting(id="addon_version", value=__addonversion__)
             else:
                 first_run = False
         __addon__.setSetting(id="addon_version", value=__addonversion__)
-        log('Correct version of settings.xml file found. Continue with initializing.') 
+        log('## Correct version of settings.xml file found. Continue with initializing.') 
