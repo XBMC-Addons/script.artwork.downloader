@@ -403,8 +403,8 @@ def download_artwork(self, media_list, providers):
                     if not artwork_result == 'pass':
                         log('Error getting data from %s (%s): %s' % (provider.name, errmsg, artwork_result))
                 if artwork_result == 'pass':
-                    if (self.limit_artwork and self.limit_extrafanart_max < len(image_list)):
-                        download_max = self.limit_extrafanart_max
+                    if (self.filters.limit_artwork and self.filters.limit_extrafanart_max < len(image_list)):
+                        download_max = self.filters.limit_extrafanart_max
                     else: download_max = len(image_list)
 
                 ### Extrafanart downloading
