@@ -25,6 +25,7 @@ from resources.lib.script_exceptions import DownloadError, CreateDirectoryError,
 from resources.lib import language
 from resources.lib.fileops import fileops
 from xml.parsers.expat import ExpatError
+from resources.lib.apply_filters import apply_filters
 
 Media_listing = media_setup.media_listing
 __language__ = language.get_abbrev()
@@ -149,15 +150,6 @@ def settings_get(self):
     self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
     self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
     
-    self.limit_artwork = __addon__.getSetting("limit_artwork") == 'true'
-    self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
-    self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
-    self.limit_size_moviefanart = int(__addon__.getSetting("limit_size_moviefanart"))
-    self.limit_size_tvshowfanart = int(__addon__.getSetting("limit_size_tvshowfanart"))
-    self.limit_extrathumbs = self.limit_artwork
-    self.limit_extrathumbs_max = 4
-    self.limit_language = __addon__.getSetting("limit_language") == 'true'
-    self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
     self.use_cache = __addon__.getSetting("use_cache") == 'true'
     self.cache_directory = __addon__.getSetting("cache_directory")
     self.background = __addon__.getSetting("background") == 'true'
@@ -168,6 +160,7 @@ def settings_get(self):
 ### Declare standard vars   
 def settings_vars(self):
     providers = provider.get_providers()
+    self.filters = apply_filters()
     self.movie_providers = providers['movie_providers']
     self.tv_providers = providers['tv_providers']
     self.music_providers = providers['music_providers']
@@ -211,15 +204,15 @@ def settings_log(self):
     log('## Central Movies Folder = %s' % str(self.centralfolder_movies))
     log('## Central TV Shows Folder = %s' % str(self.centralfolder_tvshows))
     
-    log('## Limit Artwork = %s' % str(self.limit_artwork))
-    log('## - Extrafanart Max = %s' % str(self.limit_extrafanart_max))
-    log('## - Fanart Rating = %s' % str(self.limit_extrafanart_rating))
-    log('## - Movie Fanart Size = %s' % str(self.limit_size_moviefanart))
-    log('## - TV Show Fanart Size = %s' % str(self.limit_size_tvshowfanart))
-    log('## - Extrathumbs = %s' % str(self.limit_extrathumbs))
-    log('## - Extrathumbs Max = %s' % str(self.limit_extrathumbs_max))
-    log('## - Language = %s' % str(self.limit_language))
-    log('## - Fanart with no text = %s' % str(self.limit_notext))
+    log('## Limit Artwork = %s' % str(self.filters.limit_artwork))
+    log('## - Extrafanart Max = %s' % str(self.filters.limit_extrafanart_max))
+    log('## - Fanart Rating = %s' % str(self.filters.limit_extrafanart_rating))
+    log('## - Movie Fanart Size = %s' % str(self.filters.limit_size_moviefanart))
+    log('## - TV Show Fanart Size = %s' % str(self.filters.limit_size_tvshowfanart))
+    log('## - Extrathumbs = %s' % str(self.filters.limit_extrathumbs))
+    log('## - Extrathumbs Max = %s' % str(self.filters.limit_extrathumbs_max))
+    log('## - Language = %s' % str(self.filters.limit_language))
+    log('## - Fanart with no text = %s' % str(self.filters.limit_notext))
     
     log('## Backup downloaded fanart= %s' % str(self.use_cache))
     log('## Backup folder = %s' % str(self.cache_directory))
@@ -410,8 +403,8 @@ def download_artwork(self, media_list, providers):
                     if not artwork_result == 'pass':
                         log('Error getting data from %s (%s): %s' % (provider.name, errmsg, artwork_result))
                 if artwork_result == 'pass':
-                    if (self.limit_artwork and self.limit_extrafanart_max < len(image_list)):
-                        download_max = self.limit_extrafanart_max
+                    if (self.filters.limit_artwork and self.filters.limit_extrafanart_max < len(image_list)):
+                        download_max = self.filters.limit_extrafanart_max
                     else: download_max = len(image_list)
 
                 ### Extrafanart downloading
@@ -420,11 +413,11 @@ def download_artwork(self, media_list, providers):
                         self.current_artwork = 0
                         self.downloaded_artwork = 0
                         log('Extrafanart enabled. Processing')
-                        for fanart in image_list:
+                        for artwork in image_list:
                             type = 'fanart'
                             size = 'original'
-                            imageurl = fanart['url']
-                            if size in fanart['size'] and type in fanart['type']:
+                            imageurl = artwork['url']
+                            if size in artwork['size'] and type in artwork['type']:
                                 ### check if script has been cancelled by user
                                 if dialog('iscanceled', background = self.background):
                                     dialog('close', background = self.background)
@@ -432,34 +425,18 @@ def download_artwork(self, media_list, providers):
                                 if not self.failcount < self.failthreshold:
                                     break
                                 if self.mediatype == 'movie':
-                                    fanartfile = provider.get_filename(fanart['id'])
+                                    artworkfile = provider.get_filename(artwork['id'])
                                 else:
-                                    fanartfile = provider.get_filename(imageurl)
+                                    artworkfile = provider.get_filename(imageurl)
                                 self.current_artwork = self.current_artwork + 1
                                 ### Check for set limits
                                 #limit on maximum
-                                if self.limit_artwork and self.downloaded_artwork >= self.limit_extrafanart_max:
-                                    reason = 'Max number fanart reached: %s' % self.limit_extrafanart_max
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit on size
-                                elif self.limit_artwork and 'height' in fanart and (self.mediatype == 'movie' and fanart['height'] < self.limit_size_moviefanart) or (self.mediatype == 'tvshow' and fanart['height'] < self.limit_size_tvshowfanart):
-                                    reason = 'Size was to small: %s' % fanart['height'] 
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit on rating
-                                elif self.limit_artwork and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
-                                    reason = 'Rating too low: %s' % fanart['rating']
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit without text
-                                elif self.limit_artwork and 'series_name' in fanart and self.limit_notext and fanart['series_name']:
-                                    reason = 'Has text'
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
-                                # limit on language
-                                elif self.limit_artwork and self.limit_language and 'language' in fanart and fanart['language'] != __language__:
-                                    reason = "Doesn't match current language: %s" % xbmc.getLanguage()
-                                    self.fileops._delete_file_in_dirs(fanartfile, targetdirs, reason)
+                                limited = self.filters.do_filter('extrafanart', self.mediatype, artwork, self.downloaded_artwork)
+                                if limited[0]:
+                                    self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
                                 else:
                                     try:
-                                        self.fileops._downloadfile(imageurl, fanartfile, targets)
+                                        self.fileops._downloadfile(imageurl, artworkfile, targets)
                                     except HTTP404Error, e:
                                         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                                     except HTTPTimeout, e:
@@ -473,7 +450,7 @@ def download_artwork(self, media_list, providers):
                                         log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                                     else:
                                         self.downloaded_artwork = self.downloaded_artwork + 1
-                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36102), line2 = self.media_name, line3 = fanartfile, background = self.background)
+                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36102), line2 = self.media_name, line3 = artworkfile, background = self.background)
                         if self.mediatype == 'movie': self.count_movie_extrafanart = self.count_movie_extrafanart + self.downloaded_artwork
                         if self.mediatype == 'tvshow': self.count_tvshow_extrafanart = self.count_tvshow_extrafanart + self.downloaded_artwork
                         log('Finished with %s extrafanart' %self.mediatype)
@@ -486,30 +463,25 @@ def download_artwork(self, media_list, providers):
                         self.current_artwork = 0
                         self.downloaded_artwork = 0
                         log('Movie extrathumbs enabled. Processing')
-                        for extrathumbs in image_list:
+                        for artwork in image_list:
                             type = 'fanart'
                             size = 'thumb'
-                            imageurl = extrathumbs['url']
-                            if size in extrathumbs['size'] and type in extrathumbs['type']:
+                            imageurl = artwork['url']
+                            if size in artwork['size'] and type in artwork['type']:
                                 ### check if script has been cancelled by user
                                 if dialog('iscanceled', background = self.background):
                                     dialog('close', background = self.background)
                                     break
                                 if not self.failcount < self.failthreshold:
                                     break
-                                extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
+                                artworkfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
-                                ### Check for set limits
-                                # limit on maximum
-                                if self.downloaded_artwork >= self.limit_extrathumbs_max:
-                                    reason = 'Max number extrathumbs reached: %s' % self.downloaded_artwork
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
-                                # limit on size
-                                elif self.limit_extrathumbs and 'height' in extrathumbs and extrathumbs['height'] < int('169'):
-                                    reason = 'Size was to small: %s' % extrathumbs['height'] 
+                                limited = self.filters.do_filter('extrathumbs', self.mediatype, artwork, self.downloaded_artwork)
+                                if limited[0]:
+                                    self.fileops._delete_file_in_dirs(artworkfile, targetthumbsdirs, limited[1])
                                 else:
                                     try:
-                                        self.fileops._downloadfile(imageurl, extrathumbsfile, targetthumbsdirs)
+                                        self.fileops._downloadfile(imageurl, artworkfile, targetthumbsdirs)
                                     except HTTP404Error, e:
                                         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                                     except HTTPTimeout, e:
@@ -523,7 +495,7 @@ def download_artwork(self, media_list, providers):
                                         log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                                     else:
                                         self.downloaded_artwork = self.downloaded_artwork + 1
-                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36110), line2 = self.media_name, line3 = extrathumbsfile, background = self.background)
+                                dialog('update', percentage = int(float(self.current_artwork) / float(download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(36110), line2 = self.media_name, line3 = artworkfile, background = self.background)
                         ### Add to total counter
                         self.count_movie_extrathumbs = self.count_movie_extrathumbs + self.downloaded_artwork
                         log('Finished with %s extrathumbs' %self.mediatype)
