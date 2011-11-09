@@ -27,7 +27,7 @@
     <!-- Plugin settings: General section -->
         <string id="36021">General settings</string>
         <string id="36022">General settings used in Extrafanart Downloader</string>
-        <string id="36012">Run in background</string>        
+        <string id="36023">Run in background</string>        
         <string id="36044">Show dialog on finished/errors</string>
         <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
         <string id="36032">Central TV fanart directory</string>
