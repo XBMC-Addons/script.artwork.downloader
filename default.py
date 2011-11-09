@@ -62,14 +62,12 @@ def cleanup(self):
 
 class Main:
     def __init__(self):
-        self.settings = _settings()
-        self.settings._exist()
-        self.settings._get()
-        self.settings._initiallog()
-        self.settings._vars()
-        settings_vars(self)        
-        runmode_args(self)
-        self.filters = apply_filters()
+        initial_vars(self) 
+        self.settings._exist()       # Check if settings.xml exists and correct version
+        self.settings._get()         # Get settings from settings.xml
+        self.settings._initiallog()  # Create debug log for settings
+        self.settings._vars()         # Get some settings vars
+        runmode_args(self)            # Check for script call methods
         dialog('create', line1 = __localize__(36005), background = self.settings.background)
         if initialise(self):
             if not self.mediatype == '':
@@ -107,16 +105,15 @@ class Main:
 
     
 ### Declare standard vars   
-def settings_vars(self):
+def initial_vars(self):
     providers = provider.get_providers()
+    self.settings = _settings()
+    self.filters = apply_filters()
     self.movie_providers = providers['movie_providers']
     self.tv_providers = providers['tv_providers']
     self.music_providers = providers['music_providers']
     self.mediatype = ''
     self.medianame = ''
-
-
-   
 
 ### Report the total numbers of downloaded images
 def finished_log(self):
@@ -150,8 +147,6 @@ def runmode_args(self):
     except:   log( "## no arg7" )
     try: log( "## arg 8: %s" % sys.argv[8] )
     except:   log( "## no arg8" )
-
-
 
 
 ### solo mode
