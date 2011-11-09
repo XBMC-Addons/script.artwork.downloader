@@ -413,11 +413,11 @@ def download_artwork(self, media_list, providers):
                         self.current_artwork = 0
                         self.downloaded_artwork = 0
                         log('Extrafanart enabled. Processing')
-                        for fanart in image_list:
+                        for artwork in image_list:
                             type = 'fanart'
                             size = 'original'
-                            imageurl = fanart['url']
-                            if size in fanart['size'] and type in fanart['type']:
+                            imageurl = artwork['url']
+                            if size in artwork['size'] and type in artwork['type']:
                                 ### check if script has been cancelled by user
                                 if dialog('iscanceled', background = self.background):
                                     dialog('close', background = self.background)
@@ -425,13 +425,13 @@ def download_artwork(self, media_list, providers):
                                 if not self.failcount < self.failthreshold:
                                     break
                                 if self.mediatype == 'movie':
-                                    fanartfile = provider.get_filename(fanart['id'])
+                                    fanartfile = provider.get_filename(artwork['id'])
                                 else:
                                     fanartfile = provider.get_filename(imageurl)
                                 self.current_artwork = self.current_artwork + 1
                                 ### Check for set limits
                                 #limit on maximum
-                                limited = self.filters.do_filter('fanart', self.mediatype, fanart, self.downloaded_artwork)
+                                limited = self.filters.do_filter('extrafanart', self.mediatype, artwork, self.downloaded_artwork)
                                 if limited[0]:
                                     self.fileops._delete_file_in_dirs(fanartfile, targetdirs, limited[1])
                                 else:
@@ -463,11 +463,11 @@ def download_artwork(self, media_list, providers):
                         self.current_artwork = 0
                         self.downloaded_artwork = 0
                         log('Movie extrathumbs enabled. Processing')
-                        for extrathumbs in image_list:
+                        for artwork in image_list:
                             type = 'fanart'
                             size = 'thumb'
-                            imageurl = extrathumbs['url']
-                            if size in extrathumbs['size'] and type in extrathumbs['type']:
+                            imageurl = artwork['url']
+                            if size in artwork['size'] and type in artwork['type']:
                                 ### check if script has been cancelled by user
                                 if dialog('iscanceled', background = self.background):
                                     dialog('close', background = self.background)
@@ -476,7 +476,7 @@ def download_artwork(self, media_list, providers):
                                     break
                                 extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
-                                limited = self.filters.do_filter('extrathumbs', self.mediatype, extrathumbs, self.downloaded_artwork)
+                                limited = self.filters.do_filter('extrathumbs', self.mediatype, artwork, self.downloaded_artwork)
                                 if limited[0]:
                                     self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, limited[1])
                                 else:
