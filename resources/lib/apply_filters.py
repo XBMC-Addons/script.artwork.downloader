@@ -1,5 +1,9 @@
 import xbmc
+import xbmcaddon
 from resources.lib.fileops import fileops
+
+__addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
+
 
 class apply_filters:
 
