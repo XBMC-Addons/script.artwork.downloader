@@ -28,6 +28,7 @@ class apply_filters:
 
     def fanart(self, mediatype, fanart, downloaded_artwork):
         limited = False
+        reason = ''
         if self.limit_artwork and downloaded_artwork >= self.limit_extrafanart_max:
             reason = 'Max number fanart reached: %s' % self.limit_extrafanart_max
             limited = True
@@ -47,6 +48,7 @@ class apply_filters:
 
     def extrathumbs(self, mediatype, extrathumbs, downloaded_artwork):
         limited = False
+        reason = ''
         if downloaded_artwork >= self.limit_extrathumbs_max:
             reason = 'Max number extrathumbs reached: %s' % downloaded_artwork
             limited = True
