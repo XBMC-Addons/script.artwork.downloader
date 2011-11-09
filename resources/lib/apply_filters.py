@@ -20,18 +20,18 @@ class apply_filters:
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
 
-    def do_filter(self, art_type, artwork, downloaded_artwork):
+    def do_filter(self, art_type, mediatype, artwork, downloaded_artwork):
         if art_type == 'fanart':
-            return self.fanart(artwork, downloaded_artwork)
+            return self.fanart(mediatype, artwork, downloaded_artwork)
         elif art_type == 'extrathumbs':
-            return self.extrathumbs(artwork, downloaded_artwork)
+            return self.extrathumbs(mediatype, artwork, downloaded_artwork)
 
-    def fanart(self, fanart, downloaded_artwork):
+    def fanart(self, mediatype, fanart, downloaded_artwork):
         limited = False
         if self.limit_artwork and downloaded_artwork >= self.limit_extrafanart_max:
             reason = 'Max number fanart reached: %s' % self.limit_extrafanart_max
             limited = True
-        elif self.limit_artwork and 'height' in fanart and (self.mediatype == 'movie' and fanart['height'] < self.limit_size_moviefanart) or (self.mediatype == 'tvshow' and fanart['height'] < self.limit_size_tvshowfanart):
+        elif self.limit_artwork and 'height' in fanart and (mediatype == 'movie' and fanart['height'] < self.limit_size_moviefanart) or (mediatype == 'tvshow' and fanart['height'] < self.limit_size_tvshowfanart):
             reason = 'Size was to small: %s' % fanart['height'] 
             limited = True
         elif self.limit_artwork and 'rating' in fanart and fanart['rating'] < self.limit_extrafanart_rating:
@@ -45,10 +45,10 @@ class apply_filters:
             limited = True
         return [limited, reason]
 
-    def extrathumbs(self, extrathumbs, downloaded_artwork):
+    def extrathumbs(self, mediatype, extrathumbs, downloaded_artwork):
         limited = False
         if downloaded_artwork >= self.limit_extrathumbs_max:
-            reason = 'Max number extrathumbs reached: %s' % self.downloaded_artwork
+            reason = 'Max number extrathumbs reached: %s' % downloaded_artwork
             limited = True
         elif self.limit_extrathumbs and 'height' in extrathumbs and extrathumbs['height'] < int('169'):
             reason = 'Size was to small: %s' % extrathumbs['height']

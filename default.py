@@ -431,7 +431,7 @@ def download_artwork(self, media_list, providers):
                                 self.current_artwork = self.current_artwork + 1
                                 ### Check for set limits
                                 #limit on maximum
-                                limited = self.filters.do_filter('fanart', fanart, self.downloaded_artwork)
+                                limited = self.filters.do_filter('fanart', self.mediatype, fanart, self.downloaded_artwork)
                                 if limited[0]:
                                     self.fileops._delete_file_in_dirs(fanartfile, targetdirs, limited[1])
                                 else:
@@ -476,7 +476,7 @@ def download_artwork(self, media_list, providers):
                                     break
                                 extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
-                                limited = self.filters.do_filter('extrathumbs', fanart, self.downloaded_artwork)
+                                limited = self.filters.do_filter('extrathumbs', self.mediatype, extrathumbs, self.downloaded_artwork)
                                 if limited:
                                     self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
                                 else:
