@@ -160,7 +160,7 @@ def settings_get(self):
 ### Declare standard vars   
 def settings_vars(self):
     providers = provider.get_providers()
-    filters = apply_filters()
+    self.filters = apply_filters()
     self.movie_providers = providers['movie_providers']
     self.tv_providers = providers['tv_providers']
     self.music_providers = providers['music_providers']
@@ -204,15 +204,15 @@ def settings_log(self):
     log('## Central Movies Folder = %s' % str(self.centralfolder_movies))
     log('## Central TV Shows Folder = %s' % str(self.centralfolder_tvshows))
     
-    log('## Limit Artwork = %s' % str(filters.limit_artwork))
-    log('## - Extrafanart Max = %s' % str(filters.limit_extrafanart_max))
-    log('## - Fanart Rating = %s' % str(filters.limit_extrafanart_rating))
-    log('## - Movie Fanart Size = %s' % str(filters.limit_size_moviefanart))
-    log('## - TV Show Fanart Size = %s' % str(filters.limit_size_tvshowfanart))
-    log('## - Extrathumbs = %s' % str(filters.limit_extrathumbs))
-    log('## - Extrathumbs Max = %s' % str(filters.limit_extrathumbs_max))
-    log('## - Language = %s' % str(filters.limit_language))
-    log('## - Fanart with no text = %s' % str(filters.limit_notext))
+    log('## Limit Artwork = %s' % str(self.filters.limit_artwork))
+    log('## - Extrafanart Max = %s' % str(self.filters.limit_extrafanart_max))
+    log('## - Fanart Rating = %s' % str(self.filters.limit_extrafanart_rating))
+    log('## - Movie Fanart Size = %s' % str(self.filters.limit_size_moviefanart))
+    log('## - TV Show Fanart Size = %s' % str(self.filters.limit_size_tvshowfanart))
+    log('## - Extrathumbs = %s' % str(self.filters.limit_extrathumbs))
+    log('## - Extrathumbs Max = %s' % str(self.filters.limit_extrathumbs_max))
+    log('## - Language = %s' % str(self.filters.limit_language))
+    log('## - Fanart with no text = %s' % str(self.filters.limit_notext))
     
     log('## Backup downloaded fanart= %s' % str(self.use_cache))
     log('## Backup folder = %s' % str(self.cache_directory))
@@ -431,7 +431,7 @@ def download_artwork(self, media_list, providers):
                                 self.current_artwork = self.current_artwork + 1
                                 ### Check for set limits
                                 #limit on maximum
-                                limited = filters.do_filter('fanart', fanart, self.downloaded_artwork)
+                                limited = self.filters.do_filter('fanart', fanart, self.downloaded_artwork)
                                 if limited[0]:
                                     self.fileops._delete_file_in_dirs(fanartfile, targetdirs, limited[1])
                                 else:
@@ -476,7 +476,7 @@ def download_artwork(self, media_list, providers):
                                     break
                                 extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
-                                limited = filters.do_filter('extrathumbs', fanart, self.downloaded_artwork)
+                                limited = self.filters.do_filter('extrathumbs', fanart, self.downloaded_artwork)
                                 if limited:
                                     self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
                                 else:
