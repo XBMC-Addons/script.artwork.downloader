@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
     <!-- Plugin settings -->
-        <string id="36001">Download Movie fanart</string>
-        <string id="36002">Download TV Shows fanart</string>
-        <string id="36003">-</string>
+        <string id="36001">-</string>
+        <string id="36002">-</string>
+        <string id="36003">Different settings version found!</string>
         <string id="36004">Cleaning up</string>
         <string id="36005">Checking for artwork</string>
         <string id="36006">Downloading</string>
@@ -12,23 +12,27 @@
         <string id="36009">Finished</string>
         <string id="36010">Enable downloading</string>
         <string id="36011">extrafanart centralized</string>
-        <string id="36012">Run in background</string>
+        <string id="36012">-</string>
         <string id="36013">artwork downloaded</string>
-        <string id="36029">Central Folders Split Into Titles</string>	
-        <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
-        <string id="36031">Central Movie fanart directory</string>
-        <string id="36032">Central TV fanart directory</string>
+        <string id="36014">-</string>
+        <string id="36015">-</string>
+        <string id="36016">-</string>
+        <string id="36017">-</string>
+        <string id="36018">-</string>
+        <string id="36020">-</string>
         <string id="36037">No settings found!</string>
         <string id="36038">Select your preferences and press OK to save</string>
-        <string id="36041">1080</string>
-        <string id="36042">720</string>
-        <string id="36043">480</string>
-        <string id="36044">Dialog on finished/errors</string>
-        <string id="36045">Different settings version found!</string>
+
         
     <!-- Plugin settings: General section -->
         <string id="36021">General settings</string>
         <string id="36022">General settings used in Extrafanart Downloader</string>
+        <string id="36012">Run in background</string>        
+        <string id="36044">Show dialog on finished/errors</string>
+        <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
+        <string id="36032">Central TV fanart directory</string>
+        <string id="36031">Central Movie fanart directory</string>
+
 
     <!-- Plugin settings: Limit section -->
         <string id="36033">Limit Artwork</string>
@@ -38,6 +42,9 @@
         <string id="36036">Current language only</string>
         <string id="36039">Minimum fanart size: Movies</string>
         <string id="36040">Minimum fanart size: TV Show</string>
+        <string id="36041">1080</string>
+        <string id="36042">720</string>
+        <string id="36043">480</string>
 
     <!-- Plugin settings: Movie section -->
         <string id="36051">Movies</string>
@@ -90,7 +97,6 @@
         <string id="32135">Canceled</string>
         <string id="32136">Download canceled by user</string>
         <string id="32137">Which one to download ?</string>
-        <string id="32138">Downloading:</string>
         <string id="32139">Getting info...</string>
         <string id="32140">Error copying file</string>
 </strings>

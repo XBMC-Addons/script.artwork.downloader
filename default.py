@@ -115,7 +115,7 @@ def settings_exist(self):
                 __addon__.setSetting(id="addon_version", value=__addonversion__)
         # different version settings.xml found
         if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __addonversion__:
-            dialog('okdialog', line1 = __localize__(36045), line2 = __localize__(36038))
+            dialog('okdialog', line1 = __localize__(36003), line2 = __localize__(36038))
             log('Addon version is different. Opening settings window.')
             __addon__.openSettings()
             __addon__.setSetting(id="addon_version", value=__addonversion__)

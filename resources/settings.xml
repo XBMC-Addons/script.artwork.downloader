@@ -9,9 +9,8 @@
         <setting label="36044" id="notify" subsetting="true" type="bool"  default="false" enable="eq(-1,true)" visible="eq(-1,true)"/>
         <setting type="sep" />
         <setting label="36030" id="centralize_enable" type="bool"  default="false"/>
-        <setting label="36029" id="centralfolder_split" type="bool" subsetting= "true" enable="false" default="false" visible="false" />
-        <setting label="36031" id="centralfolder_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
-        <setting label="36032" id="centralfolder_tvshows" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-3,true)" visible="eq(-3,true)"/>
+        <setting label="36031" id="centralfolder_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting label="36032" id="centralfolder_tvshows" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
         <setting type="sep" />
 
     </category>
