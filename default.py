@@ -477,8 +477,8 @@ def download_artwork(self, media_list, providers):
                                 extrathumbsfile = ('thumb%s.jpg' % str(self.downloaded_artwork+1))
                                 self.current_artwork = self.current_artwork + 1
                                 limited = self.filters.do_filter('extrathumbs', self.mediatype, extrathumbs, self.downloaded_artwork)
-                                if limited:
-                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, reason)
+                                if limited[0]:
+                                    self.fileops._delete_file_in_dirs(extrathumbsfile, targetthumbsdirs, limited[1])
                                 else:
                                     try:
                                         self.fileops._downloadfile(imageurl, extrathumbsfile, targetthumbsdirs)
