@@ -3,7 +3,7 @@ import xbmcaddon
 import os
 from resources.lib.utils import _log as log
 from resources.lib import language
-
+from resources.lib.utils import _dialog as dialog
 ### get addon info
 __addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
 __addonid__ = __addon__.getAddonInfo('id')
@@ -133,4 +133,50 @@ class _settings:
             else:
                 first_run = False
         __addon__.setSetting(id="addon_version", value=__addonversion__)
-        log('## Correct version of settings.xml file found. Continue with initializing.') 
+        log('## Correct version of settings.xml file found. Continue with initializing.')
+        
+    ### Check for faulty setting combinations
+    def _check(self):    
+        settings_faulty = True
+        check_sections = check_movie = check_tvshow = check_centralize = check_cache = True
+        while settings_faulty:
+            # re-check settings after posible change
+            self._get()        
+            # Check if artwork section enabled
+            if not (self.movie_enable and self.tvshow_enable):
+                check_sections = False
+                log('Setting check: No artwork section enabled')
+            else: check_sections = True
+            # Check if faulty setting in movie section
+            if self.movie_enable:
+                if not self.movie_extrafanart and not self.movie_extrathumbs:
+                    check_movie = False
+                    log('Setting check: No subsetting of movies enabled')
+                else: check_movie = True
+            # Check if faulty setting in tvshow section
+            if self.tvshow_enable:
+                if not self.tvshow_extrafanart:
+                    check_tvshow = False
+                    log('Setting check: No subsetting of tv shows enabled')
+                else: check_tvshow = True
+            # Check if faulty setting in centralize section
+            if self.centralize_enable:
+                if self.centralfolder_movies == '' and self.centralfolder_tvshows == '':
+                    check_centralize = False
+                    log('Setting check: No centralized folder chosen')
+                else: check_centralize = True
+            # Check if faulty setting in cache section
+            if self.use_cache:
+                if self.cache_directory == '':
+                    check_cache = False
+                    log('Setting check: No cache folder chosen')
+                else: check_cache = True
+            # Compare all setting check
+            if check_sections and check_movie and check_tvshow and check_centralize and check_cache:
+                settings_faulty = False
+            else: settings_faulty = True
+            # Faulty setting found
+            if settings_faulty:
+                log('Faulty setting combination found')
+                dialog('okdialog', line1 = __localize__(36020), line2 = __localize__(36019))
+                __addon__.openSettings()        
