@@ -143,7 +143,7 @@ class _settings:
             # re-check settings after posible change
             self._get()        
             # Check if artwork section enabled
-            if not (self.movie_enable and self.tvshow_enable):
+            if not (self.movie_enable or self.tvshow_enable):
                 check_sections = False
                 log('Setting check: No artwork section enabled')
             else: check_sections = True
