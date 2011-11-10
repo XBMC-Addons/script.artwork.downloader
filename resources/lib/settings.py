@@ -149,13 +149,13 @@ class _settings:
             else: check_sections = True
             # Check if faulty setting in movie section
             if self.movie_enable:
-                if not self.movie_extrafanart and not self.movie_extrathumbs:
+                if not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_poster:
                     check_movie = False
                     log('Setting check: No subsetting of movies enabled')
                 else: check_movie = True
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
-                if not self.tvshow_extrafanart:
+                if not self.tvshow_fanart and not self.tvshow_extrafanart and not self.tvshow_poster:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True

@@ -14,11 +14,33 @@ class apply_filters:
         self.settings._get()
 
     def do_filter(self, art_type, mediatype, artwork, downloaded_artwork):
+        if art_type == 'fanart':
+            return self.fanart(mediatype, artwork, downloaded_artwork)
         if art_type == 'extrafanart':
             return self.extrafanart(mediatype, artwork, downloaded_artwork)
         elif art_type == 'extrathumbs':
             return self.extrathumbs(mediatype, artwork, downloaded_artwork)
+        elif art_type == 'poster':
+            return self.poster(mediatype, artwork, downloaded_artwork)
+        else: return false
 
+    def fanart(self, mediatype, artwork, downloaded_artwork):
+        limited = False
+        reason = ''
+        if self.settings.limit_artwork and 'height' in artwork and (mediatype == 'movie' and artwork['height'] < self.settings.limit_size_moviefanart) or (mediatype == 'tvshow' and artwork['height'] < self.settings.limit_size_tvshowfanart):
+            reason = 'Size was to small: %s' % artwork['height'] 
+            limited = True
+        elif self.settings.limit_artwork and 'rating' in artwork and artwork['rating'] < self.settings.limit_extrafanart_rating:
+            reason = 'Rating too low: %s' % artwork['rating']
+            limited = True
+        elif self.settings.limit_artwork and 'series_name' in artwork and self.settings.limit_notext and artwork['series_name']:
+            reason = 'Has text'
+            limited = True
+        elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
+            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            limited = True
+        return [limited, reason]
+        
     def extrafanart(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
@@ -47,5 +69,16 @@ class apply_filters:
             limited = True
         elif self.settings.limit_extrathumbs and 'height' in artwork and artwork['height'] < int('169'):
             reason = 'Size was to small: %s' % artwork['height']
+            limited = True
+        return [limited, reason]
+        
+    def poster(self, mediatype, artwork, downloaded_artwork):
+        limited = False
+        reason = ''
+        if self.settings.limit_extrathumbs and 'height' in artwork and artwork['height'] < int('169'):
+            reason = 'Size was to small: %s' % artwork['height']
+            limited = True
+        elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
+            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
         return [limited, reason]
