@@ -71,6 +71,7 @@ class _settings:
         self.count_movie_extrathumbs = 0
         self.artworkfile_poster = 'poster.jpg'
         self.artworkfile_fanart = 'fanart.jpg'
+        self.artworkfile_banner = 'banner.jpg'
 
     ### Log settings in debug mode
     def _initiallog(self):
@@ -124,8 +125,7 @@ class _settings:
                 dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
                 log('## Settings.xml file not found. Opening settings window.')
                 __addon__.openSettings()
-                if os.path.isfile(settings_file):
-                    __addon__.setSetting(id="addon_version", value=__addonversion__)
+                __addon__.setSetting(id="addon_version", value=__addonversion__)
             # different version settings.xml found
             if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __addonversion__:
                 dialog('okdialog', line1 = __localize__(36003), line2 = __localize__(36038))
@@ -157,7 +157,7 @@ class _settings:
                 else: check_movie = True
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
-                if not self.tvshow_fanart and not self.tvshow_extrafanart and not self.tvshow_poster:
+                if not self.tvshow_fanart and not self.tvshow_extrafanart and not self.tvshow_poster and not self.tvshow_showbanner:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True

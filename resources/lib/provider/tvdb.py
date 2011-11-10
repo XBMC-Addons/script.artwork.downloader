@@ -32,13 +32,17 @@ class TVDBProvider(BaseProvider):
                         info['width'] = int(x)
                         info['height'] = int(y)
                     except:
-                        info['type2'] = image.findtext('BannerType')
+                        info['type2'] = image.findtext('BannerType2')
                     info['size'] = 'original'
                 info['series_name'] = image.findtext('SeriesName') == 'true'
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
                     info['rating'] = float(image.findtext('Rating'))
                 else:
                     info['rating'] = 0
+                if image.findtext('Season') and int(image.findtext('Season')) >= 0:
+                    info['season'] = image.findtext('season')
+                else:
+                    info['season'] = ''
             if info:            
                 image_list.append(info) 
         if image_list == []:

@@ -70,7 +70,7 @@
     <!-- Plugin settings: Image types -->
         <string id="36101">Fanart</string>
         <string id="36102">Extrafanart</string>
-        <string id="36103">Show Banners</string>
+        <string id="36103">Banner</string>
         <string id="36104">Season Banners</string>
         <string id="36105">ClearArt</string>
         <string id="36106">Logo</string>
