@@ -240,12 +240,12 @@ def download_artwork(self, media_list, providers):
         if self.settings.centralize_enable:
             if self.mediatype == 'tvshow':
                 if not self.settings.centralfolder_tvshows == '':
-                    targetdirs.append(self.centralfolder_tvshows)
+                    targetdirs.append(self.settings.centralfolder_tvshows)
                 else:
                     log('Error: Central fanart enabled but TV Show folder not set, skipping', xbmc.LOGERROR)
             elif self.mediatype == 'movie':
                 if not self.settings.centralfolder_movies == '':
-                    targetdirs.append(self.centralfolder_movies)
+                    targetdirs.append(self.settings.centralfolder_movies)
                 else:
                     log('Error: Central fanart enabled but movies folder not set, skipping', xbmc.LOGERROR)
         ### Check if using the cache option
