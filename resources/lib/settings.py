@@ -69,6 +69,8 @@ class _settings:
         self.count_tvshow_extrafanart = 0
         self.count_movie_extrafanart = 0
         self.count_movie_extrathumbs = 0
+        self.artworkfile_poster = 'poster.jpg'
+        self.artworkfile_fanart = 'fanart.jpg'
 
     ### Log settings in debug mode
     def _initiallog(self):
