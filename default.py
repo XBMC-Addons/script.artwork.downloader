@@ -329,7 +329,7 @@ def download_artwork(self, media_list, providers):
                         image_type = 'fanart'
                         size = 'thumb'
                         msg = 36110
-                        _download_extrathumbs(self, art_type, image_type, size, msg)
+                        _download_extrathumbs(self, art_type, image_type, size, self.targetthumbsdirs, targets, msg)
                     else:
                         log('Extrathumbs %s disabled. skipping' %self.mediatype)
                     
@@ -362,7 +362,7 @@ def download_artwork(self, media_list, providers):
 
         
 ### Movie extrathumbs downloading
-def _download_extrathumbs(self, art_type, image_type, size, msg):
+def _download_extrathumbs(self, art_type, image_type, size, targetdirs, targets, msg):
     log('Starting with processing %s' %art_type)
     self.settings.failcount = 0
     self.current_artwork = 0
@@ -380,7 +380,7 @@ def _download_extrathumbs(self, art_type, image_type, size, msg):
             self.current_artwork = self.current_artwork + 1
             limited = self.filters.do_filter(art_type, self.mediatype, artwork, self.downloaded_artwork)
             if limited[0]:
-                self.fileops._delete_file_in_dirs(artworkfile, self.targetthumbsdirs, limited[1])
+                self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
             else:
                 try:
                     self.fileops._downloadfile(imageurl, artworkfile, self.targetthumbsdirs)
@@ -403,11 +403,11 @@ def _download_extrathumbs(self, art_type, image_type, size, msg):
     log('Finished with %s' %art_type)
 
 ### Extrafanart downloading
-def _download_extrafanart(self, art_type, image_type, size, targetdirs,targets, msg):
+def _download_extrafanart(self, art_type, image_type, size, targetdirs, targets, msg):
     log('Starting with processing %s' %art_type)
     self.settings.failcount = 0
-    self.current_artwork = 0
-    self.downloaded_artwork = 0
+    current_artwork = 0
+    downloaded_artwork = 0
     for artwork in self.image_list:
         imageurl = artwork['url']
         if size in artwork['size'] and image_type in artwork['type']:
@@ -421,10 +421,10 @@ def _download_extrafanart(self, art_type, image_type, size, targetdirs,targets, 
                 artworkfile = self.provider.get_filename(artwork['id'])
             else:
                 artworkfile = self.provider.get_filename(imageurl)
-            self.current_artwork = self.current_artwork + 1
+            current_artwork = current_artwork + 1
             ### Check for set limits
             #limit on maximum
-            limited = self.filters.do_filter(art_type, self.mediatype, artwork, self.downloaded_artwork)
+            limited = self.filters.do_filter(art_type, self.mediatype, artwork, downloaded_artwork)
             if limited[0]:
                 self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
             else:
@@ -442,8 +442,8 @@ def _download_extrafanart(self, art_type, image_type, size, targetdirs,targets, 
                     self.settings.failcount = self.settings.failcount + 1
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                 else:
-                    self.downloaded_artwork = self.downloaded_artwork + 1
-            dialog('update', percentage = int(float(self.current_artwork) / float(self.download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(msg), line2 = self.media_name, line3 = artworkfile, background = self.settings.background)
+                    downloaded_artwork = downloaded_artwork + 1
+            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(msg), line2 = self.media_name, line3 = artworkfile, background = self.settings.background)
     log('Finished with %s' %art_type)
 
 
