@@ -304,7 +304,7 @@ def download_artwork(self, media_list, providers):
                     else: self.download_max = len(self.image_list)
 
                     # Calling _download_extrafanart method: extrafanart
-                    if self.settings.movie_extrafanart or self.settings.tvshow_extrafanart:
+                    if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
                         art_type = 'extrafanart'
                         image_type = 'fanart'
                         size = 'original'
@@ -313,8 +313,8 @@ def download_artwork(self, media_list, providers):
                         _download_art(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg)
                     else:
                         log('Extrafanart %s disabled. skipping' %self.mediatype)
-                    # Calling _download_art method: posters
-                    if self.settings.movie_poster or  self.settings.tvshow_poster:
+                    # Calling _download_art method: fanart
+                    if (self.settings.movie_enable and self.settings.movie_fanart) or  (self.settings.tvshow_enable and self.settings.tvshow_fanart):
                         art_type = 'fanart'
                         image_type = 'fanart'
                         size = 'original'
@@ -325,7 +325,7 @@ def download_artwork(self, media_list, providers):
                         log('Fanart %s disabled. skipping' %self.mediatype)
                         
                     # Calling _download_extrathumbs method: extrathumbs
-                    if self.settings.movie_extrathumbs and self.mediatype == 'movie':
+                    if (self.settings.movie_enable and self.settings.movie_extrathumbs):
                         art_type = 'extrathumbs'
                         image_type = 'fanart'
                         size = 'thumb'
@@ -336,7 +336,7 @@ def download_artwork(self, media_list, providers):
                         log('Extrathumbs %s disabled. skipping' %self.mediatype)
                     
                     # Calling _download_art method: posters
-                    if self.settings.movie_poster or self.settings.tvshow_poster:
+                    if (self.settings.movie_enable and self.settings.movie_poster) or (self.settings.tvshow_enable and self.settings.tvshow_poster):
                         art_type = 'poster'
                         image_type = 'poster'
                         size = 'mid'
