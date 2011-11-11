@@ -28,6 +28,14 @@ class apply_filters:
             return self.banner(mediatype, artwork, downloaded_artwork)
         elif art_type == 'seasonbanner':
             return self.banner(mediatype, artwork, downloaded_artwork)
+        elif art_type == 'clearlogo':
+            return self.banner(mediatype, artwork, downloaded_artwork)
+        elif art_type == 'clearart':
+            return self.banner(mediatype, artwork, downloaded_artwork)
+        elif art_type == 'tvthumbs':
+            return self.banner(mediatype, artwork, downloaded_artwork)
+        elif art_type == 'seasonthumbs':
+            return self.banner(mediatype, artwork, downloaded_artwork)
         else: return false
 
     def fanart(self, mediatype, artwork, downloaded_artwork):
@@ -123,4 +131,28 @@ class apply_filters:
         elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
+        return [limited, reason]
+        
+    def clearlogo(self, mediatype, artwork, downloaded_artwork):
+        limited = False
+        reason = ''
+        # no lmits available to use
+        return [limited, reason]
+        
+    def clearart(self, mediatype, artwork, downloaded_artwork):
+        limited = False
+        reason = ''
+        # no lmits available to use
+        return [limited, reason]
+    
+    def tvthumb(self, mediatype, artwork, downloaded_artwork):
+        limited = False
+        reason = ''
+        # no lmits available to use
+        return [limited, reason]
+        
+    def seasonthumbs(self, mediatype, artwork, downloaded_artwork):
+        limited = False
+        reason = ''
+        # no lmits available to use
         return [limited, reason]
