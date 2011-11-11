@@ -26,7 +26,7 @@ class TVDBProvider(BaseProvider):
                 info['url'] = self.url_prefix + image.findtext('BannerPath')
                 info['language'] = image.findtext('Language')
                 
-                # convert ...x... in bannertype
+                # convert ...x... in Bannertype2
                 if image.findtext('BannerType2'):
                     info['type'] = image.findtext('BannerType')
                     try:
@@ -45,11 +45,20 @@ class TVDBProvider(BaseProvider):
                 else: info['size'] = ''
                 info['series_name'] = image.findtext('SeriesName') == 'true'
                 
+                # convert season posters/banners to standard info[] layout
+                if image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
+                    info['type'] = 'seasonposter'
+                    info['size'] = 'mid'
+                elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
+                    info['type'] = 'seasonbanner'
+                    info['size'] = 'mid'
+                
                 # find image ratings
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
                     info['rating'] = float(image.findtext('Rating'))
                 else:
                     info['rating'] = 0
+                
                 # find season info
                 if image.findtext('Season') and int(image.findtext('Season')) >= 0:
                     info['season'] = image.findtext('season')
