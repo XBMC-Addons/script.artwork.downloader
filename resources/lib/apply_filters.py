@@ -36,6 +36,9 @@ class apply_filters:
         if self.settings.limit_artwork and 'height' in artwork and (mediatype == 'movie' and artwork['height'] < self.settings.limit_size_moviefanart) or (mediatype == 'tvshow' and artwork['height'] < self.settings.limit_size_tvshowfanart):
             reason = 'Size was to small: %s' % artwork['height'] 
             limited = True
+        elif self.settings.limit_artwork and 'rating' in artwork and artwork['rating'] < self.settings.limit_extrafanart_rating:
+            reason = 'Rating too low: %s' % artwork['rating']
+            limited = True
         elif self.settings.limit_artwork and 'series_name' in artwork and self.settings.limit_notext and artwork['series_name']:
             reason = 'Has text'
             limited = True
