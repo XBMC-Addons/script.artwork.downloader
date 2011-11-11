@@ -310,7 +310,7 @@ def download_artwork(self, media_list, providers):
                         size = 'original'
                         msg = 36102
                         artworkfile = ''
-                        _download_extrafanart(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg)
+                        _download_art(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg)
                     else:
                         log('Extrafanart %s disabled. skipping' %self.mediatype)
                     # Calling _download_art method: posters
@@ -320,7 +320,7 @@ def download_artwork(self, media_list, providers):
                         size = 'original'
                         artworkfile = self.settings.artworkfile_fanart
                         msg = 36101
-                        _download_extrafanart(self, art_type, image_type, size, artworkfile, target_artworkdir, targets, msg)
+                        _download_art(self, art_type, image_type, size, artworkfile, target_artworkdir, targets, msg)
                     else:
                         log('Fanart %s disabled. skipping' %self.mediatype)
                         
@@ -331,7 +331,7 @@ def download_artwork(self, media_list, providers):
                         size = 'thumb'
                         msg = 36110
                         artworkfile = ''
-                        _download_extrafanart(self, art_type, image_type, size, artworkfile, target_thumbsdirs, targets, msg)
+                        _download_art(self, art_type, image_type, size, artworkfile, target_thumbsdirs, targets, msg)
                     else:
                         log('Extrathumbs %s disabled. skipping' %self.mediatype)
                     
@@ -342,7 +342,7 @@ def download_artwork(self, media_list, providers):
                         size = 'mid'
                         artworkfile = self.settings.artworkfile_poster
                         msg = 36108
-                        _download_extrafanart(self, art_type, image_type, size, artworkfile, target_artworkdir, targets, msg)
+                        _download_art(self, art_type, image_type, size, artworkfile, target_artworkdir, targets, msg)
                     else:
                         log('Poster %s disabled. skipping' %self.mediatype)
 
@@ -362,51 +362,8 @@ def download_artwork(self, media_list, providers):
         self.processeditems = self.processeditems + 1
 
 
-        
-### Movie extrathumbs downloading
-""" Temporary disabled for testing/cleaning
-def _download_extrathumbs(self, art_type, image_type, size, targetdirs, targets, msg):
-    log('Starting with processing %s' %art_type)
-    self.settings.failcount = 0
-    current_artwork = 0
-    downloaded_artwork = 0
-    for artwork in self.image_list:
-        imageurl = artwork['url']
-        if size in artwork['size'] and image_type in artwork['type']:
-            ### check if script has been cancelled by user
-            if dialog('iscanceled', background = self.settings.background):
-                dialog('close', background = self.settings.background)
-                break
-            if not self.settings.failcount < self.settings.failthreshold:
-                break
-            artworkfile = ('thumb%s.jpg' % str(downloaded_artwork+1))
-            current_artwork = current_artwork + 1
-            limited = self.filters.do_filter(art_type, self.mediatype, artwork, downloaded_artwork)
-            if limited[0]:
-                self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
-            else:
-                try:
-                    self.fileops._downloadfile(imageurl, artworkfile, targetdirs)
-                except HTTP404Error, e:
-                    log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-                except HTTPTimeout, e:
-                    self.settings.failcount = self.settings.failcount + 1
-                    log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
-                except CreateDirectoryError, e:
-                    log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
-                    break
-                except DownloadError, e:
-                    self.settings.failcount = self.settings.failcount + 1
-                    log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
-                else:
-                    downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(msg), line2 = self.media_name, line3 = artworkfile, background = self.settings.background)
-    ### Add to total counter
-    self.settings.count_movie_extrathumbs = self.settings.count_movie_extrathumbs + downloaded_artwork
-    log('Finished with %s' %art_type)
-"""
-### Extrafanart downloading
-def _download_extrafanart(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg):
+### Artwork downloading
+def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg):
     log('Starting with processing %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
@@ -432,8 +389,9 @@ def _download_extrafanart(self, art_type, image_type, size, artworkfile, targetd
             current_artwork = current_artwork + 1
             # Check for set limits
             limited = self.filters.do_filter(art_type, self.mediatype, artwork, downloaded_artwork)
-            if limited[0]:
+            if limited[0] and art_type =='extrafanart':
                 self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
+            elif limited[0]: log('Skipped. Reason: %s' %limited[1])
             else:
                 try:
                     self.fileops._downloadfile(imageurl, artworkfile, targetdirs)
@@ -453,44 +411,7 @@ def _download_extrafanart(self, art_type, image_type, size, artworkfile, targetd
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(msg), line2 = self.media_name, line3 = artworkfile, background = self.settings.background)
     log('Finished with %s' %art_type)
 
-
-### Artwork downloading
-def _download_art(self, art_type, image_type, size, artworkfile, artworkdir, msg):
-    log('Starting with processing %s' %art_type)
-    self.settings.failcount = 0
-    current_artwork = 0
-    downloaded_artwork = 0
-    for artwork in self.image_list:
-        imageurl = artwork['url']
-        if size in artwork['size'] and image_type in artwork['type']:
-            ### check if script has been cancelled by user
-            if dialog('iscanceled', background = self.settings.background):
-                dialog('close', background = self.settings.background)
-                break
-            if not self.settings.failcount < self.settings.failthreshold:
-                break
-            limited = self.filters.do_filter(art_type, self.mediatype, artwork, downloaded_artwork)
-            if limited[0]:
-                log('Reason %s' %limited[1])
-            else:
-                try:
-                    self.fileops._downloadfile(imageurl, artworkfile, artworkdir)
-                except HTTP404Error, e:
-                    log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-                except HTTPTimeout, e:
-                    self.settings.failcount = self.settings.failcount + 1
-                    log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
-                except CreateDirectoryError, e:
-                    log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
-                    break
-                except DownloadError, e:
-                    self.settings.failcount = self.settings.failcount + 1
-                    log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
-                else:
-                    downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(msg), line2 = self.media_name, line3 = artworkfile, background = self.settings.background)
-    log('Finished with %s ' %art_type)
-
+    
 ### TV show stuff downloading
 def _download_seasonart(self, art_type, image_type, image_type2, size, artworkfile, artworkdir, msg):
     log('Starting with processing %s' %art_type)
