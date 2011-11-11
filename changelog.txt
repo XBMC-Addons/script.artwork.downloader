@@ -1,8 +1,12 @@
 [B]0.4.2[/B]
 - Fixed: Refactored JSON query to prevent reg-ex problems
+- Fixed: Total refactor on downloading and limiting
 - Added: Limit extrafanart on image size
 - Added: Dialog on finished when run in background
 - Added: Version check between settings and addon
+- Added: TV Show & Movie fanart
+- Added: TV Show & Movie poster
+- Added: TV Show banners
 
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies
@@ -10,7 +14,7 @@
          Advisable is to delete all existing movie extrafanart folders
 
 [B]0.4.0[/B]
-- Added: silent downloading in background
+- Added: Silent downloading in background
 - Added: Extrafanart limiter (maximum fanart/language/no text) 
 - Added: Download backup folder for fanart
 - Added: More extensive error checking
