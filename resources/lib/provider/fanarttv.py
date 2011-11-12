@@ -10,7 +10,7 @@ class FTV_TVProvider(BaseProvider):
     def __init__(self):
         self.name = 'fanart.tv - TV API'
         self.url = 'http://fanart.tv/api/fanart.php?id=%s'
-        self.imagetype = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb']
+        self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb']
         
     def get_image_list(self, media_id):
         xml_url = self.url % (media_id)
@@ -18,8 +18,9 @@ class FTV_TVProvider(BaseProvider):
         image_list = []
         data = self.get_xml(xml_url)
         tree = ET.fromstring(data)
-        for imagetype in self.imagetype:
-            for image in tree.findall(imagetype):
+        for imagetype in self.imagetypes:
+            imageroot = imagetype + 's'
+            for image in tree.findall(imageroot)[0]:
                 info = {}
                 info['type'] = imagetype
                 info['url'] = image.get('url')
