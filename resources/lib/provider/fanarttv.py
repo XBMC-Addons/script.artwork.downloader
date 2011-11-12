@@ -1,18 +1,34 @@
 from resources.lib.provider.base import BaseProvider
-#from script_exceptions import NoFanartError
-#from utils import _log as log
+from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
+from resources.lib.utils import _log as log
+from resources.lib import language
 
-#import ElementTree as ET
+from elementtree import ElementTree as ET
 
 class FTV_TVProvider(BaseProvider):
-    """
-    Setup provider for TheTVDB.com
-    """
+
     def __init__(self):
         self.name = 'fanart.tv - TV API'
         self.url = 'http://fanart.tv/api/fanart.php?id=%s'
-
+        self.imagetype = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb']
         
+    def get_image_list(self, media_id):
+        xml_url = self.url % (media_id)
+        log('API: %s ' % xml_url)
+        image_list = []
+        data = self.get_xml(xml_url)
+        tree = ET.fromstring(data)
+        for imagetype in self.imagetype:
+            for image in tree.findall(imagetype):
+                info = {}
+                info['type'] = imagetype
+                info['url'] = image.get('url')
+                if info:            
+                    image_list.append(info) 
+        if image_list == []:
+            raise NoFanartError(media_id)
+        else:
+            return image_list 
         '''
         example url: http://fanart.tv/api/fanart.php?id=71663   (The Simpsons)
         API info: http://fanart.tv/api-info/
