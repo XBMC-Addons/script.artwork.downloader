@@ -16,26 +16,37 @@ class apply_filters:
     def do_filter(self, art_type, mediatype, artwork, downloaded_artwork):
         if art_type == 'fanart':
             return self.fanart(mediatype, artwork, downloaded_artwork)
+        
         if art_type == 'extrafanart':
             return self.extrafanart(mediatype, artwork, downloaded_artwork)
+        
         elif art_type == 'extrathumbs':
             return self.extrathumbs(mediatype, artwork, downloaded_artwork)
+        
         elif art_type == 'poster':
             return self.poster(mediatype, artwork, downloaded_artwork)
+        
         elif art_type == 'seasonposter':
             return self.seasonposter(mediatype, artwork, downloaded_artwork)
+        
         elif art_type == 'banner':
             return self.banner(mediatype, artwork, downloaded_artwork)
+        
         elif art_type == 'seasonbanner':
-            return self.banner(mediatype, artwork, downloaded_artwork)
-        elif art_type == 'clearlogo':
-            return self.banner(mediatype, artwork, downloaded_artwork)
+            return self.seasonbanner(mediatype, artwork, downloaded_artwork)
+        
+        elif art_type == 'logo':
+            return self.logo(mediatype, artwork, downloaded_artwork)
+        
         elif art_type == 'clearart':
-            return self.banner(mediatype, artwork, downloaded_artwork)
-        elif art_type == 'tvthumbs':
-            return self.banner(mediatype, artwork, downloaded_artwork)
+            return self.clearart(mediatype, artwork, downloaded_artwork)
+        
+        elif art_type == 'tvthumb':
+            return self.tvthumb(mediatype, artwork, downloaded_artwork)
+        
         elif art_type == 'seasonthumbs':
-            return self.banner(mediatype, artwork, downloaded_artwork)
+            return self.seasonthumbs(mediatype, artwork, downloaded_artwork)
+        
         else: return false
 
     def fanart(self, mediatype, artwork, downloaded_artwork):
@@ -133,7 +144,7 @@ class apply_filters:
             limited = True
         return [limited, reason]
         
-    def clearlogo(self, mediatype, artwork, downloaded_artwork):
+    def logo(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
         # no lmits available to use
