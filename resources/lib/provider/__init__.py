@@ -10,8 +10,9 @@ def get_providers():
 
     tv_providers.append(TVDBProvider())
     movie_providers.append(TMDBProvider())
-    #tv_providers.append(FTVProvider())
-    #music_providers.append(FTVMusicProvider())
+    #tv_providers.append(FTV_TVProvider())
+    #movie_providers.append(FTV_MovieProvider())
+    #music_providers.append(FTV_MusicProvider())
 
     providers['movie_providers'] = movie_providers
     providers['tv_providers'] = tv_providers
