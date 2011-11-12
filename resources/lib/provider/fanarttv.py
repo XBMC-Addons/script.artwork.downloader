@@ -26,8 +26,23 @@ class FTV_TVProvider(BaseProvider):
                     info['size'] = 'mid'
                     info['type'] = imagetype
                     info['url'] = image.get('url')
+                    '''
+                    Disabled seasonthumbs because there's now way of telling to what season or thumbset it belongs.
+                    Needs to be fixed in the API first.
+                    
+                    if imagetype == 'seasonthumb':
+                        try:
+                            x,y = info['url'].split('(')
+                            y,z = str(y).split(')')
+                            info['season'] = "%.2d" % int(str(y)) #ouput is double digit int
+                        except:
+                            log('Failed retrieving season number')
+                            info['season'] = ''
+                    else: info['season'] = ''
+                    '''
+                    
                     if info:            
-                        image_list.append(info) 
+                        image_list.append(info)
         if image_list == []:
             raise NoFanartError(media_id)
         else:
