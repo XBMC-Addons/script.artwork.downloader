@@ -20,7 +20,7 @@ class FTV_TVProvider(BaseProvider):
         tree = ET.fromstring(data)
         for imagetype in self.imagetypes:
             imageroot = imagetype + 's'
-            for image in tree.findall(imageroot)[0]:
+            for image in tree.findall(imageroot):
                 info = {}
                 info['type'] = imagetype
                 info['url'] = image.get('url')
