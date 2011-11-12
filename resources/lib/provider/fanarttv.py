@@ -20,16 +20,17 @@ class FTV_TVProvider(BaseProvider):
         tree = ET.fromstring(data)
         for imagetype in self.imagetypes:
             imageroot = imagetype + 's'
-            for image in tree.findall(imageroot):
-                info = {}
-                info['size'] = 'mid'
-                info['type'] = imagetype
-                info['url'] = image.get('url')
-                log(image)
-                log(info)
-                log(image.get('url'))
-                if info:            
-                    image_list.append(info) 
+            for images in tree.findall(imageroot):
+                for image in images:
+                    info = {}
+                    info['size'] = 'mid'
+                    info['type'] = imagetype
+                    info['url'] = image.get('url')
+                    log(image)
+                    log(info)
+                    log(image.get('url'))
+                    if info:            
+                        image_list.append(info) 
         if image_list == []:
             raise NoFanartError(media_id)
         else:
