@@ -61,7 +61,8 @@ class TVDBProvider(BaseProvider):
                 
                 # find season info
                 if image.findtext('Season') and int(image.findtext('Season')) >= 0:
-                    info['season'] = image.findtext('season')
+                    season = image.findtext('season')
+                    info['season'] = "%.2d" % int(image.findtext('Season')) #ouput is double digit int
                 else:
                     info['season'] = ''
             if info:            
