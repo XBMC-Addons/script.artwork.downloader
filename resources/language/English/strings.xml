@@ -10,7 +10,7 @@
         <string id="36007">Add-on aborted</string>
         <string id="36008">Network error detected</string>
         <string id="36009">Finished</string>
-        <string id="36010">[B]Enable downloading[/B]</string>
+        <string id="36010">Enable downloading</string>
         <string id="36011">extrafanart centralized</string>
         <string id="36012">-</string>
         <string id="36013">artwork downloaded</string>
@@ -27,7 +27,7 @@
         
     <!-- Plugin settings: General section -->
         <string id="36021">General settings</string>
-        <string id="36022">General settings used in Extrafanart Downloader</string>
+        <string id="36022">[B]General settings used in Extrafanart Downloader[/B]</string>
         <string id="36023">Run in background</string>        
         <string id="36044">Show dialog on finished/errors</string>
         <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
@@ -37,7 +37,7 @@
 
     <!-- Plugin settings: Limit section -->
         <string id="36033">Limit Artwork</string>
-        <string id="36045">Options for limiting downloaded artwork</string>
+        <string id="36045">[B]Options for limiting downloaded artwork[/B]</string>
         <string id="36034">Maximum extrafanart</string>
         <string id="36035">Minimum rating</string>
         <string id="36036">Current language only</string>
@@ -49,20 +49,20 @@
 
     <!-- Plugin settings: Movie section -->
         <string id="36051">Movies</string>
-        <string id="36052">Options for downloading Movie artwork</string>
+        <string id="36052">[B]Options for downloading Movie artwork[/B]</string>
 
     <!-- Plugin settings: TV Show section -->
         <string id="36061">TV Shows</string>
-        <string id="36062">Options for downloading TV Show artwork</string>
+        <string id="36062">[B]Options for downloading TV Show artwork[/B]</string>
         <string id="36063">Exclude fanart that has text</string>
 
     <!-- Plugin settings: Music section -->
         <string id="36071">Music</string>
-        <string id="36072">Options for downloading Music artwork</string>
+        <string id="36072">[B]Options for downloading Music artwork[/B]</string>
 
     <!-- Plugin settings: Advanced settings section -->   
         <string id="36081">Advanced settings</string>
-        <string id="36086">Some advanced settings to be used</string>
+        <string id="36086">[B]Some advanced settings to be used[/B]</string>
         <string id="36200">Keep backup of all downloaded fanart</string>
         <string id="36201">Backup folder</string>
         <string id="36202">[I]Warning: folder can increase to considerable size[/I]</string>
