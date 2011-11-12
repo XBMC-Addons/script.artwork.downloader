@@ -26,6 +26,7 @@ class FTV_TVProvider(BaseProvider):
                 info['type'] = imagetype
                 info['url'] = image.get('url')
                 log(info)
+                log(image.get('url'))
                 if info:            
                     image_list.append(info) 
         if image_list == []:
