@@ -22,6 +22,7 @@ class FTV_TVProvider(BaseProvider):
             imageroot = imagetype + 's'
             for image in tree.findall(imageroot):
                 info = {}
+                info['size'] = 'mid'
                 info['type'] = imagetype
                 info['url'] = image.get('url')
                 if info:            
