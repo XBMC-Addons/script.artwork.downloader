@@ -362,7 +362,7 @@ def download_artwork(self, media_list, providers):
 
                     # Calling _download_art method: seasonthumbs
                     if (self.settings.tvshow_enable and self.settings.tvshow_seasonthumbs and self.mediatype == 'tvshow'):
-                        _download_art(self, 'seasonthumbs', 'seasonthumbs', '', self.settings.artworkfile_seasonthumbs, target_artworkdir, targets, 36113)
+                        _download_art(self, 'seasonthumbs', 'seasonthumb', '', self.settings.artworkfile_seasonthumbs, target_artworkdir, targets, 36113)
                     else:
                         log('Seasonthumbs %s disabled. skipping' %self.mediatype)
                         
@@ -400,6 +400,8 @@ def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, tar
                 artworkfile = self.provider.get_filename(imageurl)
             elif art_type =='extrathumbs':
                 artworkfile = ('thumb%s.jpg' % str(downloaded_artwork+1))
+            elif art_type =='seasonthumbs' and not artwork['season'] =='':
+                artworkfile = ('seasonthumb%s.jpg' %artwork['season'])
             else: pass
             #increase  artwork counter
             current_artwork = current_artwork + 1
