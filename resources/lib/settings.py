@@ -34,6 +34,8 @@ class _settings:
         self.tvshow_extrafanart = __addon__.getSetting("tvshow_extrafanart") == 'true'
         self.tvshow_clearart = __addon__.getSetting("tvshow_clearart") == 'true'
         self.tvshow_logo = __addon__.getSetting("tvshow_logo") == 'true'
+        self.tvshow_thumb = __addon__.getSetting("tvshow_thumb") == 'true'
+        self.tvshow_seasonthumbs = __addon__.getSetting("tvshow_seasonthumbs") == 'true'
         self.tvshow_showbanner = __addon__.getSetting("tvshow_showbanner") == 'true'
         self.tvshow_seasonbanner = __addon__.getSetting("tvshow_seasonbanner") == 'true'
         self.tvshow_characterart = __addon__.getSetting("tvshow_characterart") == 'true'
@@ -72,6 +74,11 @@ class _settings:
         self.artworkfile_poster = 'poster.jpg'
         self.artworkfile_fanart = 'fanart.jpg'
         self.artworkfile_banner = 'banner.jpg'
+        self.artworkfile_logo = 'logo.png'
+        self.artworkfile_clearart = 'clearart.png'
+        self.artworkfile_tvthumb = 'landscape.jpg'
+        self.artworkfile_seasonthumbs = 'seasonthumbxx.jpg'
+        self.artworkfile_characterart = 'character.png'
 
     ### Log settings in debug mode
     def _initiallog(self):
@@ -93,9 +100,11 @@ class _settings:
         log('## - TV Show Fanart = %s' % str(self.tvshow_fanart))
         log('## - TV Show ExtraFanart = %s' % str(self.tvshow_extrafanart))
         log('## - TV Show Clearart = %s' % str(self.tvshow_clearart))
-        log('## - TV Show Fanart = %s' % str(self.tvshow_logo))
+        log('## - TV Show Logo = %s' % str(self.tvshow_logo))
         log('## - TV Show Showbanner = %s' % str(self.tvshow_showbanner))
         log('## - TV Show Seasonbanner = %s' % str(self.tvshow_seasonbanner))
+        log('## - TV Show Thumb = %s' % str(self.tvshow_thumb))
+        log('## - TV Show Seasonthumbs = %s' % str(self.tvshow_seasonthumbs))
         log('## - TV Show Characterart = %s' % str(self.tvshow_characterart))
         
         log('## Centralize Extrafanart = %s' % str(self.centralize_enable))
@@ -157,7 +166,7 @@ class _settings:
                 else: check_movie = True
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
-                if not self.tvshow_fanart and not self.tvshow_extrafanart and not self.tvshow_poster and not self.tvshow_showbanner:
+                if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_thumb and not self.tvshow_seasonthumbs and not self.tvshow_characterart:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True
