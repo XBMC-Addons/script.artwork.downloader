@@ -1,6 +1,6 @@
 from tvdb import TVDBProvider
 from tmdb import TMDBProvider
-#from fanarttv import FTVMusicProvider, FTVProvider
+from fanarttv import FTV_TVProvider
 
 def get_providers():
     movie_providers = []
@@ -10,7 +10,7 @@ def get_providers():
 
     tv_providers.append(TVDBProvider())
     movie_providers.append(TMDBProvider())
-    #tv_providers.append(FTV_TVProvider())
+    tv_providers.append(FTV_TVProvider())
     #movie_providers.append(FTV_MovieProvider())
     #music_providers.append(FTV_MusicProvider())
 
