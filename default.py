@@ -400,7 +400,7 @@ def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, tar
                 artworkfile = self.provider.get_filename(imageurl)
             elif art_type =='extrathumbs':
                 artworkfile = ('thumb%s.jpg' % str(downloaded_artwork+1))
-            elif art_type =='seasonthumbs' and not artwork['season'] =='':
+            elif art_type =='seasonthumbs':
                 artworkfile = ('seasonthumb%s.jpg' %artwork['season'])
             else: pass
             #increase  artwork counter
