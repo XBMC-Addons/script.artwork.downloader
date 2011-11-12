@@ -47,7 +47,7 @@ class apply_filters:
         elif art_type == 'seasonthumbs':
             return self.seasonthumbs(mediatype, artwork, downloaded_artwork)
         
-        else: return False
+        else: return [False, 'Unrecognised art_type']
 
     def fanart(self, mediatype, artwork, downloaded_artwork):
         limited = False
