@@ -224,7 +224,7 @@ def download_artwork(self, media_list, providers):
             self.media_path = os.path.split(currentmedia["path"])[0]
         self.media_id = currentmedia["id"]
         self.media_name = currentmedia["name"]
-        dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = __localize__(36005), line2 = self.media_name, line3 = '', background = self.settings.background)
+        dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(36005), line3 = '', background = self.settings.background)
         log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
         log('ID: %s' % self.media_id)
         log('Path: %s' % self.media_path)
@@ -426,7 +426,7 @@ def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, tar
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                 else:
                     downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(msg), line2 = self.media_name, line3 = artworkfile, background = self.settings.background)
+            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
     log('Finished with %s' %art_type)
 
     
@@ -464,7 +464,7 @@ def _download_seasonart(self, art_type, image_type, image_type2, size, artworkfi
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                 else:
                     downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = __localize__(36006) + ' ' + __localize__(msg), line2 = self.media_name, line3 = artworkfile, background = self.settings.background)
+            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
     log('Finished with %s ' %art_type)
         
         
