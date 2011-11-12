@@ -43,15 +43,31 @@ class TVDBProvider(BaseProvider):
                 elif image.findtext('BannerType') == 'poster':
                     info['size'] = 'mid'
                 else: info['size'] = ''
-                info['series_name'] = image.findtext('SeriesName') == 'true'
+
                 
-                # convert season posters/banners to standard info[] layout
-                if image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
+                # convert posters/banners to standard info[] layout
+                if image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
+                    info['type'] = 'tvshowbanner'
+                    info['size'] = 'mid'
+                # process seasonposters
+                elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
                     info['type'] = 'seasonposter'
                     info['size'] = 'mid'
+                # process seasonbanners
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
                     info['type'] = 'seasonbanner'
                     info['size'] = 'mid'
+                # process posters
+                elif image.findtext('BannerType') == 'poster':
+                    try:
+                        x,y = image.findtext('BannerType2').split('x')
+                        info['width'] = int(x)
+                        info['height'] = int(y)
+                    except:
+                        info['type2'] = image.findtext('BannerType2')
+                
+                # check if fanart has text
+                info['series_name'] = image.findtext('SeriesName') == 'true'
                 
                 # find image ratings
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
