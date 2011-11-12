@@ -38,7 +38,7 @@ class TVDBProvider(BaseProvider):
                 
                 # set fanart size = original (same as in TMDb)
                 if image.findtext('BannerType') == 'fanart':
-                    info['size'] = 'mid'
+                    info['size'] = 'original'
                 # set poster size = mid (same as in TMDb)
                 elif image.findtext('BannerType') == 'poster':
                     info['size'] = 'mid'
