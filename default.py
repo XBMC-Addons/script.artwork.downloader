@@ -344,33 +344,32 @@ def download_artwork(self, media_list, providers):
 
                     # Calling _download_art method: logo
                     if (self.settings.tvshow_enable and self.settings.tvshow_logo and self.mediatype == 'tvshow'):
-                        _download_art(self, 'clearlogo', 'clearlogo', '', self.settings.artworkfile_logo, target_artworkdir, targets, 36106)
+                        _download_art(self, 'clearlogo', 'clearlogo', 'mid', self.settings.artworkfile_logo, target_artworkdir, targets, 36106)
                     else:
                         log('Logo %s disabled. skipping' %self.mediatype)
 
                     # Calling _download_art method: clearart
                     if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
-                        _download_art(self, 'clearart', 'clearart', '', self.settings.artworkfile_clearart, target_artworkdir, targets, 36105)
+                        _download_art(self, 'clearart', 'clearart', 'mid', self.settings.artworkfile_clearart, target_artworkdir, targets, 36105)
                     else:
                         log('Clearart %s disabled. skipping' %self.mediatype)
                         
                     # Calling _download_art method: tvthumb (landscape)
                     if (self.settings.tvshow_enable and self.settings.tvshow_thumb and self.mediatype == 'tvshow'):
-                        _download_art(self, 'tvthumb', 'tvthumb', '', self.settings.artworkfile_tvthumb, target_artworkdir, targets, 36112)
+                        _download_art(self, 'tvthumb', 'tvthumb', 'mid', self.settings.artworkfile_tvthumb, target_artworkdir, targets, 36112)
                     else:
                         log('Clearlogo %s disabled. skipping' %self.mediatype)
 
                     # Calling _download_art method: seasonthumbs
                     if (self.settings.tvshow_enable and self.settings.tvshow_seasonthumbs and self.mediatype == 'tvshow'):
-                        _download_art(self, 'seasonthumbs', 'seasonthumb', '', self.settings.artworkfile_seasonthumbs, target_artworkdir, targets, 36113)
+                        _download_art(self, 'seasonthumbs', 'seasonthumb', 'mid', self.settings.artworkfile_seasonthumbs, target_artworkdir, targets, 36113)
                     else:
                         log('Seasonthumbs %s disabled. skipping' %self.mediatype)
                         
                     # Calling _download_seasonart method: banner
                     if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
                         image_type = 'series'
-                        image_type2 = 'graphical'
-                        _download_seasonart(self, 'banner', image_type, image_type2, '', self.settings.artworkfile_banner, target_artworkdir, 36103)
+                        _download_seasonart(self, 'banner', image_type, 'mid', self.settings.artworkfile_banner, target_artworkdir, 36103)
                     else:
                         log('Banner %s disabled. skipping' %self.mediatype)
                         
@@ -431,7 +430,7 @@ def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, tar
 
     
 ### TV show stuff downloading
-def _download_seasonart(self, art_type, image_type, image_type2, size, artworkfile, artworkdir, msg):
+def _download_seasonart(self, art_type, image_type, size, artworkfile, artworkdir, msg):
     log('Starting with processing %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
