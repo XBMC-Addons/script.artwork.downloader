@@ -78,6 +78,7 @@ class _settings:
         self.artworkfile_clearart = 'clearart.png'
         self.artworkfile_tvthumb = 'landscape.jpg'
         self.artworkfile_seasonthumbs = 'seasonthumbxx.jpg'
+        self.artworkfile_seasonbanners = 'seasonbannersxx.jpg'
         self.artworkfile_characterart = 'character.png'
 
     ### Log settings in debug mode
