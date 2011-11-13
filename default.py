@@ -416,7 +416,7 @@ def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, 
                 break
             # File naming
             if art_type == 'extrafanart':
-                artworkfile = self.provider.get_filename(artwork['id'])
+                artworkfile = ('%s.jpg'%artwork['id'])
             elif art_type == 'extrathumbs':
                 artworkfile = ('thumb%s.jpg' % str(downloaded_artwork+1))
             elif art_type == 'seasonthumbs':

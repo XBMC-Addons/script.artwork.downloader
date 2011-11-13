@@ -12,8 +12,6 @@ class FTV_TVProvider(BaseProvider):
         self.url = 'http://fanart.tv/api/fanart.php?id=%s'
         self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart']
     
-    def get_filename(self, url): 
-        return url
         
     def get_image_list(self, media_id):
         xml_url = self.url % (media_id)
