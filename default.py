@@ -437,7 +437,7 @@ def _download_seasonart(self, art_type, image_type, size, artworkfile, artworkdi
     downloaded_artwork = 0
     for artwork in self.image_list:
         imageurl = artwork['url']
-        if size in artwork['size'] and image_type in artwork['type'] and image_type2 in artwork['type2']:
+        if size in artwork['size'] and image_type in artwork['type']:
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.settings.background):
                 dialog('close', background = self.settings.background)
@@ -465,7 +465,7 @@ def _download_seasonart(self, art_type, image_type, size, artworkfile, artworkdi
                     downloaded_artwork = downloaded_artwork + 1
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
     log('Finished with %s ' %art_type)
-        
+    
         
 ### Start of script
 if (__name__ == "__main__"):
