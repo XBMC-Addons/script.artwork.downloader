@@ -9,7 +9,7 @@ class FTV_TVProvider(BaseProvider):
 
     def __init__(self):
         self.name = 'fanart.tv - TV API'
-        self.url = 'http://fanart.tv/api/fanart.php?id=%s'
+        self.url = 'http://fanart.tv/api/fanart.php?v=4&id=%s'
         self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart']
     
         
@@ -26,6 +26,7 @@ class FTV_TVProvider(BaseProvider):
                     info = {}
                     info['type'] = imagetype
                     info['url'] = image.get('url')
+                    info['id'] = image.get('id')
                     '''
                     Disabled seasonthumbs because there's now way of telling to what season or thumbset it belongs.
                     Needs to be fixed in the API first.
