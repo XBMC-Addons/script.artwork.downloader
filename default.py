@@ -358,6 +358,12 @@ def _download_process(self):
         _download_art(self, 'clearart', 'clearart', 'mid', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
     else:
         log('Clearart %s disabled. skipping' %self.mediatype)
+
+    # Calling _download_art method: characterart
+    if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
+        _download_art(self, 'characterart', 'characterart', 'mid', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
+    else:
+        log('Characterart %s disabled. skipping' %self.mediatype)
         
     # Calling _download_art method: tvthumb (landscape)
     if (self.settings.tvshow_enable and self.settings.tvshow_thumb and self.mediatype == 'tvshow'):
