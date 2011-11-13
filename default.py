@@ -319,10 +319,9 @@ def _download_process(self):
     if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
         art_type = 'extrafanart'
         image_type = 'fanart'
-        size = 'original'
         msg = 36102
         artworkfile = ''
-        _download_art(self, art_type, image_type, size, artworkfile, self.targetdirs, targets, msg)
+        _download_art(self, art_type, image_type, artworkfile, self.targetdirs, targets, msg)
     else:
         log('Extrafanart %s disabled. skipping' %self.mediatype)
     '''    
