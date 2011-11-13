@@ -73,14 +73,15 @@ class _settings:
         self.count_movie_extrafanart = 0
         self.count_movie_extrathumbs = 0
         self.artworkfile_poster = 'poster.jpg'
-        self.artworkfile_seasonposter = 'season%s.png'
+        self.artworkfile_seasonposter = 'season' # requires adding 'season.ext'
         self.artworkfile_fanart = 'fanart.jpg'
         self.artworkfile_logo = 'logo.png'
         self.artworkfile_clearart = 'clearart.png'
         self.artworkfile_banner = 'banner.jpg'
-        self.artworkfile_seasonbanners = 'seasonbanners%s.jpg'
+        self.artworkfile_seasonbanners = 'seasonbanner' # requires adding 'season.ext'
         self.artworkfile_tvthumb = 'landscape.jpg'
-        self.artworkfile_seasonthumbs = 'seasonthumb%s.jpg'
+        self.artworkfile_extrathumbs = 'thumb' # requires adding 'counter.ext'
+        self.artworkfile_seasonthumbs = 'seasonthumb' # requires adding 'season.ext'
         self.artworkfile_characterart = 'character.png'
 
     ### Log settings in debug mode

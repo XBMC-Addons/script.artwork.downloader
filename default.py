@@ -343,7 +343,7 @@ def _download_process(self):
         
     # Calling _download_extrathumbs method: extrathumbs
     if (self.settings.movie_enable and self.settings.movie_extrathumbs):
-        _download_art(self, 'extrathumbs', 'thumb', '', self.target_thumbsdirs, self.targets, 36110)
+        _download_art(self, 'extrathumbs', 'thumb', self.settings.artworkfile_extrathumbs, self.target_thumbsdirs, self.targets, 36110)
     else:
         log('Extrathumbs %s disabled. skipping' %self.mediatype)
     
@@ -400,7 +400,7 @@ def _download_process(self):
         log('Season Poster %s disabled. skipping' %self.mediatype)
 
 ### Artwork downloading
-def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, msg):
+def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg):
     log('Starting with processing: %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
@@ -417,16 +417,11 @@ def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, 
             # File naming
             if art_type == 'extrafanart':
                 artworkfile = ('%s.jpg'%artwork['id'])
-            elif art_type == 'extrathumbs':
-                artworkfile = ('thumb%s.jpg' % str(downloaded_artwork+1))
-            elif art_type == 'seasonthumbs':
-                artworkfile = ('seasonthumb%s.jpg' %artwork['season'])
-            elif art_type == 'seasonbanner':
-                log('just checking')
-                artworkfile = ('seasonbanner%s.jpg' %artwork['season'])
+            elif art_type == 'extrathumbs' or art_type == 'seasonthumbs' or art_type == 'seasonbanner':
+                artworkfile = (filename+'%s.jpg' % str(downloaded_artwork+1))
             elif art_type == 'seasonposter':
-                artworkfile = ('season%s.tbn' %artwork['season'])
-            else: pass
+                artworkfile = (filename+'%s.tbn' %artwork['season'])
+            else: artworkfile = filename
             #increase  artwork counter
             current_artwork = current_artwork + 1
             # Check for set limits
