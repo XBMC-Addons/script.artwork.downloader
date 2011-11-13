@@ -24,9 +24,9 @@ class FTV_TVProvider(BaseProvider):
             for images in tree.findall(imageroot):
                 for image in images:
                     info = {}
-                    info['type'] = imagetype
                     info['url'] = image.get('url')
                     info['id'] = image.get('id')
+                    info['type'] = imagetype
                     '''
                     Disabled seasonthumbs because there's now way of telling to what season or thumbset it belongs.
                     Needs to be fixed in the API first.
