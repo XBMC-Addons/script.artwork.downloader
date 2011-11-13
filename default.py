@@ -228,30 +228,30 @@ def download_artwork(self, media_list, providers):
         log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
         log('ID: %s' % self.media_id)
         log('Path: %s' % self.media_path)
-        targetdirs = []
-        target_thumbsdirs = []
-        target_artworkdir = []
+        self.targetdirs = []
+        self.target_thumbsdirs = []
+        self.target_artworkdir = []
         extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
         extrathumbs_dir = os.path.join(self.media_path, 'extrathumbs')
-        targetdirs.append(extrafanart_dir)
-        target_thumbsdirs.append(extrathumbs_dir)
-        target_artworkdir.append(self.media_path)
+        self.targetdirs.append(extrafanart_dir)
+        self.target_thumbsdirs.append(extrathumbs_dir)
+        self.target_artworkdir.append(self.media_path)
         ### Check if using the centralize option
         if self.settings.centralize_enable:
             if self.mediatype == 'tvshow':
                 if not self.settings.centralfolder_tvshows == '':
-                    targetdirs.append(self.settings.centralfolder_tvshows)
+                    self.targetdirs.append(self.settings.centralfolder_tvshows)
                 else:
                     log('Error: Central fanart enabled but TV Show folder not set, skipping', xbmc.LOGERROR)
             elif self.mediatype == 'movie':
                 if not self.settings.centralfolder_movies == '':
-                    targetdirs.append(self.settings.centralfolder_movies)
+                    self.targetdirs.append(self.settings.centralfolder_movies)
                 else:
                     log('Error: Central fanart enabled but movies folder not set, skipping', xbmc.LOGERROR)
         ### Check if using the cache option
-        targets = targetdirs[:]
+        self.targets = self.targetdirs[:]
         if self.settings.use_cache and not self.settings.cache_directory == '':
-            targets.append(self.settings.cache_directory)
+            self.targets.append(self.settings.cache_directory)
         if self.media_id == '':
             log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
         elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
@@ -302,80 +302,81 @@ def download_artwork(self, media_list, providers):
                     if (self.settings.limit_artwork and self.settings.limit_extrafanart_max < len(self.image_list)):
                         self.download_max = self.settings.limit_extrafanart_max
                     else: self.download_max = len(self.image_list)
+                    _download_process(self)
 
-                    '''   This is just an example of how the call method is processed and how to use
-                    # Calling _download_art method: extrafanart
-                    if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
-                        art_type = 'extrafanart'
-                        image_type = 'fanart'
-                        size = 'original'
-                        msg = 36102
-                        artworkfile = ''
-                        _download_art(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg)
-                    else:
-                        log('Extrafanart %s disabled. skipping' %self.mediatype)
-                    '''    
-                    ### Following part need to be cleanup after it is functional.
-                    # To-do: Try combining these 'art_type, image_type, size' into one or easier thing to parse
-                    
-                    # Calling _download_art method: extrafanart
-                    if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
-                        _download_art(self, 'extrafanart', 'fanart', 'original', '', targetdirs, targets, 36102)
-                    else:
-                        log('Extrafanart %s disabled. skipping' %self.mediatype)
-                    
-                    # Calling _download_art method: fanart
-                    if (self.settings.movie_enable and self.settings.movie_fanart) or  (self.settings.tvshow_enable and self.settings.tvshow_fanart):
-                        _download_art(self, 'fanart', 'fanart', 'original', self.settings.artworkfile_fanart, target_artworkdir, targets, 36101)
-                    else:
-                        log('Fanart %s disabled. skipping' %self.mediatype)
-                        
-                    # Calling _download_extrathumbs method: extrathumbs
-                    if (self.settings.movie_enable and self.settings.movie_extrathumbs):
-                        _download_art(self, 'extrathumbs', 'fanart', 'thumb', '', target_thumbsdirs, targets, 36110)
-                    else:
-                        log('Extrathumbs %s disabled. skipping' %self.mediatype)
-                    
-                    # Calling _download_art method: posters
-                    if (self.settings.movie_enable and self.settings.movie_poster) or (self.settings.tvshow_enable and self.settings.tvshow_poster):
-                        _download_art(self, 'poster', 'poster', 'mid', self.settings.artworkfile_poster, target_artworkdir, targets, 36108)
-                    else:
-                        log('Poster %s disabled. skipping' %self.mediatype)
-
-                    # Calling _download_art method: logo
-                    if (self.settings.tvshow_enable and self.settings.tvshow_logo and self.mediatype == 'tvshow'):
-                        _download_art(self, 'clearlogo', 'clearlogo', 'mid', self.settings.artworkfile_logo, target_artworkdir, targets, 36106)
-                    else:
-                        log('Logo %s disabled. skipping' %self.mediatype)
-
-                    # Calling _download_art method: clearart
-                    if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
-                        _download_art(self, 'clearart', 'clearart', 'mid', self.settings.artworkfile_clearart, target_artworkdir, targets, 36105)
-                    else:
-                        log('Clearart %s disabled. skipping' %self.mediatype)
-                        
-                    # Calling _download_art method: tvthumb (landscape)
-                    if (self.settings.tvshow_enable and self.settings.tvshow_thumb and self.mediatype == 'tvshow'):
-                        _download_art(self, 'tvthumb', 'tvthumb', 'mid', self.settings.artworkfile_tvthumb, target_artworkdir, targets, 36112)
-                    else:
-                        log('Clearlogo %s disabled. skipping' %self.mediatype)
-
-                    # Calling _download_art method: seasonthumbs
-                    if (self.settings.tvshow_enable and self.settings.tvshow_seasonthumbs and self.mediatype == 'tvshow'):
-                        _download_art(self, 'seasonthumbs', 'seasonthumb', 'mid', self.settings.artworkfile_seasonthumbs, target_artworkdir, targets, 36113)
-                    else:
-                        log('Seasonthumbs %s disabled. skipping' %self.mediatype)
-                        
-                    # Calling _download_seasonart method: banner
-                    if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
-                        image_type = 'series'
-                        _download_seasonart(self, 'banner', image_type, 'mid', self.settings.artworkfile_banner, target_artworkdir, 36103)
-                    else:
-                        log('Banner %s disabled. skipping' %self.mediatype)
-                        
         log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
         self.processeditems = self.processeditems + 1
 
+def _download_process(self):    
+    '''   This is just an example of how the call method is processed and how to use
+    # Calling _download_art method: extrafanart
+    if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
+        art_type = 'extrafanart'
+        image_type = 'fanart'
+        size = 'original'
+        msg = 36102
+        artworkfile = ''
+        _download_art(self, art_type, image_type, size, artworkfile, self.targetdirs, targets, msg)
+    else:
+        log('Extrafanart %s disabled. skipping' %self.mediatype)
+    '''    
+    ### Following part need to be cleanup after it is functional.
+    # To-do: Try combining these 'art_type, image_type, size' into one or easier thing to parse
+    
+    # Calling _download_art method: extrafanart
+    if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
+        _download_art(self, 'extrafanart', 'fanart', 'original', '', self.targetdirs, self.targets, 36102)
+    else:
+        log('Extrafanart %s disabled. skipping' %self.mediatype)
+    
+    # Calling _download_art method: fanart
+    if (self.settings.movie_enable and self.settings.movie_fanart) or  (self.settings.tvshow_enable and self.settings.tvshow_fanart):
+        _download_art(self, 'fanart', 'fanart', 'original', self.settings.artworkfile_fanart, self.target_artworkdir, self.targets, 36101)
+    else:
+        log('Fanart %s disabled. skipping' %self.mediatype)
+        
+    # Calling _download_extrathumbs method: extrathumbs
+    if (self.settings.movie_enable and self.settings.movie_extrathumbs):
+        _download_art(self, 'extrathumbs', 'fanart', 'thumb', '', self.target_thumbsdirs, self.targets, 36110)
+    else:
+        log('Extrathumbs %s disabled. skipping' %self.mediatype)
+    
+    # Calling _download_art method: posters
+    if (self.settings.movie_enable and self.settings.movie_poster) or (self.settings.tvshow_enable and self.settings.tvshow_poster):
+        _download_art(self, 'poster', 'poster', 'mid', self.settings.artworkfile_poster, self.target_artworkdir, self.targets, 36108)
+    else:
+        log('Poster %s disabled. skipping' %self.mediatype)
+
+    # Calling _download_art method: logo
+    if (self.settings.tvshow_enable and self.settings.tvshow_logo and self.mediatype == 'tvshow'):
+        _download_art(self, 'clearlogo', 'clearlogo', 'mid', self.settings.artworkfile_logo, self.target_artworkdir, self.targets, 36106)
+    else:
+        log('Logo %s disabled. skipping' %self.mediatype)
+
+    # Calling _download_art method: clearart
+    if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
+        _download_art(self, 'clearart', 'clearart', 'mid', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
+    else:
+        log('Clearart %s disabled. skipping' %self.mediatype)
+        
+    # Calling _download_art method: tvthumb (landscape)
+    if (self.settings.tvshow_enable and self.settings.tvshow_thumb and self.mediatype == 'tvshow'):
+        _download_art(self, 'tvthumb', 'tvthumb', 'mid', self.settings.artworkfile_tvthumb, self.target_artworkdir, self.targets, 36112)
+    else:
+        log('Clearlogo %s disabled. skipping' %self.mediatype)
+
+    # Calling _download_art method: seasonthumbs
+    if (self.settings.tvshow_enable and self.settings.tvshow_seasonthumbs and self.mediatype == 'tvshow'):
+        _download_art(self, 'seasonthumbs', 'seasonthumb', 'mid', self.settings.artworkfile_seasonthumbs, self.target_artworkdir, self.targets, 36113)
+    else:
+        log('Seasonthumbs %s disabled. skipping' %self.mediatype)
+        
+    # Calling _download_seasonart method: banner
+    if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
+        image_type = 'series'
+        _download_seasonart(self, 'banner', image_type, 'mid', self.settings.artworkfile_banner, self.target_artworkdir, 36103)
+    else:
+        log('Banner %s disabled. skipping' %self.mediatype)
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg):
