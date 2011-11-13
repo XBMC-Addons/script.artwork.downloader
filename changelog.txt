@@ -7,12 +7,13 @@
 - Added: Movie Fanart
 - Added: Movie Poster
 - Added: TV Show Poster
+- Added: TV Show Season Poster
 - Added: TV Show Fanart
 - Added: TV Show Clearart
 - Added: TV Show Characterart
 - Added: TV Show Logo
-- Added: TV Show Logo
 - Added: TV Show Banner
+- Added: TV Show Season Banner
 - Added: TV Show Thumb
 
 [B]0.4.1[/B]
