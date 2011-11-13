@@ -23,8 +23,7 @@ class BaseProvider:
     url_prefix = ''
     
     
-    def get_filename(self, url): 
-        return url.rsplit('/', 1)[1]
+
 
     def get_xml(self, url):
         try:
