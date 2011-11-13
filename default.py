@@ -380,14 +380,23 @@ def _download_process(self):
         
     # Calling _download_art method: banner
     if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
-        image_type = 'series'
-        _download_art(self, 'banner', image_type, self.settings.artworkfile_banner, self.target_artworkdir, self.targets, 36103)
+        _download_art(self, 'banner', 'banner', self.settings.artworkfile_banner, self.target_artworkdir, self.targets, 36103)
     else:
         log('Banner %s disabled. skipping' %self.mediatype)
+    # Calling _download_art method: seasonbanner
+    if (self.settings.tvshow_enable and self.settings.tvshow_seasonbanner and self.mediatype == 'tvshow'):
+        _download_art(self, 'seasonbanner', 'seasonbanner', self.settings.artworkfile_seasonbanners, self.target_artworkdir, self.targets, 36104)
+    else:
+        log('Season Banner %s disabled. skipping' %self.mediatype)
+    # Calling _download_art method: season poster
+    if (self.settings.tvshow_enable and self.settings.tvshow_seasonposter and self.mediatype == 'tvshow'):
+        _download_art(self, 'seasonposter', 'seasonposter', self.settings.artworkfile_seasonposter, self.target_artworkdir, self.targets, 36114)
+    else:
+        log('Season Poster %s disabled. skipping' %self.mediatype)
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, msg):
-    log('Starting with processing %s' %art_type)
+    log('Starting with processing _%s_' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
     downloaded_artwork = 0
@@ -401,14 +410,19 @@ def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, 
             if not self.settings.failcount < self.settings.failthreshold:
                 break
             # File naming
-            if art_type =='extrafanart' and self.mediatype == 'movie':
+            if art_type == 'extrafanart' and self.mediatype == 'movie':
                 artworkfile = self.provider.get_filename(artwork['id'])
-            elif art_type =='extrafanart' and self.mediatype == 'tvshow':
+            elif art_type == 'extrafanart' and self.mediatype == 'tvshow':
                 artworkfile = self.provider.get_filename(imageurl)
-            elif art_type =='extrathumbs':
+            elif art_type == 'extrathumbs':
                 artworkfile = ('thumb%s.jpg' % str(downloaded_artwork+1))
-            elif art_type =='seasonthumbs':
+            elif art_type == 'seasonthumbs':
                 artworkfile = ('seasonthumb%s.jpg' %artwork['season'])
+            elif art_type == 'seasonbanner':
+                log('just checking')
+                artworkfile = ('seasonbanner%s.jpg' %artwork['season'])
+            elif art_type == 'seasonposter':
+                artworkfile = ('season%s.tbn' %artwork['season'])
             else: pass
             #increase  artwork counter
             current_artwork = current_artwork + 1
