@@ -416,8 +416,10 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             # File naming
             if art_type == 'extrafanart':
                 artworkfile = ('%s.jpg'%artwork['id'])
-            elif art_type == 'extrathumbs' or art_type == 'seasonthumbs' or art_type == 'seasonbanner':
+            elif art_type == 'extrathumbs':
                 artworkfile = (filename+'%s.jpg' % str(downloaded_artwork+1))
+            elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
+                artworkfile = (filename+'%s.jpg' %artwork['season'])
             elif art_type == 'seasonposter':
                 artworkfile = (filename+'%s.tbn' %artwork['season'])
             else: artworkfile = filename
