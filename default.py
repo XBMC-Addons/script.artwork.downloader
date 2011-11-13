@@ -380,7 +380,7 @@ def _download_process(self):
     # Calling _download_seasonart method: banner
     if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
         image_type = 'series'
-        _download_seasonart(self, 'banner', image_type, self.settings.artworkfile_banner, self.target_artworkdir, 36103)
+        _download_art(self, 'banner', image_type, self.settings.artworkfile_banner, self.target_artworkdir, self.targets, 36103)
     else:
         log('Banner %s disabled. skipping' %self.mediatype)
 
@@ -435,44 +435,6 @@ def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, 
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
     log('Finished with %s' %art_type)
 
-    
-### TV show stuff downloading
-def _download_seasonart(self, art_type, image_type, artworkfile, artworkdir, msg):
-    log('Starting with processing %s' %art_type)
-    self.settings.failcount = 0
-    current_artwork = 0
-    downloaded_artwork = 0
-    for artwork in self.image_list:
-        imageurl = artwork['url']
-        if image_type in artwork['type']:
-            ### check if script has been cancelled by user
-            if dialog('iscanceled', background = self.settings.background):
-                dialog('close', background = self.settings.background)
-                break
-            if not self.settings.failcount < self.settings.failthreshold:
-                break
-            limited = self.filters.do_filter(art_type, self.mediatype, artwork, downloaded_artwork)
-            if limited[0]:
-                log('Reason %s' %limited[1])
-            else:
-                try:
-                    self.fileops._downloadfile(imageurl, artworkfile, artworkdir)
-                except HTTP404Error, e:
-                    log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-                except HTTPTimeout, e:
-                    self.settings.failcount = self.settings.failcount + 1
-                    log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
-                except CreateDirectoryError, e:
-                    log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
-                    break
-                except DownloadError, e:
-                    self.settings.failcount = self.settings.failcount + 1
-                    log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
-                else:
-                    downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
-    log('Finished with %s ' %art_type)
-    
         
 ### Start of script
 if (__name__ == "__main__"):
