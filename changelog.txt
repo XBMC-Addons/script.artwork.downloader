@@ -4,9 +4,16 @@
 - Added: Limit extrafanart on image size
 - Added: Dialog on finished when run in background
 - Added: Version check between settings and addon
-- Added: TV Show & Movie fanart
-- Added: TV Show & Movie poster
-- Added: TV Show banners
+- Added: Movie Fanart
+- Added: Movie Poster
+- Added: TV Show Poster
+- Added: TV Show Fanart
+- Added: TV Show Clearart
+- Added: TV Show Characterart
+- Added: TV Show Logo
+- Added: TV Show Logo
+- Added: TV Show Banner
+- Added: TV Show Thumb
 
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies
