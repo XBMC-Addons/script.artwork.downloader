@@ -225,6 +225,7 @@ def download_artwork(self, media_list, providers):
         self.media_id = currentmedia["id"]
         self.media_name = currentmedia["name"]
         dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(36005), line3 = '', background = self.settings.background)
+        log('########################################################')
         log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
         log('ID: %s' % self.media_id)
         log('Path: %s' % self.media_path)
