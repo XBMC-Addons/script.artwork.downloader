@@ -30,6 +30,7 @@ class _settings:
         
         self.tvshow_enable = __addon__.getSetting("tvshow_enable") == 'true'
         self.tvshow_poster = __addon__.getSetting("tvshow_poster") == 'true'
+        self.tvshow_seasonposter = __addon__.getSetting("tvshow_seasonposter") == 'true'
         self.tvshow_fanart = __addon__.getSetting("tvshow_fanart") == 'true'
         self.tvshow_extrafanart = __addon__.getSetting("tvshow_extrafanart") == 'true'
         self.tvshow_clearart = __addon__.getSetting("tvshow_clearart") == 'true'
@@ -72,13 +73,14 @@ class _settings:
         self.count_movie_extrafanart = 0
         self.count_movie_extrathumbs = 0
         self.artworkfile_poster = 'poster.jpg'
+        self.artworkfile_seasonposter = 'season%s.png'
         self.artworkfile_fanart = 'fanart.jpg'
-        self.artworkfile_banner = 'banner.jpg'
         self.artworkfile_logo = 'logo.png'
         self.artworkfile_clearart = 'clearart.png'
+        self.artworkfile_banner = 'banner.jpg'
+        self.artworkfile_seasonbanners = 'seasonbanners%s.jpg'
         self.artworkfile_tvthumb = 'landscape.jpg'
-        self.artworkfile_seasonthumbs = 'seasonthumbxx.jpg'
-        self.artworkfile_seasonbanners = 'seasonbannersxx.jpg'
+        self.artworkfile_seasonthumbs = 'seasonthumb%s.jpg'
         self.artworkfile_characterart = 'character.png'
 
     ### Log settings in debug mode
@@ -168,7 +170,7 @@ class _settings:
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
                 #if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner '''and not self.tvshow_seasonbanner''' and not self.tvshow_thumb ''''and not self.tvshow_seasonthumbs''' and not self.tvshow_characterart:
-                if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart:
+                if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True
