@@ -14,6 +14,10 @@ class TVDBProvider(BaseProvider):
         self.url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml'
         self.url_prefix = 'http://www.thetvdb.com/banners/'
     
+    def get_filename(self, imageid):
+        filename = imageid + '.jpg'
+        return filename
+    
     def get_image_list(self, media_id):
         xml_url = self.url % (self.api_key, media_id)
         log('API: %s ' % xml_url)

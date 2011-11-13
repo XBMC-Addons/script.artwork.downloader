@@ -415,10 +415,8 @@ def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, 
             if not self.settings.failcount < self.settings.failthreshold:
                 break
             # File naming
-            if art_type == 'extrafanart' and self.mediatype == 'movie':
+            if art_type == 'extrafanart':
                 artworkfile = self.provider.get_filename(artwork['id'])
-            elif art_type == 'extrafanart' and self.mediatype == 'tvshow':
-                artworkfile = self.provider.get_filename(imageurl)
             elif art_type == 'extrathumbs':
                 artworkfile = ('thumb%s.jpg' % str(downloaded_artwork+1))
             elif art_type == 'seasonthumbs':
