@@ -258,6 +258,8 @@ def download_artwork(self, media_list, providers):
         elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
             log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
         else:
+            self.temp_image_list = []
+            self.image_list = []
             for self.provider in providers:
                 if not self.settings.failcount < self.settings.failthreshold:
                     break
@@ -267,7 +269,7 @@ def download_artwork(self, media_list, providers):
                     if artwork_result == 'retrying':
                         time.sleep(10)
                     try:
-                        self.image_list = self.provider.get_image_list(self.media_id)
+                        self.temp_image_list = self.provider.get_image_list(self.media_id)
                     except HTTP404Error, e:
                         errmsg = '404: File not found'
                         artwork_result = 'skipping'
@@ -295,15 +297,18 @@ def download_artwork(self, media_list, providers):
                         artwork_result = 'skipping'
                     else:
                         artwork_result = 'pass'
+                        for item in self.temp_image_list:
+                            self.image_list.append(item)
                     if not xmlfailcount < self.settings.xmlfailthreshold:
                         artwork_result = 'skipping'
                     if not artwork_result == 'pass':
                         log('Error getting data from %s (%s): %s' % (self.provider.name, errmsg, artwork_result))
-                if artwork_result == 'pass':
-                    if (self.settings.limit_artwork and self.settings.limit_extrafanart_max < len(self.image_list)):
-                        self.download_max = self.settings.limit_extrafanart_max
-                    else: self.download_max = len(self.image_list)
-                    _download_process(self)
+            if len(self.image_list) > 0:
+                if (self.settings.limit_artwork and self.settings.limit_extrafanart_max < len(self.image_list)):
+                    self.download_max = self.settings.limit_extrafanart_max
+                else:
+                    self.download_max = len(self.image_list)
+                _download_process(self)
 
         log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
         self.processeditems = self.processeditems + 1
