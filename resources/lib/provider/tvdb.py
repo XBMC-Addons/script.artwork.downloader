@@ -25,8 +25,34 @@ class TVDBProvider(BaseProvider):
             if image.findtext('BannerPath'):
                 info['url'] = self.url_prefix + image.findtext('BannerPath')
                 info['language'] = image.findtext('Language')
+                info['id'] = image.findtext('id')
+                info['size'] = ''
+                # set fanart size = original (same as in TMDb)
+                if image.findtext('BannerType') == 'fanart':
+                    info['type'] = 'fanart'
+                    info['size'] = 'original'
+                     
+                # set poster size = mid (same as in TMDb)
+                if image.findtext('BannerType') == 'poster':
+                    info['type'] = 'poster'
+                    info['size'] = 'mid'
+
+                # convert posters/banners to standard info[] layout
+                if image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
+                    info['type'] = 'tvshowbanner'
+                    info['size'] = 'mid'
+                # process seasonposters
+                if image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
+                    info['type'] = 'seasonposter'
+                    info['size'] = 'mid'
+                # process seasonbanners
+                if image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
+                    info['type'] = 'seasonbanner'
+                    info['size'] = 'mid'
                 
-                # convert ...x... in Bannertype2
+                
+
+                # convert image size ...x... in Bannertype2
                 if image.findtext('BannerType2'):
                     info['type'] = image.findtext('BannerType')
                     try:
@@ -35,37 +61,7 @@ class TVDBProvider(BaseProvider):
                         info['height'] = int(y)
                     except:
                         info['type2'] = image.findtext('BannerType2')
-                
-                # set fanart size = original (same as in TMDb)
-                if image.findtext('BannerType') == 'fanart':
-                    info['size'] = 'original'
-                # set poster size = mid (same as in TMDb)
-                elif image.findtext('BannerType') == 'poster':
-                    info['size'] = 'mid'
-                else: info['size'] = ''
-
-                
-                # convert posters/banners to standard info[] layout
-                if image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
-                    info['type'] = 'tvshowbanner'
-                    info['size'] = 'mid'
-                # process seasonposters
-                elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
-                    info['type'] = 'seasonposter'
-                    info['size'] = 'mid'
-                # process seasonbanners
-                elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
-                    info['type'] = 'seasonbanner'
-                    info['size'] = 'mid'
-                # process posters
-                elif image.findtext('BannerType') == 'poster':
-                    try:
-                        x,y = image.findtext('BannerType2').split('x')
-                        info['width'] = int(x)
-                        info['height'] = int(y)
-                    except:
-                        info['type2'] = image.findtext('BannerType2')
-                
+                        
                 # check if fanart has text
                 info['series_name'] = image.findtext('SeriesName') == 'true'
                 
