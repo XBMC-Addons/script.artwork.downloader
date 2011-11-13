@@ -396,7 +396,7 @@ def _download_process(self):
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, msg):
-    log('Starting with processing _%s_' %art_type)
+    log('Starting with processing: %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
     downloaded_artwork = 0
@@ -448,7 +448,7 @@ def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, 
                 else:
                     downloaded_artwork = downloaded_artwork + 1
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
-    log('Finished with %s' %art_type)
+    log('Finished with: %s' %art_type)
 
         
 ### Start of script
