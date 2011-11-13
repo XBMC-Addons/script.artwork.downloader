@@ -366,7 +366,7 @@ def _download_process(self):
 
     # Calling _download_art method: characterart
     if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
-        _download_art(self, 'characterart', 'characterart', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
+        _download_art(self, 'characterart', 'characterart', self.settings.artworkfile_characterart, self.target_artworkdir, self.targets, 36107)
     else:
         log('Characterart %s disabled. skipping' %self.mediatype)
         
