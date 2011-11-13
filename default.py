@@ -377,7 +377,7 @@ def _download_process(self):
     else:
         log('Seasonthumbs %s disabled. skipping' %self.mediatype)
         
-    # Calling _download_seasonart method: banner
+    # Calling _download_art method: banner
     if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
         image_type = 'series'
         _download_art(self, 'banner', image_type, self.settings.artworkfile_banner, self.target_artworkdir, self.targets, 36103)
