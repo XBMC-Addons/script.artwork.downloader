@@ -27,13 +27,14 @@ class TVDBProvider(BaseProvider):
                 info['language'] = image.findtext('Language')
                 info['id'] = image.findtext('id')
                 info['size'] = ''
-                # set fanart size = original (same as in TMDb)
+                info['type'] = ''
+                # process fanarts
                 if image.findtext('BannerType') == 'fanart':
                     info['type'] = 'fanart'
-                # set poster size = mid (same as in TMDb)
-                if image.findtext('BannerType') == 'poster':
+                # process posters
+                elif image.findtext('BannerType') == 'poster':
                     info['type'] = 'poster'
-                # convert posters/banners to standard info[] layout
+                # process banners
                 elif image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
                     info['type'] = 'tvshowbanner'
                 # process seasonposters
@@ -42,30 +43,33 @@ class TVDBProvider(BaseProvider):
                 # process seasonbanners
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
                     info['type'] = 'seasonbanner'
-                else: info['type'] = ''
                 # convert image size ...x... in Bannertype2
                 if image.findtext('BannerType2'):
-                    info['type'] = image.findtext('BannerType')
                     try:
                         x,y = image.findtext('BannerType2').split('x')
                         info['width'] = int(x)
                         info['height'] = int(y)
                     except:
                         info['type2'] = image.findtext('BannerType2')
-                        
+ 
                 # check if fanart has text
                 info['series_name'] = image.findtext('SeriesName') == 'true'
-                
+
                 # find image ratings
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
                     info['rating'] = float(image.findtext('Rating'))
                 else:
                     info['rating'] = 0
-                
+
                 # find season info
                 if image.findtext('Season') and int(image.findtext('Season')) >= 0:
                     season = image.findtext('season')
-                    info['season'] = "%.2d" % int(image.findtext('Season')) #ouput is double digit int
+                    seasonxx = "%.2d" % int(image.findtext('Season')) #ouput is double digit int
+                    if seasonxx == '00':
+                        info['season'] = '-specials'
+                    else:
+                        info['season'] = str(seasonxx)
+                    log('Season: %s' %info['season'])
                 else:
                     info['season'] = ''
             if info:            
