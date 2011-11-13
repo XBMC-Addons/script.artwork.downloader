@@ -10,7 +10,7 @@ class FTV_TVProvider(BaseProvider):
     def __init__(self):
         self.name = 'fanart.tv - TV API'
         self.url = 'http://fanart.tv/api/fanart.php?id=%s'
-        self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb']
+        self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart']
         
     def get_image_list(self, media_id):
         xml_url = self.url % (media_id)
@@ -23,7 +23,6 @@ class FTV_TVProvider(BaseProvider):
             for images in tree.findall(imageroot):
                 for image in images:
                     info = {}
-                    info['size'] = 'mid'
                     info['type'] = imagetype
                     info['url'] = image.get('url')
                     '''
@@ -47,15 +46,6 @@ class FTV_TVProvider(BaseProvider):
             raise NoFanartError(media_id)
         else:
             return image_list 
-        '''
-        example url: http://fanart.tv/api/fanart.php?id=71663   (The Simpsons)
-        API info: http://fanart.tv/api-info/
-        See the download section in default.py what info[] is expected for now. This can be changed when cleaning up.
-        The seasonthumbs need to get info['season'] for season numbering with the value that is between brackets.
-        This will later be converted into what we need.
-        The first seasonthumb is one we probably don't need.
-        '''
-        
         
 class FTV_MovieProvider(BaseProvider):
     """

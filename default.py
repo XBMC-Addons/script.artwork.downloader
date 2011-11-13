@@ -325,67 +325,67 @@ def _download_process(self):
     
     # Calling _download_art method: extrafanart
     if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
-        _download_art(self, 'extrafanart', 'fanart', 'original', '', self.targetdirs, self.targets, 36102)
+        _download_art(self, 'extrafanart', 'fanart', '', self.targetdirs, self.targets, 36102)
     else:
         log('Extrafanart %s disabled. skipping' %self.mediatype)
     
     # Calling _download_art method: fanart
     if (self.settings.movie_enable and self.settings.movie_fanart) or  (self.settings.tvshow_enable and self.settings.tvshow_fanart):
-        _download_art(self, 'fanart', 'fanart', 'original', self.settings.artworkfile_fanart, self.target_artworkdir, self.targets, 36101)
+        _download_art(self, 'fanart', 'fanart', self.settings.artworkfile_fanart, self.target_artworkdir, self.targets, 36101)
     else:
         log('Fanart %s disabled. skipping' %self.mediatype)
         
     # Calling _download_extrathumbs method: extrathumbs
     if (self.settings.movie_enable and self.settings.movie_extrathumbs):
-        _download_art(self, 'extrathumbs', 'thumb', 'thumb', '', self.target_thumbsdirs, self.targets, 36110)
+        _download_art(self, 'extrathumbs', 'thumb', '', self.target_thumbsdirs, self.targets, 36110)
     else:
         log('Extrathumbs %s disabled. skipping' %self.mediatype)
     
     # Calling _download_art method: posters
     if (self.settings.movie_enable and self.settings.movie_poster) or (self.settings.tvshow_enable and self.settings.tvshow_poster):
-        _download_art(self, 'poster', 'poster', 'mid', self.settings.artworkfile_poster, self.target_artworkdir, self.targets, 36108)
+        _download_art(self, 'poster', 'poster', self.settings.artworkfile_poster, self.target_artworkdir, self.targets, 36108)
     else:
         log('Poster %s disabled. skipping' %self.mediatype)
 
     # Calling _download_art method: logo
     if (self.settings.tvshow_enable and self.settings.tvshow_logo and self.mediatype == 'tvshow'):
-        _download_art(self, 'clearlogo', 'clearlogo', 'mid', self.settings.artworkfile_logo, self.target_artworkdir, self.targets, 36106)
+        _download_art(self, 'clearlogo', 'clearlogo', self.settings.artworkfile_logo, self.target_artworkdir, self.targets, 36106)
     else:
         log('Logo %s disabled. skipping' %self.mediatype)
 
     # Calling _download_art method: clearart
     if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
-        _download_art(self, 'clearart', 'clearart', 'mid', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
+        _download_art(self, 'clearart', 'clearart', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
     else:
         log('Clearart %s disabled. skipping' %self.mediatype)
 
     # Calling _download_art method: characterart
     if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
-        _download_art(self, 'characterart', 'characterart', 'mid', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
+        _download_art(self, 'characterart', 'characterart', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
     else:
         log('Characterart %s disabled. skipping' %self.mediatype)
         
     # Calling _download_art method: tvthumb (landscape)
     if (self.settings.tvshow_enable and self.settings.tvshow_thumb and self.mediatype == 'tvshow'):
-        _download_art(self, 'tvthumb', 'tvthumb', 'mid', self.settings.artworkfile_tvthumb, self.target_artworkdir, self.targets, 36112)
+        _download_art(self, 'tvthumb', 'tvthumb', self.settings.artworkfile_tvthumb, self.target_artworkdir, self.targets, 36112)
     else:
         log('Clearlogo %s disabled. skipping' %self.mediatype)
 
     # Calling _download_art method: seasonthumbs
     if (self.settings.tvshow_enable and self.settings.tvshow_seasonthumbs and self.mediatype == 'tvshow'):
-        _download_art(self, 'seasonthumbs', 'seasonthumb', 'mid', self.settings.artworkfile_seasonthumbs, self.target_artworkdir, self.targets, 36113)
+        _download_art(self, 'seasonthumbs', 'seasonthumb', self.settings.artworkfile_seasonthumbs, self.target_artworkdir, self.targets, 36113)
     else:
         log('Seasonthumbs %s disabled. skipping' %self.mediatype)
         
     # Calling _download_seasonart method: banner
     if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
         image_type = 'series'
-        _download_seasonart(self, 'banner', image_type, 'mid', self.settings.artworkfile_banner, self.target_artworkdir, 36103)
+        _download_seasonart(self, 'banner', image_type, self.settings.artworkfile_banner, self.target_artworkdir, 36103)
     else:
         log('Banner %s disabled. skipping' %self.mediatype)
 
 ### Artwork downloading
-def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, targets, msg):
+def _download_art(self, art_type, image_type, artworkfile, targetdirs, targets, msg):
     log('Starting with processing %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
@@ -437,14 +437,14 @@ def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, tar
 
     
 ### TV show stuff downloading
-def _download_seasonart(self, art_type, image_type, size, artworkfile, artworkdir, msg):
+def _download_seasonart(self, art_type, image_type, artworkfile, artworkdir, msg):
     log('Starting with processing %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
     downloaded_artwork = 0
     for artwork in self.image_list:
         imageurl = artwork['url']
-        if size in artwork['size'] and image_type in artwork['type']:
+        if image_type in artwork['type']:
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.settings.background):
                 dialog('close', background = self.settings.background)
