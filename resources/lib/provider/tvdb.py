@@ -69,7 +69,6 @@ class TVDBProvider(BaseProvider):
                         info['season'] = '-specials'
                     else:
                         info['season'] = str(seasonxx)
-                    log('Season: %s' %info['season'])
                 else:
                     info['season'] = ''
             if info:            
