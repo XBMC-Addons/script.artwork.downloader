@@ -337,7 +337,7 @@ def _download_process(self):
         
     # Calling _download_extrathumbs method: extrathumbs
     if (self.settings.movie_enable and self.settings.movie_extrathumbs):
-        _download_art(self, 'extrathumbs', 'fanart', 'thumb', '', self.target_thumbsdirs, self.targets, 36110)
+        _download_art(self, 'extrathumbs', 'thumb', 'thumb', '', self.target_thumbsdirs, self.targets, 36110)
     else:
         log('Extrathumbs %s disabled. skipping' %self.mediatype)
     
@@ -392,7 +392,7 @@ def _download_art(self, art_type, image_type, size, artworkfile, targetdirs, tar
     downloaded_artwork = 0
     for artwork in self.image_list:
         imageurl = artwork['url']
-        if size in artwork['size'] and image_type in artwork['type']:
+        if image_type in artwork['type']:
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.settings.background):
                 dialog('close', background = self.settings.background)

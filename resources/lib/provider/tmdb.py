@@ -36,15 +36,17 @@ class TMDBProvider(BaseProvider):
             tree = tree.findall('images')[0]
             for image in tree.findall('image'):
                 info = {}
-                if image.get('type') == 'backdrop':
+                info['url'] = image.get('url')
+                info['type'] = ''
+                if image.get('type') == 'backdrop' and image.get('size') == 'original':
                     info['type'] = 'fanart'
-                elif image.get('type') == 'poster':
+                if image.get('type') == 'backdrop' and image.get('size') == 'thumb':
+                    info['type'] = 'thumb'
+                if image.get('type') == 'poster' and image.get('size') == 'mid':
                     info['type'] = 'poster'
-                else:
-                    info['type'] = ''
                 info['size'] = image.get('size')
                 info['id'] = image.get('id')
-                info['url'] = image.get('url')
+
                 info['height'] = int(image.get('height'))
                 info['width'] = int(image.get('width'))
                 if info:            
