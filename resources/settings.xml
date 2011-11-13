@@ -51,15 +51,16 @@
         <setting type="sep" />
         <setting label="36010" type="bool" id="tvshow_enable" default="false" />
         <setting label="36108" type="bool" id="tvshow_poster" subsetting= "true" enable="eq(-1,true)" default="false" />
-        <setting label="36101" type="bool" id="tvshow_fanart" subsetting= "true" enable="eq(-2,true)" default="false" />
-        <setting label="36102" type="bool" id="tvshow_extrafanart" subsetting= "true" enable="eq(-3,true)" default="false" />
-        <setting label="36105" type="bool" id="tvshow_clearart" subsetting= "true" enable="eq(-4,true)" default="false" />
-        <setting label="36107" type="bool" id="tvshow_characterart" subsetting= "true" enable="eq(-5,true)" default="false" />
-        <setting label="36106" type="bool" id="tvshow_logo" subsetting= "true" enable="eq(-6,true)" default="false" />
-        <setting label="36103" type="bool" id="tvshow_showbanner" subsetting= "true" enable="eq(-7,true)" default="false" />
-        <setting label="36104" type="bool" id="tvshow_seasonbanner" subsetting= "true" enable="eq(-8,true)+eq(-10,false)" default="false" />
-        <setting label="36112" type="bool" id="tvshow_thumb" subsetting= "true" enable="eq(-9,true)" default="false" />
-        <setting label="36113" type="bool" id="tvshow_seasonthumbs" subsetting= "true" enable="eq(-10,true)+eq(-10,false)" default="false" />
+        <setting label="36114" type="bool" id="tvshow_seasonposter" subsetting= "true" enable="eq(-2,true)" default="false" />
+        <setting label="36101" type="bool" id="tvshow_fanart" subsetting= "true" enable="eq(-3,true)" default="false" />
+        <setting label="36102" type="bool" id="tvshow_extrafanart" subsetting= "true" enable="eq(-4,true)" default="false" />
+        <setting label="36105" type="bool" id="tvshow_clearart" subsetting= "true" enable="eq(-5,true)" default="false" />
+        <setting label="36107" type="bool" id="tvshow_characterart" subsetting= "true" enable="eq(-6,true)" default="false" />
+        <setting label="36106" type="bool" id="tvshow_logo" subsetting= "true" enable="eq(-7,true)" default="false" />
+        <setting label="36103" type="bool" id="tvshow_showbanner" subsetting= "true" enable="eq(-8,true)" default="false" />
+        <setting label="36104" type="bool" id="tvshow_seasonbanner" subsetting= "true" enable="eq(-9,true)" default="false" />
+        <setting label="36112" type="bool" id="tvshow_thumb" subsetting= "true" enable="eq(-10,true)" default="false" />
+        <setting label="36113" type="bool" id="tvshow_seasonthumbs" subsetting= "true" enable="eq(-11,true)" default="false" />
     </category>
     
 <!-- Plugin settings: Music section -->
