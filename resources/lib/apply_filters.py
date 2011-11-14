@@ -4,7 +4,7 @@ from resources.lib.fileops import fileops
 from resources.lib import language
 from resources.lib.settings import _settings
 
-__addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
+__addon__ = xbmcaddon.Addon('script.artwork.downloader')
 __language__ = language.get_abbrev()
 
 class apply_filters:

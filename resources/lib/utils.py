@@ -10,11 +10,14 @@ This module contains helper classes and functions to assist in the
 operation of script.extrafanartdownloader
 """
 
-__addon__ = xbmcaddon.Addon('script.extrafanartdownloader')
+### get addon info
+__addon__ = xbmcaddon.Addon('script.artwork.downloader')
 __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
-__localize__ = __addon__.getLocalizedString
+__addonversion__ = __addon__.getAddonInfo('version')
 __icon__ = __addon__.getAddonInfo('icon')
+__localize__ = __addon__.getLocalizedString
+
 
 dialog = xbmcgui.DialogProgress()
 
@@ -25,7 +28,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
     try:
-        message = 'script.extrafanartdownloader: %s' % txt
+        message = 'script.artwork.downloader: %s' % txt
         xbmc.log(msg=message, level=severity)
     except:
         xbmc.log('ASCII character error')
