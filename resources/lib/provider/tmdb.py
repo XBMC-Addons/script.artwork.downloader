@@ -38,7 +38,7 @@ class TMDBProvider(BaseProvider):
                     info['type'] = 'fanart'
                 elif image.get('type') == 'backdrop' and image.get('size') == 'thumb':
                     info['type'] = 'thumb'
-                elif image.get('type') == 'poster' and image.get('size') == 'mid':
+                elif image.get('type') == 'poster' and image.get('size') == 'original':
                     info['type'] = 'poster'
                 info['height'] = int(image.get('height'))
                 info['width'] = int(image.get('width'))

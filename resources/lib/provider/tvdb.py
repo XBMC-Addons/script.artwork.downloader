@@ -13,8 +13,8 @@ class TVDBProvider(BaseProvider):
         self.api_key = '1A41A145E2DA0053'
         self.url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml'
         self.url_prefix = 'http://www.thetvdb.com/banners/'
-    
-   
+
+
     def get_image_list(self, media_id):
         xml_url = self.url % (self.api_key, media_id)
         log('API: %s ' % xml_url)
@@ -37,7 +37,7 @@ class TVDBProvider(BaseProvider):
                     info['type'] = 'poster'
                 # process banners
                 elif image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
-                    info['type'] = 'tvshowbanner'
+                    info['type'] = 'banner'
                 # process seasonposters
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
                     info['type'] = 'seasonposter'
@@ -52,7 +52,7 @@ class TVDBProvider(BaseProvider):
                         info['height'] = int(y)
                     except:
                         info['type2'] = image.findtext('BannerType2')
- 
+
                 # check if fanart has text
                 info['series_name'] = image.findtext('SeriesName') == 'true'
 
@@ -71,9 +71,9 @@ class TVDBProvider(BaseProvider):
                     else:
                         info['season'] = str(seasonxx)
                 else:
-                    info['season'] = ''
-            if info:            
-                image_list.append(info) 
+                    info['season'] = 'NA'
+            if info:
+                image_list.append(info)
         if image_list == []:
             raise NoFanartError(media_id)
         else:
