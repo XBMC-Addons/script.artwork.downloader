@@ -128,6 +128,9 @@ class apply_filters:
         elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
+        elif artwork['type'] != 'banner':
+            reason = "Not normal banner "
+            limited = True
         return [limited, reason]
         
     def seasonbanner(self, mediatype, artwork, downloaded_artwork):
@@ -141,6 +144,9 @@ class apply_filters:
             limited = True
         elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            limited = True
+        elif artwork['type'] != 'seasonbanner':
+            reason = "Not season banner "
             limited = True
         return [limited, reason]
         
