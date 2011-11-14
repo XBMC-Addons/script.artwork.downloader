@@ -1,4 +1,5 @@
 [B]0.4.2[/B]
+- Name change: Extrafanart Downloader -> Artwork Downloader
 - Fixed: Refactored JSON query to prevent reg-ex problems
 - Fixed: Total refactor on downloading and limiting
 - Added: Limit extrafanart on image size
