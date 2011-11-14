@@ -432,6 +432,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             elif limited[0]: log('Skipped. Reason: %s' %limited[1])
             else:
                 try:
+                    log('ID of downloaded image: %s' %artwork['id'])
                     self.fileops._downloadfile(imageurl, artworkfile, targetdirs)
                 except HTTP404Error, e:
                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
