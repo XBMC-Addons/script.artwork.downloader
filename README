@@ -1,24 +1,50 @@
-This script will automatically download all of the fanart for every:
-    TV show (thetvdb.com)
-    Movie (themoviedb.org)
-in your XBMC library and place it in an 'extrafanart' directory to be used by skins which support this feature.
-
-The script also supports a 'solo mode' which allows it to be run from inside a skin and download the fanart for only 1 tv show or movie at a time.
+This script can automaticly download all available artwork for your movies/tvshows in your library.
+!!Each Movies and TV Show must have it's own subfolder!!
 
 Eden 11.0:
     The script can now be downloaded from the official repo XBMC-repo (pre-Eden)
     This script requires an xbmc nightly build of September 21st or later
 
 Current Features:
-    - TV ExtraFanart
-    - Movie ExtraFanart
-    - Movie ExtraThumbs
-    - Limit fanart on: maximum, rating, without text, language, image size
-    - Skin integration: Bulk mode (download all extrafanart for every tv show/movie)
-    - Skin integration: Solo mode (download all extrafanart for only one tv show/movie)
-    - Limit fanart by: maximum amount/ minimum rating / language used
-    - Centralized fanart folder to be used as multi-image background folder
+    - Artwork sources:
+        * www.fanart.tv
+        * www.thetvdb.com
+        * www.themoviedb.org
+    Please show your support to these sites by donating or contributing new artwork!
+
+    - Movie
+        * Poster
+        * Fanart
+        * Extrafanart
+        * Extrathumbs
+        
+    - TV Shows
+        * Poster
+        * Season Posters
+        * Fanart
+        * Extrafanart
+        * Clearart
+        * Characterart
+        * Logo
+        * Banner
+        * Season Banners
+
+    - Limit artwork on (when available):
+        * Maximum number of extrafanart
+        * Rating
+        * Without text
+        * Language
+        * Image size
+        
+    - Skin integration:
+        * Bulk mode (downloads all in settings enabled artwork for every tv show/movie)
+        * Solo mode (downloads all in settings enabled for only one tv show/movie)
+
+    - Centralized fanart:
+        * Can be used for multi-image background slideshow
+    
     - Fanart download backup folder
+        * Temporary disabled!!
     
 Todos:
     - Music fanart
@@ -27,7 +53,7 @@ Skins using this Add-On:
     Eden 11.0
     - Aeon Nox (made by Big Noid)
     - Cirrus Extended (made by Butchabay)
-    - Transparency [T!] (made by Ronie)
+    - Transparency [T!] (made by ronie)
     - Aeon MQ3 (made my MarcosQui)
 
 ----------------------------------------------------------------------------------------------

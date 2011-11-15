@@ -1,8 +1,21 @@
 [B]0.4.2[/B]
+- Name change: Extrafanart Downloader -> Artwork Downloader
 - Fixed: Refactored JSON query to prevent reg-ex problems
+- Fixed: Total refactor on downloading and limiting
 - Added: Limit extrafanart on image size
 - Added: Dialog on finished when run in background
 - Added: Version check between settings and addon
+- Added: Movie Fanart
+- Added: Movie Poster
+- Added: TV Show Poster
+- Added: TV Show Season Poster
+- Added: TV Show Fanart
+- Added: TV Show Clearart
+- Added: TV Show Characterart
+- Added: TV Show Logo
+- Added: TV Show Banner
+- Added: TV Show Season Banner
+- Added: TV Show Thumb
 
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies
@@ -10,7 +23,7 @@
          Advisable is to delete all existing movie extrafanart folders
 
 [B]0.4.0[/B]
-- Added: silent downloading in background
+- Added: Silent downloading in background
 - Added: Extrafanart limiter (maximum fanart/language/no text) 
 - Added: Download backup folder for fanart
 - Added: More extensive error checking
