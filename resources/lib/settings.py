@@ -47,8 +47,8 @@ class _settings:
         self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
 
         self.limit_artwork = __addon__.getSetting("limit_artwork") == 'true'
-        self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
-        self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
+        self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.').rstrip(','))
+        self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.').rstrip(','))
         self.limit_size_moviefanart = int(__addon__.getSetting("limit_size_moviefanart"))
         self.limit_size_tvshowfanart = int(__addon__.getSetting("limit_size_tvshowfanart"))
         self.limit_extrathumbs = self.limit_artwork
