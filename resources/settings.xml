@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
-    <category label="36021">
+    <category label="36021" id="section_general">
         <setting type="sep" />
         <setting label="36022" type="lsep" />
         <setting type="sep" />
@@ -15,7 +15,7 @@
     </category>
 
 <!-- Plugin settings: Limit section -->
-    <category label="36033">
+    <category label="36033" id="section_limit">
         <setting type="sep" />
         <setting label="36045" type="lsep" />
         <setting type="sep" />
@@ -26,12 +26,13 @@
         <setting label="36063" id="limit_notext" subsetting="true" type="bool" enable="eq(-4,true)" visible="eq(-4,true)" default="true" />
         <setting label="36039" id="limit_size_moviefanart" subsetting="true" type="labelenum" lvalues="36043|36042|36041" default="720" enable="eq(-5,true)" visible="eq(-5,true)" />
         <setting label="36040" id="limit_size_tvshowfanart" subsetting="true" type="labelenum" lvalues="36043|36042|36041" default="720" enable="eq(-6,true)" visible="eq(-6,true)" />
+        <setting label="36041" id="limit_size_extrathumbs" subsetting="true" type="labelenum" lvalues="36043|36042|36041" default="300" enable="eq(-7,true)" visible="eq(-7,true)" />
     </category>
 
 
 
 <!-- Plugin settings: Movie section -->
-    <category label="36051">
+    <category label="36051" id="section_movie">
         <setting type="sep" />
         <setting label="36052" type="lsep" />
         <setting type="sep" />
@@ -45,7 +46,7 @@
     </category>
     
 <!-- Plugin settings: TV Show section -->
-    <category label="36061">
+    <category label="36061" id="section_tvshow">
         <setting type="sep" />
         <setting label="36062" type="lsep" />
         <setting type="sep" />
@@ -64,7 +65,7 @@
     </category>
     
 <!-- Plugin settings: Music section -->
-<!--    <category label="36071">
+<!--    <category label="36071" id="section_music">
         <setting type="sep" />
         <setting label="36072" type="lsep" />
         <setting type="sep" />
@@ -75,7 +76,7 @@
     </category> -->
     
 <!-- Plugin settings: Advanced section -->
-    <category label="36081">
+    <category label="36081" id="section_advanced">
         <setting type="sep" />
         <setting label="36086" type="lsep" />
         <setting type="sep" />
