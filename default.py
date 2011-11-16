@@ -406,7 +406,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
     downloaded_artwork = 0
     for artwork in self.image_list:
         imageurl = artwork['url']
-        if image_type in artwork['type']:
+        if image_type == artwork['type']:
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.settings.background):
                 dialog('close', background = self.settings.background)
