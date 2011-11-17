@@ -61,6 +61,7 @@ class _settings:
         self.cache_directory = __addon__.getSetting("cache_directory")
         self.background = __addon__.getSetting("background") == 'true'
         self.notify = __addon__.getSetting("notify") == 'true'
+        self.overwrite = __addon__.getSetting("overwrite") == 'true'
 
     ### Initial startup vars
     def _vars(self):

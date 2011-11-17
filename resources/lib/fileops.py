@@ -80,7 +80,7 @@ class fileops:
             log("Copied successfully: %s" % targetpath)
 
 
-    def _downloadfile(self, url, filename, targetdirs):
+    def _downloadfile(self, url, filename, targetdirs, overwrite):
 
         """
         Download url to filename and place in all targetdirs.  If file
@@ -92,12 +92,16 @@ class fileops:
         filenotexistspaths = []
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
-            if self._exists(path):
-                fileexists.append(True)
-                existspath = path
-            else:
+            if overwrite:
                 fileexists.append(False)
                 filenotexistspaths.append(path)
+            else:
+                if self._exists(path):
+                    fileexists.append(True)
+                    existspath = path
+                else:
+                    fileexists.append(False)
+                    filenotexistspaths.append(path)
         if not True in fileexists:
             try:
                 temppath = os.path.join(self.tempdir, filename)

@@ -30,6 +30,7 @@
         <string id="36022">[B]General settings used in Extrafanart Downloader[/B]</string>
         <string id="36023">Run in background</string>        
         <string id="36044">Show dialog on finished/errors</string>
+        <string id="36046">Overwrite all existing artwork</string>
         <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
         <string id="36032">Central TV fanart directory</string>
         <string id="36031">Central Movie fanart directory</string>

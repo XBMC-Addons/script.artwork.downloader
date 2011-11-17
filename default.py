@@ -437,7 +437,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             else:
                 try:
                     log('ID of downloaded image: %s' %artwork['id'])
-                    self.fileops._downloadfile(imageurl, artworkfile, targetdirs)
+                    self.fileops._downloadfile(imageurl, artworkfile, targetdirs, self.settings.overwrite)
                 except HTTP404Error, e:
                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                 except HTTPTimeout, e:
