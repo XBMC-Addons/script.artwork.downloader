@@ -5,12 +5,13 @@ from resources.lib.utils import _log as log
 from resources.lib import language
 from resources.lib.utils import _dialog as dialog
 ### get addon info
-__addon__ = xbmcaddon.Addon('script.artwork.downloader')
-__addonid__ = __addon__.getAddonInfo('id')
-__addonname__ = __addon__.getAddonInfo('name')
-__addonversion__ = __addon__.getAddonInfo('version')
-__localize__ = __addon__.getLocalizedString
-__language__ = language.get_abbrev()
+__addon__       = xbmcaddon.Addon()
+__addonid__     = __addon__.getAddonInfo('id')
+__addonname__   = __addon__.getAddonInfo('name')
+__author__      = __addon__.getAddonInfo('author')
+__version__     = __addon__.getAddonInfo('version')
+__localize__    = __addon__.getLocalizedString
+__language__    = language.get_abbrev()
 
 addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 settings_file = os.path.join(addondir, "settings.xml")
@@ -87,46 +88,46 @@ class _settings:
     ### Log settings in debug mode
     def _initiallog(self):
         log("## Settings...")
-        log('## Language Used = %s' % str(__language__))
-        log('## Background Run = %s' % str(self.background))
-        log('## - Notify when finished/error = %s' % str(self.notify))
+        log('## Language Used           = %s' % str(__language__))
+        log('## Background Run          = %s' % str(self.background))
+        log('## - Notify                = %s' % str(self.notify))
         
-        log('## Download Movie Artwork= %s' % str(self.movie_enable))
-        log('## - Movie Poster= %s' % str(self.movie_poster))
-        log('## - Movie Fanart= %s' % str(self.movie_fanart))
-        log('## - Movie ExtraFanart= %s' % str(self.movie_extrafanart))
-        log('## - Movie ExtraThumbs= %s' % str(self.movie_extrathumbs))
-        log('## - Movie Logo= %s' % str(self.movie_logo))
-        log('## - Movie DiscArt= %s' % str(self.movie_discart))
+        log('## Movie Artwork           = %s' % str(self.movie_enable))
+        log('## - Poster                = %s' % str(self.movie_poster))
+        log('## - Fanart                = %s' % str(self.movie_fanart))
+        log('## - ExtraFanart           = %s' % str(self.movie_extrafanart))
+        log('## - ExtraThumbs           = %s' % str(self.movie_extrathumbs))
+        log('## - Logo                  = %s' % str(self.movie_logo))
+        log('## - DiscArt               = %s' % str(self.movie_discart))
         
-        log('## Download TV Show Artwork = %s' % str(self.tvshow_enable))
-        log('## - TV Show Poster = %s' % str(self.tvshow_poster))
-        log('## - TV Show Fanart = %s' % str(self.tvshow_fanart))
-        log('## - TV Show ExtraFanart = %s' % str(self.tvshow_extrafanart))
-        log('## - TV Show Clearart = %s' % str(self.tvshow_clearart))
-        log('## - TV Show Logo = %s' % str(self.tvshow_logo))
-        log('## - TV Show Showbanner = %s' % str(self.tvshow_showbanner))
-        log('## - TV Show Seasonbanner = %s' % str(self.tvshow_seasonbanner))
-        log('## - TV Show Thumb = %s' % str(self.tvshow_thumb))
-        log('## - TV Show Seasonthumbs = %s' % str(self.tvshow_seasonthumbs))
-        log('## - TV Show Characterart = %s' % str(self.tvshow_characterart))
+        log('## TV Show Artwork         = %s' % str(self.tvshow_enable))
+        log('## - Poster                = %s' % str(self.tvshow_poster))
+        log('## - Fanart                = %s' % str(self.tvshow_fanart))
+        log('## - ExtraFanart           = %s' % str(self.tvshow_extrafanart))
+        log('## - Clearart              = %s' % str(self.tvshow_clearart))
+        log('## - Logo                  = %s' % str(self.tvshow_logo))
+        log('## - Showbanner            = %s' % str(self.tvshow_showbanner))
+        log('## - Seasonbanner          = %s' % str(self.tvshow_seasonbanner))
+        log('## - Thumb                 = %s' % str(self.tvshow_thumb))
+        log('## - Show Seasonthumbs     = %s' % str(self.tvshow_seasonthumbs))
+        log('## - Show Characterart     = %s' % str(self.tvshow_characterart))
         
-        log('## Centralize Extrafanart = %s' % str(self.centralize_enable))
-        log('## Central Movies Folder = %s' % str(self.centralfolder_movies))
-        log('## Central TV Shows Folder = %s' % str(self.centralfolder_tvshows))
+        log('## Centralize Extrafanart  = %s' % str(self.centralize_enable))
+        log('## - Movies Folder         = %s' % str(self.centralfolder_movies))
+        log('## - TV Shows Folder       = %s' % str(self.centralfolder_tvshows))
         
-        log('## Limit Artwork = %s' % str(self.limit_artwork))
-        log('## - Extrafanart Max = %s' % str(self.limit_extrafanart_max))
-        log('## - Fanart Rating = %s' % str(self.limit_extrafanart_rating))
-        log('## - Movie Fanart Size = %s' % str(self.limit_size_moviefanart))
-        log('## - TV Show Fanart Size = %s' % str(self.limit_size_tvshowfanart))
-        log('## - Extrathumbs = %s' % str(self.limit_extrathumbs))
-        log('## - Extrathumbs Max = %s' % str(self.limit_extrathumbs_max))
-        log('## - Language = %s' % str(self.limit_language))
-        log('## - Fanart with no text = %s' % str(self.limit_notext))
+        log('## Limit Artwork           = %s' % str(self.limit_artwork))
+        log('## - Extrafanart Max       = %s' % str(self.limit_extrafanart_max))
+        log('## - Fanart Rating         = %s' % str(self.limit_extrafanart_rating))
+        log('## - Movie Fanart Size     = %s' % str(self.limit_size_moviefanart))
+        log('## - TV Show Fanart Size   = %s' % str(self.limit_size_tvshowfanart))
+        log('## - Extrathumbs           = %s' % str(self.limit_extrathumbs))
+        log('## - Extrathumbs Max       = %s' % str(self.limit_extrathumbs_max))
+        log('## - Language              = %s' % str(self.limit_language))
+        log('## - Fanart with no text   = %s' % str(self.limit_notext))
         
-        log('## Backup downloaded fanart= %s' % str(self.use_cache))
-        log('## Backup folder = %s' % str(self.cache_directory))
+        log('## Backup fanart           = %s' % str(self.use_cache))
+        log('## Backup folder           = %s' % str(self.cache_directory))
         log("## End of Settings...")
 
     ### Check if settings.xml exist and version check
@@ -138,16 +139,16 @@ class _settings:
                 dialog('okdialog', line1 = __localize__(36037), line2 = __localize__(36038))
                 log('## Settings.xml file not found. Opening settings window.')
                 __addon__.openSettings()
-                __addon__.setSetting(id="addon_version", value=__addonversion__)
+                __addon__.setSetting(id="addon_version", value=__version__)
             # different version settings.xml found
-            if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __addonversion__:
+            if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __version__:
                 dialog('okdialog', line1 = __localize__(36003), line2 = __localize__(36038))
                 log('## Addon version is different. Opening settings window.')
                 __addon__.openSettings()
-                __addon__.setSetting(id="addon_version", value=__addonversion__)
+                __addon__.setSetting(id="addon_version", value=__version__)
             else:
                 first_run = False
-        __addon__.setSetting(id="addon_version", value=__addonversion__)
+        __addon__.setSetting(id="addon_version", value=__version__)
         log('## Correct version of settings.xml file found. Continue with initializing.')
         
     ### Check for faulty setting combinations

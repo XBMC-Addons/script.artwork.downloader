@@ -5,14 +5,10 @@ import sys
 import xbmc
 import xbmcaddon
 import platform
+from traceback import print_exc
+import xbmcgui
 
-### get addon info
-__addon__ = xbmcaddon.Addon('script.artwork.downloader')
-__addonid__ = __addon__.getAddonInfo('id')
-__addonname__ = __addon__.getAddonInfo('name')
-__addonversion__ = __addon__.getAddonInfo('version')
-__localize__ = __addon__.getLocalizedString
-
+### import libraries
 from resources.lib import media_setup
 from resources.lib import provider
 from resources.lib.utils import _log as log
@@ -24,12 +20,20 @@ from xml.parsers.expat import ExpatError
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
 
-Media_listing = media_setup.media_listing
+### get addon info
+__addon__       = xbmcaddon.Addon()
+__addonid__     = __addon__.getAddonInfo('id')
+__addonname__   = __addon__.getAddonInfo('name')
+__author__      = __addon__.getAddonInfo('author')
+__version__     = __addon__.getAddonInfo('version')
+__localize__    = __addon__.getLocalizedString
 __language__ = language.get_abbrev()
+Media_listing = media_setup.media_listing
 
 
 
-### clean up and
+
+### clean up temporary folder
 def cleanup(self):
     if self.fileops._exists(self.fileops.tempdir):
         dialog('update', percentage = 100, line1 = __localize__(36004), background = self.settings.background)
@@ -454,8 +458,9 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
 ### Start of script
 if (__name__ == "__main__"):
     log("######## Extrafanart Downloader: Initializing...............................")
-    log('## Add-on ID = %s' % str(__addonid__))
-    log('## Add-on Name= %s' % str(__addonname__))
-    log('## Add-on Version = %s' % str(__addonversion__))
+    log('## Add-on ID   = %s' % str(__addonid__))
+    log('## Add-on Name = %s' % str(__addonname__))
+    log('## Authors     = %s' % str(__author__))
+    log('## Version     = %s' % str(__version__))
     Main()
     log('script stopped')

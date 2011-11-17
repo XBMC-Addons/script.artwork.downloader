@@ -11,7 +11,7 @@ operation of script.extrafanartdownloader
 """
 
 ### get addon info
-__addon__ = xbmcaddon.Addon('script.artwork.downloader')
+__addon__ = xbmcaddon.Addon()
 __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
@@ -28,7 +28,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
     try:
-        message = 'script.artwork.downloader: %s' % txt
+        message = 'Artwork Downloader: %s' % txt
         xbmc.log(msg=message, level=severity)
     except:
         xbmc.log('ASCII character error')
