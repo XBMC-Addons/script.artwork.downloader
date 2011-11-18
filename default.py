@@ -126,7 +126,7 @@ def initial_vars(self):
     self.mediatype = ''
     self.medianame = ''
     self.mode = ''
-    self.gui_typeselected = ''
+    self.gui_selected_type = ''
 
 ### Report the total numbers of downloaded images
 def finished_log(self):
@@ -403,6 +403,43 @@ def gui_imagelist(self, art_type, image_type):
     log('Image list: %s' %self.gui_imagelist)
     return True
 
+### Artwork downloading
+def _download_solo(self, art_type, image_type, filename, targetdirs, targets, msg):
+    log('Starting with processing: %s' %art_type)
+    self.settings.failcount = 0
+    current_artwork = 0
+    downloaded_artwork = 0
+
+    imageurl = self.image_url
+    ### check if script has been cancelled by user
+    # File naming
+    if art_type == 'extrafanart':
+        artworkfile = ('%s.jpg'%self.gui_imagelist['id'])
+    elif art_type == 'extrathumbs':
+        artworkfile = (filename+'%s.jpg' % str(downloaded_artwork+1))
+    elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
+        artworkfile = (filename+'%s.jpg' %artwork['season'])
+    elif art_type == 'seasonposter':
+        artworkfile = (filename+'%s.tbn' %artwork['season'])
+    else: artworkfile = filename
+    #increase  artwork counter
+    current_artwork = current_artwork + 1
+    try:
+        self.fileops._downloadfile(imageurl, artworkfile, targetdirs, 'true')
+    except HTTP404Error, e:
+        log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+    except HTTPTimeout, e:
+        self.settings.failcount = self.settings.failcount + 1
+        log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
+    except CreateDirectoryError, e:
+        log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+    except DownloadError, e:
+        self.settings.failcount = self.settings.failcount + 1
+        log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
+    else:
+        downloaded_artwork = downloaded_artwork + 1
+    dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
+    log('Finished with: %s' %art_type)
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg):
@@ -427,7 +464,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
                 artworkfile = (filename+'%s.jpg' %artwork['season'])
             elif art_type == 'seasonposter':
-                artworkfile = (filename+'%s.tbn' %artwork['season'])
+                artworkfile = (filename+'%s.jpg' %artwork['season'])
             else: artworkfile = filename
             #increase  artwork counter
             current_artwork = current_artwork + 1
@@ -484,15 +521,12 @@ def _gui(self):
         self.GUI_type_list[0] = "True"
     if ( len(self.GUI_type_list) == 1 ) or choice_type(self):
         self.tmp_image_list = False
-        gui_imagelist(self, self.gui_typeselected, self.gui_typeselected)
+        gui_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
 
     if choose_image(self):
-        if not self.download_image():
-            if self.error == "download":
-                xbmcgui.Dialog().ok(__language__(32101) , __language__(32105) )
-            elif self.error == "copy":
-                xbmcgui.Dialog().ok(__language__(32101) , __language__(32126) )
+        _download_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
+
 
 def choice_type(self):
     select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.GUI_type_list)
@@ -503,43 +537,79 @@ def choice_type(self):
     else:
         if self.mediatype == 'tvshow':
             if self.GUI_type_list[select] == __localize__(36108) : # Poster
-                self.gui_typeselected = 'poster'
+                self.gui_selected_type = 'poster'
+                self.gui_selected_filename = 'poster.jpg'
+                self.gui_selected_msg = 36108
             elif self.GUI_type_list[select] == __localize__(36114) : # Season poster
-                self.gui_typeselected = 'seasonposter'
+                self.gui_selected_type = 'seasonposter'
+                self.gui_selected_filename = 'season'
+                self.gui_selected_msg = 36114
             elif self.GUI_type_list[select] == __localize__(36101) : # Fanart
-                self.gui_typeselected = 'fanart'
+                self.gui_selected_type = 'fanart'
+                self.gui_selected_filename = 'fanart.jpg'
+                self.gui_selected_msg = 36101
             elif self.GUI_type_list[select] == __localize__(36102) : # Extrafanart
-                self.gui_typeselected = 'extrafanart'
+                self.gui_selected_type = 'extrafanart'
+                self.gui_selected_filename = ''
+                self.gui_selected_msg = 36102
             elif self.GUI_type_list[select] == __localize__(36105) : # Clearart
-                self.gui_typeselected = 'clearart'
+                self.gui_selected_type = 'clearart'
+                self.gui_selected_filename = 'clearart.png'
+                self.gui_selected_msg = 36105
             elif self.GUI_type_list[select] == __localize__(36106) : # Logo
-                self.gui_typeselected = 'clearlogo'
+                self.gui_selected_type = 'clearlogo'
+                self.gui_selected_filename = 'logo.png'
+                self.gui_selected_msg = 36108
             elif self.GUI_type_list[select] == __localize__(36109) : # Thumb
-                self.gui_typeselected = 'tvshowthumb'
+                self.gui_selected_type = 'tvthumb'
+                self.gui_selected_filename = 'thumb.jpg'
+                self.gui_selected_msg = 36109
             elif self.GUI_type_list[select] == __localize__(36113) : # Season thumbs
-                self.gui_typeselected = 'seasonthumbs'
+                self.gui_selected_type = 'seasonthumb'
+                self.gui_selected_filename = 'seasonthumb.jpg'
+                self.gui_selected_msg = 36113
             elif self.GUI_type_list[select] == __localize__(36103) : # Banner
-                self.gui_typeselected = 'banner'
+                self.gui_selected_type = 'banner'
+                self.gui_selected_filename = 'banner.jpg'
+                self.gui_selected_msg = 36103
             elif self.GUI_type_list[select] == __localize__(36104) : # Season banners
-                self.gui_typeselected = 'seasonbanners'
+                self.gui_selected_type = 'seasonbanner'
+                self.gui_selected_filename = 'seasonbanner'
+                self.gui_selected_msg = 36104
             elif self.GUI_type_list[select] == __localize__(36107) : # Character Art
-                self.gui_typeselected = 'characterart'
+                self.gui_selected_type = 'characterart'
+                self.gui_selected_filename = 'character.png'
+                self.gui_selected_msg = 36108
             return True
         if self.mediatype == 'movie':
             if self.GUI_type_list[select] == __localize__(36108) : # Poster
-                self.gui_typeselected = 'poster'
+                self.gui_selected_type = 'poster'
+                self.gui_selected_filename = 'poster.jpg'
+                self.gui_selected_msg = 36108
             elif self.GUI_type_list[select] == __localize__(36101) : # Fanart
-                self.gui_typeselected = 'fanart'
+                self.gui_selected_type = 'fanart'
+                self.gui_selected_filename = 'fanart.jpg'
+                self.gui_selected_msg = 36101
             elif self.GUI_type_list[select] == __localize__(36102) : # Extrafanart
-                self.gui_typeselected = 'extrafanart'
-            elif self.GUI_type_list[select] == __localize__(36102) : # Extrathumbs
-                self.gui_typeselected = 'extrathumbs'
+                self.gui_selected_type = 'extrafanart'
+                self.gui_selected_filename = ''
+                self.gui_selected_msg = 36102
+            elif self.GUI_type_list[select] == __localize__(36110) : # Extrathumbs
+                self.gui_selected_type = 'extrathumbs'
+                self.gui_selected_filename = 'thumb'
+                self.gui_selected_msg = 36110
             elif self.GUI_type_list[select] == __localize__(36106) : # Logo
-                self.gui_typeselected = 'clearlogo'
+                self.gui_selected_type = 'clearlogo'
+                self.gui_selected_filename = 'logo.jpg'
+                self.gui_selected_msg = 36106
             elif self.GUI_type_list[select] == __localize__(361111) : # discart
-                self.gui_typeselected = 'discart'
+                self.gui_selected_type = 'discart'
+                self.gui_selected_filename = 'cdart.jpg'
+                self.gui_selected_msg = 36111
             elif self.GUI_type_list[select] == __localize__(36107) : # Character Art
-                self.gui_typeselected = 'characterart'
+                self.gui_selected_type = 'characterart'
+                self.gui_selected_filename = 'character.png'
+                self.gui_selected_msg = 36107
             return True
         else: return False
         

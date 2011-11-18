@@ -100,10 +100,11 @@ class _settings:
 
     ### Log settings in debug mode
     def _initiallog(self):
-        log("## Settings...")
+        log('## Settings...')
         log('## Language Used           = %s' % str(__language__))
         log('## Background Run          = %s' % str(self.background))
         log('## - Notify                = %s' % str(self.notify))
+        log('## Overwrite all files     = %s' % str(self.overwrite))
         
         log('## Movie Artwork           = %s' % str(self.movie_enable))
         log('## - Poster                = %s' % str(self.movie_poster))
@@ -143,7 +144,8 @@ class _settings:
         
         log('## Backup fanart           = %s' % str(self.use_cache))
         log('## Backup folder           = %s' % str(self.cache_directory))
-        log("## End of Settings...")
+        log('##')
+        log('## End of Settings...')
 
     ### Check if settings.xml exist and version check
     def _exist(self):
