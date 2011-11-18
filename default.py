@@ -126,6 +126,7 @@ def initial_vars(self):
     self.mediatype = ''
     self.medianame = ''
     self.mode = ''
+    self.gui_typeselected = ''
 
 ### Report the total numbers of downloaded images
 def finished_log(self):
@@ -392,8 +393,15 @@ def _download_process(self):
             except:
                 log('some error')
 
-def gui_imagelist(self):
+def gui_imagelist(self, art_type, image_type):
     log('here goes retrieving image list for GUI')
+    self.gui_imagelist = []
+    for artwork in self.image_list:
+        if  artwork['type'] == art_type:
+            self.gui_imagelist.append(artwork['url'])
+            log('url: %s'%artwork['url'])
+    log('Image list: %s' %self.gui_imagelist)
+    return True
 
 
 ### Artwork downloading
@@ -450,98 +458,94 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
 
 def _gui(self):
     dialog('close', background = self.settings.background)
-    self.test_type_list = []
-    self.test_type_list.append (__localize__(36108))
-    self.test_type_list.append (__localize__(36114))
-    self.test_type_list.append (__localize__(36101))
-    self.test_type_list.append (__localize__(36102))
-    self.test_type_list.append (__localize__(36105))
-    self.test_type_list.append (__localize__(36106))
-    self.test_type_list.append (__localize__(36109))
-    self.test_type_list.append (__localize__(36113))
-    self.test_type_list.append (__localize__(36103))
-    self.test_type_list.append (__localize__(36104))
-    self.test_type_list.append (__localize__(36107))
-    if len(self.test_type_list) == 1:
-        self.test_type_list[0] = "True"
-    if ( len(self.test_type_list) == 1 ) or choice_type(self):
-        self.image_list = False
-    
-        if self.tvshow_poster:
-            self.get_lockstock_xml()
-            self.search_logo()
-        elif self.tvshow_seasonposter: 
-            self.get_lockstock_xml()
-            self.search_clearart()
-        elif self.tvshow_fanart: 
-            self.get_lockstock_xml()
-            self.search_characterart()
-        elif self.tvshow_extrafanart:
-            self.get_lockstock_xml()
-            self.search_show_thumb()
-        elif self.tvshow_clearart:
-            self.get_tvdb_xml()
-            self.search_banner()
-        elif self.tvshow_logo:
-            self.get_tvdb_xml()
-            self.search_poster()
-        elif self.tvshow_thumb:
-            self.get_tvdb_xml()
-            self.search_poster()
-        elif self.tvshow_seasonthumbs:
-            self.get_tvdb_xml()
-            self.search_poster()
-        elif self.tvshow_showbanner:
-            self.get_tvdb_xml()
-            self.search_poster()
-        elif self.tvshow_seasonbanner:
-            self.get_tvdb_xml()
-            self.search_poster()            
-        elif self.tvshow_characterart:
-            self.get_tvdb_xml()
-            self.search_poster()
-    if self.image_list:
-        if choose_image(self):
-            if not download_image(self):
-                if self.error == "download":
-                    xbmcgui.Dialog().ok(__localize__(36001) , __localize__(36002) )
-                elif self.error == "copy":
-                    xbmcgui.Dialog().ok(__localize__(36001) , __localize__(32126) )
+    self.GUI_type_list = []
+    if self.mediatype == 'tvshow':
+        self.GUI_type_list.append (__localize__(36108))
+        self.GUI_type_list.append (__localize__(36114))
+        self.GUI_type_list.append (__localize__(36101))
+        self.GUI_type_list.append (__localize__(36102))
+        self.GUI_type_list.append (__localize__(36105))
+        self.GUI_type_list.append (__localize__(36106))
+        self.GUI_type_list.append (__localize__(36109))
+        self.GUI_type_list.append (__localize__(36113))
+        self.GUI_type_list.append (__localize__(36103))
+        self.GUI_type_list.append (__localize__(36104))
+        self.GUI_type_list.append (__localize__(36107))
+    if self.mediatype == 'movie':
+        self.GUI_type_list.append (__localize__(36108))
+        self.GUI_type_list.append (__localize__(36101))
+        self.GUI_type_list.append (__localize__(36102))
+        self.GUI_type_list.append (__localize__(36110))
+        self.GUI_type_list.append (__localize__(36106))
+        self.GUI_type_list.append (__localize__(36111))
+        self.GUI_type_list.append (__localize__(36112))
+      
+    if len(self.GUI_type_list) == 1:
+        self.GUI_type_list[0] = "True"
+    if ( len(self.GUI_type_list) == 1 ) or choice_type(self):
+        self.tmp_image_list = False
+        gui_imagelist(self, self.gui_typeselected, self.gui_typeselected)
+        log('Image put to GUI: %s' %self.gui_imagelist)
+
+    if choose_image(self):
+        if not self.download_image():
+            if self.error == "download":
+                xbmcgui.Dialog().ok(__language__(32101) , __language__(32105) )
+            elif self.error == "copy":
+                xbmcgui.Dialog().ok(__language__(32101) , __language__(32126) )
 
 def choice_type(self):
-    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.test_type_list)
+    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.GUI_type_list)
     if select == -1: 
         log( "### Canceled by user" )
-        xbmcgui.Dialog().ok(__localize__(36014) , __localize__(36017) )
+        xbmcgui.Dialog().ok(__localize__(36014) , __localize__(36015) )
         return False
     else:
-        if self.test_type_list[select] == __localize__(36108) : # Poster
-            self.clearart = self.show_thumb = self.banner = self.poster = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36114) : # Season poster
-            self.logo = self.show_thumb = self.banner = self.poster = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36101) : # Fanart
-            self.logo = self.show_thumb = self.banner = self.poster = self.clearart = False
-        elif self.test_type_list[select] == __localize__(36102) : # Extrafanart
-            self.clearart = self.logo = self.banner = self.poster = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36105) : # Clearart
-            self.logo = self.show_thumb = self.clearart = self.poster = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36106) : # Logo
-            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36109) : # Thumb
-            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36113) : # Season thumbs
-            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36103) : # Banner
-            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36104) : # Season banners
-            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
-        elif self.test_type_list[select] == __localize__(36107) : # Character Art
-            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False        
-        return True
+        if self.mediatype == 'tvshow':
+            if self.GUI_type_list[select] == __localize__(36108) : # Poster
+                self.gui_typeselected = 'poster'
+            elif self.GUI_type_list[select] == __localize__(36114) : # Season poster
+                self.gui_typeselected = 'seasonposter'
+            elif self.GUI_type_list[select] == __localize__(36101) : # Fanart
+                self.gui_typeselected = 'fanart'
+            elif self.GUI_type_list[select] == __localize__(36102) : # Extrafanart
+                self.gui_typeselected = 'extrafanart'
+            elif self.GUI_type_list[select] == __localize__(36105) : # Clearart
+                self.gui_typeselected = 'clearart'
+            elif self.GUI_type_list[select] == __localize__(36106) : # Logo
+                self.gui_typeselected = 'clearlogo'
+            elif self.GUI_type_list[select] == __localize__(36109) : # Thumb
+                self.gui_typeselected = 'tvshowthumb'
+            elif self.GUI_type_list[select] == __localize__(36113) : # Season thumbs
+                self.gui_typeselected = 'seasonthumbs'
+            elif self.GUI_type_list[select] == __localize__(36103) : # Banner
+                self.gui_typeselected = 'banner'
+            elif self.GUI_type_list[select] == __localize__(36104) : # Season banners
+                self.gui_typeselected = 'seasonbanners'
+            elif self.GUI_type_list[select] == __localize__(36107) : # Character Art
+                self.gui_typeselected = 'characterart'
+            return True
+        if self.mediatype == 'movie':
+            if self.GUI_type_list[select] == __localize__(36108) : # Poster
+                self.gui_typeselected = 'poster'
+            elif self.GUI_type_list[select] == __localize__(36101) : # Fanart
+                self.gui_typeselected = 'fanart'
+            elif self.GUI_type_list[select] == __localize__(36102) : # Extrafanart
+                self.gui_typeselected = 'extrafanart'
+            elif self.GUI_type_list[select] == __localize__(36102) : # Extrathumbs
+                self.gui_typeselected = 'extrathumbs'
+            elif self.GUI_type_list[select] == __localize__(36106) : # Logo
+                self.gui_typeselected = 'clearlogo'
+            elif self.GUI_type_list[select] == __localize__(361111) : # discart
+                self.gui_typeselected = 'discart'
+            elif self.GUI_type_list[select] == __localize__(36107) : # Character Art
+                self.gui_typeselected = 'characterart'
+            return True
+        else: return False
         
 def choose_image(self):
-    log( "### image list: %s" % self.image_list )
-    self.image_url = MyDialog(self.image_list)
+    log( "### image list: %s" % self.gui_imagelist )
+    self.image_url = MyDialog(self.gui_imagelist)
     if self.image_url: return True
     else: return False    
 
