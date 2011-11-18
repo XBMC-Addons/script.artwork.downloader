@@ -70,7 +70,6 @@ class _settings:
         self.cache_directory = __addon__.getSetting("cache_directory")
         self.background = __addon__.getSetting("background") == 'true'
         self.notify = __addon__.getSetting("notify") == 'true'
-        self.overwrite = __addon__.getSetting("overwrite") == 'true'
 
     ### Initial startup vars
     def _vars(self):
@@ -172,37 +171,37 @@ class _settings:
         # append movie list
         if self.movie_poster:
             info = {}
-            info['gui'] = __localize__(36108)
+            info['gui'] = 36108
             info['art_type'] = 'poster'
             info['filename'] = 'poster.jpg'
             self.movie_arttype_list.append(info)
         if self.movie_fanart:
             info = {}
-            info['gui'] = __localize__(36101)
+            info['gui'] = 36101
             info['art_type'] = 'fanart'
             info['filename'] = 'fanart.jpg'
             self.movie_arttype_list.append(info)
         if self.movie_extrafanart:
             info = {}
-            info['gui'] = __localize__(36102)
+            info['gui'] = 36102
             info['art_type'] = 'extrafanart'
             info['filename'] = ''
             self.movie_arttype_list.append(info)
         if self.movie_extrathumbs:
             info = {}
-            info['gui'] = __localize__(36110)
+            info['gui'] = 36110
             info['art_type'] = 'extrathumbs'
             info['filename'] = 'thumb'
             self.movie_arttype_list.append(info)
         if self.movie_logo:
             info = {}
-            info['gui'] = __localize__(36106)
+            info['gui'] = 36106
             info['art_type'] = 'clearlogo'
             info['filename'] = 'logo.png'
             self.movie_arttype_list.append(info)
         if self.movie_discart:
             info = {}
-            info['gui'] = __localize__(36111)
+            info['gui'] = 36111
             info['art_type'] = 'discart'
             info['filename'] = 'cdart.png'
             self.movie_arttype_list.append(info)
@@ -210,67 +209,67 @@ class _settings:
         # append tv show list
         if self.tvshow_poster:
             info = {}
-            info['gui'] = __localize__(36108)
+            info['gui'] = 36108
             info['art_type'] = 'poster'
             info['filename'] = 'poster.jpg'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_seasonposter:
             info = {}
-            info['gui'] = __localize__(36114)
+            info['gui'] = 36114
             info['art_type'] = 'seasonposter'
             info['filename'] = 'season'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_fanart:
             info = {}
-            info['gui'] = __localize__(36101)
+            info['gui'] = 36101
             info['art_type'] = 'fanart'
             info['filename'] = 'fanart.jpg'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_extrafanart:
             info = {}
-            info['gui'] = __localize__(36102)
+            info['gui'] = 36102
             info['art_type'] = 'extrafanart'
             info['filename'] = '' 
             self.tvshow_arttype_list.append(info)
         if self.tvshow_clearart:
             info = {}
-            info['gui'] = __localize__(36105)
+            info['gui'] = 36105
             info['art_type'] = 'clearart'
             info['filename'] = 'clearart.png'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_logo:
             info = {}
-            info['gui'] = __localize__(36106)
+            info['gui'] = 36106
             info['art_type'] = 'clearlogo'
             info['filename'] = 'logo.png'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_thumb:
             info = {}
-            info['gui'] = __localize__(36109)
+            info['gui'] = 36109
             info['art_type'] = 'tvthumb'
             info['filename'] = 'landscape.jpg'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_seasonthumbs:
             info = {}
-            info['gui'] = __localize__(36113)
+            info['gui'] = 36113
             info['art_type'] = 'seasonthumbs'
             info['filename'] = 'seasonthumb'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_showbanner:
             info = {}
-            info['gui'] = __localize__(36103)
+            info['gui'] = 36103
             info['art_type'] = 'banner'
             info['filename'] = 'banner.jpg'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_seasonbanner:
             info = {}
-            info['gui'] = __localize__(36104)
+            info['gui'] = 36104
             info['art_type'] = 'seasonbanner'
             info['filename'] = 'seasonbanner'
             self.tvshow_arttype_list.append(info)
         if self.tvshow_characterart:
             info = {}
-            info['gui'] = __localize__(36107)
+            info['gui'] = 36107
             info['art_type'] = 'characterart'
             info['filename'] = 'character.png'
             self.tvshow_arttype_list.append(info)
