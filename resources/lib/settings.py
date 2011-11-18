@@ -37,6 +37,7 @@ class _settings:
         self.movie_extrathumbs = __addon__.getSetting("movie_extrathumbs") == 'true'
         self.movie_logo = __addon__.getSetting("movie_logo") == 'true'
         self.movie_discart = __addon__.getSetting("movie_discart") == 'true'
+        self.movie_defaultthumb = __addon__.getSetting("movie_defaultthumb") == 'true'
         
         self.tvshow_enable = __addon__.getSetting("tvshow_enable") == 'true'
         self.tvshow_poster = __addon__.getSetting("tvshow_poster") == 'true'
@@ -50,7 +51,8 @@ class _settings:
         self.tvshow_showbanner = __addon__.getSetting("tvshow_showbanner") == 'true'
         self.tvshow_seasonbanner = __addon__.getSetting("tvshow_seasonbanner") == 'true'
         self.tvshow_characterart = __addon__.getSetting("tvshow_characterart") == 'true'
-     
+        self.tvshow_defaultthumb = __addon__.getSetting("tvshow_defaultthumb") == 'true'
+        
         self.centralize_enable = __addon__.getSetting("centralize_enable") == 'true'
         self.centralfolder_split = __addon__.getSetting("centralfolder_split")
         self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
@@ -70,6 +72,7 @@ class _settings:
         self.cache_directory = __addon__.getSetting("cache_directory")
         self.background = __addon__.getSetting("background") == 'true'
         self.notify = __addon__.getSetting("notify") == 'true'
+        self.overwrite = __addon__.getSetting("overwrite") == 'true'
 
     ### Initial startup vars
     def _vars(self):
@@ -93,6 +96,7 @@ class _settings:
         self.artworkfile_extrathumbs = 'thumb' # requires adding 'counter.ext'
         self.artworkfile_seasonthumbs = 'seasonthumb' # requires adding 'season.ext'
         self.artworkfile_characterart = 'character.png'
+        self.artworkfile_defaultthumb = 'folder.jpg'
 
     ### Log settings in debug mode
     def _initiallog(self):
@@ -108,6 +112,7 @@ class _settings:
         log('## - ExtraThumbs           = %s' % str(self.movie_extrathumbs))
         log('## - Logo                  = %s' % str(self.movie_logo))
         log('## - DiscArt               = %s' % str(self.movie_discart))
+        log('## - Default Thumb         = %s' % str(self.movie_defaultthumb))
         
         log('## TV Show Artwork         = %s' % str(self.tvshow_enable))
         log('## - Poster                = %s' % str(self.tvshow_poster))
@@ -120,6 +125,7 @@ class _settings:
         log('## - Thumb                 = %s' % str(self.tvshow_thumb))
         log('## - Show Seasonthumbs     = %s' % str(self.tvshow_seasonthumbs))
         log('## - Show Characterart     = %s' % str(self.tvshow_characterart))
+        log('## - Default Thumb         = %s' % str(self.tvshow_defaultthumb))
         
         log('## Centralize Extrafanart  = %s' % str(self.centralize_enable))
         log('## - Movies Folder         = %s' % str(self.centralfolder_movies))
@@ -205,6 +211,12 @@ class _settings:
             info['art_type'] = 'discart'
             info['filename'] = 'cdart.png'
             self.movie_arttype_list.append(info)
+        if self.movie_defaultthumb:
+            info = {}
+            info['gui'] = 36112
+            info['art_type'] = 'defaultthumb'
+            info['filename'] = 'folder.jpg'
+            self.movie_arttype_list.append(info)
             
         # append tv show list
         if self.tvshow_poster:
@@ -273,7 +285,13 @@ class _settings:
             info['art_type'] = 'characterart'
             info['filename'] = 'character.png'
             self.tvshow_arttype_list.append(info)
-        
+        if self.tvshow_defaultthumb:
+            info = {}
+            info['gui'] = 36112
+            info['art_type'] = 'defaultthumb'
+            info['filename'] = 'folder.jpg'
+            self.tvshow_arttype_list.append(info)
+            
     ### Check for faulty setting combinations
     def _check(self):    
         settings_faulty = True
@@ -288,14 +306,13 @@ class _settings:
             else: check_sections = True
             # Check if faulty setting in movie section
             if self.movie_enable:
-                if not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_poster:
+                if not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_poster and not self.movie_defaultthumb:
                     check_movie = False
                     log('Setting check: No subsetting of movies enabled')
                 else: check_movie = True
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
-                #if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner '''and not self.tvshow_seasonbanner''' and not self.tvshow_thumb ''''and not self.tvshow_seasonthumbs''' and not self.tvshow_characterart:
-                if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart:
+                if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart and not self.tvshow_defaultthumb:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True

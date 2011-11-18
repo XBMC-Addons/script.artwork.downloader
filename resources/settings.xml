@@ -44,6 +44,7 @@
         <setting label="36110" type="bool" id="movie_extrathumbs" subsetting= "true" enable="eq(-4,true)" default="false" />
         <setting label="36106" type="bool" id="movie_logo" subsetting= "true" enable="eq(-5,true)" default="false" visible="false" />
         <setting label="36111" type="bool" id="movie_discart" subsetting= "true" enable="eq(-6,true)" default="false" visible="false" />
+        <setting label="36112" type="bool" id="movie_defaultthumb" subsetting= "true" enable="eq(-7,true)" default="false" />
     </category>
     
 <!-- Plugin settings: TV Show section -->
@@ -63,6 +64,7 @@
         <setting label="36104" type="bool" id="tvshow_seasonbanner" subsetting= "true" enable="eq(-9,true)" default="false" />
         <setting label="36109" type="bool" id="tvshow_thumb" subsetting= "true" enable="eq(-10,true)" default="false" />
         <setting label="36113" type="bool" id="tvshow_seasonthumbs" subsetting= "true" enable="eq(-11,true)+eq(-11,false)" default="false" />
+        <setting label="36112" type="bool" id="tvshow_defaultthumb" subsetting= "true" enable="eq(-12,true)" default="false" />
     </category>
     
 <!-- Plugin settings: Music section -->

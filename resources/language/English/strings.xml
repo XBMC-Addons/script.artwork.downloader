@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
     <!-- Plugin settings -->
-        <string id="36001">-</string>
-        <string id="36002">-</string>
+        <string id="36001">Error</string>
+        <string id="36002">Error downloading file</string>
         <string id="36003">Different settings version found!</string>
         <string id="36004">Cleaning up</string>
         <string id="36005">Checking for artwork</string>
@@ -16,8 +16,8 @@
         <string id="36013">artwork downloaded</string>
         <string id="36014">Cancelled</string>
         <string id="36015">Download canceled by user</string>
-        <string id="36016">-</string>
-        <string id="36017">-</string>
+        <string id="36016">Which one to download ?</string>
+        <string id="36017">Download canceled by user</string>
         <string id="36018">-</string>
         <string id="36019">Select the preferences and press OK to save</string>
         <string id="36020">Faulty/empty settings combination found!</string>
@@ -81,27 +81,21 @@
         <string id="36109">Thumb</string>
         <string id="36110">Extrathumbs</string>
         <string id="36111">Disc Art</string>
-        <string id="36112">-</string>
+        <string id="36112">Default Thumb</string>
         <string id="36113">Season Thumbs</string>
 
-    <!-- Messages settings: Possible messages to use -->
-        <string id="32121">Please help us to get more art on</string>
-        <string id="32123">http://fanart.tv</string>
-        <string id="32123">http://www.thetvdb.com/</string>
-        <string id="32124">http://www.themoviedb.org/</string>
-        <string id="32125">Not Found</string>
-        <string id="32126">No logo found!</string>
-        <string id="32127">No clearart found!</string>
-        <string id="32128">No show thumb found!</string>
-        <string id="32129">No banner found!</string>
-        <string id="32130">No fanart found!</string>
-        <string id="32131">No extrafanart found!</string>
-        <string id="32132">No season banner found!</string>
-        <string id="32133">No characterart found!</string>
-        <string id="32134">choose what to download</string>
-        <string id="32135">Canceled</string>
-        <string id="32136">Download canceled by user</string>
-        <string id="32137">Which one to download ?</string>
-        <string id="32139">Getting info...</string>
-        <string id="32140">Error copying file</string>
+        <string id="36121">No Fanart found!</string>
+        <string id="36122">No Extrafanart found!</string>
+        <string id="36123">No Banner found!</string>
+        <string id="36124">No Season Banners found!</string>
+        <string id="36125">No ClearArt found!</string>
+        <string id="36126">No Logo found!</string>
+        <string id="36127">No Character Art found!</string>
+        <string id="36128">No Poster found!</string>
+        <string id="36124">No Season Posters found!</string>
+        <string id="36129">No Thumb found!</string>
+        <string id="36130">No Extrathumbs found!</string>
+        <string id="36131">No Disc Art found!</string>
+        <string id="36132">No Default Thumb found!</string>
+        <string id="36133">No Season Thumbs found!</string>
 </strings>

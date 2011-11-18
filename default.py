@@ -28,10 +28,11 @@ __addonname__   = __addon__.getAddonInfo('name')
 __author__      = __addon__.getAddonInfo('author')
 __version__     = __addon__.getAddonInfo('version')
 __localize__    = __addon__.getLocalizedString
+__cwd__       = __addon__.getAddonInfo('path')
 __language__ = language.get_abbrev()
 Media_listing = media_setup.media_listing
-
-
+ACTION_PREVIOUS_MENU = ( 9, 10, 92, 216, 247, 257, 275, 61467, 61448, )
+SOURCEPATH = __cwd__
 
 
 ### clean up temporary folder
@@ -215,6 +216,8 @@ def gui_mode(self, itemtype, itemname):
                 download_artwork(self, self.Medialist, self.tv_providers)
             break
 
+
+            
 ### load settings and initialise needed directories
 def initialise(self):
     for item in sys.argv:
@@ -249,30 +252,7 @@ def initialise(self):
         return False
     else:
         return True 
-
-        
-def choose_image(self):
-    log( "### image list: %s" % self.image_list )
-    self.image_url = self.maingui.MyDialog(self.image_list)
-    if self.image_url: return True
-    else: return False
-
-def choice_type(self):
-    select = xbmcgui.Dialog().select(__language__(36012) , self.type_list)
-    if select == -1: 
-        log( "### Canceled by user" )
-        xbmcgui.Dialog().ok(__language__(36013) , __language__(36014) )
-        return False
-    else:
-        if self.type_list[select] == __language__(32128) : self.clearart = self.show_thumb = self.banner = self.poster = self.characterart = False
-        elif self.type_list[select] == __language__(32129) : self.logo = self.show_thumb = self.banner = self.poster = self.characterart = False
-        elif self.type_list[select] == __language__(32130) : self.logo = self.show_thumb = self.banner = self.poster = self.clearart = False
-        elif self.type_list[select] == __language__(32131) : self.clearart = self.logo = self.banner = self.poster = self.characterart = False
-        elif self.type_list[select] == __language__(32132) : self.logo = self.show_thumb = self.clearart = self.poster = self.characterart = False
-        elif self.type_list[select] == __language__(32133) : self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
-        return True
-
-    
+   
 ### download media fanart
 def download_artwork(self, media_list, providers):
     self.processeditems = 0
@@ -378,6 +358,7 @@ def download_artwork(self, media_list, providers):
                     self.download_max = len(self.image_list)
                 if self.mode == 'gui':
                     log('here goes gui mode')
+                    _gui(self)
                 else:
                     _download_process(self)
 
@@ -388,25 +369,32 @@ def _download_process(self):
 
     if self.settings.movie_enable and self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
-            try:
-                if arttypes['art_type'] == 'extrafanart':
-                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
-                elif arttypes['art_type'] == 'extrathumbs':
-                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui'])
-                else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
-            except:
-                log('some error')
+
+            if arttypes['art_type'] == 'extrafanart':
+                _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
+            elif arttypes['art_type'] == 'defaultthumb':
+                _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])    
+            elif arttypes['art_type'] == 'extrathumbs':
+                _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui'])
+            else:
+                _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
+
 
     if self.settings.tvshow_enable and self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
             try:
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
+                elif arttypes['art_type'] == 'defaultthumb':
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])  
                 else:
                     _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])                
             except:
                 log('some error')
+
+def gui_imagelist(self):
+    log('here goes retrieving image list for GUI')
+
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg):
@@ -460,6 +448,157 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
 
+def _gui(self):
+    dialog('close', background = self.settings.background)
+    self.test_type_list = []
+    self.test_type_list.append (__localize__(36108))
+    self.test_type_list.append (__localize__(36114))
+    self.test_type_list.append (__localize__(36101))
+    self.test_type_list.append (__localize__(36102))
+    self.test_type_list.append (__localize__(36105))
+    self.test_type_list.append (__localize__(36106))
+    self.test_type_list.append (__localize__(36109))
+    self.test_type_list.append (__localize__(36113))
+    self.test_type_list.append (__localize__(36103))
+    self.test_type_list.append (__localize__(36104))
+    self.test_type_list.append (__localize__(36107))
+    if len(self.test_type_list) == 1:
+        self.test_type_list[0] = "True"
+    if ( len(self.test_type_list) == 1 ) or choice_type(self):
+        self.image_list = False
+    
+        if self.tvshow_poster:
+            self.get_lockstock_xml()
+            self.search_logo()
+        elif self.tvshow_seasonposter: 
+            self.get_lockstock_xml()
+            self.search_clearart()
+        elif self.tvshow_fanart: 
+            self.get_lockstock_xml()
+            self.search_characterart()
+        elif self.tvshow_extrafanart:
+            self.get_lockstock_xml()
+            self.search_show_thumb()
+        elif self.tvshow_clearart:
+            self.get_tvdb_xml()
+            self.search_banner()
+        elif self.tvshow_logo:
+            self.get_tvdb_xml()
+            self.search_poster()
+        elif self.tvshow_thumb:
+            self.get_tvdb_xml()
+            self.search_poster()
+        elif self.tvshow_seasonthumbs:
+            self.get_tvdb_xml()
+            self.search_poster()
+        elif self.tvshow_showbanner:
+            self.get_tvdb_xml()
+            self.search_poster()
+        elif self.tvshow_seasonbanner:
+            self.get_tvdb_xml()
+            self.search_poster()            
+        elif self.tvshow_characterart:
+            self.get_tvdb_xml()
+            self.search_poster()
+    if self.image_list:
+        if choose_image(self):
+            if not download_image(self):
+                if self.error == "download":
+                    xbmcgui.Dialog().ok(__localize__(36001) , __localize__(36002) )
+                elif self.error == "copy":
+                    xbmcgui.Dialog().ok(__localize__(36001) , __localize__(32126) )
+
+def choice_type(self):
+    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.test_type_list)
+    if select == -1: 
+        log( "### Canceled by user" )
+        xbmcgui.Dialog().ok(__localize__(36014) , __localize__(36017) )
+        return False
+    else:
+        if self.test_type_list[select] == __localize__(36108) : # Poster
+            self.clearart = self.show_thumb = self.banner = self.poster = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36114) : # Season poster
+            self.logo = self.show_thumb = self.banner = self.poster = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36101) : # Fanart
+            self.logo = self.show_thumb = self.banner = self.poster = self.clearart = False
+        elif self.test_type_list[select] == __localize__(36102) : # Extrafanart
+            self.clearart = self.logo = self.banner = self.poster = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36105) : # Clearart
+            self.logo = self.show_thumb = self.clearart = self.poster = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36106) : # Logo
+            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36109) : # Thumb
+            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36113) : # Season thumbs
+            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36103) : # Banner
+            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36104) : # Season banners
+            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False
+        elif self.test_type_list[select] == __localize__(36107) : # Character Art
+            self.logo = self.show_thumb = self.banner = self.clearart = self.characterart = False        
+        return True
+        
+def choose_image(self):
+    log( "### image list: %s" % self.image_list )
+    self.image_url = MyDialog(self.image_list)
+    if self.image_url: return True
+    else: return False    
+
+    
+class MainGui( xbmcgui.WindowXMLDialog ):
+    def __init__( self, *args, **kwargs ):
+        xbmcgui.WindowXMLDialog.__init__( self )
+        xbmc.executebuiltin( "Skin.Reset(AnimeWindowXMLDialogClose)" )
+        xbmc.executebuiltin( "Skin.SetBool(AnimeWindowXMLDialogClose)" )
+        self.listing = kwargs.get( "listing" )
+
+    def onInit(self):
+        try :
+            self.img_list = self.getControl(6)
+            self.img_list.controlLeft(self.img_list)
+            self.img_list.controlRight(self.img_list)
+            self.getControl(3).setVisible(False)
+        except :
+            print_exc()
+            self.img_list = self.getControl(3)
+
+        self.getControl(5).setVisible(False)
+        self.getControl(1).setLabel(__localize__(36016))
+
+        for image in self.listing :
+            listitem = xbmcgui.ListItem( image.split("/")[-1] )
+            listitem.setIconImage( image )
+            listitem.setLabel2(image)
+            log( "### image: %s" % image )
+            self.img_list.addItem( listitem )
+        self.setFocus(self.img_list)
+
+    def onAction(self, action):
+        if action in ACTION_PREVIOUS_MENU:
+            self.close() 
+
+    def onClick(self, controlID):
+        log( "### control: %s" % controlID )
+        if controlID == 6 or controlID == 3: 
+            num = self.img_list.getSelectedPosition()
+            log( "### position: %s" % num )
+            self.selected_url = self.img_list.getSelectedItem().getLabel2()
+            self.close()
+
+    def onFocus(self, controlID):
+        pass
+
+def MyDialog(tv_list):
+    w = MainGui( "DialogSelect.xml", SOURCEPATH, listing=tv_list )
+    w.doModal()
+    try: return w.selected_url
+    except: 
+        print_exc()
+        return False
+    del w
+    
+    
         
 ### Start of script
 if (__name__ == "__main__"):
