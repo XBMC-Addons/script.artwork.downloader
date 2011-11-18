@@ -394,7 +394,7 @@ def _download_process(self):
                 elif arttypes['art_type'] == 'extrathumbs':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui'])
                 else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], target_artworkdir, self.targets, arttypes['gui'])
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
             except:
                 log('some error')
 
@@ -404,7 +404,7 @@ def _download_process(self):
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
                 else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], target_artworkdir, self.targets, arttypes['gui'])                
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])                
             except:
                 log('some error')
 
