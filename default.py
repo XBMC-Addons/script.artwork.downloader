@@ -127,6 +127,7 @@ def initial_vars(self):
     self.medianame = ''
     self.mode = ''
     self.gui_selected_type = ''
+    self.gui_imagelist = ''
 
 ### Report the total numbers of downloaded images
 def finished_log(self):
@@ -316,7 +317,7 @@ def download_artwork(self, media_list, providers):
                 xmlfailcount = 0
                 while not artwork_result == 'pass' and not artwork_result == 'skipping':
                     if artwork_result == 'retrying':
-                        time.sleep(10)
+                        time.sleep(self.settings.api_timedelay)
                     try:
                         self.temp_image_list = self.provider.get_image_list(self.media_id)
                     except HTTP404Error, e:
@@ -359,7 +360,7 @@ def download_artwork(self, media_list, providers):
                     self.download_max = len(self.image_list)
                 if self.mode == 'gui':
                     log('here goes gui mode')
-                    _gui(self)
+                    gui_solomode(self)
                 else:
                     _download_process(self)
 
@@ -390,7 +391,7 @@ def _download_process(self):
                     _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
 
 
-def gui_imagelist(self, art_type, image_type):
+def gui_solomode_imagelist(self, art_type, image_type):
     log('here goes retrieving image list for GUI')
     self.gui_imagelist = []
     for artwork in self.image_list:
@@ -490,7 +491,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
 
-def _gui(self):
+def gui_solomode(self):
     # Close the 'checking for artwork' dialog before opening the GUI list
     dialog('close', background = self.settings.background)
     self.GUI_type_list = []
@@ -509,7 +510,7 @@ def _gui(self):
         self.GUI_type_list[0] = "True"
     if ( len(self.GUI_type_list) == 1 ) or choice_type(self):
         self.tmp_image_list = False
-        gui_imagelist(self, self.gui_selected_type, self.gui_selected_type)
+        gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
     # Download the selected image
     if choose_image(self):
