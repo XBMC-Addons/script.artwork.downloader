@@ -491,40 +491,31 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
     log('Finished with: %s' %art_type)
 
 def _gui(self):
+    # Close the 'checking for artwork' dialog before opening the GUI list
     dialog('close', background = self.settings.background)
     self.GUI_type_list = []
+    # Fill GUI art type list
     if self.mediatype == 'tvshow':
-        self.GUI_type_list.append (__localize__(36108))
-        self.GUI_type_list.append (__localize__(36114))
-        self.GUI_type_list.append (__localize__(36101))
-        self.GUI_type_list.append (__localize__(36102))
-        self.GUI_type_list.append (__localize__(36105))
-        self.GUI_type_list.append (__localize__(36106))
-        self.GUI_type_list.append (__localize__(36109))
-        self.GUI_type_list.append (__localize__(36113))
-        self.GUI_type_list.append (__localize__(36103))
-        self.GUI_type_list.append (__localize__(36104))
-        self.GUI_type_list.append (__localize__(36107))
+        for arttypes in self.settings.tvshow_arttype_list:
+            gui = arttypes['gui']
+            self.GUI_type_list.append (__localize__(gui))
+    # Fill GUI art type list
     if self.mediatype == 'movie':
-        self.GUI_type_list.append (__localize__(36108))
-        self.GUI_type_list.append (__localize__(36101))
-        self.GUI_type_list.append (__localize__(36102))
-        self.GUI_type_list.append (__localize__(36110))
-        self.GUI_type_list.append (__localize__(36106))
-        self.GUI_type_list.append (__localize__(36111))
-        self.GUI_type_list.append (__localize__(36112))
-      
+        for arttypes in self.settings.movie_arttype_list:
+            gui = arttypes['gui']
+            self.GUI_type_list.append (__localize__(gui))
+    # 
     if len(self.GUI_type_list) == 1:
         self.GUI_type_list[0] = "True"
     if ( len(self.GUI_type_list) == 1 ) or choice_type(self):
         self.tmp_image_list = False
         gui_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
-
+    # Download the selected image
     if choose_image(self):
         _download_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
 
-
+# This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
 def choice_type(self):
     select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.GUI_type_list)
     if select == -1: 
@@ -611,7 +602,7 @@ def choice_type(self):
         else: return False
         
 def choose_image(self):
-    log( "### image list: %s" % self.gui_imagelist )
+    log( "### image list: %s" % self.gui_imagelist)
     self.image_url = MyDialog(self.gui_imagelist)
     if self.image_url: return True
     else: return False    
