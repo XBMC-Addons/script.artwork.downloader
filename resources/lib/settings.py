@@ -1,6 +1,15 @@
 import xbmc
 import xbmcaddon
 import os
+import re
+import time
+import sys
+import platform
+from traceback import print_exc
+import xbmcgui
+
+
+
 from resources.lib.utils import _log as log
 from resources.lib import language
 from resources.lib.utils import _dialog as dialog
@@ -11,7 +20,7 @@ __addonname__   = __addon__.getAddonInfo('name')
 __author__      = __addon__.getAddonInfo('author')
 __version__     = __addon__.getAddonInfo('version')
 __localize__    = __addon__.getLocalizedString
-__language__    = language.get_abbrev()
+__language__ = language.get_abbrev()
 
 addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 settings_file = os.path.join(addondir, "settings.xml")
@@ -151,6 +160,120 @@ class _settings:
                 first_run = False
         __addon__.setSetting(id="addon_version", value=__version__)
         log('## Correct version of settings.xml file found. Continue with initializing.')
+
+    ### Create list for Artwork types to download
+    def _artype_list(self):
+        # Only add when set true in settings
+        self.movie_gui_list = []
+        self.movie_arttype_list = []
+        self.tvshow_gui_list = []
+        self.tvshow_arttype_list = []
+
+        # append movie list
+        if self.movie_poster:
+            info = {}
+            info['gui'] = __localize__(36108)
+            info['art_type'] = 'poster'
+            info['filename'] = 'poster.jpg'
+            self.movie_arttype_list.append(info)
+        if self.movie_fanart:
+            info = {}
+            info['gui'] = __localize__(36101)
+            info['art_type'] = 'fanart'
+            info['filename'] = 'fanart.jpg'
+            self.movie_arttype_list.append(info)
+        if self.movie_extrafanart:
+            info = {}
+            info['gui'] = __localize__(36102)
+            info['art_type'] = 'extrafanart'
+            info['filename'] = ''
+            self.movie_arttype_list.append(info)
+        if self.movie_extrathumbs:
+            info = {}
+            info['gui'] = __localize__(36110)
+            info['art_type'] = 'extrathumbs'
+            info['filename'] = 'thumb'
+            self.movie_arttype_list.append(info)
+        if self.movie_logo:
+            info = {}
+            info['gui'] = __localize__(36106)
+            info['art_type'] = 'clearlogo'
+            info['filename'] = 'logo.png'
+            self.movie_arttype_list.append(info)
+        if self.movie_discart:
+            info = {}
+            info['gui'] = __localize__(36111)
+            info['art_type'] = 'discart'
+            info['filename'] = 'cdart.png'
+            self.movie_arttype_list.append(info)
+            
+        # append tv show list
+        if self.tvshow_poster:
+            info = {}
+            info['gui'] = __localize__(36108)
+            info['art_type'] = 'poster'
+            info['filename'] = 'poster.jpg'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_seasonposter:
+            info = {}
+            info['gui'] = __localize__(36114)
+            info['art_type'] = 'seasonposter'
+            info['filename'] = 'season'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_fanart:
+            info = {}
+            info['gui'] = __localize__(36101)
+            info['art_type'] = 'fanart'
+            info['filename'] = 'fanart.jpg'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_extrafanart:
+            info = {}
+            info['gui'] = __localize__(36102)
+            info['art_type'] = 'extrafanart'
+            info['filename'] = '' 
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_clearart:
+            info = {}
+            info['gui'] = __localize__(36105)
+            info['art_type'] = 'clearart'
+            info['filename'] = 'clearart.png'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_logo:
+            info = {}
+            info['gui'] = __localize__(36106)
+            info['art_type'] = 'clearlogo'
+            info['filename'] = 'logo.png'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_thumb:
+            info = {}
+            info['gui'] = __localize__(36109)
+            info['art_type'] = 'tvthumb'
+            info['filename'] = 'landscape.jpg'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_seasonthumbs:
+            info = {}
+            info['gui'] = __localize__(36113)
+            info['art_type'] = 'seasonthumbs'
+            info['filename'] = 'seasonthumb'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_showbanner:
+            info = {}
+            info['gui'] = __localize__(36103)
+            info['art_type'] = 'banner'
+            info['filename'] = 'banner.jpg'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_seasonbanner:
+            info = {}
+            info['gui'] = __localize__(36104)
+            info['art_type'] = 'seasonbanner'
+            info['filename'] = 'seasonbanner'
+            self.tvshow_arttype_list.append(info)
+        if self.tvshow_characterart:
+            info = {}
+            info['gui'] = __localize__(36107)
+            info['art_type'] = 'characterart'
+            info['filename'] = 'character.png'
+            self.tvshow_arttype_list.append(info)
         
     ### Check for faulty setting combinations
     def _check(self):    

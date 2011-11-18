@@ -61,7 +61,7 @@
         <setting label="36106" type="bool" id="tvshow_logo" subsetting= "true" enable="eq(-7,true)" default="false" />
         <setting label="36103" type="bool" id="tvshow_showbanner" subsetting= "true" enable="eq(-8,true)" default="false" />
         <setting label="36104" type="bool" id="tvshow_seasonbanner" subsetting= "true" enable="eq(-9,true)" default="false" />
-        <setting label="36112" type="bool" id="tvshow_thumb" subsetting= "true" enable="eq(-10,true)" default="false" />
+        <setting label="36109" type="bool" id="tvshow_thumb" subsetting= "true" enable="eq(-10,true)" default="false" />
         <setting label="36113" type="bool" id="tvshow_seasonthumbs" subsetting= "true" enable="eq(-11,true)+eq(-11,false)" default="false" />
     </category>
     
