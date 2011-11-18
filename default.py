@@ -367,31 +367,28 @@ def download_artwork(self, media_list, providers):
         self.processeditems = self.processeditems + 1
 
 def _download_process(self):    
-
     if self.settings.movie_enable and self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
-
-            if arttypes['art_type'] == 'extrafanart':
-                _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
-            elif arttypes['art_type'] == 'defaultthumb':
-                _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])    
-            elif arttypes['art_type'] == 'extrathumbs':
-                _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui'])
-            else:
-                _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
-
-
-    if self.settings.tvshow_enable and self.mediatype == 'tvshow':
-        for arttypes in self.settings.tvshow_arttype_list:
-            try:
+            if arttypes['enabled']:
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
                 elif arttypes['art_type'] == 'defaultthumb':
-                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])  
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])    
+                elif arttypes['art_type'] == 'extrathumbs':
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui'])
                 else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])                
-            except:
-                log('some error')
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
+
+    if self.settings.tvshow_enable and self.mediatype == 'tvshow':
+        for arttypes in self.settings.tvshow_arttype_list:
+            if arttypes['enabled']:
+                if arttypes['art_type'] == 'extrafanart':
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
+                elif arttypes['art_type'] == 'defaultthumb':
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
+                else:
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
+
 
 def gui_imagelist(self, art_type, image_type):
     log('here goes retrieving image list for GUI')

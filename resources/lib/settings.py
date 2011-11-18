@@ -175,124 +175,123 @@ class _settings:
         self.movie_arttype_list = []
         self.tvshow_gui_list = []
         self.tvshow_arttype_list = []
-
-        # append movie list
-        if self.movie_poster:
-            info = {}
-            info['gui'] = 36108
-            info['art_type'] = 'poster'
-            info['filename'] = 'poster.jpg'
-            self.movie_arttype_list.append(info)
-        if self.movie_fanart:
-            info = {}
-            info['gui'] = 36101
-            info['art_type'] = 'fanart'
-            info['filename'] = 'fanart.jpg'
-            self.movie_arttype_list.append(info)
-        if self.movie_extrafanart:
-            info = {}
-            info['gui'] = 36102
-            info['art_type'] = 'extrafanart'
-            info['filename'] = ''
-            self.movie_arttype_list.append(info)
-        if self.movie_extrathumbs:
-            info = {}
-            info['gui'] = 36110
-            info['art_type'] = 'extrathumbs'
-            info['filename'] = 'thumb'
-            self.movie_arttype_list.append(info)
-        if self.movie_logo:
-            info = {}
-            info['gui'] = 36106
-            info['art_type'] = 'clearlogo'
-            info['filename'] = 'logo.png'
-            self.movie_arttype_list.append(info)
-        if self.movie_discart:
-            info = {}
-            info['gui'] = 36111
-            info['art_type'] = 'discart'
-            info['filename'] = 'cdart.png'
-            self.movie_arttype_list.append(info)
-        if self.movie_defaultthumb:
-            info = {}
-            info['gui'] = 36112
-            info['art_type'] = 'defaultthumb'
-            info['filename'] = 'folder.jpg'
-            self.movie_arttype_list.append(info)
-            
-        # append tv show list
-        if self.tvshow_poster:
-            info = {}
-            info['gui'] = 36108
-            info['art_type'] = 'poster'
-            info['filename'] = 'poster.jpg'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_seasonposter:
-            info = {}
-            info['gui'] = 36114
-            info['art_type'] = 'seasonposter'
-            info['filename'] = 'season'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_fanart:
-            info = {}
-            info['gui'] = 36101
-            info['art_type'] = 'fanart'
-            info['filename'] = 'fanart.jpg'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_extrafanart:
-            info = {}
-            info['gui'] = 36102
-            info['art_type'] = 'extrafanart'
-            info['filename'] = '' 
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_clearart:
-            info = {}
-            info['gui'] = 36105
-            info['art_type'] = 'clearart'
-            info['filename'] = 'clearart.png'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_logo:
-            info = {}
-            info['gui'] = 36106
-            info['art_type'] = 'clearlogo'
-            info['filename'] = 'logo.png'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_thumb:
-            info = {}
-            info['gui'] = 36109
-            info['art_type'] = 'tvthumb'
-            info['filename'] = 'landscape.jpg'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_seasonthumbs:
-            info = {}
-            info['gui'] = 36113
-            info['art_type'] = 'seasonthumbs'
-            info['filename'] = 'seasonthumb'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_showbanner:
-            info = {}
-            info['gui'] = 36103
-            info['art_type'] = 'banner'
-            info['filename'] = 'banner.jpg'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_seasonbanner:
-            info = {}
-            info['gui'] = 36104
-            info['art_type'] = 'seasonbanner'
-            info['filename'] = 'seasonbanner'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_characterart:
-            info = {}
-            info['gui'] = 36107
-            info['art_type'] = 'characterart'
-            info['filename'] = 'character.png'
-            self.tvshow_arttype_list.append(info)
-        if self.tvshow_defaultthumb:
-            info = {}
-            info['gui'] = 36112
-            info['art_type'] = 'defaultthumb'
-            info['filename'] = 'folder.jpg'
-            self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.movie_poster
+        info['gui'] = 36108
+        info['art_type'] = 'poster'
+        info['filename'] = 'poster.jpg'
+        self.movie_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.movie_fanart 
+        info['gui'] = 36101
+        info['art_type'] = 'fanart'
+        info['filename'] = 'fanart.jpg'
+        self.movie_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.movie_extrafanart
+        info['gui'] = 36102
+        info['art_type'] = 'extrafanart'
+        info['filename'] = ''
+        self.movie_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.movie_extrathumbs
+        info['gui'] = 36110
+        info['art_type'] = 'extrathumbs'
+        info['filename'] = 'thumb'
+        self.movie_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.movie_logo
+        info['gui'] = 36106
+        info['art_type'] = 'clearlogo'
+        info['filename'] = 'logo.png'
+        self.movie_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.movie_discart
+        info['gui'] = 36111
+        info['art_type'] = 'discart'
+        info['filename'] = 'cdart.png'
+        self.movie_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.movie_defaultthumb
+        info['gui'] = 36112
+        info['art_type'] = 'defaultthumb'
+        info['filename'] = 'folder.jpg'
+        self.movie_arttype_list.append(info)
+        info = {}
+    # append tv show list
+        info = {}
+        info['enabled'] = self.tvshow_poster
+        info['gui'] = 36108
+        info['art_type'] = 'poster'
+        info['filename'] = 'poster.jpg'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_seasonposter
+        info['gui'] = 36114
+        info['art_type'] = 'seasonposter'
+        info['filename'] = 'season'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_fanart
+        info['gui'] = 36101
+        info['art_type'] = 'fanart'
+        info['filename'] = 'fanart.jpg'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_extrafanart
+        info['gui'] = 36102
+        info['art_type'] = 'extrafanart'
+        info['filename'] = '' 
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_clearart
+        info['gui'] = 36105
+        info['art_type'] = 'clearart'
+        info['filename'] = 'clearart.png'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_logo
+        info['gui'] = 36106
+        info['art_type'] = 'clearlogo'
+        info['filename'] = 'logo.png'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_thumb
+        info['gui'] = 36109
+        info['art_type'] = 'tvthumb'
+        info['filename'] = 'landscape.jpg'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_seasonthumbs
+        info['gui'] = 36113
+        info['art_type'] = 'seasonthumbs'
+        info['filename'] = 'seasonthumb'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_showbanner
+        info['gui'] = 36103
+        info['art_type'] = 'banner'
+        info['filename'] = 'banner.jpg'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_seasonbanner
+        info['gui'] = 36104
+        info['art_type'] = 'seasonbanner'
+        info['filename'] = 'seasonbanner'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_characterart
+        info['gui'] = 36107
+        info['art_type'] = 'characterart'
+        info['filename'] = 'character.png'
+        self.tvshow_arttype_list.append(info)
+        info = {}
+        info['enabled'] = self.tvshow_defaultthumb
+        info['gui'] = 36112
+        info['art_type'] = 'defaultthumb'
+        info['filename'] = 'folder.jpg'
+        self.tvshow_arttype_list.append(info)        
+        
             
     ### Check for faulty setting combinations
     def _check(self):    
