@@ -525,80 +525,19 @@ def choice_type(self):
         return False
     else:
         if self.mediatype == 'tvshow':
-            if self.GUI_type_list[select] == __localize__(36108) : # Poster
-                self.gui_selected_type = 'poster'
-                self.gui_selected_filename = 'poster.jpg'
-                self.gui_selected_msg = 36108
-            elif self.GUI_type_list[select] == __localize__(36114) : # Season poster
-                self.gui_selected_type = 'seasonposter'
-                self.gui_selected_filename = 'season'
-                self.gui_selected_msg = 36114
-            elif self.GUI_type_list[select] == __localize__(36101) : # Fanart
-                self.gui_selected_type = 'fanart'
-                self.gui_selected_filename = 'fanart.jpg'
-                self.gui_selected_msg = 36101
-            elif self.GUI_type_list[select] == __localize__(36102) : # Extrafanart
-                self.gui_selected_type = 'extrafanart'
-                self.gui_selected_filename = ''
-                self.gui_selected_msg = 36102
-            elif self.GUI_type_list[select] == __localize__(36105) : # Clearart
-                self.gui_selected_type = 'clearart'
-                self.gui_selected_filename = 'clearart.png'
-                self.gui_selected_msg = 36105
-            elif self.GUI_type_list[select] == __localize__(36106) : # Logo
-                self.gui_selected_type = 'clearlogo'
-                self.gui_selected_filename = 'logo.png'
-                self.gui_selected_msg = 36108
-            elif self.GUI_type_list[select] == __localize__(36109) : # Thumb
-                self.gui_selected_type = 'tvthumb'
-                self.gui_selected_filename = 'thumb.jpg'
-                self.gui_selected_msg = 36109
-            elif self.GUI_type_list[select] == __localize__(36113) : # Season thumbs
-                self.gui_selected_type = 'seasonthumb'
-                self.gui_selected_filename = 'seasonthumb.jpg'
-                self.gui_selected_msg = 36113
-            elif self.GUI_type_list[select] == __localize__(36103) : # Banner
-                self.gui_selected_type = 'banner'
-                self.gui_selected_filename = 'banner.jpg'
-                self.gui_selected_msg = 36103
-            elif self.GUI_type_list[select] == __localize__(36104) : # Season banners
-                self.gui_selected_type = 'seasonbanner'
-                self.gui_selected_filename = 'seasonbanner'
-                self.gui_selected_msg = 36104
-            elif self.GUI_type_list[select] == __localize__(36107) : # Character Art
-                self.gui_selected_type = 'characterart'
-                self.gui_selected_filename = 'character.png'
-                self.gui_selected_msg = 36108
-            return True
+            for arttypes in self.settings.tvshow_arttype_list:
+                if self.GUI_type_list[select] == arttypes['gui'] : # Poster
+                    self.gui_selected_type = arttypes['art_type']
+                    self.gui_selected_filename = arttypes['filename']
+                    self.gui_selected_msg = arttypes['gui']
+                    return True
         if self.mediatype == 'movie':
-            if self.GUI_type_list[select] == __localize__(36108) : # Poster
-                self.gui_selected_type = 'poster'
-                self.gui_selected_filename = 'poster.jpg'
-                self.gui_selected_msg = 36108
-            elif self.GUI_type_list[select] == __localize__(36101) : # Fanart
-                self.gui_selected_type = 'fanart'
-                self.gui_selected_filename = 'fanart.jpg'
-                self.gui_selected_msg = 36101
-            elif self.GUI_type_list[select] == __localize__(36102) : # Extrafanart
-                self.gui_selected_type = 'extrafanart'
-                self.gui_selected_filename = ''
-                self.gui_selected_msg = 36102
-            elif self.GUI_type_list[select] == __localize__(36110) : # Extrathumbs
-                self.gui_selected_type = 'extrathumbs'
-                self.gui_selected_filename = 'thumb'
-                self.gui_selected_msg = 36110
-            elif self.GUI_type_list[select] == __localize__(36106) : # Logo
-                self.gui_selected_type = 'clearlogo'
-                self.gui_selected_filename = 'logo.jpg'
-                self.gui_selected_msg = 36106
-            elif self.GUI_type_list[select] == __localize__(361111) : # discart
-                self.gui_selected_type = 'discart'
-                self.gui_selected_filename = 'cdart.jpg'
-                self.gui_selected_msg = 36111
-            elif self.GUI_type_list[select] == __localize__(36107) : # Character Art
-                self.gui_selected_type = 'characterart'
-                self.gui_selected_filename = 'character.png'
-                self.gui_selected_msg = 36107
+            for arttypes in self.settings.movie_arttype_list:
+                if self.GUI_type_list[select] == arttypes['gui'] : # Poster
+                    self.gui_selected_type = arttypes['art_type']
+                    self.gui_selected_filename = arttypes['filename']
+                    self.gui_selected_msg = arttypes['gui']
+                    return True
             return True
         else: return False
         
