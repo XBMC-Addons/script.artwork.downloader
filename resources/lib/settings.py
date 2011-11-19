@@ -183,7 +183,7 @@ class _settings:
         
         info = {}
         info['bulk_enabled'] = self.movie_extrafanart
-        info['solo_enabled'] = 'true'
+        info['solo_enabled'] = 'false'
         info['gui_string'] = __localize__(36102)
         info['art_type'] = 'extrafanart'
         info['filename'] = ''
@@ -191,7 +191,7 @@ class _settings:
         
         info = {}
         info['bulk_enabled'] = self.movie_extrathumbs
-        info['solo_enabled'] = 'true'
+        info['solo_enabled'] = 'false'
         info['gui_string'] = __localize__(36110)
         info['art_type'] = 'extrathumbs'
         info['filename'] = 'thumb'
@@ -232,7 +232,7 @@ class _settings:
         
         info = {}
         info['bulk_enabled'] = self.tvshow_seasonposter
-        info['solo_enabled'] = 'true'
+        info['solo_enabled'] = 'false'
         info['gui_string'] = __localize__(36114)
         info['art_type'] = 'seasonposter'
         info['filename'] = 'season'
@@ -248,7 +248,7 @@ class _settings:
         
         info = {}
         info['bulk_enabled'] = self.tvshow_extrafanart
-        info['solo_enabled'] = 'true'
+        info['solo_enabled'] = 'false'
         info['gui_string'] = __localize__(36102)
         info['art_type'] = 'extrafanart'
         info['filename'] = '' 
@@ -280,7 +280,7 @@ class _settings:
         
         info = {}
         info['bulk_enabled'] = self.tvshow_seasonthumbs
-        info['solo_enabled'] = 'true'
+        info['solo_enabled'] = 'false'
         info['gui_string'] = __localize__(36113)
         info['art_type'] = 'seasonthumbs'
         info['filename'] = 'seasonthumb'
@@ -296,7 +296,7 @@ class _settings:
         
         info = {}
         info['bulk_enabled'] = self.tvshow_seasonbanner
-        info['solo_enabled'] = 'true'
+        info['solo_enabled'] = 'false'
         info['gui_string'] = __localize__(36104)
         info['art_type'] = 'seasonbanner'
         info['filename'] = 'seasonbanner'
