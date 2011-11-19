@@ -110,6 +110,9 @@ class Main:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
+        # Make sure that overwrite option get's reset after downloading
+        __addon__.setSetting(id="overwrite", value='false')
+        # Cleaning up
         cleanup(self)
         finished_log(self)
 
