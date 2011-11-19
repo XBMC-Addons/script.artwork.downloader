@@ -402,15 +402,17 @@ def gui_solomode_imagelist(self, art_type, image_type):
             self.gui_imagelist.append(artwork['url'])
             log('url: %s'%artwork['url'])
     log('Image list: %s' %self.gui_imagelist)
-    return True
+    if self.gui_imagelist == '':
+        return False
+    else: return True
 
 ### Artwork downloading
 def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets, msg):
     log('Starting with processing: %s' %art_type)
+    self._download_art_succes = False
     self.settings.failcount = 0
     current_artwork = 0
     downloaded_artwork = 0
-
     imageurl = self.image_url
     ### check if script has been cancelled by user
     # File naming
@@ -427,20 +429,26 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     current_artwork = current_artwork + 1
     try:
         self.fileops._downloadfile(imageurl, artworkfile, targetdirs, 'true')
+        self._download_art_succes = True
     except HTTP404Error, e:
         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+        self._download_art_succes = False
     except HTTPTimeout, e:
         self.settings.failcount = self.settings.failcount + 1
         log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
+        self._download_art_succes = False
     except CreateDirectoryError, e:
         log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+        self._download_art_succes = False
     except DownloadError, e:
         self.settings.failcount = self.settings.failcount + 1
         log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
+        self._download_art_succes = False
     else:
         downloaded_artwork = downloaded_artwork + 1
     dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
+
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg):
@@ -518,9 +526,15 @@ def gui_solomode(self):
         gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
     # Download the selected image
-    if choose_image(self):
-        _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
-
+    if self.gui_imagelist:
+        if choose_image(self):
+            _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
+            if not self._download_art_succes:
+                xbmcgui.Dialog().ok(__localize__(36001) , __localize__(36002) )
+        
+        
+        
+        
 # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
 def choice_type(self):
     select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.GUI_type_list)
