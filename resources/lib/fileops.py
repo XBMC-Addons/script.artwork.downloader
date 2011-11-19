@@ -6,7 +6,8 @@ import xbmcvfs
 from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
 from resources.lib import utils
-
+from traceback import print_exc
+THUMBS_CACHE_PATH = os.path.join( xbmc.translatePath( "special://profile/" ), "Thumbnails/Video" )
 
 log = utils._log
 
@@ -62,6 +63,38 @@ class fileops:
         if not isdeleted:
             log("Ignoring (%s): %s" % (reason, filename), xbmc.LOGINFO)
 
+    def erase_current_cache(self, targetdirs, filename):
+        log('Try to erase old cached image')
+        try: 
+            cached_thumb = self.get_cached_thumb(targetdirs, filename)
+            log( "Cache %s" % cached_thumb )
+            if xbmcvfs.exists( cached_thumb.replace("png" , "dds").replace("jpg" , "dds") ):
+                xbmcvfs.delete( cached_thumb.replace("png" , "dds").replace("jpg" , "dds") )
+            copy = xbmcvfs.copy( os.path.join( targetdirs , filename ) , cached_thumb )
+            if copy:
+                log('Cached file: %s' %cached_thumb)
+            else:
+                log( "Failed to copy to cached thumb" )
+        except :
+            print_exc()
+            log( "Cache erasing error" )
+
+    def get_cached_thumb( self, path, filename ):
+        log('Get old cached image')
+        if path.startswith( "stack://" ):
+            path = strPath[ 8 : ].split( " , " )[ 0 ]
+        if filename == "folder.jpg":
+            cachedthumb = xbmc.getCacheThumbName( path )
+            thumbpath = os.path.join( THUMBS_CACHE_PATH, cachedthumb[0], cachedthumb )
+        else:
+            cachedthumb = xbmc.getCacheThumbName( os.path.join( path, filename ) )
+            if ".jpg" in filename:
+                cachedthumb = cachedthumb.replace("tbn" , "jpg")
+            elif ".png" in filename:
+                cachedthumb = cachedthumb.replace("tbn" , "png")      
+            thumbpath = os.path.join( THUMBS_CACHE_PATH, cachedthumb[0], cachedthumb ).replace( "/Video" , "")    
+        return thumbpath
+            
 
     def _copyfile(self, sourcepath, targetpath):
 
@@ -126,6 +159,7 @@ class fileops:
                 self.downloadcount = self.downloadcount + 1
                 for filenotexistspath in filenotexistspaths:
                     self._copyfile(temppath, filenotexistspath)
+            self.erase_current_cache(targetdir, filename)
         elif not False in fileexists:
             log("Ignoring (Exists in all target directories): %s" % filename, xbmc.LOGINFO)
         else:
