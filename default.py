@@ -392,7 +392,7 @@ def _download_process(self):
 
 
 def gui_solomode_imagelist(self, art_type, image_type):
-    log('here goes retrieving image list for GUI')
+    log('Retrieving image list for GUI')
     self.gui_imagelist = []
     for artwork in self.image_list:
         if  artwork['type'] == art_type:
