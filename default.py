@@ -524,28 +524,32 @@ def choice_type(self):
         xbmcgui.Dialog().ok(__localize__(36014) , __localize__(36015) )
         return False
     else:
+        # Check what artwork type has been chosen and parse the image restraints
         if self.mediatype == 'tvshow':
             for arttypes in self.settings.tvshow_arttype_list:
-                if self.GUI_type_list[select] == arttypes['gui'] : # Poster
+                if self.GUI_type_list[select] == arttypes['gui']:
                     self.gui_selected_type = arttypes['art_type']
                     self.gui_selected_filename = arttypes['filename']
                     self.gui_selected_msg = arttypes['gui']
                     return True
         if self.mediatype == 'movie':
             for arttypes in self.settings.movie_arttype_list:
-                if self.GUI_type_list[select] == arttypes['gui'] : # Poster
+                if self.GUI_type_list[select] == arttypes['gui']:
                     self.gui_selected_type = arttypes['art_type']
                     self.gui_selected_filename = arttypes['filename']
                     self.gui_selected_msg = arttypes['gui']
                     return True
             return True
-        else: return False
+        else:
+            return False
         
 def choose_image(self):
     log( "### image list: %s" % self.gui_imagelist)
     self.image_url = MyDialog(self.gui_imagelist)
-    if self.image_url: return True
-    else: return False    
+    if self.image_url:
+        return True
+    else:
+        return False    
 
     
 class MainGui( xbmcgui.WindowXMLDialog ):
