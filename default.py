@@ -370,7 +370,7 @@ def download_artwork(self, media_list, providers):
 def _download_process(self):    
     if self.settings.movie_enable and self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
-            if arttypes['enabled']:
+            if arttypes['bulk_enabled']:
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
                 elif arttypes['art_type'] == 'defaultthumb':
@@ -382,7 +382,7 @@ def _download_process(self):
 
     if self.settings.tvshow_enable and self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
-            if arttypes['enabled']:
+            if arttypes['bulk_enabled']:
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
                 elif arttypes['art_type'] == 'defaultthumb':
@@ -402,7 +402,7 @@ def gui_solomode_imagelist(self, art_type, image_type):
     return True
 
 ### Artwork downloading
-def _download_solo(self, art_type, image_type, filename, targetdirs, targets, msg):
+def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets, msg):
     log('Starting with processing: %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
@@ -436,7 +436,7 @@ def _download_solo(self, art_type, image_type, filename, targetdirs, targets, ms
         log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
     else:
         downloaded_artwork = downloaded_artwork + 1
-    dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
+    dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
 
 ### Artwork downloading
@@ -488,7 +488,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                 else:
                     downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
+            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
 
 def gui_solomode(self):
@@ -499,12 +499,12 @@ def gui_solomode(self):
     if self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
             gui = arttypes['gui']
-            self.GUI_type_list.append (__localize__(gui))
+            self.GUI_type_list.append (gui)
     # Fill GUI art type list
     if self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
             gui = arttypes['gui']
-            self.GUI_type_list.append (__localize__(gui))
+            self.GUI_type_list.append (gui)
     # 
     if len(self.GUI_type_list) == 1:
         self.GUI_type_list[0] = "True"
@@ -514,7 +514,7 @@ def gui_solomode(self):
         log('Image put to GUI: %s' %self.gui_imagelist)
     # Download the selected image
     if choose_image(self):
-        _download_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
+        _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
 
 # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
 def choice_type(self):
