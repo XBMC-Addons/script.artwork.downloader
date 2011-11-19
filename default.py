@@ -5,8 +5,9 @@ import sys
 import xbmc
 import xbmcaddon
 import platform
-from traceback import print_exc
 import xbmcgui
+from traceback import print_exc
+
 
 ### import libraries
 from resources.lib import media_setup
@@ -423,7 +424,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     elif art_type == 'seasonposter':
         artworkfile = (filename+'%s.tbn' %artwork['season'])
     else: artworkfile = filename
-    dialog('create', line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile)
+    dialog('create', line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg + ': ' + artworkfile)
     # Try downloading the file
     try:
         self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true')
@@ -528,10 +529,9 @@ def gui_solomode(self):
             _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
             if not self._download_art_succes:
                 xbmcgui.Dialog().ok(__localize__(36001) , __localize__(36002) )
+
         
-        
-        
-        
+
 # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
 def choice_type(self):
     select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.GUI_type_list)
