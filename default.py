@@ -498,13 +498,15 @@ def gui_solomode(self):
     # Fill GUI art type list
     if self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
-            gui = arttypes['gui']
-            self.GUI_type_list.append (gui)
+            if arttypes['solo_enabled'] == 'true':
+                gui = arttypes['gui']
+                self.GUI_type_list.append (gui)
     # Fill GUI art type list
     if self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
-            gui = arttypes['gui']
-            self.GUI_type_list.append (gui)
+            if arttypes['solo_enabled'] == 'true':
+                gui = arttypes['gui']
+                self.GUI_type_list.append (gui)
     # 
     if len(self.GUI_type_list) == 1:
         self.GUI_type_list[0] = "True"
