@@ -60,7 +60,9 @@ def cleanup(self):
     if not self.settings.failcount < self.settings.failthreshold:
         log('Network error detected, script aborted', xbmc.LOGERROR)
         dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.settings.background)
-    if not xbmc.abortRequested:
+    if self.mode == 'gui':
+        log('')
+    elif not xbmc.abortRequested:
         dialog('okdialog', line1 = summary, background = self.settings.background)
     else:
         dialog('okdialog', line1 = __localize__(36007), line2 = summary, background = self.settings.background)
@@ -411,10 +413,6 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     log('Starting with processing: %s' %art_type)
     self._download_art_succes = False
     self.settings.failcount = 0
-    current_artwork = 0
-    downloaded_artwork = 0
-    imageurl = self.image_url
-    ### check if script has been cancelled by user
     # File naming
     if art_type == 'extrafanart':
         artworkfile = ('%s.jpg'%self.gui_imagelist['id'])
@@ -425,10 +423,10 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     elif art_type == 'seasonposter':
         artworkfile = (filename+'%s.tbn' %artwork['season'])
     else: artworkfile = filename
-    #increase  artwork counter
-    current_artwork = current_artwork + 1
+    dialog('create', line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile)
+    # Try downloading the file
     try:
-        self.fileops._downloadfile(imageurl, artworkfile, targetdirs, 'true')
+        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true')
         self._download_art_succes = True
     except HTTP404Error, e:
         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
@@ -442,11 +440,10 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
         self._download_art_succes = False
     except DownloadError, e:
         self.settings.failcount = self.settings.failcount + 1
-        log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
+        log('Error downloading file: %s (Possible network error: %s), skipping' % (self.image_url, str(e)), xbmc.LOGERROR)
         self._download_art_succes = False
-    else:
-        downloaded_artwork = downloaded_artwork + 1
-    dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
+    dialog('close')
+    dialog('okdialog', line1 = self.media_name, line2 = __localize__(36017) + ' ' + msg + ': ' + artworkfile)
     log('Finished with: %s' %art_type)
 
 

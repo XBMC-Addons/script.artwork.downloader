@@ -48,7 +48,7 @@ def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', backgrou
             else:
                 return False
         if action == 'okdialog':
-            xbmcgui.Dialog().ok(__addonname__, line1, line2)
+            xbmcgui.Dialog().ok(__addonname__, line1, line2, line3)
     if background:
         if (action == 'create' or action == 'okdialog'):
             if line2 == '':
