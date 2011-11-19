@@ -168,7 +168,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.movie_poster
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36108)
+        info['gui_string'] = __localize__(36108)
         info['art_type'] = 'poster'
         info['filename'] = 'poster.jpg'
         self.movie_arttype_list.append(info)
@@ -176,7 +176,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.movie_fanart 
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36101)
+        info['gui_string'] = __localize__(36101)
         info['art_type'] = 'fanart'
         info['filename'] = 'fanart.jpg'
         self.movie_arttype_list.append(info)
@@ -184,7 +184,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.movie_extrafanart
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36102)
+        info['gui_string'] = __localize__(36102)
         info['art_type'] = 'extrafanart'
         info['filename'] = ''
         self.movie_arttype_list.append(info)
@@ -192,7 +192,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.movie_extrathumbs
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36110)
+        info['gui_string'] = __localize__(36110)
         info['art_type'] = 'extrathumbs'
         info['filename'] = 'thumb'
         self.movie_arttype_list.append(info)
@@ -200,7 +200,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.movie_logo
         info['solo_enabled'] = 'false'
-        info['gui'] = __localize__(36106)
+        info['gui_string'] = __localize__(36106)
         info['art_type'] = 'clearlogo'
         info['filename'] = 'logo.png'
         self.movie_arttype_list.append(info)
@@ -208,7 +208,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.movie_discart
         info['solo_enabled'] = 'false'
-        info['gui'] = __localize__(36111)
+        info['gui_string'] = __localize__(36111)
         info['art_type'] = 'discart'
         info['filename'] = 'cdart.png'
         self.movie_arttype_list.append(info)
@@ -216,7 +216,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.movie_defaultthumb
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36112)
+        info['gui_string'] = __localize__(36112)
         info['art_type'] = 'defaultthumb'
         info['filename'] = 'folder.jpg'
         self.movie_arttype_list.append(info)
@@ -225,7 +225,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_poster
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36108)
+        info['gui_string'] = __localize__(36108)
         info['art_type'] = 'poster'
         info['filename'] = 'poster.jpg'
         self.tvshow_arttype_list.append(info)
@@ -233,7 +233,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_seasonposter
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36114)
+        info['gui_string'] = __localize__(36114)
         info['art_type'] = 'seasonposter'
         info['filename'] = 'season'
         self.tvshow_arttype_list.append(info)
@@ -241,7 +241,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_fanart
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36101)
+        info['gui_string'] = __localize__(36101)
         info['art_type'] = 'fanart'
         info['filename'] = 'fanart.jpg'
         self.tvshow_arttype_list.append(info)
@@ -249,7 +249,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_extrafanart
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36102)
+        info['gui_string'] = __localize__(36102)
         info['art_type'] = 'extrafanart'
         info['filename'] = '' 
         self.tvshow_arttype_list.append(info)
@@ -257,7 +257,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_clearart
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36105)
+        info['gui_string'] = __localize__(36105)
         info['art_type'] = 'clearart'
         info['filename'] = 'clearart.png'
         self.tvshow_arttype_list.append(info)
@@ -265,7 +265,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_logo
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36106)
+        info['gui_string'] = __localize__(36106)
         info['art_type'] = 'clearlogo'
         info['filename'] = 'logo.png'
         self.tvshow_arttype_list.append(info)
@@ -273,7 +273,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_thumb
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36109)
+        info['gui_string'] = __localize__(36109)
         info['art_type'] = 'tvthumb'
         info['filename'] = 'landscape.jpg'
         self.tvshow_arttype_list.append(info)
@@ -281,7 +281,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_seasonthumbs
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36113)
+        info['gui_string'] = __localize__(36113)
         info['art_type'] = 'seasonthumbs'
         info['filename'] = 'seasonthumb'
         self.tvshow_arttype_list.append(info)
@@ -289,7 +289,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_showbanner
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36103)
+        info['gui_string'] = __localize__(36103)
         info['art_type'] = 'banner'
         info['filename'] = 'banner.jpg'
         self.tvshow_arttype_list.append(info)
@@ -297,7 +297,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_seasonbanner
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36104)
+        info['gui_string'] = __localize__(36104)
         info['art_type'] = 'seasonbanner'
         info['filename'] = 'seasonbanner'
         self.tvshow_arttype_list.append(info)
@@ -305,7 +305,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_characterart
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36107)
+        info['gui_string'] = __localize__(36107)
         info['art_type'] = 'characterart'
         info['filename'] = 'character.png'
         self.tvshow_arttype_list.append(info)
@@ -313,7 +313,7 @@ class _settings:
         info = {}
         info['bulk_enabled'] = self.tvshow_defaultthumb
         info['solo_enabled'] = 'true'
-        info['gui'] = __localize__(36112)
+        info['gui_string'] = __localize__(36112)
         info['art_type'] = 'defaultthumb'
         info['filename'] = 'folder.jpg'
         self.tvshow_arttype_list.append(info)        

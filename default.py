@@ -372,23 +372,23 @@ def _download_process(self):
         for arttypes in self.settings.movie_arttype_list:
             if arttypes['bulk_enabled']:
                 if arttypes['art_type'] == 'extrafanart':
-                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui_string'])
                 elif arttypes['art_type'] == 'defaultthumb':
-                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])    
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])    
                 elif arttypes['art_type'] == 'extrathumbs':
-                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui'])
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui_string'])
                 else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
 
     if self.settings.tvshow_enable and self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
             if arttypes['bulk_enabled']:
                 if arttypes['art_type'] == 'extrafanart':
-                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui'])
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui_string'])
                 elif arttypes['art_type'] == 'defaultthumb':
-                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
                 else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui'])
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
 
 
 def gui_solomode_imagelist(self, art_type, image_type):
@@ -499,13 +499,13 @@ def gui_solomode(self):
     if self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
             if arttypes['solo_enabled'] == 'true':
-                gui = arttypes['gui']
+                gui = arttypes['gui_string']
                 self.GUI_type_list.append (gui)
     # Fill GUI art type list
     if self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
             if arttypes['solo_enabled'] == 'true':
-                gui = arttypes['gui']
+                gui = arttypes['gui_string']
                 self.GUI_type_list.append (gui)
     # 
     if len(self.GUI_type_list) == 1:
@@ -529,17 +529,17 @@ def choice_type(self):
         # Check what artwork type has been chosen and parse the image restraints
         if self.mediatype == 'tvshow':
             for arttypes in self.settings.tvshow_arttype_list:
-                if self.GUI_type_list[select] == arttypes['gui']:
+                if self.GUI_type_list[select] == arttypes['gui_string']:
                     self.gui_selected_type = arttypes['art_type']
                     self.gui_selected_filename = arttypes['filename']
-                    self.gui_selected_msg = arttypes['gui']
+                    self.gui_selected_msg = arttypes['gui_string']
                     return True
         if self.mediatype == 'movie':
             for arttypes in self.settings.movie_arttype_list:
-                if self.GUI_type_list[select] == arttypes['gui']:
+                if self.GUI_type_list[select] == arttypes['gui_string']:
                     self.gui_selected_type = arttypes['art_type']
                     self.gui_selected_filename = arttypes['filename']
-                    self.gui_selected_msg = arttypes['gui']
+                    self.gui_selected_msg = arttypes['gui_string']
                     return True
             return True
         else:
