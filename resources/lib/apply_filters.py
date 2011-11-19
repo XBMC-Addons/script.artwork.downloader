@@ -16,7 +16,7 @@ class apply_filters:
         if art_type == 'fanart':
             return self.fanart(mediatype, artwork, downloaded_artwork)
         
-        if art_type == 'extrafanart':
+        elif art_type == 'extrafanart':
             return self.extrafanart(mediatype, artwork, downloaded_artwork)
         
         elif art_type == 'extrathumbs':
@@ -51,7 +51,10 @@ class apply_filters:
     def fanart(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
-        if self.settings.limit_artwork and 'height' in artwork and (mediatype == 'movie' and artwork['height'] < self.settings.limit_size_moviefanart) or (mediatype == 'tvshow' and artwork['height'] < self.settings.limit_size_tvshowfanart):
+        if downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number logos reached: %s' % downloaded_artwork
+            limited = True
+        elif self.settings.limit_artwork and 'height' in artwork and (mediatype == 'movie' and artwork['height'] < self.settings.limit_size_moviefanart) or (mediatype == 'tvshow' and artwork['height'] < self.settings.limit_size_tvshowfanart):
             reason = 'Size was to small: %s' % artwork['height'] 
             limited = True
         elif self.settings.limit_artwork and 'rating' in artwork and artwork['rating'] < self.settings.limit_extrafanart_rating:
@@ -99,7 +102,10 @@ class apply_filters:
     def poster(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
-        if self.settings.limit_extrathumbs and 'height' in artwork and artwork['height'] < int('169'):
+        if downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number logos reached: %s' % downloaded_artwork
+            limited = True
+        elif self.settings.limit_extrathumbs and 'height' in artwork and artwork['height'] < int('169'):
             reason = 'Size was to small: %s' % artwork['height']
             limited = True
         elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
@@ -121,7 +127,10 @@ class apply_filters:
     def banner(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
-        if self.settings.limit_artwork and 'rating' in artwork and artwork['rating'] < self.settings.limit_extrafanart_rating:
+        if downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number logos reached: %s' % downloaded_artwork
+            limited = True
+        elif self.settings.limit_artwork and 'rating' in artwork and artwork['rating'] < self.settings.limit_extrafanart_rating:
             reason = 'Rating too low: %s' % artwork['rating']
             limited = True
         elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
@@ -135,6 +144,9 @@ class apply_filters:
         if not 'season' in artwork:
             reason = 'No season'
             limited = True
+        elif downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number logos reached: %s' % downloaded_artwork
+            limited = True
         elif self.settings.limit_artwork and 'rating' in artwork and artwork['rating'] < self.settings.limit_extrafanart_rating:
             reason = 'Rating too low: %s' % artwork['rating']
             limited = True
@@ -146,7 +158,9 @@ class apply_filters:
     def logo(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
-        # no lmits available to use
+        if downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number logos reached: %s' % downloaded_artwork
+            limited = True
         return [limited, reason]
         
     def clearart(self, mediatype, artwork, downloaded_artwork):
@@ -158,11 +172,15 @@ class apply_filters:
     def tvthumb(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
-        # no lmits available to use
+        if downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number logos reached: %s' % downloaded_artwork
+            limited = True
         return [limited, reason]
         
     def seasonthumbs(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
-        # no lmits available to use
+        if downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number logos reached: %s' % downloaded_artwork
+            limited = True
         return [limited, reason]

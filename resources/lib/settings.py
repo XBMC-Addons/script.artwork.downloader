@@ -65,6 +65,7 @@ class _settings:
         self.limit_size_tvshowfanart = int(__addon__.getSetting("limit_size_tvshowfanart"))
         self.limit_extrathumbs = self.limit_artwork
         self.limit_extrathumbs_max = 4
+        self.limit_artwork_max = 1
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
 
@@ -79,7 +80,6 @@ class _settings:
         self.failcount = 0
         self.failthreshold = 3
         self.xmlfailthreshold = 5
-        self.limit_artwork_max = 1
         self.api_timedelay = 5
         self.mediatype = ''
         self.medianame = ''
