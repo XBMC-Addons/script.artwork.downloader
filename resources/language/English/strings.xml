@@ -1,113 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
-    <!-- Add-on messages -->
-        <string id="36037">No settings found!</string>
-        <string id="36003">Different settings version found!</string>
-        <string id="36020">Faulty/empty settings combination found!</string>
-        <string id="36019">Select your preferences and press OK to save</string>
-        <string id="36004">Cleaning up</string>
-        <string id="36001">Error</string>
-        <string id="36002">Error downloading file</string>
-        <string id="36005">Checking for artwork</string>
-        <string id="36006">Downloading</string>
-        <string id="36007">Add-on aborted</string>
-        <string id="36008">Network error detected</string>
-        <string id="36009">Finished</string>
-        <string id="36010">Enable downloading</string>
-        <string id="36011">extrafanart centralized</string>
-        <string id="36012">Choose what to download</string>
-        <string id="36013">artwork downloaded</string>
-        <string id="36014">Cancelled</string>
-        <string id="36015">Download canceled by user</string>
-        <string id="36012">Choose what to download</string>
-        <string id="36016">Which one to download?</string>
-        <string id="36017">Downloaded</string>
-        <string id="36018">-</string>
-        <string id="36038">Select your preferences and press OK to save</string>
+    <!-- Add-on messages id=32001 to 32030 -->
+        <string id="32001">No settings found!</string>
+        <string id="32002">Different settings version found!</string>
+        <string id="32003">Faulty/empty settings combination found!</string>
+        <string id="32004">Select your preferences and press OK to save</string>
+        <string id="32005">Cleaning up</string>
+        <string id="32006">Error</string>
+        <string id="32007">Error downloading file</string>
+        <string id="32008">Searching for artwork</string>
+        <string id="32009">Downloading</string>
+        <string id="32010">Add-on aborted</string>
+        <string id="32011">Network error detected</string>
+        <string id="32012">Finished</string>
+        <string id="32013">Enable downloading</string>
+        <string id="32014">extrafanart centralized</string>
+        <string id="32015">Choose what to download</string>
+        <string id="32016">artwork downloaded</string>
+        <string id="32017">Cancelled</string>
+        <string id="32018">Download canceled by user</string>
+        <string id="32019">Which one to download?</string>
+        <string id="32020">Downloaded</string>
+        <string id="32021">Select your preferences and press OK to save</string>
+        <string id="32022">-</string>
+        <string id="32023">-</string>
+        <string id="32024">-</string>
+        <string id="32025">-</string>
+        <string id="32026">-</string>
+        <string id="32027">-</string>
+        <string id="32028">-</string>
+        <string id="32029">-</string>
+        <string id="32030">-</string>
+
+    <!-- Add-on settings: General section id=32031 to 32050 -->
+        <string id="32031">General settings</string>
+        <string id="32032">[B]General settings used in Extrafanart Downloader[/B]</string>
+        <string id="32033">Run in background</string>        
+        <string id="32034">Show dialog on finished/errors</string>
+        <string id="32035">Overwrite all existing artwork [I](will be automaticly disabled after downloading)[/I] </string>
+        <string id="32036">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
+        <string id="32037">Central TV fanart directory</string>
+        <string id="32038">Central Movie fanart directory</string>
+        <string id="32039">-</string>
+        <string id="32040">-</string>
         
-    <!-- Add-on settings: General section -->
-        <string id="36021">General settings</string>
-        <string id="36022">[B]General settings used in Extrafanart Downloader[/B]</string>
-        <string id="36023">Run in background</string>        
-        <string id="36044">Show dialog on finished/errors</string>
-        <string id="36046">Overwrite all existing artwork [I](will be automaticly disabled after downloading)[/I] </string>
-        <string id="36030">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
-        <string id="36032">Central TV fanart directory</string>
-        <string id="36031">Central Movie fanart directory</string>
+    <!-- Add-on settings: Limit section id=32051 to 32060 -->
+        <string id="32051">Limit Artwork</string>
+        <string id="32052">[B]Options for limiting downloaded artwork[/B]</string>
+        <string id="32053">Maximum extrafanart</string>
+        <string id="32054">Minimum rating</string>
+        <string id="32055">Current language only</string>
+        <string id="32056">Exclude fanart that has text</string>
+        <string id="32057">Minimum fanart size: Movies</string>
+        <string id="32058">Minimum fanart size: TV Show</string>
+        <string id="32059">1080</string>
+        <string id="32060">720</string>
+        <string id="32061">480</string>
 
-    <!-- Add-on settings: Limit section -->
-        <string id="36033">Limit Artwork</string>
-        <string id="36045">[B]Options for limiting downloaded artwork[/B]</string>
-        <string id="36034">Maximum extrafanart</string>
-        <string id="36035">Minimum rating</string>
-        <string id="36036">Current language only</string>
-        <string id="36063">Exclude fanart that has text</string>
-        <string id="36039">Minimum fanart size: Movies</string>
-        <string id="36040">Minimum fanart size: TV Show</string>
-        <string id="36041">1080</string>
-        <string id="36042">720</string>
-        <string id="36043">480</string>
+    <!-- Add-on settings: Movie section id=32071 to 32080 -->
+        <string id="32071">Movies</string>
+        <string id="32072">[B]Options for downloading Movie artwork[/B]</string>
 
-    <!-- Add-on settings: Movie section -->
-        <string id="36051">Movies</string>
-        <string id="36052">[B]Options for downloading Movie artwork[/B]</string>
+    <!-- Add-on settings: TV Show section id=32081 to 32090 -->
+        <string id="32081">TV Shows</string>
+        <string id="32082">[B]Options for downloading TV Show artwork[/B]</string>
 
-    <!-- Add-on settings: TV Show section -->
-        <string id="36061">TV Shows</string>
-        <string id="36062">[B]Options for downloading TV Show artwork[/B]</string>
+    <!-- Add-on settings: Music section id=32091 to 32100 -->
+        <string id="32091">Music</string>
+        <string id="32092">[B]Options for downloading Music artwork[/B]</string>
 
-    <!-- Add-on settings: Music section -->
-        <string id="36071">Music</string>
-        <string id="36072">[B]Options for downloading Music artwork[/B]</string>
+    <!-- Add-on settings: Advanced settings section id=32101 to 32020 -->   
+        <string id="32101">Advanced settings</string>
+        <string id="32102">[B]Some advanced settings to be used[/B]</string>
+        <string id="32103">Keep backup of all downloaded fanart</string>
+        <string id="32104">Backup folder</string>
+        <string id="32105">[I]Warning: folder can increase to considerable size[/I]</string>
 
-    <!-- Add-on settings: Advanced settings section -->   
-        <string id="36081">Advanced settings</string>
-        <string id="36086">[B]Some advanced settings to be used[/B]</string>
-        <string id="36200">Keep backup of all downloaded fanart</string>
-        <string id="36201">Backup folder</string>
-        <string id="36202">[I]Warning: folder can increase to considerable size[/I]</string>
+    <!-- Add-on messages: Image types id=32121 to 32140 -->
+        <string id="32121">Fanart</string>
+        <string id="32122">Extrafanart</string>
+        <string id="32123">Banner</string>
+        <string id="32124">Season Banners</string>
+        <string id="32125">ClearArt</string>
+        <string id="32126">Logo</string>
+        <string id="32127">Character Art</string>
+        <string id="32128">Poster</string>
+        <string id="32129">Season Posters</string>
+        <string id="32130">Thumb</string>
+        <string id="32131">Extrathumbs</string>
+        <string id="32132">Disc Art</string>
+        <string id="32133">Default Thumb</string>
+        <string id="32134">Season Thumbs</string>
 
-    <!-- Add-on settings: Info section -->   
-        <string id="36091">Info</string>
-        <string id="36092">Please make a donation or contribute to following sites to show your support:</string>
-        <string id="36093">[I]www.xbmc.org[/I] </string>
-        <string id="36094">[I]www.fanart.tv[/I] </string>
-        <string id="36095">[I]www.thetvdb.com[/I] </string>
-        <string id="36096">[I]www.themoviedb.org[/I] </string>
-        <string id="36097">Add-on dev's:</string>
-        <string id="36098">[I]paddycarey, machine-sanctum, pudneyj [/I] </string>
-        <string id="36099">Thanks to:</string>
-        <string id="36100">Team XBMC and all other dev's on which this add-on was based on.</string>
+    <!-- Add-on messages: Image types not found id=32141 to 32160 -->
+        <string id="32141">No Fanart found!</string>
+        <string id="32142">No Extrafanart found!</string>
+        <string id="32143">No Banner found!</string>
+        <string id="32144">No Season Banners found!</string>
+        <string id="32145">No ClearArt found!</string>
+        <string id="32146">No Logo found!</string>
+        <string id="32147">No Character Art found!</string>
+        <string id="32148">No Poster found!</string>
+        <string id="32149">No Season Posters found!</string>
+        <string id="32150">No Thumb found!</string>
+        <string id="32151">No Extrathumbs found!</string>
+        <string id="32152">No Disc Art found!</string>
+        <string id="32153">No Default Thumb found!</string>
+        <string id="32154">No Season Thumbs found!</string>
         
-    <!-- Add-on settings: Image types -->
-        <string id="36101">Fanart</string>
-        <string id="36102">Extrafanart</string>
-        <string id="36103">Banner</string>
-        <string id="36104">Season Banners</string>
-        <string id="36105">ClearArt</string>
-        <string id="36106">Logo</string>
-        <string id="36107">Character Art</string>
-        <string id="36108">Poster</string>
-        <string id="36114">Season Posters</string>
-        <string id="36109">Thumb</string>
-        <string id="36110">Extrathumbs</string>
-        <string id="36111">Disc Art</string>
-        <string id="36112">Default Thumb</string>
-        <string id="36113">Season Thumbs</string>
-
-    <!-- Add-on settings: Image types not found -->
-        <string id="36121">No Fanart found!</string>
-        <string id="36122">No Extrafanart found!</string>
-        <string id="36123">No Banner found!</string>
-        <string id="36124">No Season Banners found!</string>
-        <string id="36125">No ClearArt found!</string>
-        <string id="36126">No Logo found!</string>
-        <string id="36127">No Character Art found!</string>
-        <string id="36128">No Poster found!</string>
-        <string id="36124">No Season Posters found!</string>
-        <string id="36129">No Thumb found!</string>
-        <string id="36130">No Extrathumbs found!</string>
-        <string id="36131">No Disc Art found!</string>
-        <string id="36132">No Default Thumb found!</string>
-        <string id="36133">No Season Thumbs found!</string>
+    <!-- Add-on settings: Info section id=32181 to 32190-->   
+        <string id="32181">Info</string>
+        <string id="32182">Please make a donation or contribute to following sites to show your support:</string>
+        <string id="32183">[I]www.xbmc.org[/I] </string>
+        <string id="32184">[I]www.fanart.tv[/I] </string>
+        <string id="32185">[I]www.thetvdb.com[/I] </string>
+        <string id="32186">[I]www.themoviedb.org[/I] </string>
+        <string id="32187">Add-on dev's:</string>
+        <string id="32188">[I]paddycarey, machine-sanctum, pudneyj [/I] </string>
+        <string id="32189">Thanks to:</string>
+        <string id="32190">Team XBMC and all other dev's on which this add-on was based on.</string>
 </strings>

@@ -39,7 +39,7 @@ SOURCEPATH = __cwd__
 ### clean up temporary folder
 def cleanup(self):
     if self.fileops._exists(self.fileops.tempdir):
-        dialog('update', percentage = 100, line1 = __localize__(36004), background = self.settings.background)
+        dialog('update', percentage = 100, line1 = __localize__(32005), background = self.settings.background)
         log('Cleaning up temp files')
         for x in os.listdir(self.fileops.tempdir):
             tempfile = os.path.join(self.fileops.tempdir, x)
@@ -52,21 +52,21 @@ def cleanup(self):
         else:
             log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
     ### log results and notify user
-    summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
-    summary = summary_tmp + __localize__(36013)
+    summary_tmp = __localize__(32012) + ': %s ' % self.fileops.downloadcount
+    summary = summary_tmp + __localize__(32016)
     dialog('close', background = self.settings.background)
     if self.settings.notify:
         log('Notify on finished/error enabled')
         self.settings.background = False
     if not self.settings.failcount < self.settings.failthreshold:
         log('Network error detected, script aborted', xbmc.LOGERROR)
-        dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.settings.background)
+        dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
     if self.mode == 'gui':
         log('')
     elif not xbmc.abortRequested:
         dialog('okdialog', line1 = summary, background = self.settings.background)
     else:
-        dialog('okdialog', line1 = __localize__(36007), line2 = summary, background = self.settings.background)
+        dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
 
 
 class Main:
@@ -79,7 +79,7 @@ class Main:
         self.settings._vars()       # Get some settings vars
         self.settings._artype_list()# Fill out the GUI and Arttype lists with enabled options
         runmode_args(self)          # Check for script call methods
-        dialog('create', line1 = __localize__(36005), background = self.settings.background)
+        dialog('create', line1 = __localize__(32008), background = self.settings.background)
         if initialise(self):
             if not self.mediatype == '':
                 if not self.medianame == '':
@@ -252,7 +252,7 @@ def download_artwork(self, media_list, providers):
         # Declare some vars
         self.media_id = currentmedia["id"]
         self.media_name = currentmedia["name"]
-        dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(36005), line3 = '', background = self.settings.background)
+        dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(32008), line3 = '', background = self.settings.background)
         log('########################################################')
         log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
         log('ID: %s' % self.media_id)
@@ -400,7 +400,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     elif art_type == 'seasonposter':
         artworkfile = (filename+'%s.tbn' %artwork['season'])
     else: artworkfile = filename
-    dialog('create', line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg + ': ' + artworkfile)
+    dialog('create', line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg + ': ' + artworkfile)
     # Try downloading the file
     try:
         self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true')
@@ -420,7 +420,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
         log('Error downloading file: %s (Possible network error: %s), skipping' % (self.image_url, str(e)), xbmc.LOGERROR)
         self._download_art_succes = False
     dialog('close')
-    dialog('okdialog', line1 = self.media_name, line2 = __localize__(36017) + ' ' + msg + ': ' + artworkfile)
+    dialog('okdialog', line1 = self.media_name, line2 = __localize__(32020) + ' ' + msg + ': ' + artworkfile)
     log('Finished with: %s' %art_type)
 
 
@@ -473,7 +473,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                 else:
                     downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
+            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
 
 def _gui_solomode(self):
@@ -504,16 +504,16 @@ def _gui_solomode(self):
         if _choose_image(self):
             _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
             if not self._download_art_succes:
-                xbmcgui.Dialog().ok(__localize__(36001) , __localize__(36002) )
+                xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
 
         
 
 # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
 def _choice_type(self):
-    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.GUI_type_list)
+    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , self.GUI_type_list)
     if select == -1: 
         log( "### Canceled by user" )
-        xbmcgui.Dialog().ok(__localize__(36014) , __localize__(36015) )
+        xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
         return False
     else:
         # Check what artwork type has been chosen and parse the image restraints
@@ -562,7 +562,7 @@ class MainGui( xbmcgui.WindowXMLDialog ):
             self.img_list = self.getControl(3)
 
         self.getControl(5).setVisible(False)
-        self.getControl(1).setLabel(__localize__(36016))
+        self.getControl(1).setLabel(__localize__(32019))
 
         for image in self.listing :
             listitem = xbmcgui.ListItem( image.split("/")[-1] )
