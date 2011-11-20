@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
-    <!-- Plugin settings -->
+    <!-- Add-on messages -->
+        <string id="36037">No settings found!</string>
+        <string id="36003">Different settings version found!</string>
+        <string id="36020">Faulty/empty settings combination found!</string>
+        <string id="36019">Select your preferences and press OK to save</string>
+        <string id="36004">Cleaning up</string>
         <string id="36001">Error</string>
         <string id="36002">Error downloading file</string>
-        <string id="36003">Different settings version found!</string>
-        <string id="36004">Cleaning up</string>
         <string id="36005">Checking for artwork</string>
         <string id="36006">Downloading</string>
         <string id="36007">Add-on aborted</string>
@@ -16,16 +19,13 @@
         <string id="36013">artwork downloaded</string>
         <string id="36014">Cancelled</string>
         <string id="36015">Download canceled by user</string>
-        <string id="36016">Which one to download ?</string>
+        <string id="36012">Choose what to download</string>
+        <string id="36016">Which one to download?</string>
         <string id="36017">Downloaded</string>
         <string id="36018">-</string>
-        <string id="36019">Select the preferences and press OK to save</string>
-        <string id="36020">Faulty/empty settings combination found!</string>
-        <string id="36037">No settings found!</string>
         <string id="36038">Select your preferences and press OK to save</string>
-
         
-    <!-- Plugin settings: General section -->
+    <!-- Add-on settings: General section -->
         <string id="36021">General settings</string>
         <string id="36022">[B]General settings used in Extrafanart Downloader[/B]</string>
         <string id="36023">Run in background</string>        
@@ -35,40 +35,51 @@
         <string id="36032">Central TV fanart directory</string>
         <string id="36031">Central Movie fanart directory</string>
 
-
-    <!-- Plugin settings: Limit section -->
+    <!-- Add-on settings: Limit section -->
         <string id="36033">Limit Artwork</string>
         <string id="36045">[B]Options for limiting downloaded artwork[/B]</string>
         <string id="36034">Maximum extrafanart</string>
         <string id="36035">Minimum rating</string>
         <string id="36036">Current language only</string>
+        <string id="36063">Exclude fanart that has text</string>
         <string id="36039">Minimum fanart size: Movies</string>
         <string id="36040">Minimum fanart size: TV Show</string>
         <string id="36041">1080</string>
         <string id="36042">720</string>
         <string id="36043">480</string>
 
-    <!-- Plugin settings: Movie section -->
+    <!-- Add-on settings: Movie section -->
         <string id="36051">Movies</string>
         <string id="36052">[B]Options for downloading Movie artwork[/B]</string>
 
-    <!-- Plugin settings: TV Show section -->
+    <!-- Add-on settings: TV Show section -->
         <string id="36061">TV Shows</string>
         <string id="36062">[B]Options for downloading TV Show artwork[/B]</string>
-        <string id="36063">Exclude fanart that has text</string>
 
-    <!-- Plugin settings: Music section -->
+    <!-- Add-on settings: Music section -->
         <string id="36071">Music</string>
         <string id="36072">[B]Options for downloading Music artwork[/B]</string>
 
-    <!-- Plugin settings: Advanced settings section -->   
+    <!-- Add-on settings: Advanced settings section -->   
         <string id="36081">Advanced settings</string>
         <string id="36086">[B]Some advanced settings to be used[/B]</string>
         <string id="36200">Keep backup of all downloaded fanart</string>
         <string id="36201">Backup folder</string>
         <string id="36202">[I]Warning: folder can increase to considerable size[/I]</string>
 
-    <!-- Plugin settings: Image types -->
+    <!-- Add-on settings: Info section -->   
+        <string id="36091">Info</string>
+        <string id="36092">Please make a donation or contribute to following sites to show your support:</string>
+        <string id="36093">[I]www.xbmc.org[/I] </string>
+        <string id="36094">[I]www.fanart.tv[/I] </string>
+        <string id="36095">[I]www.thetvdb.com[/I] </string>
+        <string id="36096">[I]www.themoviedb.org[/I] </string>
+        <string id="36097">Add-on dev's:</string>
+        <string id="36098">[I]paddycarey, machine-sanctum, pudneyj [/I] </string>
+        <string id="36099">Thanks to:</string>
+        <string id="36100">Team XBMC and all other dev's on which this add-on was based on.</string>
+        
+    <!-- Add-on settings: Image types -->
         <string id="36101">Fanart</string>
         <string id="36102">Extrafanart</string>
         <string id="36103">Banner</string>
@@ -84,6 +95,7 @@
         <string id="36112">Default Thumb</string>
         <string id="36113">Season Thumbs</string>
 
+    <!-- Add-on settings: Image types not found -->
         <string id="36121">No Fanart found!</string>
         <string id="36122">No Extrafanart found!</string>
         <string id="36123">No Banner found!</string>

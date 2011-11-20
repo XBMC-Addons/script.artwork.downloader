@@ -87,4 +87,20 @@
         <setting label="36202" type="lsep" visible="eq(-1,true)"/>
         <setting label="36201" id="cache_directory" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>   
     </category>
+    
+<!-- Plugin settings: Advanced section -->
+    <category label="36091" id="section_info">
+        <setting type="sep" />
+        <setting label="36092" type="lsep" />
+        <setting label="36093" type="lsep" subsetting= "true"/>
+        <setting label="36094" type="lsep" subsetting= "true"/>
+        <setting label="36095" type="lsep" subsetting= "true"/>
+        <setting label="36096" type="lsep" subsetting= "true"/>
+        <setting label="" type="lsep" />
+        <setting label="36097" type="lsep" />
+        <setting label="36098" type="lsep" subsetting= "true"/>
+        <setting label="" type="lsep" />
+        <setting label="36099" type="lsep" />
+        <setting label="36100" type="lsep" subsetting= "true"/>
+    </category>
 </settings>
