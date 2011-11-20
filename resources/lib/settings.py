@@ -74,6 +74,7 @@ class _settings:
         self.background = __addon__.getSetting("background") == 'true'
         self.notify = __addon__.getSetting("notify") == 'true'
         self.overwrite = __addon__.getSetting("overwrite") == 'true'
+        self.xbmc_caching_enabled = __addon__.getSetting("xbmc_caching_enabled") == 'true'
 
     ### Initial startup vars
     def _vars(self):
@@ -133,6 +134,7 @@ class _settings:
         
         log('## Backup fanart           = %s' % str(self.use_cache))
         log('## Backup folder           = %s' % str(self.cache_directory))
+        log('## XBMC caching enabled    = %s' % str(self.xbmc_caching_enabled))
         log('##')
         log('## End of Settings...')
 

@@ -3,10 +3,11 @@ import socket
 import urllib2
 import xbmc
 import xbmcvfs
+from traceback import print_exc
 from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
 from resources.lib import utils
-from traceback import print_exc
+from resources.lib.settings import _settings
 THUMBS_CACHE_PATH = os.path.join( xbmc.translatePath( "special://profile/" ), "Thumbnails/Video" )
 
 log = utils._log
@@ -27,7 +28,8 @@ class fileops:
         """Initialise needed directories/vars for fileops"""
 
         log("Setting up fileops")
-
+        self.settings = _settings()
+        self.settings._get()
         self._exists = lambda path: xbmcvfs.exists(path)
         self._rmdir = lambda path: xbmcvfs.rmdir(path)
         self._mkdir = lambda path: xbmcvfs.mkdir(path)
@@ -159,7 +161,8 @@ class fileops:
                 self.downloadcount = self.downloadcount + 1
                 for filenotexistspath in filenotexistspaths:
                     self._copyfile(temppath, filenotexistspath)
-            self.erase_current_cache(targetdir, filename)
+            if self.settings.xbmc_caching_enabled:
+                self.erase_current_cache(targetdir, filename)
         elif not False in fileexists:
             log("Ignoring (Exists in all target directories): %s" % filename, xbmc.LOGINFO)
         else:

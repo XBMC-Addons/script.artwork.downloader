@@ -85,10 +85,12 @@
         <setting type="sep" />
         <setting label="32103" id="use_cache" type="bool"  default="false"/>
         <setting label="32105" type="lsep" visible="eq(-1,true)"/>
-        <setting label="32104" id="cache_directory" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>   
+        <setting label="32104" id="cache_directory" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
+        <setting type="sep" />
+        <setting label="32106" id="xbmc_caching_enabled" type="bool"  default="false"/>
     </category>
     
-<!-- Plugin settings: Advanced section -->
+<!-- Plugin settings: Info section -->
     <category label="32181" id="section_info">
         <setting type="sep" />
         <setting label="32182" type="lsep" />
