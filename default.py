@@ -1,3 +1,4 @@
+### import
 import re
 import os
 import time
@@ -7,7 +8,6 @@ import xbmcaddon
 import platform
 import xbmcgui
 from traceback import print_exc
-
 
 ### import libraries
 from resources.lib import media_setup
@@ -84,7 +84,8 @@ class Main:
             if not self.mediatype == '':
                 if not self.medianame == '':
                     if self.mode == 'gui':
-                        gui_mode(self, self.mediatype, self.medianame)
+                        # 'Mode check is at the end of: 'def download_artwork'
+                        solo_mode(self, self.mediatype, self.medianame)
                     else:
                         solo_mode(self, self.mediatype, self.medianame)
                 else:
@@ -120,7 +121,6 @@ class Main:
         finished_log(self)
 
 
-    
 ### Declare standard vars   
 def initial_vars(self):
     providers = provider.get_providers()
@@ -135,7 +135,7 @@ def initial_vars(self):
     self.gui_selected_type = ''
     self.gui_imagelist = ''
 
-### Report the total numbers of downloaded images
+### Report the total numbers of downloaded images (needs some work for correct totals)
 def finished_log(self):
     log('## Download totaliser:')
     log('- Artwork: %s' % self.fileops.downloadcount, xbmc.LOGNOTICE)
@@ -169,7 +169,6 @@ def runmode_args(self):
     except:   log( "## no arg8" )
 
 
-
 ### solo mode
 def solo_mode(self, itemtype, itemname):
     if itemtype == 'movie':
@@ -197,35 +196,7 @@ def solo_mode(self, itemtype, itemname):
                 download_artwork(self, self.Medialist, self.tv_providers)
             break
 
-### gui mode
-def gui_mode(self, itemtype, itemname):
-    if itemtype == 'movie':
-        log("## GUI mode: Movie...")
-        self.Medialist = Media_listing('movie')
-    elif itemtype == 'tvshow':
-        self.Medialist = Media_listing('tvshow')
-        log("## GUI mode: TV Show...")
-    elif itemtype == 'music':
-        self.Medialist = Media_listing('music')
-        log("## GUI mode: Music...")
-    else:
-        log("Error: type must be one of 'movie', 'tvshow' or 'music', aborting", xbmc.LOGERROR)
-        return False
-    log('Retrieving fanart for: %s' % itemname)
-    for currentitem in self.Medialist:
-        if itemname == currentitem["name"]:
-            if itemtype == 'movie':
-                self.Medialist = []
-                self.Medialist.append(currentitem)
-                download_artwork(self, self.Medialist, self.movie_providers)
-            if itemtype == 'tvshow':
-                self.Medialist = []
-                self.Medialist.append(currentitem)
-                download_artwork(self, self.Medialist, self.tv_providers)
-            break
-
-
-            
+           
 ### load settings and initialise needed directories
 def initialise(self):
     for item in sys.argv:
@@ -251,9 +222,8 @@ def initialise(self):
             self.medianame = item.replace("medianame=" , "")
         else:
             pass
-
-            
     try:
+        # Creates temp folder
         self.fileops = fileops()
     except CreateDirectoryError, e:
         log("Could not create directory: %s" % str(e))
@@ -274,10 +244,12 @@ def download_artwork(self, media_list, providers):
             break
         if not self.settings.failcount < self.settings.failthreshold:
             break
+        # Check for stacked movies
         try:
             self.media_path = os.path.split(currentmedia["path"])[0].rsplit(' , ', 1)[1]
         except:
             self.media_path = os.path.split(currentmedia["path"])[0]
+        # Declare some vars
         self.media_id = currentmedia["id"]
         self.media_name = currentmedia["name"]
         dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(36005), line3 = '', background = self.settings.background)
@@ -285,6 +257,7 @@ def download_artwork(self, media_list, providers):
         log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
         log('ID: %s' % self.media_id)
         log('Path: %s' % self.media_path)
+        # Declare the target folders
         self.target_extrafanartdirs = []
         self.target_extrathumbsdirs = []
         self.target_artworkdir = []
@@ -309,6 +282,7 @@ def download_artwork(self, media_list, providers):
         self.targets = self.target_extrafanartdirs[:]
         if self.settings.use_cache and not self.settings.cache_directory == '':
             self.targets.append(self.settings.cache_directory)
+        # Check for id used by source sites
         if self.media_id == '':
             log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
         elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
@@ -316,6 +290,7 @@ def download_artwork(self, media_list, providers):
         else:
             self.temp_image_list = []
             self.image_list = []
+            # Run through all providers getting their imagelisting
             for self.provider in providers:
                 if not self.settings.failcount < self.settings.failthreshold:
                     break
@@ -364,9 +339,10 @@ def download_artwork(self, media_list, providers):
                     self.download_max = self.settings.limit_extrafanart_max
                 else:
                     self.download_max = len(self.image_list)
+                # Check for GUI mode
                 if self.mode == 'gui':
                     log('here goes gui mode')
-                    gui_solomode(self)
+                    _gui_solomode(self)
                 else:
                     _download_process(self)
 
@@ -397,7 +373,7 @@ def _download_process(self):
                     _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
 
 
-def gui_solomode_imagelist(self, art_type, image_type):
+def _gui_solomode_imagelist(self, art_type, image_type):
     log('Retrieving image list for GUI')
     self.gui_imagelist = []
     for artwork in self.image_list:
@@ -500,7 +476,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
 
-def gui_solomode(self):
+def _gui_solomode(self):
     # Close the 'checking for artwork' dialog before opening the GUI list
     dialog('close', background = self.settings.background)
     self.GUI_type_list = []
@@ -519,13 +495,13 @@ def gui_solomode(self):
     # 
     if len(self.GUI_type_list) == 1:
         self.GUI_type_list[0] = "True"
-    if ( len(self.GUI_type_list) == 1 ) or choice_type(self):
+    if ( len(self.GUI_type_list) == 1 ) or _choice_type(self):
         self.tmp_image_list = False
-        gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
+        _gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
     # Download the selected image
     if self.gui_imagelist:
-        if choose_image(self):
+        if _choose_image(self):
             _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
             if not self._download_art_succes:
                 xbmcgui.Dialog().ok(__localize__(36001) , __localize__(36002) )
@@ -533,7 +509,7 @@ def gui_solomode(self):
         
 
 # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
-def choice_type(self):
+def _choice_type(self):
     select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(36012) , self.GUI_type_list)
     if select == -1: 
         log( "### Canceled by user" )
@@ -559,7 +535,7 @@ def choice_type(self):
         else:
             return False
         
-def choose_image(self):
+def _choose_image(self):
     log( "### image list: %s" % self.gui_imagelist)
     self.image_url = MyDialog(self.gui_imagelist)
     if self.image_url:
