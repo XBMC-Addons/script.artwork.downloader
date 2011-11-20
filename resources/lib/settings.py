@@ -217,7 +217,7 @@ class _settings:
         info['bulk_enabled'] = self.movie_defaultthumb
         info['solo_enabled'] = 'true'
         info['gui_string'] = __localize__(36112)
-        info['art_type'] = 'defaultthumb'
+        info['art_type'] = 'poster'
         info['filename'] = 'folder.jpg'
         self.movie_arttype_list.append(info)
 
@@ -314,7 +314,7 @@ class _settings:
         info['bulk_enabled'] = self.tvshow_defaultthumb
         info['solo_enabled'] = 'true'
         info['gui_string'] = __localize__(36112)
-        info['art_type'] = 'defaultthumb'
+        info['art_type'] = 'poster'
         info['filename'] = 'folder.jpg'
         self.tvshow_arttype_list.append(info)        
         
