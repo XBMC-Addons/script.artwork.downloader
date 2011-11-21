@@ -73,10 +73,8 @@ class fileops:
             copy = xbmcvfs.copy( filename , cached_thumb )
             if copy:
                 log( "Cache succesful" )
-                '''this needs by worked out.
-                if self.main.mode == 'gui':
+                if self.reset_skin:
                     xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
-                '''
             else:
                 log( "Failed to copy to cached thumb" )
         except :
@@ -115,14 +113,14 @@ class fileops:
             log("Copied successfully: %s" % targetpath)
 
 
-    def _downloadfile(self, url, filename, targetdirs, overwrite):
+    def _downloadfile(self, url, filename, targetdirs, overwrite, reset_skin = False):
 
         """
         Download url to filename and place in all targetdirs.  If file
         already exists in any of the targetdirs it is copied from there
         to the others instead of being downloaded again.
         """
-
+        self.reset_skin = reset_skin
         fileexists = []
         filenotexistspaths = []
         for targetdir in targetdirs:

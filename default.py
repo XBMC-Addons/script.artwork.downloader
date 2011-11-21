@@ -404,7 +404,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     dialog('create', line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg + ': ' + artworkfile)
     # Try downloading the file
     try:
-        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true')
+        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true', 'true')
         self._download_art_succes = True
     except HTTP404Error, e:
         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
