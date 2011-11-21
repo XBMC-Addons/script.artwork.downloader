@@ -2,10 +2,22 @@ import re
 import xbmc
 import urllib
 import simplejson
+import unicodedata
 from resources.lib.utils import _log as log
 
 ### get list of all tvshows and movies with their imdbnumber from library
 
+# Fixes unicode problems
+def _unicode( text, encoding='utf-8' ):
+    try: text = unicode( text, encoding )
+    except: pass
+    return text
+
+def normalize_string( text ):
+    try: text = unicodedata.normalize( 'NFKD', _unicode( text ) ).encode( 'ascii', 'ignore' )
+    except: pass
+    return text
+# Retrieve JSON list
 def media_listing(media_type):
         log('Using JSON for retrieving %s info' %media_type)
         Medialist = []
@@ -15,7 +27,7 @@ def media_listing(media_type):
             if jsonobject['result'].has_key('tvshows'):
                 for item in jsonobject['result']['tvshows']:
                     Media = {}
-                    Media['name'] = item['label']
+                    Media['name'] = normalize_string(item['label'])
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['tvshowid'] = item['tvshowid']
@@ -34,7 +46,7 @@ def media_listing(media_type):
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
                     Media = {}
-                    Media['name'] = item['label']
+                    Media['name'] = normalize_string(item['label'])
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['movieid'] = item['movieid']

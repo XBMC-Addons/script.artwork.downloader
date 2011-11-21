@@ -2,16 +2,27 @@
 <!-- These are just examples of how the script can be called from with in the skin --> 
 <!-- The examples are taken from the Aeon Nox(pre-Eden11.0) skin made by Big Noid -->
 
-<!-- Calling the script to download extrafanart for just one movie/tvshow --> 
+<!-- Calling the script to download extrafanart for just one movie/tvshow using the add-on settings--> 
 	<item id="8">
-		<description>Get Extrafanart</description>
+		<description>Get Artwork</description>
 		<label>$LOCALIZE[31316]</label>
 		<onclick condition="Container.Content(tvshows)">XBMC.RunScript(script.extrafanartdownloader, mediatype=tvshow, medianame=$INFO[ListItem.TVShowTitle])</onclick>
 		<onclick condition="Container.Content(movies)">XBMC.RunScript(script.extrafanartdownloader, mediatype=movie, medianame=$INFO[ListItem.Title])</onclick>
 		<visible>[Container.Content(tvshows)|Container.Content(movies)]+system.hasaddon(script.extrafanartdownloader)</visible>
 	</item>
 		  
-  
+
+<!-- Calling the script to download extrafanart for just one movie/tvshow with GUI mode so user can select the artwork he wants--> 
+	<item id="8">
+		<description>Get Artwork</description>
+		<label>$LOCALIZE[31316]</label>
+		<onclick condition="Container.Content(tvshows)">XBMC.RunScript(script.extrafanartdownloader, mediatype=tvshow, medianame=$INFO[ListItem.TVShowTitle])</onclick>
+		<onclick condition="Container.Content(movies)">XBMC.RunScript(script.extrafanartdownloader, mediatype=movie, medianame=$INFO[ListItem.Title])</onclick>
+		<visible>[Container.Content(tvshows)|Container.Content(movies)]+system.hasaddon(script.extrafanartdownloader)</visible>
+	</item>
+
+
+          
  <!-- Showing off the extrafanart as a slideshow -->
 	<control type="multiimage">
 		<posx>715</posx>

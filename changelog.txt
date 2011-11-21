@@ -16,6 +16,9 @@
 - Added: TV Show Banner
 - Added: TV Show Season Banner
 - Added: TV Show Thumb
+- Added: Solo run mode with GUI
+- Added: Overwrite all artwork option (will be reset when finished)
+- Added: Automatic caching of downloaded files
 
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies

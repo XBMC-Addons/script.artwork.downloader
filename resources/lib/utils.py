@@ -11,7 +11,7 @@ operation of script.extrafanartdownloader
 """
 
 ### get addon info
-__addon__ = xbmcaddon.Addon('script.artwork.downloader')
+__addon__ = xbmcaddon.Addon()
 __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
@@ -28,7 +28,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
     try:
-        message = 'script.artwork.downloader: %s' % txt
+        message = 'Artwork Downloader: %s' % txt
         xbmc.log(msg=message, level=severity)
     except:
         xbmc.log('ASCII character error')
@@ -37,7 +37,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', background = False):
     if not background:
         if action == 'create':
-            dialog.create(__addonname__, line1)
+            dialog.create(__addonname__, line1, line2, line3)
         if action == 'update':
             dialog.update(percentage, line1, line2, line3)
         if action == 'close':
@@ -48,7 +48,7 @@ def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', backgrou
             else:
                 return False
         if action == 'okdialog':
-            xbmcgui.Dialog().ok(__addonname__, line1, line2)
+            xbmcgui.Dialog().ok(__addonname__, line1, line2, line3)
     if background:
         if (action == 'create' or action == 'okdialog'):
             if line2 == '':

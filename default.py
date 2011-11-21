@@ -1,3 +1,4 @@
+### import
 import re
 import os
 import time
@@ -5,14 +6,10 @@ import sys
 import xbmc
 import xbmcaddon
 import platform
+import xbmcgui
+from traceback import print_exc
 
-### get addon info
-__addon__ = xbmcaddon.Addon('script.artwork.downloader')
-__addonid__ = __addon__.getAddonInfo('id')
-__addonname__ = __addon__.getAddonInfo('name')
-__addonversion__ = __addon__.getAddonInfo('version')
-__localize__ = __addon__.getLocalizedString
-
+### import libraries
 from resources.lib import media_setup
 from resources.lib import provider
 from resources.lib.utils import _log as log
@@ -23,16 +20,26 @@ from resources.lib.fileops import fileops
 from xml.parsers.expat import ExpatError
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
+from resources.lib.gui import _maingui
 
-Media_listing = media_setup.media_listing
+### get addon info
+__addon__       = xbmcaddon.Addon()
+__addonid__     = __addon__.getAddonInfo('id')
+__addonname__   = __addon__.getAddonInfo('name')
+__author__      = __addon__.getAddonInfo('author')
+__version__     = __addon__.getAddonInfo('version')
+__localize__    = __addon__.getLocalizedString
+__cwd__       = __addon__.getAddonInfo('path')
 __language__ = language.get_abbrev()
+Media_listing = media_setup.media_listing
+ACTION_PREVIOUS_MENU = ( 9, 10, 92, 216, 247, 257, 275, 61467, 61448, )
+SOURCEPATH = __cwd__
 
 
-
-### clean up and
+### clean up temporary folder
 def cleanup(self):
     if self.fileops._exists(self.fileops.tempdir):
-        dialog('update', percentage = 100, line1 = __localize__(36004), background = self.settings.background)
+        dialog('update', percentage = 100, line1 = __localize__(32005), background = self.settings.background)
         log('Cleaning up temp files')
         for x in os.listdir(self.fileops.tempdir):
             tempfile = os.path.join(self.fileops.tempdir, x)
@@ -45,19 +52,21 @@ def cleanup(self):
         else:
             log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
     ### log results and notify user
-    summary_tmp = __localize__(36009) + ': %s ' % self.fileops.downloadcount
-    summary = summary_tmp + __localize__(36013)
+    summary_tmp = __localize__(32012) + ': %s ' % self.fileops.downloadcount
+    summary = summary_tmp + __localize__(32016)
     dialog('close', background = self.settings.background)
     if self.settings.notify:
         log('Notify on finished/error enabled')
         self.settings.background = False
     if not self.settings.failcount < self.settings.failthreshold:
         log('Network error detected, script aborted', xbmc.LOGERROR)
-        dialog('okdialog', line1 = __localize__(36007), line2 = __localize__(36008), background = self.settings.background)
-    if not xbmc.abortRequested:
+        dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
+    if self.mode == 'gui':
+        log('')
+    elif not xbmc.abortRequested:
         dialog('okdialog', line1 = summary, background = self.settings.background)
     else:
-        dialog('okdialog', line1 = __localize__(36007), line2 = summary, background = self.settings.background)
+        dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
 
 
 class Main:
@@ -68,12 +77,17 @@ class Main:
         self.settings._check()      # Check if there are some faulty combinations present
         self.settings._initiallog() # Create debug log for settings
         self.settings._vars()       # Get some settings vars
+        self.settings._artype_list()# Fill out the GUI and Arttype lists with enabled options
         runmode_args(self)          # Check for script call methods
-        dialog('create', line1 = __localize__(36005), background = self.settings.background)
+        dialog('create', line1 = __localize__(32008), background = self.settings.background)
         if initialise(self):
             if not self.mediatype == '':
                 if not self.medianame == '':
-                    solo_mode(self, self.mediatype, self.medianame)
+                    if self.mode == 'gui':
+                        # 'Mode check is at the end of: 'def download_artwork'
+                        solo_mode(self, self.mediatype, self.medianame)
+                    else:
+                        solo_mode(self, self.mediatype, self.medianame)
                 else:
                     if self.mediatype == 'movie':
                         self.Medialist = Media_listing('movie')
@@ -100,11 +114,13 @@ class Main:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
+        # Make sure that overwrite option get's reset after downloading
+        __addon__.setSetting(id="overwrite", value='false')
+        # Cleaning up
         cleanup(self)
         finished_log(self)
 
 
-    
 ### Declare standard vars   
 def initial_vars(self):
     providers = provider.get_providers()
@@ -115,8 +131,11 @@ def initial_vars(self):
     self.music_providers = providers['music_providers']
     self.mediatype = ''
     self.medianame = ''
+    self.mode = ''
+    self.gui_selected_type = ''
+    self.gui_imagelist = ''
 
-### Report the total numbers of downloaded images
+### Report the total numbers of downloaded images (needs some work for correct totals)
 def finished_log(self):
     log('## Download totaliser:')
     log('- Artwork: %s' % self.fileops.downloadcount, xbmc.LOGNOTICE)
@@ -177,11 +196,16 @@ def solo_mode(self, itemtype, itemname):
                 download_artwork(self, self.Medialist, self.tv_providers)
             break
 
-
+           
 ### load settings and initialise needed directories
 def initialise(self):
     for item in sys.argv:
         log("## Checking for downloading mode...")
+        # Check for download mode
+        match = re.search("mode=(.*)" , item)
+        if match:
+            self.mode = match.group(1)
+        # Check for mediatype mode
         match = re.search("mediatype=(.*)" , item)
         if match:
             self.mediatype = match.group(1)
@@ -192,19 +216,21 @@ def initialise(self):
                 return False
         else:
             pass
+        # Check for medianame
         match = re.search("medianame=" , item)
         if match:
             self.medianame = item.replace("medianame=" , "")
         else:
             pass
     try:
+        # Creates temp folder
         self.fileops = fileops()
     except CreateDirectoryError, e:
         log("Could not create directory: %s" % str(e))
         return False
     else:
         return True 
-        
+   
 ### download media fanart
 def download_artwork(self, media_list, providers):
     self.processeditems = 0
@@ -218,41 +244,46 @@ def download_artwork(self, media_list, providers):
             break
         if not self.settings.failcount < self.settings.failthreshold:
             break
+        # Check for stacked movies
         try:
             self.media_path = os.path.split(currentmedia["path"])[0].rsplit(' , ', 1)[1]
         except:
             self.media_path = os.path.split(currentmedia["path"])[0]
+        # Declare some vars
         self.media_id = currentmedia["id"]
         self.media_name = currentmedia["name"]
-        dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(36005), line3 = '', background = self.settings.background)
+        dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(32008), line3 = '', background = self.settings.background)
         log('########################################################')
         log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
         log('ID: %s' % self.media_id)
         log('Path: %s' % self.media_path)
-        self.targetdirs = []
-        self.target_thumbsdirs = []
+        # Declare the target folders
+        self.target_extrafanartdirs = []
+        self.target_extrathumbsdirs = []
         self.target_artworkdir = []
-        extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
-        extrathumbs_dir = os.path.join(self.media_path, 'extrathumbs')
-        self.targetdirs.append(extrafanart_dir)
-        self.target_thumbsdirs.append(extrathumbs_dir)
-        self.target_artworkdir.append(self.media_path)
+        artwork_dir = os.path.join(self.media_path + '/')
+        extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
+        extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
+        self.target_artworkdir.append(artwork_dir)
+        self.target_extrafanartdirs.append(extrafanart_dir)
+        self.target_extrathumbsdirs.append(extrathumbs_dir)
         ### Check if using the centralize option
         if self.settings.centralize_enable:
             if self.mediatype == 'tvshow':
                 if not self.settings.centralfolder_tvshows == '':
-                    self.targetdirs.append(self.settings.centralfolder_tvshows)
+                    self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
                 else:
                     log('Error: Central fanart enabled but TV Show folder not set, skipping', xbmc.LOGERROR)
             elif self.mediatype == 'movie':
                 if not self.settings.centralfolder_movies == '':
-                    self.targetdirs.append(self.settings.centralfolder_movies)
+                    self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
                 else:
                     log('Error: Central fanart enabled but movies folder not set, skipping', xbmc.LOGERROR)
         ### Check if using the cache option
-        self.targets = self.targetdirs[:]
+        self.targets = self.target_extrafanartdirs[:]
         if self.settings.use_cache and not self.settings.cache_directory == '':
             self.targets.append(self.settings.cache_directory)
+        # Check for id used by source sites
         if self.media_id == '':
             log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
         elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
@@ -260,6 +291,7 @@ def download_artwork(self, media_list, providers):
         else:
             self.temp_image_list = []
             self.image_list = []
+            # Run through all providers getting their imagelisting
             for self.provider in providers:
                 if not self.settings.failcount < self.settings.failthreshold:
                     break
@@ -267,7 +299,7 @@ def download_artwork(self, media_list, providers):
                 xmlfailcount = 0
                 while not artwork_result == 'pass' and not artwork_result == 'skipping':
                     if artwork_result == 'retrying':
-                        time.sleep(10)
+                        time.sleep(self.settings.api_timedelay)
                     try:
                         self.temp_image_list = self.provider.get_image_list(self.media_id)
                     except HTTP404Error, e:
@@ -308,95 +340,90 @@ def download_artwork(self, media_list, providers):
                     self.download_max = self.settings.limit_extrafanart_max
                 else:
                     self.download_max = len(self.image_list)
-                _download_process(self)
+                # Check for GUI mode
+                if self.mode == 'gui':
+                    log('here goes gui mode')
+                    _gui_solomode(self)
+                else:
+                    _download_process(self)
 
         log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
         self.processeditems = self.processeditems + 1
 
 def _download_process(self):    
-    '''   This is just an example of how the call method is processed and how to use
-    # Calling _download_art method: extrafanart
-    if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
-        art_type = 'extrafanart'
-        image_type = 'fanart'
-        msg = 36102
-        artworkfile = ''
-        _download_art(self, art_type, image_type, artworkfile, self.targetdirs, targets, msg)
-    else:
-        log('Extrafanart %s disabled. skipping' %self.mediatype)
-    '''    
-    ### Following part need to be cleanup after it is functional.
-    # To-do: Try combining these 'art_type, image_type, size' into one or easier thing to parse
-    
-    # Calling _download_art method: extrafanart
-    if (self.settings.movie_enable and self.settings.movie_extrafanart) or (self.settings.tvshow_enable and self.settings.tvshow_extrafanart):
-        _download_art(self, 'extrafanart', 'fanart', '', self.targetdirs, self.targets, 36102)
-    else:
-        log('Extrafanart %s disabled. skipping' %self.mediatype)
-    
-    # Calling _download_art method: fanart
-    if (self.settings.movie_enable and self.settings.movie_fanart) or  (self.settings.tvshow_enable and self.settings.tvshow_fanart):
-        _download_art(self, 'fanart', 'fanart', self.settings.artworkfile_fanart, self.target_artworkdir, self.targets, 36101)
-    else:
-        log('Fanart %s disabled. skipping' %self.mediatype)
-        
-    # Calling _download_extrathumbs method: extrathumbs
-    if (self.settings.movie_enable and self.settings.movie_extrathumbs):
-        _download_art(self, 'extrathumbs', 'thumb', self.settings.artworkfile_extrathumbs, self.target_thumbsdirs, self.targets, 36110)
-    else:
-        log('Extrathumbs %s disabled. skipping' %self.mediatype)
-    
-    # Calling _download_art method: posters
-    if (self.settings.movie_enable and self.settings.movie_poster) or (self.settings.tvshow_enable and self.settings.tvshow_poster):
-        _download_art(self, 'poster', 'poster', self.settings.artworkfile_poster, self.target_artworkdir, self.targets, 36108)
-    else:
-        log('Poster %s disabled. skipping' %self.mediatype)
+    if self.settings.movie_enable and self.mediatype == 'movie':
+        for arttypes in self.settings.movie_arttype_list:
+            if arttypes['bulk_enabled']:
+                if arttypes['art_type'] == 'extrafanart':
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui_string'])
+                elif arttypes['art_type'] == 'defaultthumb':
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])    
+                elif arttypes['art_type'] == 'extrathumbs':
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui_string'])
+                else:
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
 
-    # Calling _download_art method: logo
-    if (self.settings.tvshow_enable and self.settings.tvshow_logo and self.mediatype == 'tvshow'):
-        _download_art(self, 'clearlogo', 'clearlogo', self.settings.artworkfile_logo, self.target_artworkdir, self.targets, 36106)
-    else:
-        log('Logo %s disabled. skipping' %self.mediatype)
+    if self.settings.tvshow_enable and self.mediatype == 'tvshow':
+        for arttypes in self.settings.tvshow_arttype_list:
+            if arttypes['bulk_enabled']:
+                if arttypes['art_type'] == 'extrafanart':
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui_string'])
+                elif arttypes['art_type'] == 'defaultthumb':
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
+                else:
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
 
-    # Calling _download_art method: clearart
-    if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
-        _download_art(self, 'clearart', 'clearart', self.settings.artworkfile_clearart, self.target_artworkdir, self.targets, 36105)
-    else:
-        log('Clearart %s disabled. skipping' %self.mediatype)
 
-    # Calling _download_art method: characterart
-    if (self.settings.tvshow_enable and self.settings.tvshow_clearart and self.mediatype == 'tvshow'):
-        _download_art(self, 'characterart', 'characterart', self.settings.artworkfile_characterart, self.target_artworkdir, self.targets, 36107)
-    else:
-        log('Characterart %s disabled. skipping' %self.mediatype)
-        
-    # Calling _download_art method: tvthumb (landscape)
-    if (self.settings.tvshow_enable and self.settings.tvshow_thumb and self.mediatype == 'tvshow'):
-        _download_art(self, 'tvthumb', 'tvthumb', self.settings.artworkfile_tvthumb, self.target_artworkdir, self.targets, 36112)
-    else:
-        log('Clearlogo %s disabled. skipping' %self.mediatype)
+def _gui_solomode_imagelist(self, art_type, image_type):
+    log('Retrieving image list for GUI')
+    self.gui_imagelist = []
+    for artwork in self.image_list:
+        if  artwork['type'] == art_type:
+            self.gui_imagelist.append(artwork['url'])
+            log('url: %s'%artwork['url'])
+    log('Image list: %s' %self.gui_imagelist)
+    if self.gui_imagelist == '':
+        return False
+    else: return True
 
-    # Calling _download_art method: seasonthumbs
-    if (self.settings.tvshow_enable and self.settings.tvshow_seasonthumbs and self.mediatype == 'tvshow'):
-        _download_art(self, 'seasonthumbs', 'seasonthumb', self.settings.artworkfile_seasonthumbs, self.target_artworkdir, self.targets, 36113)
-    else:
-        log('Seasonthumbs %s disabled. skipping' %self.mediatype)
-        
-    # Calling _download_art method: banner
-    if (self.settings.tvshow_enable and self.settings.tvshow_showbanner and self.mediatype == 'tvshow'):
-        _download_art(self, 'banner', 'banner', self.settings.artworkfile_banner, self.target_artworkdir, self.targets, 36103)
-    else:
-        log('Banner %s disabled. skipping' %self.mediatype)
-    # Calling _download_art method: seasonbanner
-    if (self.settings.tvshow_enable and self.settings.tvshow_seasonbanner and self.mediatype == 'tvshow'):
-        _download_art(self, 'seasonbanner', 'seasonbanner', self.settings.artworkfile_seasonbanners, self.target_artworkdir, self.targets, 36104)
-    else:
-        log('Season Banner %s disabled. skipping' %self.mediatype)
-    # Calling _download_art method: season poster
-    if (self.settings.tvshow_enable and self.settings.tvshow_seasonposter and self.mediatype == 'tvshow'):
-        _download_art(self, 'seasonposter', 'seasonposter', self.settings.artworkfile_seasonposter, self.target_artworkdir, self.targets, 36114)
-    else:
-        log('Season Poster %s disabled. skipping' %self.mediatype)
+### Artwork downloading
+def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets, msg):
+    log('Starting with processing: %s' %art_type)
+    self._download_art_succes = False
+    self.settings.failcount = 0
+    # File naming
+    if art_type == 'extrafanart':
+        artworkfile = ('%s.jpg'%self.gui_imagelist['id'])
+    elif art_type == 'extrathumbs':
+        artworkfile = (filename+'%s.jpg' % str(downloaded_artwork+1))
+    elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
+        artworkfile = (filename+'%s.jpg' %artwork['season'])
+    elif art_type == 'seasonposter':
+        artworkfile = (filename+'%s.tbn' %artwork['season'])
+    else: artworkfile = filename
+    dialog('create', line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg + ': ' + artworkfile)
+    # Try downloading the file
+    try:
+        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true', 'true')
+        self._download_art_succes = True
+    except HTTP404Error, e:
+        log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
+        self._download_art_succes = False
+    except HTTPTimeout, e:
+        self.settings.failcount = self.settings.failcount + 1
+        log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
+        self._download_art_succes = False
+    except CreateDirectoryError, e:
+        log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+        self._download_art_succes = False
+    except DownloadError, e:
+        self.settings.failcount = self.settings.failcount + 1
+        log('Error downloading file: %s (Possible network error: %s), skipping' % (self.image_url, str(e)), xbmc.LOGERROR)
+        self._download_art_succes = False
+    dialog('close')
+    dialog('okdialog', line1 = self.media_name, line2 = __localize__(32020) + ' ' + msg + ': ' + artworkfile)
+    log('Finished with: %s' %art_type)
+
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg):
@@ -406,7 +433,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
     downloaded_artwork = 0
     for artwork in self.image_list:
         imageurl = artwork['url']
-        if image_type in artwork['type']:
+        if image_type == artwork['type']:
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.settings.background):
                 dialog('close', background = self.settings.background)
@@ -421,7 +448,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
                 artworkfile = (filename+'%s.jpg' %artwork['season'])
             elif art_type == 'seasonposter':
-                artworkfile = (filename+'%s.tbn' %artwork['season'])
+                artworkfile = (filename+'%s.jpg' %artwork['season'])
             else: artworkfile = filename
             #increase  artwork counter
             current_artwork = current_artwork + 1
@@ -433,7 +460,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             else:
                 try:
                     log('ID of downloaded image: %s' %artwork['id'])
-                    self.fileops._downloadfile(imageurl, artworkfile, targetdirs)
+                    self.fileops._downloadfile(imageurl, artworkfile, targetdirs, self.settings.overwrite)
                 except HTTP404Error, e:
                     log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
                 except HTTPTimeout, e:
@@ -447,15 +474,137 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (imageurl, str(e)), xbmc.LOGERROR)
                 else:
                     downloaded_artwork = downloaded_artwork + 1
-            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(36006) + ' ' + __localize__(msg), line3 = artworkfile, background = self.settings.background)
+            dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
     log('Finished with: %s' %art_type)
 
+def _gui_solomode(self):
+    # Close the 'checking for artwork' dialog before opening the GUI list
+    dialog('close', background = self.settings.background)
+    self.GUI_type_list = []
+    # Fill GUI art type list
+    if self.mediatype == 'tvshow':
+        for arttypes in self.settings.tvshow_arttype_list:
+            if arttypes['solo_enabled'] == 'true':
+                gui = arttypes['gui_string']
+                self.GUI_type_list.append (gui)
+    # Fill GUI art type list
+    if self.mediatype == 'movie':
+        for arttypes in self.settings.movie_arttype_list:
+            if arttypes['solo_enabled'] == 'true':
+                gui = arttypes['gui_string']
+                self.GUI_type_list.append (gui)
+    # 
+    if len(self.GUI_type_list) == 1:
+        self.GUI_type_list[0] = "True"
+    if ( len(self.GUI_type_list) == 1 ) or _choice_type(self):
+        self.tmp_image_list = False
+        _gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
+        log('Image put to GUI: %s' %self.gui_imagelist)
+    # Download the selected image
+    if self.gui_imagelist:
+        if _choose_image(self):
+            _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
+            if not self._download_art_succes:
+                xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
+
+        
+
+# This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
+def _choice_type(self):
+    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , self.GUI_type_list)
+    if select == -1: 
+        log( "### Canceled by user" )
+        xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
+        return False
+    else:
+        # Check what artwork type has been chosen and parse the image restraints
+        if self.mediatype == 'tvshow':
+            for arttypes in self.settings.tvshow_arttype_list:
+                if self.GUI_type_list[select] == arttypes['gui_string']:
+                    self.gui_selected_type = arttypes['art_type']
+                    self.gui_selected_filename = arttypes['filename']
+                    self.gui_selected_msg = arttypes['gui_string']
+                    return True
+        if self.mediatype == 'movie':
+            for arttypes in self.settings.movie_arttype_list:
+                if self.GUI_type_list[select] == arttypes['gui_string']:
+                    self.gui_selected_type = arttypes['art_type']
+                    self.gui_selected_filename = arttypes['filename']
+                    self.gui_selected_msg = arttypes['gui_string']
+                    return True
+            return True
+        else:
+            return False
+        
+def _choose_image(self):
+    log( "### image list: %s" % self.gui_imagelist)
+    self.image_url = MyDialog(self.gui_imagelist)
+    if self.image_url:
+        return True
+    else:
+        return False    
+
+    
+class MainGui( xbmcgui.WindowXMLDialog ):
+    def __init__( self, *args, **kwargs ):
+        xbmcgui.WindowXMLDialog.__init__( self )
+        xbmc.executebuiltin( "Skin.Reset(AnimeWindowXMLDialogClose)" )
+        xbmc.executebuiltin( "Skin.SetBool(AnimeWindowXMLDialogClose)" )
+        self.listing = kwargs.get( "listing" )
+
+    def onInit(self):
+        try :
+            self.img_list = self.getControl(6)
+            self.img_list.controlLeft(self.img_list)
+            self.img_list.controlRight(self.img_list)
+            self.getControl(3).setVisible(False)
+        except :
+            print_exc()
+            self.img_list = self.getControl(3)
+
+        self.getControl(5).setVisible(False)
+        self.getControl(1).setLabel(__localize__(32019))
+
+        for image in self.listing :
+            listitem = xbmcgui.ListItem( image.split("/")[-1] )
+            listitem.setIconImage( image )
+            listitem.setLabel2(image)
+            log( "### image: %s" % image )
+            self.img_list.addItem( listitem )
+        self.setFocus(self.img_list)
+
+    def onAction(self, action):
+        if action in ACTION_PREVIOUS_MENU:
+            self.close() 
+
+    def onClick(self, controlID):
+        log( "### control: %s" % controlID )
+        if controlID == 6 or controlID == 3: 
+            num = self.img_list.getSelectedPosition()
+            log( "### position: %s" % num )
+            self.selected_url = self.img_list.getSelectedItem().getLabel2()
+            self.close()
+
+    def onFocus(self, controlID):
+        pass
+
+def MyDialog(tv_list):
+    w = MainGui( "DialogSelect.xml", SOURCEPATH, listing=tv_list )
+    w.doModal()
+    try: return w.selected_url
+    except: 
+        print_exc()
+        return False
+    del w
+    
+    
         
 ### Start of script
 if (__name__ == "__main__"):
     log("######## Extrafanart Downloader: Initializing...............................")
-    log('## Add-on ID = %s' % str(__addonid__))
-    log('## Add-on Name= %s' % str(__addonname__))
-    log('## Add-on Version = %s' % str(__addonversion__))
+    log('## Add-on ID   = %s' % str(__addonid__))
+    log('## Add-on Name = %s' % str(__addonname__))
+    log('## Authors     = %s' % str(__author__))
+    log('## Version     = %s' % str(__version__))
     Main()
     log('script stopped')
