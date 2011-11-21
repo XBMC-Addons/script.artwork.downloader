@@ -73,8 +73,10 @@ class fileops:
             copy = xbmcvfs.copy( filename , cached_thumb )
             if copy:
                 log( "Cache succesful" )
-                if self.main.mode == 'gui': # this needs by worked out.
+                '''this needs by worked out.
+                if self.main.mode == 'gui':
                     xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
+                '''
             else:
                 log( "Failed to copy to cached thumb" )
         except :
