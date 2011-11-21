@@ -8,9 +8,9 @@ from resources.lib.script_exceptions import CopyError, DownloadError, CreateDire
 from urllib2 import HTTPError, URLError
 from resources.lib import utils
 from resources.lib.settings import _settings
-THUMBS_CACHE_PATH = os.path.join( xbmc.translatePath( "special://profile/" ), "Thumbnails/Video" )
+from resources.lib.utils import _log as log
+THUMBS_CACHE_PATH = xbmc.translatePath( "special://profile/Thumbnails/Video" )
 
-log = utils._log
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -44,8 +44,7 @@ class fileops:
                     raise CreateDirectoryError(addondir)
             if not self._mkdir(self.tempdir):
                 raise CreateDirectoryError(self.tempdir)
-
-
+        
     def _copy(self, source, target):
         return xbmcvfs.copy(source, target)
 
@@ -65,38 +64,37 @@ class fileops:
         if not isdeleted:
             log("Ignoring (%s): %s" % (reason, filename), xbmc.LOGINFO)
 
-    def erase_current_cache(self, targetdirs, filename):
-        log('Try to erase old cached image')
+    def erase_current_cache(self,filename):
         try: 
-            cached_thumb = self.get_cached_thumb(targetdirs, filename)
-            log( "Cache %s" % cached_thumb )
+            cached_thumb = self.get_cached_thumb(filename)
+            log( "Cache file %s" % cached_thumb )
             if xbmcvfs.exists( cached_thumb.replace("png" , "dds").replace("jpg" , "dds") ):
                 xbmcvfs.delete( cached_thumb.replace("png" , "dds").replace("jpg" , "dds") )
-            copy = xbmcvfs.copy( os.path.join( targetdirs , filename ) , cached_thumb )
+            copy = xbmcvfs.copy( filename , cached_thumb )
             if copy:
-                log('Cached file: %s' %cached_thumb)
+                log( "Cache succesful" )
+                if self.main.mode == 'gui': # this needs by worked out.
+                    xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
             else:
                 log( "Failed to copy to cached thumb" )
         except :
             print_exc()
             log( "Cache erasing error" )
 
-    def get_cached_thumb( self, path, filename ):
-        log('Get old cached image')
-        if path.startswith( "stack://" ):
-            path = strPath[ 8 : ].split( " , " )[ 0 ]
-        if filename == "folder.jpg":
-            cachedthumb = xbmc.getCacheThumbName( path )
+    def get_cached_thumb( self, filename ):
+        if filename.startswith( "stack://" ):
+            filename = strPath[ 8 : ].split( " , " )[ 0 ]
+        if filename.endswith( "folder.jpg" ):
+            cachedthumb = xbmc.getCacheThumbName( filename )
             thumbpath = os.path.join( THUMBS_CACHE_PATH, cachedthumb[0], cachedthumb )
         else:
-            cachedthumb = xbmc.getCacheThumbName( os.path.join( path, filename ) )
+            cachedthumb = xbmc.getCacheThumbName( filename )
             if ".jpg" in filename:
                 cachedthumb = cachedthumb.replace("tbn" , "jpg")
             elif ".png" in filename:
                 cachedthumb = cachedthumb.replace("tbn" , "png")      
             thumbpath = os.path.join( THUMBS_CACHE_PATH, cachedthumb[0], cachedthumb ).replace( "/Video" , "")    
-        return thumbpath
-            
+        return thumbpath         
 
     def _copyfile(self, sourcepath, targetpath):
 
@@ -126,7 +124,8 @@ class fileops:
         fileexists = []
         filenotexistspaths = []
         for targetdir in targetdirs:
-            path = os.path.join(targetdir, filename)
+            path = os.path.join(targetdir +'/'+  filename)
+            #path = xbmc.translatePath(path)
             if overwrite:
                 fileexists.append(False)
                 filenotexistspaths.append(path)
@@ -161,8 +160,8 @@ class fileops:
                 self.downloadcount = self.downloadcount + 1
                 for filenotexistspath in filenotexistspaths:
                     self._copyfile(temppath, filenotexistspath)
-            if self.settings.xbmc_caching_enabled:
-                self.erase_current_cache(targetdir, filename)
+                    if self.settings.xbmc_caching_enabled:
+                        self.erase_current_cache(filenotexistspath)
         elif not False in fileexists:
             log("Ignoring (Exists in all target directories): %s" % filename, xbmc.LOGINFO)
         else:
