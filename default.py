@@ -261,11 +261,12 @@ def download_artwork(self, media_list, providers):
         self.target_extrafanartdirs = []
         self.target_extrathumbsdirs = []
         self.target_artworkdir = []
-        extrafanart_dir = os.path.join(self.media_path, 'extrafanart')
-        extrathumbs_dir = os.path.join(self.media_path, 'extrathumbs')
+        artwork_dir = os.path.join(self.media_path + '/')
+        extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
+        extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
+        self.target_artworkdir.append(artwork_dir)
         self.target_extrafanartdirs.append(extrafanart_dir)
         self.target_extrathumbsdirs.append(extrathumbs_dir)
-        self.target_artworkdir.append(self.media_path)
         ### Check if using the centralize option
         if self.settings.centralize_enable:
             if self.mediatype == 'tvshow':

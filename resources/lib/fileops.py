@@ -127,9 +127,6 @@ class fileops:
         filenotexistspaths = []
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
-            if (' :// ') in path:
-                path = path.replace( "\\" , "/")
-            #path = xbmc.translatePath(path)
             if overwrite:
                 fileexists.append(False)
                 filenotexistspaths.append(path)
