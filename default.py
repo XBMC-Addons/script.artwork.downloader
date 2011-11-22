@@ -74,13 +74,17 @@ class Main:
         initial_vars(self) 
         self.settings._exist()      # Check if settings.xml exists and correct version
         self.settings._get()        # Get settings from settings.xml
+        self.settings._get_limit() # Get settings from settings.xml
         self.settings._check()      # Check if there are some faulty combinations present
         self.settings._initiallog() # Create debug log for settings
         self.settings._vars()       # Get some settings vars
         self.settings._artype_list()# Fill out the GUI and Arttype lists with enabled options
         runmode_args(self)          # Check for script call methods
-        dialog('create', line1 = __localize__(32008), background = self.settings.background)
         if initialise(self):
+            if self.mode == 'silent':
+                self.settings.background = 'true'
+                self.settings.notify = 'true'
+            dialog('create', line1 = __localize__(32008), background = self.settings.background)
             if not self.mediatype == '':
                 if not self.medianame == '':
                     if self.mode == 'gui':

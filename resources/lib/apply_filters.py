@@ -10,7 +10,7 @@ class apply_filters:
 
     def __init__(self):
         self.settings = _settings()
-        self.settings._get()
+        self.settings._get_limit()
 
     def do_filter(self, art_type, mediatype, artwork, downloaded_artwork):
         if art_type == 'fanart':

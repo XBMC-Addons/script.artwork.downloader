@@ -58,6 +58,14 @@ class _settings:
         self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
 
+        self.use_cache = __addon__.getSetting("use_cache") == 'true'
+        self.cache_directory = __addon__.getSetting("cache_directory")
+        self.background = __addon__.getSetting("background") == 'true'
+        self.notify = __addon__.getSetting("notify") == 'true'
+        self.overwrite = __addon__.getSetting("overwrite") == 'true'
+        self.xbmc_caching_enabled = __addon__.getSetting("xbmc_caching_enabled") == 'true'
+        
+    def _get_limit(self):    
         self.limit_artwork = __addon__.getSetting("limit_artwork") == 'true'
         self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.').rstrip(','))
         self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.').rstrip(','))
@@ -69,12 +77,7 @@ class _settings:
         self.limit_language = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
 
-        self.use_cache = __addon__.getSetting("use_cache") == 'true'
-        self.cache_directory = __addon__.getSetting("cache_directory")
-        self.background = __addon__.getSetting("background") == 'true'
-        self.notify = __addon__.getSetting("notify") == 'true'
-        self.overwrite = __addon__.getSetting("overwrite") == 'true'
-        self.xbmc_caching_enabled = __addon__.getSetting("xbmc_caching_enabled") == 'true'
+
 
     ### Initial startup vars
     def _vars(self):
