@@ -81,7 +81,7 @@ class Main:
         self.settings._artype_list()# Fill out the GUI and Arttype lists with enabled options
         runmode_args(self)          # Check for script call methods
         if initialise(self):
-            if self.mode == 'silent':
+            if self.silent:
                 self.settings.background = 'true'
                 self.settings.notify = 'true'
             dialog('create', line1 = __localize__(32008), background = self.settings.background)
@@ -205,6 +205,10 @@ def solo_mode(self, itemtype, itemname):
 def initialise(self):
     for item in sys.argv:
         log("## Checking for downloading mode...")
+        # Check for download mode
+        match = re.search("silent=(.*)" , item)
+        if match:
+            self.silent = match.group(1)
         # Check for download mode
         match = re.search("mode=(.*)" , item)
         if match:
