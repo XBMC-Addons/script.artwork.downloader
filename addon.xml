@@ -19,7 +19,7 @@
 	Downloads all different kinds of artwork for TV shows and Movies in your library. Check the options for supported artwork[CR]
     For this to work your skins needs to support these features![CR]
 	Remark:[CR]Each TV Show / Movie must have its own folder where an 'extrafanart' or 'extrathumbs' subfolder will be created.[CR]
-	Artwork sources:[cCR]fanart.tv[CR]thetvdb.com)[CR]themoviedb.org[CR]
+	Artwork sources:[CR]fanart.tv[CR]thetvdb.com)[CR]themoviedb.org[CR]
 	Skin integration:[CR]See readme file
 	</description>
     <platform>all</platform>
