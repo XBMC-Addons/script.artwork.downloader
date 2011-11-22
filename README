@@ -37,9 +37,9 @@ Current Features:
         * Image size
         
     - Skin integration:
-        * Bulk mode (downloads all in settings enabled artwork for every tv show/movie)
-        * Solo mode (downloads all in settings enabled for only one tv show/movie)
-        * Solo mode with GUI (does not use any limit or setttings from the add-on)
+        * Bulk mode: Downloads all in settings enabled artwork for every tv show/movie.
+        * Solo mode: Downloads all in settings enabled for only one tv show/movie.
+        * GUI mode:  User can select what artwork to download. Does not use any limit or setttings from the add-on.
 
     - Centralized fanart:
         * Can be used for multi-image background slideshow
