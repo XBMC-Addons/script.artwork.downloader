@@ -1,8 +1,8 @@
 import xbmc
 import xbmcaddon
 from resources.lib.fileops import fileops
-from resources.lib import language
 from resources.lib.settings import _settings
+from resources.lib import language
 
 __language__ = language.get_abbrev()
 
@@ -13,7 +13,7 @@ class apply_filters:
         self.settings._get_limit()
 
     def do_filter(self, art_type, mediatype, artwork, downloaded_artwork):
-        if art_type == 'fanart':
+        if art_type   == 'fanart':
             return self.fanart(mediatype, artwork, downloaded_artwork)
         
         elif art_type == 'extrafanart':
@@ -39,7 +39,10 @@ class apply_filters:
         
         elif art_type == 'clearart':
             return self.clearart(mediatype, artwork, downloaded_artwork)
-        
+
+        elif art_type == 'characterart':
+            return self.characterart(mediatype, artwork, downloaded_artwork)
+            
         elif art_type == 'tvthumb':
             return self.tvthumb(mediatype, artwork, downloaded_artwork)
         
@@ -47,11 +50,10 @@ class apply_filters:
             return self.seasonthumbs(mediatype, artwork, downloaded_artwork)
 
         elif art_type == 'defaultthumb':
-            return self.discart(mediatype, artwork, downloaded_artwork)
+            return self.defaultthumb(mediatype, artwork, downloaded_artwork)
 
         elif art_type == 'discart':
             return self.discart(mediatype, artwork, downloaded_artwork)
-        
         else: return [False, 'Unrecognised art_type']
 
     def fanart(self, mediatype, artwork, downloaded_artwork):
@@ -179,7 +181,15 @@ class apply_filters:
             reason = 'Max number clearart reached: %s' % downloaded_artwork
             limited = True
         return [limited, reason]
-    
+
+    def characterart(self, mediatype, artwork, downloaded_artwork):
+        limited = False
+        reason = ''
+        if downloaded_artwork >= self.settings.limit_artwork_max:
+            reason = 'Max number characterart reached: %s' % downloaded_artwork
+            limited = True
+        return [limited, reason]
+        
     def tvthumb(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
