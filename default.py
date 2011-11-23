@@ -136,6 +136,7 @@ def initial_vars(self):
     self.mediatype = ''
     self.medianame = ''
     self.mode = ''
+    self.silent = ''
     self.gui_selected_type = ''
     self.gui_imagelist = ''
 
