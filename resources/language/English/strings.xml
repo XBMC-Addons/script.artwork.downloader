@@ -22,7 +22,7 @@
         <string id="32019">Which one to download?</string>
         <string id="32020">Downloaded</string>
         <string id="32021">Select your preferences and press OK to save</string>
-        <string id="32022">-</string>
+        <string id="32022">not found!</string>
         <string id="32023">-</string>
         <string id="32024">-</string>
         <string id="32025">-</string>
@@ -98,20 +98,20 @@
         <string id="32134">Season Thumbs</string>
 
     <!-- Add-on messages: Image types not found id=32141 to 32160 -->
-        <string id="32141">No Fanart found!</string>
-        <string id="32142">No Extrafanart found!</string>
-        <string id="32143">No Banner found!</string>
-        <string id="32144">No Season Banners found!</string>
-        <string id="32145">No ClearArt found!</string>
-        <string id="32146">No Logo found!</string>
-        <string id="32147">No Character Art found!</string>
-        <string id="32148">No Poster found!</string>
-        <string id="32149">No Season Posters found!</string>
-        <string id="32150">No Thumb found!</string>
-        <string id="32151">No Extrathumbs found!</string>
-        <string id="32152">No Disc Art found!</string>
-        <string id="32153">No Default Thumb found!</string>
-        <string id="32154">No Season Thumbs found!</string>
+        <string id="32141">-</string>
+        <string id="32142">-</string>
+        <string id="32143">-</string>
+        <string id="32144">-</string>
+        <string id="32145">-</string>
+        <string id="32146">-</string>
+        <string id="32147">-</string>
+        <string id="32148">-</string>
+        <string id="32149">-</string>
+        <string id="32150">-</string>
+        <string id="32151">-</string>
+        <string id="32152">-</string>
+        <string id="32153">-</string>
+        <string id="32154">-</string>
         
     <!-- Add-on settings: Info section id=32181 to 32190-->   
         <string id="32181">Info</string>
