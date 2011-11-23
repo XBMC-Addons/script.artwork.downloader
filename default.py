@@ -14,7 +14,7 @@ from resources.lib import media_setup
 from resources.lib import provider
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
-from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError
+from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError, CopyError
 from resources.lib import language
 from resources.lib.fileops import fileops
 from xml.parsers.expat import ExpatError
@@ -425,6 +425,9 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     except CreateDirectoryError, e:
         log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
         self._download_art_succes = False
+    except CopyError, e:
+        log("Could not copy file (Destination may be read only), skipping: %s" % str(e), xbmc.LOGWARNING)
+        self._download_art_succes = False
     except DownloadError, e:
         self.settings.failcount = self.settings.failcount + 1
         log('Error downloading file: %s (Possible network error: %s), skipping' % (self.image_url, str(e)), xbmc.LOGERROR)
@@ -477,6 +480,9 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
                     log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
                 except CreateDirectoryError, e:
                     log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                    break
+                except CopyError, e:
+                    log("Could not copy file (Destination may be read only), skipping: %s" % str(e), xbmc.LOGWARNING)
                     break
                 except DownloadError, e:
                     self.settings.failcount = self.settings.failcount + 1
