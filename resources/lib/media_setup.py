@@ -13,12 +13,12 @@ def _unicode( text, encoding='utf-8' ):
     except: pass
     return text
 
-def normalize_string( text ):
+def _normalize_string( text ):
     try: text = unicodedata.normalize( 'NFKD', _unicode( text ) ).encode( 'ascii', 'ignore' )
     except: pass
     return text
 # Retrieve JSON list
-def media_listing(media_type):
+def _media_listing(media_type):
         log('Using JSON for retrieving %s info' %media_type)
         Medialist = []
         if media_type == 'tvshow':
@@ -27,7 +27,7 @@ def media_listing(media_type):
             if jsonobject['result'].has_key('tvshows'):
                 for item in jsonobject['result']['tvshows']:
                     Media = {}
-                    Media['name'] = normalize_string(item['label'])
+                    Media['name'] = _normalize_string(item['label'])
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['tvshowid'] = item['tvshowid']
@@ -46,7 +46,7 @@ def media_listing(media_type):
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
                     Media = {}
-                    Media['name'] = normalize_string(item['label'])
+                    Media['name'] = _normalize_string(item['label'])
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['movieid'] = item['movieid']

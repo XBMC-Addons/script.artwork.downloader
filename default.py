@@ -21,7 +21,7 @@ from xml.parsers.expat import ExpatError
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
 from resources.lib.gui import _maingui
-
+from resources.lib.media_setup import _media_listing as media_listing
 ### get addon info
 __addon__       = xbmcaddon.Addon()
 __addonid__     = __addon__.getAddonInfo('id')
@@ -29,11 +29,11 @@ __addonname__   = __addon__.getAddonInfo('name')
 __author__      = __addon__.getAddonInfo('author')
 __version__     = __addon__.getAddonInfo('version')
 __localize__    = __addon__.getLocalizedString
-__cwd__       = __addon__.getAddonInfo('path')
+__cwd__         = __addon__.getAddonInfo('path')
 __language__ = language.get_abbrev()
-Media_listing = media_setup.media_listing
+
 ACTION_PREVIOUS_MENU = ( 9, 10, 92, 216, 247, 257, 275, 61467, 61448, )
-SOURCEPATH = __cwd__
+
 
 
 ### clean up temporary folder
@@ -94,24 +94,24 @@ class Main:
                         solo_mode(self, self.mediatype, self.medianame)
                 else:
                     if self.mediatype == 'movie':
-                        self.Medialist = Media_listing('movie')
+                        self.Medialist = media_listing('movie')
                         log("Bulk mode: movie")
                         download_artwork(self, self.Medialist, self.movie_providers)
                     elif self.mediatype == 'tvshow':
-                        self.Medialist = Media_listing('tvshow')
+                        self.Medialist = media_listing('tvshow')
                         log("Bulk mode: TV Shows")
                         download_artwork(self, self.Medialist, self.tv_providers)
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
             else:
                 if self.settings.movie_enable:
-                    self.Medialist = Media_listing('movie')
+                    self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
                     download_artwork(self, self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
                 if self.settings.tvshow_enable:
-                    self.Medialist = Media_listing('tvshow')
+                    self.Medialist = media_listing('tvshow')
                     self.mediatype = 'tvshow'
                     download_artwork(self, self.Medialist, self.tv_providers)
                 else:
@@ -178,12 +178,12 @@ def runmode_args(self):
 def solo_mode(self, itemtype, itemname):
     if itemtype == 'movie':
         log("## Solo mode: Movie...")
-        self.Medialist = Media_listing('movie')
+        self.Medialist = media_listing('movie')
     elif itemtype == 'tvshow':
-        self.Medialist = Media_listing('tvshow')
+        self.Medialist = media_listing('tvshow')
         log("## Solo mode: TV Show...")
     elif itemtype == 'music':
-        self.Medialist = Media_listing('music')
+        self.Medialist = media_listing('music')
         log("## Solo mode: Music...")
     else:
         log("Error: type must be one of 'movie', 'tvshow' or 'music', aborting", xbmc.LOGERROR)
@@ -598,7 +598,7 @@ class MainGui( xbmcgui.WindowXMLDialog ):
         pass
 
 def MyDialog(tv_list):
-    w = MainGui( "DialogSelect.xml", SOURCEPATH, listing=tv_list )
+    w = MainGui( "DialogSelect.xml", __cwd__, listing=tv_list )
     w.doModal()
     try: return w.selected_url
     except: 
