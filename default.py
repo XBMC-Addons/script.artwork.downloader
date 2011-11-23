@@ -29,8 +29,8 @@ __addonname__   = __addon__.getAddonInfo('name')
 __author__      = __addon__.getAddonInfo('author')
 __version__     = __addon__.getAddonInfo('version')
 __localize__    = __addon__.getLocalizedString
-__cwd__         = __addon__.getAddonInfo('path')
-__language__ = language.get_abbrev()
+__addonpath__   = __addon__.getAddonInfo('path')
+__language__    = language.get_abbrev()
 
 ACTION_PREVIOUS_MENU = ( 9, 10, 92, 216, 247, 257, 275, 61467, 61448, )
 
@@ -290,8 +290,8 @@ def download_artwork(self, media_list, providers):
                     log('Error: Central fanart enabled but movies folder not set, skipping', xbmc.LOGERROR)
         ### Check if using the cache option
         self.targets = self.target_extrafanartdirs[:]
-        if self.settings.use_cache and not self.settings.cache_directory == '':
-            self.targets.append(self.settings.cache_directory)
+        if self.settings.backup_enabled and not self.settings.backup_path == '':
+            self.targets.append(self.settings.backup_path)
         # Check for id used by source sites
         if self.media_id == '':
             log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
@@ -598,7 +598,7 @@ class MainGui( xbmcgui.WindowXMLDialog ):
         pass
 
 def MyDialog(tv_list):
-    w = MainGui( "DialogSelect.xml", __cwd__, listing=tv_list )
+    w = MainGui( "DialogSelect.xml", __addonpath__, listing=tv_list )
     w.doModal()
     try: return w.selected_url
     except: 

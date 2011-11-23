@@ -1,3 +1,4 @@
+#import modules
 import xbmc
 import xbmcaddon
 import os
@@ -8,11 +9,11 @@ import platform
 from traceback import print_exc
 import xbmcgui
 
-
-
+#import libraries
 from resources.lib.utils import _log as log
 from resources.lib import language
 from resources.lib.utils import _dialog as dialog
+
 ### get addon info
 __addon__       = xbmcaddon.Addon()
 __addonid__     = __addon__.getAddonInfo('id')
@@ -20,62 +21,61 @@ __addonname__   = __addon__.getAddonInfo('name')
 __author__      = __addon__.getAddonInfo('author')
 __version__     = __addon__.getAddonInfo('version')
 __localize__    = __addon__.getLocalizedString
-__language__ = language.get_abbrev()
-
-addondir = xbmc.translatePath( __addon__.getAddonInfo('profile') )
-settings_file = os.path.join(addondir, "settings.xml")
+__language__    = language.get_abbrev()
+__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
+settings_file   = os.path.join(__addondir__, "settings.xml")
 
 
 class _settings:
 
     ### Get settings from settings.xml
     def _get(self):
-        self.movie_enable = __addon__.getSetting("movie_enable") == 'true'
-        self.movie_poster = __addon__.getSetting("movie_poster") == 'true'
-        self.movie_fanart = __addon__.getSetting("movie_fanart") == 'true'
-        self.movie_extrafanart = __addon__.getSetting("movie_extrafanart") == 'true'
-        self.movie_extrathumbs = __addon__.getSetting("movie_extrathumbs") == 'true'
-        self.movie_logo = __addon__.getSetting("movie_logo") == 'true'
-        self.movie_discart = __addon__.getSetting("movie_discart") == 'true'
-        self.movie_defaultthumb = __addon__.getSetting("movie_defaultthumb") == 'true'
+        self.movie_enable           = __addon__.getSetting("movie_enable") == 'true'
+        self.movie_poster           = __addon__.getSetting("movie_poster") == 'true'
+        self.movie_fanart           = __addon__.getSetting("movie_fanart") == 'true'
+        self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart") == 'true'
+        self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs") == 'true'
+        self.movie_logo             = __addon__.getSetting("movie_logo") == 'true'
+        self.movie_discart          = __addon__.getSetting("movie_discart") == 'true'
+        self.movie_defaultthumb     = __addon__.getSetting("movie_defaultthumb") == 'true'
         
-        self.tvshow_enable = __addon__.getSetting("tvshow_enable") == 'true'
-        self.tvshow_poster = __addon__.getSetting("tvshow_poster") == 'true'
-        self.tvshow_seasonposter = __addon__.getSetting("tvshow_seasonposter") == 'true'
-        self.tvshow_fanart = __addon__.getSetting("tvshow_fanart") == 'true'
-        self.tvshow_extrafanart = __addon__.getSetting("tvshow_extrafanart") == 'true'
-        self.tvshow_clearart = __addon__.getSetting("tvshow_clearart") == 'true'
-        self.tvshow_logo = __addon__.getSetting("tvshow_logo") == 'true'
-        self.tvshow_thumb = __addon__.getSetting("tvshow_thumb") == 'true'
-        self.tvshow_seasonthumbs = __addon__.getSetting("tvshow_seasonthumbs") == 'true'
-        self.tvshow_showbanner = __addon__.getSetting("tvshow_showbanner") == 'true'
-        self.tvshow_seasonbanner = __addon__.getSetting("tvshow_seasonbanner") == 'true'
-        self.tvshow_characterart = __addon__.getSetting("tvshow_characterart") == 'true'
-        self.tvshow_defaultthumb = __addon__.getSetting("tvshow_defaultthumb") == 'true'
+        self.tvshow_enable          = __addon__.getSetting("tvshow_enable") == 'true'
+        self.tvshow_poster          = __addon__.getSetting("tvshow_poster") == 'true'
+        self.tvshow_seasonposter    = __addon__.getSetting("tvshow_seasonposter") == 'true'
+        self.tvshow_fanart          = __addon__.getSetting("tvshow_fanart") == 'true'
+        self.tvshow_extrafanart     = __addon__.getSetting("tvshow_extrafanart") == 'true'
+        self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart") == 'true'
+        self.tvshow_logo            = __addon__.getSetting("tvshow_logo") == 'true'
+        self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb") == 'true'
+        self.tvshow_seasonthumbs    = __addon__.getSetting("tvshow_seasonthumbs") == 'true'
+        self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner") == 'true'
+        self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner") == 'true'
+        self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart") == 'true'
+        self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb") == 'true'
         
-        self.centralize_enable = __addon__.getSetting("centralize_enable") == 'true'
-        self.centralfolder_split = __addon__.getSetting("centralfolder_split")
-        self.centralfolder_movies = __addon__.getSetting("centralfolder_movies")
-        self.centralfolder_tvshows = __addon__.getSetting("centralfolder_tvshows")
+        self.centralize_enable      = __addon__.getSetting("centralize_enable") == 'true'
+        self.centralfolder_split    = __addon__.getSetting("centralfolder_split")
+        self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
+        self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
 
-        self.use_cache = __addon__.getSetting("use_cache") == 'true'
-        self.cache_directory = __addon__.getSetting("cache_directory")
-        self.background = __addon__.getSetting("background") == 'true'
-        self.notify = __addon__.getSetting("notify") == 'true'
-        self.overwrite = __addon__.getSetting("overwrite") == 'true'
-        self.xbmc_caching_enabled = __addon__.getSetting("xbmc_caching_enabled") == 'true'
+        self.backup_enabled         = __addon__.getSetting("backup_enabled") == 'true'
+        self.backup_path            = __addon__.getSetting("backup_path")
+        self.background             = __addon__.getSetting("background") == 'true'
+        self.notify                 = __addon__.getSetting("notify") == 'true'
+        self.overwrite              = __addon__.getSetting("overwrite") == 'true'
+        self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
         
     def _get_limit(self):    
         self.limit_artwork = __addon__.getSetting("limit_artwork") == 'true'
-        self.limit_extrafanart_max = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.').rstrip(','))
-        self.limit_extrafanart_rating = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.').rstrip(','))
-        self.limit_size_moviefanart = int(__addon__.getSetting("limit_size_moviefanart"))
-        self.limit_size_tvshowfanart = int(__addon__.getSetting("limit_size_tvshowfanart"))
-        self.limit_extrathumbs = self.limit_artwork
-        self.limit_extrathumbs_max = 4
-        self.limit_artwork_max = 1
-        self.limit_language = __addon__.getSetting("limit_language") == 'true'
-        self.limit_notext = __addon__.getSetting("limit_notext") == 'true'
+        self.limit_extrafanart_max      = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.').rstrip(','))
+        self.limit_extrafanart_rating   = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.').rstrip(','))
+        self.limit_size_moviefanart     = int(__addon__.getSetting("limit_size_moviefanart"))
+        self.limit_size_tvshowfanart    = int(__addon__.getSetting("limit_size_tvshowfanart"))
+        self.limit_extrathumbs          = self.limit_artwork
+        self.limit_extrathumbs_max      = 4
+        self.limit_artwork_max          = 1
+        self.limit_language             = __addon__.getSetting("limit_language") == 'true'
+        self.limit_notext               = __addon__.getSetting("limit_notext") == 'true'
 
 
 
@@ -135,8 +135,8 @@ class _settings:
         log('## - Language              = %s' % str(self.limit_language))
         log('## - Fanart with no text   = %s' % str(self.limit_notext))
         
-        log('## Backup fanart           = %s' % str(self.use_cache))
-        log('## Backup folder           = %s' % str(self.cache_directory))
+        log('## Backup fanart           = %s' % str(self.backup_enabled))
+        log('## Backup folder           = %s' % str(self.backup_path))
         log('## XBMC caching enabled    = %s' % str(self.xbmc_caching_enabled))
         log('##')
         log('## End of Settings...')
@@ -150,6 +150,7 @@ class _settings:
                 dialog('okdialog', line1 = __localize__(32001), line2 = __localize__(32021))
                 log('## Settings.xml file not found. Opening settings window.')
                 __addon__.openSettings()
+                time.sleep(1)
                 __addon__.setSetting(id="addon_version", value=__version__)
             # different version settings.xml found
             if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __version__:
@@ -355,8 +356,8 @@ class _settings:
                     log('Setting check: No centralized folder chosen')
                 else: check_centralize = True
             # Check if faulty setting in cache section
-            if self.use_cache:
-                if self.cache_directory == '':
+            if self.backup_enabled:
+                if self.backup_path == '':
                     check_cache = False
                     log('Setting check: No cache folder chosen')
                 else: check_cache = True
