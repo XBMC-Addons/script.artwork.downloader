@@ -1,4 +1,5 @@
 import socket
+import sys
 from urllib2 import HTTPError, URLError, urlopen
 from resources.lib.script_exceptions import HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
 
@@ -36,11 +37,12 @@ class BaseProvider:
                 raise HTTP503Error(url)
             else:
                 raise DownloadError(str(e))
-        except URLError, e:
-            if isinstance(e.reason, socket.timeout):
-                raise HTTPTimeout(url)
-            else:
-                raise DownloadError(str(e))
+            except socket.error:
+                errno, errstr = sys.exc_info()[:2]
+                if errno == socket.timeout:
+                    raise HTTPTimeout(url)
+                else:
+                    raise
 
 
 
