@@ -23,12 +23,12 @@
         <string id="32020">Downloaded</string>
         <string id="32021">Select your preferences and press OK to save</string>
         <string id="32022">not found!</string>
-        <string id="32023">-</string>
-        <string id="32024">-</string>
-        <string id="32025">-</string>
-        <string id="32026">-</string>
-        <string id="32027">-</string>
-        <string id="32028">-</string>
+        <string id="32023">Run add-on at start-up / login</string>
+        <string id="32024">Run add-on as a service</string>
+        <string id="32025">Time interval (hours)</string>
+        <string id="32026">24</string>
+        <string id="32027">36</string>
+        <string id="32028">48</string>
         <string id="32029">-</string>
         <string id="32030">-</string>
 

@@ -8,6 +8,10 @@
         <setting label="32033" id="background" type="bool" default="false"/>
         <setting label="32034" id="notify" subsetting="true" type="bool"  default="false" enable="eq(-1,true)" visible="eq(-1,true)"/>
         <setting type="sep" />
+        <setting label="32023" id="service_startup" type="bool" default="false"/>
+        <setting label="32024" id="service_enable" type="bool" default="false"/>
+        <setting label="32025" id="service_time" subsetting="true" type="labelenum" lvalues="32028|32027|32026"  default="24" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting type="sep" />
         <setting label="32035" id="files_overwrite" type="bool" default="false"/>
         <setting type="sep" />
         <setting label="32036" id="centralize_enable" type="bool"  default="false"/>
