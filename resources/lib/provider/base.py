@@ -37,12 +37,8 @@ class BaseProvider:
                 raise HTTP503Error(url)
             else:
                 raise DownloadError(str(e))
-        except socket.error:
-            errno, errstr = sys.exc_info()[:2]
-            if errno == socket.timeout:
-                raise HTTPTimeout(url)
-            else:
-                raise
+        except URLError:
+            raise HTTPTimeout(url)
 
 
     def get_image_list(self, media_id):

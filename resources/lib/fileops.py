@@ -149,12 +149,8 @@ class fileops:
                     raise HTTP404Error(url)
                 else:
                     raise DownloadError(str(e))
-            except socket.error:
-                errno, errstr = sys.exc_info()[:2]
-                if errno == socket.timeout:
-                    raise HTTPTimeout(url)
-                else:
-                    raise
+            except URLError:
+                raise HTTPTimeout(url)
             else:
                 log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
