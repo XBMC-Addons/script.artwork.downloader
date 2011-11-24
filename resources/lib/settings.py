@@ -61,6 +61,9 @@ class _settings:
         self.backup_path            = __addon__.getSetting("backup_path")
         self.background             = __addon__.getSetting("background") == 'true'
         self.notify                 = __addon__.getSetting("notify") == 'true'
+        self.service_startup        = __addon__.getSetting("service_startup") == 'true'
+        self.service_enable         = __addon__.getSetting("service_enable") == 'true'
+        self.service_time           = __addon__.getSetting("service_time")
         self.files_overwrite        = __addon__.getSetting("files_overwrite") == 'true'
         self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
         
@@ -96,6 +99,9 @@ class _settings:
         log('## Language Used           = %s' % str(__language__))
         log('## Background Run          = %s' % str(self.background))
         log('## - Notify                = %s' % str(self.notify))
+        log('## Run at startup / login  = %s' % str(self.service_startup))
+        log('## Run as service          = %s' % str(self.service_enable))
+        log('## - Time interval         = %s' % str(self.service_time))
         log('## Overwrite all files     = %s' % str(self.files_overwrite))
         
         log('## Movie Artwork           = %s' % str(self.movie_enable))
