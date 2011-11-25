@@ -520,7 +520,7 @@ def _gui_solomode(self):
             _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
             if not self._download_art_succes:
                 xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
-    else: xbmcgui.Dialog().ok(self.media_name , self.gui_selected_msg + ' ' + __localize__(32022), __localize__(32010) )
+    else: xbmcgui.Dialog().ok(self.media_name , self.gui_selected_msg + ' ' + __localize__(32022), __localize__(32012) )
 
         
 
