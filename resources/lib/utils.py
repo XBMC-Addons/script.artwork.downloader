@@ -11,7 +11,7 @@ operation of script.extrafanartdownloader
 """
 
 ### get addon info
-__addon__ = xbmcaddon.Addon()
+__addon__ = xbmcaddon.Addon('script.artwork.downloader')
 __addonid__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __addonversion__ = __addon__.getAddonInfo('version')
