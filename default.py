@@ -20,7 +20,6 @@ from resources.lib.fileops import fileops
 from xml.parsers.expat import ExpatError
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
-from resources.lib.gui import _maingui
 from resources.lib.media_setup import _media_listing as media_listing
 ### get addon info
 __addon__       = xbmcaddon.Addon()
