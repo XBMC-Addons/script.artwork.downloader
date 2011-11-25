@@ -53,16 +53,16 @@
         <setting type="sep" />
         <setting label="32013" type="bool" id="tvshow_enable" default="false" />
         <setting label="32128" type="bool" id="tvshow_poster" subsetting= "true" enable="eq(-1,true)" default="false" />
-        <setting label="32129" type="bool" id="tvshow_seasonposter" subsetting= "true" enable="eq(-2,true)" default="false" enabled="false"/>
+        <setting label="32129" type="bool" id="tvshow_seasonposter" subsetting= "true" enable="false" default="false" />
         <setting label="32121" type="bool" id="tvshow_fanart" subsetting= "true" enable="eq(-3,true)" default="false" />
         <setting label="32122" type="bool" id="tvshow_extrafanart" subsetting= "true" enable="eq(-4,true)" default="false" />
         <setting label="32125" type="bool" id="tvshow_clearart" subsetting= "true" enable="eq(-5,true)" default="false" />
         <setting label="32127" type="bool" id="tvshow_characterart" subsetting= "true" enable="eq(-6,true)" default="false" />
         <setting label="32126" type="bool" id="tvshow_logo" subsetting= "true" enable="eq(-7,true)" default="false" />
         <setting label="32123" type="bool" id="tvshow_showbanner" subsetting= "true" enable="eq(-8,true)" default="false" />
-        <setting label="32124" type="bool" id="tvshow_seasonbanner" subsetting= "true" enable="eq(-9,true)" default="false" enabled="false" />
+        <setting label="32124" type="bool" id="tvshow_seasonbanner" subsetting= "true" enable="false" default="false" />
         <setting label="32130" type="bool" id="tvshow_thumb" subsetting= "true" enable="eq(-10,true)" default="false" />
-        <setting label="32134" type="bool" id="tvshow_seasonthumbs" subsetting= "true" enable="eq(-11,true)+eq(-11,false)" default="false" />
+        <setting label="32134" type="bool" id="tvshow_seasonthumbs" subsetting= "true" enable="false" default="false" />
         <setting label="32133" type="bool" id="tvshow_defaultthumb" subsetting= "true" enable="eq(-12,true)" default="false" />
     </category>
     
