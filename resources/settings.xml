@@ -11,7 +11,7 @@
         <setting label="32023" id="service_startup" type="bool" default="false"/>
         <setting label="32024" id="service_enable" type="bool" default="false"/>
         <setting label="32025" id="service_time" subsetting="true" type="labelenum" lvalues="32028|32027|32026"  default="24" enable="eq(-1,true)" visible="eq(-1,true)"/>
-        <setting label="32029" type="action"  action="RunScript($CWD/service.py)" />
+        <setting label="32029" type="text" subsetting="true" enable="false"/>
         <setting type="sep" />
     </category>
 
