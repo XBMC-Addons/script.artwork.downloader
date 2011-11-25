@@ -11,12 +11,7 @@
         <setting label="32023" id="service_startup" type="bool" default="false"/>
         <setting label="32024" id="service_enable" type="bool" default="false"/>
         <setting label="32025" id="service_time" subsetting="true" type="labelenum" lvalues="32028|32027|32026"  default="24" enable="eq(-1,true)" visible="eq(-1,true)"/>
-        <setting type="sep" />
-        <setting label="32035" id="files_overwrite" type="bool" default="false"/>
-        <setting type="sep" />
-        <setting label="32036" id="centralize_enable" type="bool"  default="false"/>
-        <setting label="32038" id="centralfolder_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
-        <setting label="32037" id="centralfolder_tvshows" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
+        <setting label="32029" type="action"  action="RunScript($CWD/service.py)" />
         <setting type="sep" />
     </category>
 
@@ -86,6 +81,12 @@
     <category label="32101" id="section_advanced">
         <setting type="sep" />
         <setting label="32102" type="lsep" />
+        <setting type="sep" />
+        <setting label="32035" id="files_overwrite" type="bool" default="false"/>
+        <setting type="sep" />
+        <setting label="32036" id="centralize_enable" type="bool"  default="false"/>
+        <setting label="32038" id="centralfolder_movies" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting label="32037" id="centralfolder_tvshows" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
         <setting type="sep" />
         <setting label="32103" id="backup_enabled" type="bool"  default="false"/>
         <setting label="32105" type="lsep" visible="eq(-1,true)"/>
