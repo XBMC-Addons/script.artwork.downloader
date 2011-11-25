@@ -83,6 +83,10 @@ class Main:
             if self.silent:
                 self.settings.background = 'true'
                 self.settings.notify = 'true'
+            elif self.mode == 'gui':
+                log('set dialog true')
+                self.settings.background = False
+                self.settings.notify = False
             dialog('create', line1 = __localize__(32008), background = self.settings.background)
             if not self.mediatype == '':
                 if not self.medianame == '':
@@ -520,16 +524,21 @@ def _gui_solomode(self):
             _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
             if not self._download_art_succes:
                 xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
-    else: xbmcgui.Dialog().ok(self.media_name , self.gui_selected_msg + ' ' + __localize__(32022), __localize__(32012) )
-
+    if not self.gui_imagelist and not self.gui_selected_type == '':
+        log('no artwork')
+        xbmcgui.Dialog().ok(self.media_name , self.gui_selected_msg + ' ' + __localize__(32022) )
+    #if self.gui_selected_type == '':
+    #    xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
+    else:
+        log('cancelled')
+        xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
         
-
 # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
 def _choice_type(self):
     select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , self.GUI_type_list)
+    self.gui_selected_type = ''
     if select == -1: 
         log( "### Canceled by user" )
-        xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
         return False
     else:
         # Check what artwork type has been chosen and parse the image restraints
@@ -547,7 +556,7 @@ def _choice_type(self):
                     self.gui_selected_filename = arttypes['filename']
                     self.gui_selected_msg = arttypes['gui_string']
                     return True
-            return True
+            
         else:
             return False
         
