@@ -20,6 +20,7 @@
 - Added: Overwrite all artwork option (will be reset when finished)
 - Added: Automatic XBMC caching of downloaded files
 - Added: 'silent=true' add-on start argument (displays notification on finished)
+- Added: Add-on can be run as service and at startup
 
 [B]0.4.1[/B]
 - Added: Extrathumbs support for Movies
