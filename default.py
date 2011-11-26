@@ -54,6 +54,7 @@ def cleanup(self):
     summary_tmp = __localize__(32012) + ': %s ' % self.fileops.downloadcount
     summary = summary_tmp + __localize__(32016)
     dialog('close', background = self.settings.background)
+    # Some dialog checks
     if self.settings.notify:
         log('Notify on finished/error enabled')
         self.settings.background = False
@@ -61,7 +62,9 @@ def cleanup(self):
         log('Network error detected, script aborted', xbmc.LOGERROR)
         dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
     if self.mode == 'gui':
-        log('')
+        log('GUI mode finished')
+    if xbmc.Player().isPlayingVideo():
+        log('Silent finish because of playing a video')
     elif not xbmc.abortRequested:
         dialog('okdialog', line1 = summary, background = self.settings.background)
     else:
