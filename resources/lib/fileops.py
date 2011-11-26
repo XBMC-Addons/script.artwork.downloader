@@ -4,7 +4,7 @@ import urllib2
 import xbmc
 import xbmcvfs
 from traceback import print_exc
-from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
+from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError, SocketTimeout
 from urllib2 import HTTPError, URLError
 from resources.lib import utils
 from resources.lib.settings import _settings
@@ -48,12 +48,8 @@ class fileops:
     def _copy(self, source, target):
         return xbmcvfs.copy(source, target)
 
-
+    ### Delete file from all targetdirs
     def _delete_file_in_dirs(self, filename, targetdirs, reason):
-        """
-        Delete file from all targetdirs
-        """
-        
         isdeleted = False
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
@@ -64,6 +60,7 @@ class fileops:
         if not isdeleted:
             log("Ignoring (%s): %s" % (reason, filename), xbmc.LOGINFO)
 
+    ### erase old cache file and copy new one
     def erase_current_cache(self,filename):
         try: 
             cached_thumb = self.get_cached_thumb(filename)
@@ -81,6 +78,7 @@ class fileops:
             print_exc()
             log( "Cache erasing error" )
 
+    # retrieve cache filename
     def get_cached_thumb( self, filename ):
         if filename.startswith( "stack://" ):
             filename = strPath[ 8 : ].split( " , " )[ 0 ]
@@ -96,13 +94,8 @@ class fileops:
             thumbpath = os.path.join( THUMBS_CACHE_PATH, cachedthumb[0], cachedthumb ).replace( "/Video" , "")    
         return thumbpath         
 
+    # copy filen from temp to final location
     def _copyfile(self, sourcepath, targetpath):
-
-        """
-        Copy sourcepath to targetpath and create directory if
-        necessary
-        """
-
         targetdir = os.path.dirname(targetpath)
         if not self._exists(targetdir):
             if not self._mkdir(targetdir):
@@ -112,7 +105,7 @@ class fileops:
         else:
             log("Copied successfully: %s" % targetpath)
 
-
+    # download file
     def _downloadfile(self, url, filename, targetdirs, files_overwrite, reset_skin = False):
 
         """
@@ -151,8 +144,9 @@ class fileops:
                     raise DownloadError(str(e))
             except URLError:
                 raise HTTPTimeout(url)
-            except timeout:
-                raise HTTPTimeout(url)
+            except socket.timeout, e:
+                #raise SocketTimeout(str(e))
+                log('Socket timeout. Continueing with next one.')
             else:
                 log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1

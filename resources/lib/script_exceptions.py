@@ -15,3 +15,4 @@ class HTTP503Error(BaseError): pass
 class HTTPTimeout(BaseError): pass
 class NoFanartError(BaseError): pass
 class ItemNotFoundError(BaseError): pass
+class SocketTimeout(BaseError): pass
