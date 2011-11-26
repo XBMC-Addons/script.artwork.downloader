@@ -4,7 +4,7 @@ import urllib2
 import xbmc
 import xbmcvfs
 from traceback import print_exc
-from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError, SocketTimeout
+from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
 from resources.lib import utils
 from resources.lib.settings import _settings
@@ -145,8 +145,7 @@ class fileops:
             except URLError:
                 raise HTTPTimeout(url)
             except socket.timeout, e:
-                #raise SocketTimeout(str(e))
-                log('Socket timeout. Continueing with next one.')
+                raise HTTPTimeout(str(e))
             else:
                 log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
