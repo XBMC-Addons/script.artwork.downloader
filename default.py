@@ -299,7 +299,10 @@ def download_artwork(self, media_list, providers):
         if self.settings.backup_enabled and not self.settings.backup_path == '':
             self.targets.append(self.settings.backup_path)
         # Check for id used by source sites
-        if self.media_id == '':
+        if self.mode == 'gui' and ((self.media_id == '') or (self.mediatype == 'tvshow' and self.media_id.startswith('tt'))):
+            dialog('close', background = self.settings.background)
+            dialog('okdialog','' ,self.media_name , __localize__(32030))
+        elif self.media_id == '':
             log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
         elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
             log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
