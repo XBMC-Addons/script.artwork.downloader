@@ -63,6 +63,8 @@ def cleanup(self):
         dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
     if self.mode == 'gui':
         log('GUI mode finished')
+        if self._download_art_succes:
+            xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
     if xbmc.Player().isPlayingVideo():
         log('Silent finish because of playing a video')
     elif not xbmc.abortRequested:
@@ -364,7 +366,6 @@ def download_artwork(self, media_list, providers):
                     _gui_solomode(self)
                 else:
                     _download_process(self)
-
         log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
         self.processeditems = self.processeditems + 1
 
@@ -435,7 +436,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
     
     # Try downloading the file and catch errors while trying to
     try:
-        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true', 'true')
+        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true')
         self._download_art_succes = True
     except HTTP404Error, e:
         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
