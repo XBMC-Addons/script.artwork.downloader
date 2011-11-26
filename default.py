@@ -397,8 +397,16 @@ def _download_process(self):
 def _gui_solomode_imagelist(self, art_type, image_type):
     log('Retrieving image list for GUI')
     self.gui_imagelist = []
+    # do some check for special cases
+    if art_type == 'defaultthumb':
+        image_type = str.lower(self.settings.tvshow_defaultthumb_type)
+    elif art_type == 'extrafanart':
+        image_type == 'fanart'
+    elif art_type == 'extrathumbs':
+        image_type == 'fanart'
+    #retrieve list
     for artwork in self.image_list:
-        if  artwork['type'] == art_type:
+        if  artwork['type'] == image_type:
             self.gui_imagelist.append(artwork['url'])
             log('url: %s'%artwork['url'])
     log('Image list: %s' %self.gui_imagelist)
@@ -532,6 +540,7 @@ def _gui_solomode(self):
         self.GUI_type_list[0] = "True"
     if ( len(self.GUI_type_list) == 1 ) or _choice_type(self):
         self.tmp_image_list = False
+        
         _gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
     
@@ -571,7 +580,6 @@ def _choice_type(self):
                     self.gui_selected_filename = arttypes['filename']
                     self.gui_selected_msg = arttypes['gui_string']
                     return True
-            
         else:
             return False
         
