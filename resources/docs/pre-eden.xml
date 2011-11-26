@@ -6,21 +6,24 @@
 	<item id="8">
 		<description>Get Artwork</description>
 		<label>$LOCALIZE[31316]</label>
-		<onclick condition="Container.Content(tvshows)">XBMC.RunScript(script.extrafanartdownloader, mediatype=tvshow, medianame=$INFO[ListItem.TVShowTitle])</onclick>
-		<onclick condition="Container.Content(movies)">XBMC.RunScript(script.extrafanartdownloader, mediatype=movie, medianame=$INFO[ListItem.Title])</onclick>
-		<visible>[Container.Content(tvshows)|Container.Content(movies)]+system.hasaddon(script.extrafanartdownloader)</visible>
+		<onclick condition="Container.Content(tvshows)">XBMC.RunScript(script.artwork.downloader, mediatype=tvshow, medianame=$INFO[ListItem.TVShowTitle])</onclick>
+		<onclick condition="Container.Content(movies)">XBMC.RunScript(script.artwork.downloader, mediatype=movie, medianame=$INFO[ListItem.Title])</onclick>
+		<visible>[Container.Content(tvshows)|Container.Content(movies)]+system.hasaddon(script.artwork.downloader)</visible>
 	</item>
 		  
 
-<!-- Calling the script to download extrafanart for just one movie/tvshow with GUI mode so user can select the artwork he wants--> 
+<!-- Calling the script to download extrafanart for just one movie/tvshow with GUI mode so user can select the artwork he wants-->
+<!-- You can also use a yes/no button to call GUI mode or automatic solo downloading-->
 	<item id="8">
 		<description>Get Artwork</description>
 		<label>$LOCALIZE[31316]</label>
-		<onclick condition="Container.Content(tvshows)">XBMC.RunScript(script.extrafanartdownloader, mediatype=tvshow, medianame=$INFO[ListItem.TVShowTitle])</onclick>
-		<onclick condition="Container.Content(movies)">XBMC.RunScript(script.extrafanartdownloader, mediatype=movie, medianame=$INFO[ListItem.Title])</onclick>
-		<visible>[Container.Content(tvshows)|Container.Content(movies)]+system.hasaddon(script.extrafanartdownloader)</visible>
+		<onclick condition="Container.Content(tvshows)">XBMC.RunScript(script.artwork.downloader, mode=gui, mediatype=tvshow, medianame=$INFO[ListItem.TVShowTitle])</onclick>
+		<onclick condition="Container.Content(movies)">XBMC.RunScript(script.artwork.downloader, mode=gui, mediatype=movie, medianame=$INFO[ListItem.Title])</onclick>
+		<visible>[Container.Content(tvshows)|Container.Content(movies)]+system.hasaddon(script.artwork.downloader)</visible>
 	</item>
 
+
+    
 
           
  <!-- Showing off the extrafanart as a slideshow -->
