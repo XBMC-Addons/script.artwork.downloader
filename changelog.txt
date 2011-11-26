@@ -1,4 +1,4 @@
-[B]0.4.2[/B]
+[B]1.0.0[/B]
 - Name change: Extrafanart Downloader -> Artwork Downloader
 - Fixed: Refactored JSON query to prevent reg-ex problems
 - Fixed: Total refactor on downloading and limiting
@@ -7,15 +7,15 @@
 - Added: Version check between settings and addon
 - Added: Movie Fanart
 - Added: Movie Poster
+- Added: Movie Default Thumb (folder.jpg=Poster)
 - Added: TV Show Poster
-- Added: TV Show Season Poster
 - Added: TV Show Fanart
 - Added: TV Show Clearart
 - Added: TV Show Characterart
 - Added: TV Show Logo
 - Added: TV Show Banner
-- Added: TV Show Season Banner
 - Added: TV Show Thumb
+- Added: TV Show Default Thumb (folder.jpg=Poster|Banner|Thumb)
 - Added: Solo run mode with GUI
 - Added: Overwrite all artwork option (will be reset when finished)
 - Added: 'silent=true' add-on start argument (displays notification on finished)
