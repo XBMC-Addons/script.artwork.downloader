@@ -362,7 +362,8 @@ def download_artwork(self, media_list, providers):
         log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
         self.processeditems = self.processeditems + 1
 
-def _download_process(self):    
+### Processes the bulk/solo mode downloading of files
+def _download_process(self):
     if self.settings.movie_enable and self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
             if arttypes['bulk_enabled']:
@@ -386,6 +387,7 @@ def _download_process(self):
                     _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
 
 
+### Retrieves imagelist for GUI solo mode
 def _gui_solomode_imagelist(self, art_type, image_type):
     log('Retrieving image list for GUI')
     self.gui_imagelist = []
@@ -396,7 +398,9 @@ def _gui_solomode_imagelist(self, art_type, image_type):
     log('Image list: %s' %self.gui_imagelist)
     if self.gui_imagelist == '':
         return False
-    else: return True
+    else:
+        return True
+
 
 ### Artwork downloading
 def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets, msg):
@@ -414,7 +418,8 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
         artworkfile = (filename+'%s.tbn' %artwork['season'])
     else: artworkfile = filename
     dialog('create', line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg + ': ' + artworkfile)
-    # Try downloading the file
+    
+    # Try downloading the file and catch errors while trying to
     try:
         self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true', 'true')
         self._download_art_succes = True
@@ -471,8 +476,10 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
             limited = self.filters.do_filter(art_type, self.mediatype, artwork, downloaded_artwork)
             if limited[0] and art_type =='extrafanart':
                 self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
-            elif limited[0]: log('Skipped. Reason: %s' %limited[1])
+            elif limited[0]:
+                log('Skipped. Reason: %s' %limited[1])
             else:
+                # Try downloading the file and catch errors while trying to
                 try:
                     log('ID of downloaded image: %s' %artwork['id'])
                     self.fileops._downloadfile(imageurl, artworkfile, targetdirs, self.settings.files_overwrite)
@@ -499,18 +506,21 @@ def _gui_solomode(self):
     # Close the 'checking for artwork' dialog before opening the GUI list
     dialog('close', background = self.settings.background)
     self.GUI_type_list = []
+    
     # Fill GUI art type list
     if self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
             if arttypes['solo_enabled'] == 'true':
                 gui = arttypes['gui_string']
                 self.GUI_type_list.append (gui)
+    
     # Fill GUI art type list
     if self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
             if arttypes['solo_enabled'] == 'true':
                 gui = arttypes['gui_string']
                 self.GUI_type_list.append (gui)
+    
     # 
     if len(self.GUI_type_list) == 1:
         self.GUI_type_list[0] = "True"
@@ -518,6 +528,7 @@ def _gui_solomode(self):
         self.tmp_image_list = False
         _gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
+    
     # Download the selected image
     if self.gui_imagelist:
         if _choose_image(self):
