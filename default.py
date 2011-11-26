@@ -553,6 +553,8 @@ def _gui_solomode(self):
     if not self.gui_imagelist and not self.gui_selected_type == '':
         log('no artwork')
         xbmcgui.Dialog().ok(self.media_name , self.gui_selected_msg + ' ' + __localize__(32022) )
+    elif self._download_art_succes:
+        log('Download succesfull')
     else:
         log('cancelled')
         xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
