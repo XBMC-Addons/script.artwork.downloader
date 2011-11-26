@@ -21,8 +21,8 @@
 	Artwork sources:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]
 	Remark:[CR]Check your skin what type of artwork is supported![CR]Each TV Show / Movie must have its own folder![CR]
 	Skin integration:[CR]See readme file
-    Issues/bugs/suggestions:[CR]Go to forum.xbmc.org
 	</description>
+    <disclaimer>For bugs, requests or general questions visit the Artwork Downloader thread on the XBMC forum.</disclaimer>
     <platform>all</platform>
   </extension>
 </addon>
