@@ -151,6 +151,8 @@ class fileops:
                     raise DownloadError(str(e))
             except URLError:
                 raise HTTPTimeout(url)
+            except timeout:
+                raise HTTPTimeout(url)
             else:
                 log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
