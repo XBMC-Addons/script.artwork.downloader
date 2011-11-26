@@ -51,6 +51,7 @@ class _settings:
         self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner") == 'true'
         self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart") == 'true'
         self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb") == 'true'
+        self.tvshow_defaultthumb_type    = __addon__.getSetting("tvshow_defaultthumb_type")
         
         self.centralize_enable      = __addon__.getSetting("centralize_enable") == 'true'
         self.centralfolder_split    = __addon__.getSetting("centralfolder_split")
@@ -103,7 +104,7 @@ class _settings:
         log('## Run as service          = %s' % str(self.service_enable))
         log('## - Time interval         = %s' % str(self.service_time))
         log('## Overwrite all files     = %s' % str(self.files_overwrite))
-        
+        log('##')
         log('## Movie Artwork           = %s' % str(self.movie_enable))
         log('## - Poster                = %s' % str(self.movie_poster))
         log('## - Fanart                = %s' % str(self.movie_fanart))
@@ -112,7 +113,7 @@ class _settings:
         log('## - Logo                  = %s' % str(self.movie_logo))
         log('## - DiscArt               = %s' % str(self.movie_discart))
         log('## - Default Thumb         = %s' % str(self.movie_defaultthumb))
-        
+        log('##')
         log('## TV Show Artwork         = %s' % str(self.tvshow_enable))
         log('## - Poster                = %s' % str(self.tvshow_poster))
         log('## - Fanart                = %s' % str(self.tvshow_fanart))
@@ -125,11 +126,12 @@ class _settings:
         log('## - Show Seasonthumbs     = %s' % str(self.tvshow_seasonthumbs))
         log('## - Show Characterart     = %s' % str(self.tvshow_characterart))
         log('## - Default Thumb         = %s' % str(self.tvshow_defaultthumb))
-        
+        log('## - Default Thumb Type    = %s' % str(self.tvshow_defaultthumb_type))
+        log('##')
         log('## Centralize Extrafanart  = %s' % str(self.centralize_enable))
         log('## - Movies Folder         = %s' % str(self.centralfolder_movies))
         log('## - TV Shows Folder       = %s' % str(self.centralfolder_tvshows))
-        
+        log('##')
         log('## Limit Artwork           = %s' % str(self.limit_artwork))
         log('## - Extrafanart Max       = %s' % str(self.limit_extrafanart_max))
         log('## - Fanart Rating         = %s' % str(self.limit_extrafanart_rating))
@@ -139,7 +141,7 @@ class _settings:
         log('## - Extrathumbs Max       = %s' % str(self.limit_extrathumbs_max))
         log('## - Language              = %s' % str(self.limit_language))
         log('## - Fanart with no text   = %s' % str(self.limit_notext))
-        
+        log('##')
         log('## Backup fanart           = %s' % str(self.backup_enabled))
         log('## Backup folder           = %s' % str(self.backup_path))
         log('## XBMC caching enabled    = %s' % str(self.xbmc_caching_enabled))
@@ -322,7 +324,7 @@ class _settings:
         info['bulk_enabled']    = self.tvshow_defaultthumb
         info['solo_enabled']    = 'true'
         info['gui_string']      = __localize__(32133)
-        info['art_type']        = 'poster'
+        info['art_type']        = 'defaultthumb'
         info['filename']        = 'folder.jpg'
         self.tvshow_arttype_list.append(info)        
         
