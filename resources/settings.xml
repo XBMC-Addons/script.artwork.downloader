@@ -92,7 +92,7 @@
         <setting label="32105" type="lsep" visible="eq(-1,true)"/>
         <setting label="32104" id="backup_path" subsetting="true" type="folder"  default="" source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
         <setting type="sep" />
-        <setting label="32106" id="xbmc_caching_enabled" type="bool"  default="false"/>
+        <setting label="32106" id="xbmc_caching_enabled" type="bool"  default="false" enable="false"/>
     </category>
     
 <!-- Plugin settings: Info section -->
