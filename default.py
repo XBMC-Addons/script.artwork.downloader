@@ -516,6 +516,8 @@ def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg
                 else:
                     downloaded_artwork = downloaded_artwork + 1
             dialog('update', percentage = int(float(current_artwork) / float(self.download_max) * 100.0), line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg, line3 = artworkfile, background = self.settings.background)
+    if current_artwork == 0:
+        log('No %s found' %art_type)
     log('Finished with: %s' %art_type)
 
 def _gui_solomode(self):
