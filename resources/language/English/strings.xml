@@ -30,7 +30,7 @@
         <string id="32027">36</string>
         <string id="32028">48</string>
         <string id="32029">[I](After changes are made you must restart XBMC) [/I]</string>
-        <string id="32030">-</string>
+        <string id="32030">No ID found for looking up artwork</string>
 
     <!-- Add-on settings: General section id=32031 to 32050 -->
         <string id="32031">General settings</string>
@@ -64,6 +64,7 @@
     <!-- Add-on settings: TV Show section id=32081 to 32090 -->
         <string id="32081">TV Shows</string>
         <string id="32082">[B]Options for downloading TV Show artwork[/B]</string>
+        <string id="32083">Choose what type to use for default thumb:</string>
 
     <!-- Add-on settings: Music section id=32091 to 32100 -->
         <string id="32091">Music</string>
