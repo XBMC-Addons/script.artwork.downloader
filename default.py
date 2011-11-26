@@ -147,6 +147,7 @@ def initial_vars(self):
     self.silent = ''
     self.gui_selected_type = ''
     self.gui_imagelist = ''
+    self._download_art_succes = False
 
 ### Report the total numbers of downloaded images (needs some work for correct totals)
 def finished_log(self):
@@ -625,7 +626,7 @@ class MainGui( xbmcgui.WindowXMLDialog ):
 
     def onAction(self, action):
         if action in ACTION_PREVIOUS_MENU:
-            self.close() 
+            self.close()
 
     def onClick(self, controlID):
         log( "### control: %s" % controlID )
