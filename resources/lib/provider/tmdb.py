@@ -13,7 +13,7 @@ class TMDBProvider(BaseProvider):
         self.name = 'TMDB'
         self.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
         self.api_limits = True
-        self.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/" + language.get_abbrev() + "/xml/%s/%s"
+        self.url = "http://api.themoviedb.org/2.1/Movie.getImages/" + language.get_abbrev() + "/xml/%s/%s"
        
         
     def get_image_list(self, media_id):
