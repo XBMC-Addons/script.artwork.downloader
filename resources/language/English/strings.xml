@@ -116,15 +116,15 @@
         
     <!-- Add-on settings: Info section id=32181 to 32190-->   
         <string id="32181">Info</string>
-        <string id="32182">Please donate or contribute to following sites to show your support:</string>
+        <string id="32182">Please donate or contribute to the following sites to show your support:</string>
         <string id="32183">[I]www.xbmc.org[/I] </string>
         <string id="32184">[I]www.fanart.tv[/I] </string>
         <string id="32185">[I]www.thetvdb.com[/I] </string>
         <string id="32186">[I]www.themoviedb.org[/I] </string>
-        <string id="32187">Add-on dev's:</string>
-        <string id="32188">[I]paddycarey, machine-sanctum, pudneyj [/I] </string>
+        <string id="32187">Add-on authors:</string>
+        <string id="32188">[I]paddycarey, machine-sanctum, putneyj [/I] </string>
         <string id="32191">[I]For bugs, requests or general questions visit the [/I]</string>
         <string id="32192">[I]  Artwork Downloader thread on the XBMC forum. [/I]</string>
         <string id="32189">Thanks to:</string>
-        <string id="32190">Team XBMC and the dev's on which this add-on was based on.</string>
+        <string id="32190">Team XBMC and the devs of the other addons on which this was based.</string>
 </strings>

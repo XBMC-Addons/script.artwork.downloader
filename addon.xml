@@ -17,9 +17,9 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Downloads Artwork for TV shows and Movies in your library</summary>
     <description lang="en">
-	Downloads all different kinds of artwork for TV shows and Movies in your library. Check the options for supported artwork[CR]
+	Downloads all available artwork for TV shows and Movies in your library. Check the options for supported artwork[CR]
 	Artwork sources:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]
-	Remark:[CR]Check your skin what type of artwork is supported![CR]Each TV Show / Movie must have its own folder![CR]
+	Remark:[CR]Check your skin to see what type of artwork is supported![CR]Each TV Show/Movie must have its own folder![CR]
 	Skin integration:[CR]See readme file
 	</description>
     <disclaimer>For bugs, requests or general questions visit the Artwork Downloader thread on the XBMC forum.</disclaimer>
