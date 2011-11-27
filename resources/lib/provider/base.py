@@ -39,6 +39,8 @@ class BaseProvider:
                 raise DownloadError(str(e))
         except URLError:
             raise HTTPTimeout(url)
+        except socket.timeout, e:
+            raise HTTPTimeout(url)
 
 
     def get_image_list(self, media_id):

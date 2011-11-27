@@ -13,7 +13,7 @@ class TMDBProvider(BaseProvider):
         self.name = 'TMDB'
         self.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
         self.api_limits = True
-        self.url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/" + language.get_abbrev() + "/xml/%s/%s"
+        self.url = "http://api.themoviedb.org/2.1/Movie.getImages/" + language.get_abbrev() + "/xml/%s/%s"
        
         
     def get_image_list(self, media_id):
@@ -29,21 +29,23 @@ class TMDBProvider(BaseProvider):
             raise ItemNotFoundError(media_id)
         else:
             tree = tree.findall('images')[0]
-            for image in tree.findall('image'):
-                info = {}
-                info['url'] = image.get('url')
-                info['id'] = image.get('id')
-                info['type'] = ''
-                if image.get('type') == 'backdrop' and image.get('size') == 'original':
-                    info['type'] = 'fanart'
-                elif image.get('type') == 'backdrop' and image.get('size') == 'poster':
-                    info['type'] = 'thumb'
-                elif image.get('type') == 'poster' and image.get('size') == 'original':
-                    info['type'] = 'poster'
-                info['height'] = int(image.get('height'))
-                info['width'] = int(image.get('width'))
-                if info:            
-                    image_list.append(info) 
+            for imagetype in ['poster', 'backdrop']:
+                for image in tree.findall(imagetype):
+                    for sizes in image:
+                        info = {}
+                        info['id'] = image.get('id')
+                        info['type'] = ''
+                        if imagetype == 'backdrop' and sizes.get('size') == 'original':
+                            info['type'] = 'fanart'
+                        elif imagetype == 'backdrop' and sizes.get('size') == 'poster':
+                            info['type'] = 'thumb'
+                        elif imagetype == 'poster' and sizes.get('size') == 'original':
+                            info['type'] = 'poster'
+                        info['url'] = sizes.get('url')
+                        info['height'] = int(sizes.get('height'))
+                        info['width'] = int(sizes.get('width'))
+                        if info:            
+                            image_list.append(info) 
             if image_list == []:
                 raise NoFanartError(media_id)
             else:
