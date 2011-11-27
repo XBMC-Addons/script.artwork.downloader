@@ -58,6 +58,9 @@ def cleanup(self):
     if self.settings.notify:
         log('Notify on finished/error enabled')
         self.settings.background = False
+    if xbmc.Player().isPlayingVideo():
+        #log('Silent finish because of playing a video')
+        self.settings.background = True
     if not self.settings.failcount < self.settings.failthreshold:
         log('Network error detected, script aborted', xbmc.LOGERROR)
         dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
@@ -65,9 +68,7 @@ def cleanup(self):
         log('GUI mode finished')
         if self._download_art_succes:
             xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
-    if xbmc.Player().isPlayingVideo():
-        log('Silent finish because of playing a video')
-    elif not xbmc.abortRequested:
+    if not xbmc.abortRequested:
         dialog('okdialog', line1 = summary, background = self.settings.background)
     else:
         dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
@@ -629,6 +630,7 @@ class MainGui( xbmcgui.WindowXMLDialog ):
     def onAction(self, action):
         if action in ACTION_PREVIOUS_MENU:
             self.close()
+   
 
     def onClick(self, controlID):
         log( "### control: %s" % controlID )
