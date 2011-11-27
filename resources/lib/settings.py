@@ -70,8 +70,8 @@ class _settings:
         
     def _get_limit(self):    
         self.limit_artwork = __addon__.getSetting("limit_artwork") == 'true'
-        self.limit_extrafanart_max      = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.').rstrip(','))
-        self.limit_extrafanart_rating   = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.').rstrip(','))
+        self.limit_extrafanart_max      = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
+        self.limit_extrafanart_rating   = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_size_moviefanart     = int(__addon__.getSetting("limit_size_moviefanart"))
         self.limit_size_tvshowfanart    = int(__addon__.getSetting("limit_size_tvshowfanart"))
         self.limit_extrathumbs          = self.limit_artwork
@@ -84,12 +84,12 @@ class _settings:
 
     ### Initial startup vars
     def _vars(self):
-        self.failcount          = 0
-        self.failthreshold      = 3
-        self.xmlfailthreshold   = 5
-        self.api_timedelay      = 5
-        self.mediatype          = ''
-        self.medianame          = ''
+        self.failcount                  = 0
+        self.failthreshold              = 3
+        self.xmlfailthreshold           = 5
+        self.api_timedelay              = 5
+        self.mediatype                  = ''
+        self.medianame                  = ''
         self.count_tvshow_extrafanart   = 0
         self.count_movie_extrafanart    = 0
         self.count_movie_extrathumbs    = 0
