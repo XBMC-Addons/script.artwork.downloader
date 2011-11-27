@@ -143,7 +143,7 @@ class fileops:
             except URLError:
                 raise HTTPTimeout(url)
             except socket.timeout, e:
-                raise HTTPTimeout(str(e))
+                raise HTTPTimeout(url)
             else:
                 log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
