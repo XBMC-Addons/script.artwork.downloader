@@ -116,6 +116,7 @@ class _settings:
         log('##')
         log('## TV Show Artwork         = %s' % str(self.tvshow_enable))
         log('## - Poster                = %s' % str(self.tvshow_poster))
+        log('## - Season Poster         = %s' % str(self.tvshow_seasonposter))
         log('## - Fanart                = %s' % str(self.tvshow_fanart))
         log('## - ExtraFanart           = %s' % str(self.tvshow_extrafanart))
         log('## - Clearart              = %s' % str(self.tvshow_clearart))
