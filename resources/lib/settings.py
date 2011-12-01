@@ -69,12 +69,12 @@ class _settings:
         self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
         
     def _get_limit(self):    
-        self.limit_artwork = __addon__.getSetting("limit_artwork") == 'true'
+        self.limit_artwork              = __addon__.getSetting("limit_artwork") == 'true'
         self.limit_extrafanart_max      = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
         self.limit_extrafanart_rating   = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_size_moviefanart     = int(__addon__.getSetting("limit_size_moviefanart"))
         self.limit_size_tvshowfanart    = int(__addon__.getSetting("limit_size_tvshowfanart"))
-        self.limit_extrathumbs          = self.limit_artwork
+        self.limit_extrathumbs          = 'true'
         self.limit_extrathumbs_max      = 4
         self.limit_artwork_max          = 1
         self.limit_language             = __addon__.getSetting("limit_language") == 'true'
