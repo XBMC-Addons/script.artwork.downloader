@@ -1,3 +1,6 @@
+[B]1.0.1[/B]
+- Fixed: Downloading logos in overwrite all mode
+
 [B]1.0.0[/B]
 - Name change: Extrafanart Downloader -> Artwork Downloader
 - Fixed: Refactored JSON query to prevent reg-ex problems
