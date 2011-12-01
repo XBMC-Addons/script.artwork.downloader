@@ -277,7 +277,7 @@ class _settings:
         info['bulk_enabled']    = self.tvshow_logo
         info['solo_enabled']    = 'true'
         info['gui_string']      = __localize__(32126)
-        info['art_type']        = 'clearlogo'
+        info['art_type']        = 'logo'
         info['filename']        = 'logo.png'
         self.tvshow_arttype_list.append(info)
         
