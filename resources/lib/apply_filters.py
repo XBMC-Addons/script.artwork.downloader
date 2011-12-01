@@ -34,8 +34,8 @@ class apply_filters:
         elif art_type == 'seasonbanner':
             return self.seasonbanner(mediatype, artwork, downloaded_artwork)
         
-        elif art_type == 'logo':
-            return self.logo(mediatype, artwork, downloaded_artwork)
+        elif art_type == 'clearlogo':
+            return self.clearlogo(mediatype, artwork, downloaded_artwork)
         
         elif art_type == 'clearart':
             return self.clearart(mediatype, artwork, downloaded_artwork)
@@ -166,7 +166,7 @@ class apply_filters:
             limited = True
         return [limited, reason]
         
-    def logo(self, mediatype, artwork, downloaded_artwork):
+    def clearlogo(self, mediatype, artwork, downloaded_artwork):
         limited = False
         reason = ''
         if downloaded_artwork >= self.settings.limit_artwork_max:
