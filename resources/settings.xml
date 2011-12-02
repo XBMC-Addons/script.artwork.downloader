@@ -78,10 +78,6 @@
         <setting label="32038" id="centralfolder_movies"    type="folder"   default=""  subsetting="true"    source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
         <setting label="32037" id="centralfolder_tvshows"   type="folder"   default=""  subsetting="true"    source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
         <setting type="sep" />
-        <setting label="32103" id="backup_enabled"          type="bool"     default="false" enable="false"/>
-        <setting label="32105" type="lsep"  visible="eq(-1,true)" />
-        <setting label="32104" id="backup_path"             type="folder"   default=""  subsetting="true"    source="auto" option="writeable" enable="eq(-2,true)" visible="eq(-2,true)"/>
-        <setting type="sep" />
         <setting label="32106" id="xbmc_caching_enabled"    type="bool"     default="false" enable="false"/>
     </category>
     

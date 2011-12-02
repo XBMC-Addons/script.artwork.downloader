@@ -1,4 +1,4 @@
-### import
+﻿### import
 import re
 import os
 import time
@@ -302,10 +302,6 @@ def download_artwork(self, media_list, providers):
                     self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
                 else:
                     log('Error: Central fanart enabled but movies folder not set, skipping', xbmc.LOGERROR)
-        ### Check if using the cache option
-        self.targets = self.target_extrafanartdirs[:]
-        if self.settings.backup_enabled and not self.settings.backup_path == '':
-            self.targets.append(self.settings.backup_path)
         # Check for id used by source sites
         if self.mode == 'gui' and ((self.media_id == '') or (self.mediatype == 'tvshow' and self.media_id.startswith('tt'))):
             dialog('close', background = self.settings.background)
@@ -314,6 +310,7 @@ def download_artwork(self, media_list, providers):
             log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
         elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
             log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
+        # If correct ID found continue
         else:
             self.temp_image_list = []
             self.image_list = []
@@ -381,23 +378,23 @@ def _download_process(self):
         for arttypes in self.settings.movie_arttype_list:
             if arttypes['bulk_enabled']:
                 if arttypes['art_type'] == 'extrafanart':
-                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui_string'])
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                 elif arttypes['art_type'] == 'defaultthumb':
-                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])    
+                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])    
                 elif arttypes['art_type'] == 'extrathumbs':
-                    _download_art(self, arttypes['art_type'], 'thumb', arttypes['filename'], self.target_extrathumbsdirs, self.targets, arttypes['gui_string'])
+                    _download_art(self, arttypes['art_type'], 'thumb', arttypes['filename'], self.target_extrathumbsdirs,  arttypes['gui_string'])
                 else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
     if self.settings.tvshow_enable and self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
             if arttypes['bulk_enabled']:
                 if arttypes['art_type'] == 'extrafanart':
-                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs, self.targets, arttypes['gui_string'])
+                    _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                 elif arttypes['art_type'] == 'defaultthumb':
-                    _download_art(self, arttypes['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
+                    _download_art(self, arttypes['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
                 else:
-                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir, self.targets, arttypes['gui_string'])
+                    _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
 
 ### Retrieves imagelist for GUI solo mode
@@ -424,7 +421,7 @@ def _gui_solomode_imagelist(self, art_type, image_type):
 
 
 ### Artwork downloading
-def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets, msg):
+def _download_art_solo(self, art_type, image_type, filename, targetdirs, msg):
     log('Starting with processing: %s' %art_type)
     self._download_art_succes = False
     self.settings.failcount = 0
@@ -467,7 +464,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, targets
 
 
 ### Artwork downloading
-def _download_art(self, art_type, image_type, filename, targetdirs, targets, msg):
+def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     log('Starting with processing: %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
@@ -556,7 +553,7 @@ def _gui_solomode(self):
     # Download the selected image
     if self.gui_imagelist:
         if _choose_image(self):
-            _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.targets, self.gui_selected_msg)
+            _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
             if not self._download_art_succes:
                 xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
     if not self.gui_imagelist and not self.gui_selected_type == '':

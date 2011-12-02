@@ -58,8 +58,6 @@ class _settings:
         self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
 
-        self.backup_enabled         = __addon__.getSetting("backup_enabled") == 'true'
-        self.backup_path            = __addon__.getSetting("backup_path")
         self.background             = __addon__.getSetting("background") == 'true'
         self.notify                 = __addon__.getSetting("notify") == 'true'
         self.service_startup        = __addon__.getSetting("service_startup") == 'true'
@@ -143,8 +141,6 @@ class _settings:
         log('## - Language              = %s' % str(self.limit_language))
         log('## - Fanart with no text   = %s' % str(self.limit_notext))
         log('##')
-        log('## Backup fanart           = %s' % str(self.backup_enabled))
-        log('## Backup folder           = %s' % str(self.backup_path))
         log('## XBMC caching enabled    = %s' % str(self.xbmc_caching_enabled))
         log('##')
         log('## End of Settings...')
@@ -333,7 +329,7 @@ class _settings:
     ### Check for faulty setting combinations
     def _check(self):    
         settings_faulty = True
-        check_sections = check_movie = check_tvshow = check_centralize = check_cache = True
+        check_sections = check_movie = check_tvshow = check_centralize = True
         while settings_faulty:
             # re-check settings after posible change
             self._get()        
@@ -360,14 +356,8 @@ class _settings:
                     check_centralize = False
                     log('Setting check: No centralized folder chosen')
                 else: check_centralize = True
-            # Check if faulty setting in cache section
-            if self.backup_enabled:
-                if self.backup_path == '':
-                    check_cache = False
-                    log('Setting check: No cache folder chosen')
-                else: check_cache = True
             # Compare all setting check
-            if check_sections and check_movie and check_tvshow and check_centralize and check_cache:
+            if check_sections and check_movie and check_tvshow and check_centralize:
                 settings_faulty = False
             else: settings_faulty = True
             # Faulty setting found
