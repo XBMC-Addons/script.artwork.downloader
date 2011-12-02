@@ -322,18 +322,17 @@ class _settings:
         info['gui_string']      = __localize__(32133)
         info['art_type']        = 'defaultthumb'
         info['filename']        = 'folder.jpg'
-        self.tvshow_arttype_list.append(info)        
-        
-            
+        self.tvshow_arttype_list.append(info)
+
+
     ### Check for faulty setting combinations
-    def _check(self):    
+    def _check(self):
         settings_faulty = True
-        
         while settings_faulty:
+            settings_faulty = True
             check_sections = check_movie = check_tvshow = check_centralize = True
             # re-check settings after posible change
             self._get()
-            sleep(10)
             # Check if artwork section enabled
             if not (self.movie_enable or self.tvshow_enable):
                 check_sections = False
@@ -353,7 +352,6 @@ class _settings:
                 else: check_tvshow = True
             # Check if faulty setting in centralize section
             if self.centralize_enable:
-                self._get()
                 if self.centralfolder_movies == '' and self.centralfolder_tvshows == '':
                     check_centralize = False
                     log('Setting check: No centralized folder chosen')
@@ -367,4 +365,3 @@ class _settings:
                 log('Faulty setting combination found')
                 dialog('okdialog', line1 = __localize__(32003), line2 = __localize__(32004))
                 __addon__.openSettings()
-                sleep(3)
