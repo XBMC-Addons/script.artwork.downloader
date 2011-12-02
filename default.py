@@ -7,6 +7,7 @@ import xbmc
 import xbmcaddon
 import platform
 import xbmcgui
+import urllib
 from traceback import print_exc
 
 ### import libraries
@@ -270,10 +271,7 @@ def download_artwork(self, media_list, providers):
             self.media_path = os.path.split(currentmedia["path"])[0]
         # Fixes problems with rared movies
         if self.media_path.startswith("rar"):
-            self.media_path = self.media_path.replace("%3a",":").replace("%5c","\\").replace("%2f","/").replace("%20"," ").replace("%28","(").replace("%29",")").replace("%2e",".").replace("%2d","-")
-            self.media_path = self.media_path.replace("rar://","")
-            self.media_path = os.path.split(self.media_path)[0]
-            log('Path: %s' % self.media_path)
+            self.media_path = os.path.split(urllib.url2pathname(self.media_path.replace("rar://","")))[0]
         # Declare some vars
         self.media_id = currentmedia["id"]
         self.media_name = currentmedia["name"]
