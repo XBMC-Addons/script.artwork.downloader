@@ -78,7 +78,6 @@ def cleanup(self):
 class Main:
     def __init__(self):
         initial_vars(self) 
-        #self.settings._exist()      # Check if settings.xml exists and correct version
         self.settings._get()        # Get settings from settings.xml
         self.settings._get_limit() # Get settings from settings.xml
         self.settings._check()      # Check if there are some faulty combinations present

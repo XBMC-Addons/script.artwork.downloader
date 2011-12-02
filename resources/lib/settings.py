@@ -144,27 +144,6 @@ class _settings:
         log('##')
         log('## End of Settings...')
 
-    ### Check if settings.xml exist and version check
-    def _exist(self):
-        first_run = True
-        while first_run:
-            # no settings.xml found
-            if not os.path.isfile(settings_file):
-                dialog('okdialog', line1 = __localize__(32001), line2 = __localize__(32021))
-                log('## Settings.xml file not found. Opening settings window.')
-                __addon__.openSettings()
-                time.sleep(1)
-                __addon__.setSetting(id="addon_version", value=__version__)
-            # different version settings.xml found
-            if os.path.isfile(settings_file) and __addon__.getSetting("addon_version") <> __version__:
-                dialog('okdialog', line1 = __localize__(32002), line2 = __localize__(32021))
-                log('## Addon version is different. Opening settings window.')
-                __addon__.openSettings()
-                __addon__.setSetting(id="addon_version", value=__version__)
-            else:
-                first_run = False
-        __addon__.setSetting(id="addon_version", value=__version__)
-        log('## Correct version of settings.xml file found. Continue with initializing.')
 
     ### Create list for Artwork types to download
     def _artype_list(self):
