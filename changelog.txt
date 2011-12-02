@@ -1,6 +1,7 @@
 [B]1.0.1[/B]
 - Fixed: Downloading logos in overwrite all mode
 - Fixed: Problems with folder creation for rared media
+- Removed: Version/settings.xml check
 
 [B]1.0.0[/B]
 - Name change: Extrafanart Downloader -> Artwork Downloader
