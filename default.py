@@ -105,8 +105,12 @@ class Main:
                     if self.mediatype == 'movie':
                         self.Medialist = media_listing('movie')
                         log("Bulk mode: movie")
+                        self.settings.movie_enable = 'true'
+                        self.settings.tvshow_enable = 'false'
                         download_artwork(self, self.Medialist, self.movie_providers)
                     elif self.mediatype == 'tvshow':
+                        self.settings.movie_enable = 'false'
+                        self.settings.tvshow_enable = 'true'
                         self.Medialist = media_listing('tvshow')
                         log("Bulk mode: TV Shows")
                         download_artwork(self, self.Medialist, self.tv_providers)
