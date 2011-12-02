@@ -65,6 +65,11 @@ class _settings:
         self.files_overwrite        = __addon__.getSetting("files_overwrite") == 'true'
         self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
         
+        # temporary force these to false
+        self.tvshow_seasonposter    = 'false'
+        self.tvshow_seasonbanner    = 'false'
+        self.tvshow_seasonthumbs    = 'false'
+        
     def _get_limit(self):    
         self.limit_artwork              = __addon__.getSetting("limit_artwork") == 'true'
         self.limit_extrafanart_max      = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
