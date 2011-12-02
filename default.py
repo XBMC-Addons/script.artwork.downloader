@@ -182,7 +182,10 @@ def runmode_args(self):
     except:   log( "## no arg7" )
     try: log( "## arg 8: %s" % sys.argv[8] )
     except:   log( "## no arg8" )
-
+    try: log( "## arg 8: %s" % sys.argv[9] )
+    except:   log( "## no arg8" )
+    try: log( "## arg 8: %s" % sys.argv[10] )
+    except:   log( "## no arg8" )
 
 ### solo mode
 def solo_mode(self, itemtype, itemname):
@@ -233,8 +236,6 @@ def initialise(self):
             else:
                 log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
                 return False
-        else:
-            pass
         # Check for medianame
         match = re.search("medianame=" , item)
         if match:
