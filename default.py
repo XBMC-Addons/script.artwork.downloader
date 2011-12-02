@@ -97,7 +97,7 @@ class Main:
             if not self.mediatype == '':
                 if not self.medianame == '':
                     if self.mode == 'gui':
-                        # 'Mode check is at the end of: 'def download_artwork'
+                        # GUI mode check is at the end of: 'def download_artwork'
                         solo_mode(self, self.mediatype, self.medianame)
                     else:
                         solo_mode(self, self.mediatype, self.medianame)
