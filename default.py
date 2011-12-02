@@ -290,18 +290,12 @@ def download_artwork(self, media_list, providers):
         self.target_artworkdir.append(artwork_dir)
         self.target_extrafanartdirs.append(extrafanart_dir)
         self.target_extrathumbsdirs.append(extrathumbs_dir)
-        ### Check if using the centralize option
+        # Check if using the centralize option
         if self.settings.centralize_enable:
             if self.mediatype == 'tvshow':
-                if not self.settings.centralfolder_tvshows == '':
-                    self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
-                else:
-                    log('Error: Central fanart enabled but TV Show folder not set, skipping', xbmc.LOGERROR)
+                self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
             elif self.mediatype == 'movie':
-                if not self.settings.centralfolder_movies == '':
-                    self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
-                else:
-                    log('Error: Central fanart enabled but movies folder not set, skipping', xbmc.LOGERROR)
+                self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
         # Check for id used by source sites
         if self.mode == 'gui' and ((self.media_id == '') or (self.mediatype == 'tvshow' and self.media_id.startswith('tt'))):
             dialog('close', background = self.settings.background)
