@@ -54,7 +54,6 @@ class _settings:
         self.tvshow_defaultthumb_type    = __addon__.getSetting("tvshow_defaultthumb_type")
         
         self.centralize_enable      = __addon__.getSetting("centralize_enable") == 'true'
-        self.centralfolder_split    = __addon__.getSetting("centralfolder_split")
         self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
 
@@ -329,10 +328,12 @@ class _settings:
     ### Check for faulty setting combinations
     def _check(self):    
         settings_faulty = True
-        check_sections = check_movie = check_tvshow = check_centralize = True
+        
         while settings_faulty:
+            check_sections = check_movie = check_tvshow = check_centralize = True
             # re-check settings after posible change
-            self._get()        
+            self._get()
+            sleep(10)
             # Check if artwork section enabled
             if not (self.movie_enable or self.tvshow_enable):
                 check_sections = False
@@ -352,6 +353,7 @@ class _settings:
                 else: check_tvshow = True
             # Check if faulty setting in centralize section
             if self.centralize_enable:
+                self._get()
                 if self.centralfolder_movies == '' and self.centralfolder_tvshows == '':
                     check_centralize = False
                     log('Setting check: No centralized folder chosen')
@@ -364,4 +366,5 @@ class _settings:
             if settings_faulty:
                 log('Faulty setting combination found')
                 dialog('okdialog', line1 = __localize__(32003), line2 = __localize__(32004))
-                __addon__.openSettings()        
+                __addon__.openSettings()
+                sleep(3)
