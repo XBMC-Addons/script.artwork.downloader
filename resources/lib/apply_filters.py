@@ -3,6 +3,7 @@ import xbmcaddon
 from resources.lib.fileops import fileops
 from resources.lib.settings import _settings
 from resources.lib import language
+from resources.lib.utils import _log as log
 
 __language__ = language.get_abbrev()
 
