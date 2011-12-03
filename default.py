@@ -384,7 +384,7 @@ def _custom_process(self):
                     if arttypes['art_type'] == 'extrafanart':
                         _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                     elif arttypes['art_type'] == 'defaultthumb':
-                        _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])    
+                        _download_art(self, arttypes['art_type'], 'poster', arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])    
                     elif arttypes['art_type'] == 'extrathumbs':
                         _download_art(self, arttypes['art_type'], 'thumb', arttypes['filename'], self.target_extrathumbsdirs,  arttypes['gui_string'])
                     else:
@@ -411,7 +411,7 @@ def _download_process(self):
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                 elif arttypes['art_type'] == 'defaultthumb':
-                    _download_art(self, 'poster', 'poster', arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])    
+                    _download_art(self, arttypes['art_type'], 'poster', arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])    
                 elif arttypes['art_type'] == 'extrathumbs':
                     _download_art(self, arttypes['art_type'], 'thumb', arttypes['filename'], self.target_extrathumbsdirs,  arttypes['gui_string'])
                 else:

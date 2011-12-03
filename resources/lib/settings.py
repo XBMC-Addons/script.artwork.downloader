@@ -207,7 +207,7 @@ class _settings:
         info['bulk_enabled']    = self.movie_defaultthumb
         info['solo_enabled']    = 'true'
         info['gui_string']      = __localize__(32133)
-        info['art_type']        = 'poster'
+        info['art_type']        = 'defaultthumb'
         info['filename']        = 'folder.jpg'
         self.movie_arttype_list.append(info)
 
