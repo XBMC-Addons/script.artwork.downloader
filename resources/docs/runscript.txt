@@ -4,6 +4,10 @@ These are the available script function for skin integration can be called from 
 The script searches in the XBMC library for the corresponding values as described below.
 
 
+ALL OPTIONS MUST BE LOWERCASE!!
+EXCEPT MOVIE/TVSHOW NAMES THAT MUST MATCH THE LIBRARY
+
+
 Code to run script solo:
     XBMC.RunScript(script.extrafanartdownloader, mediatype=?, medianame=?)
             -> Runs automated using all add-on settings
@@ -43,12 +47,15 @@ Available options "mode=?"
     
 Available options "medianame=?":
     Any name/title that fits the corresponding "mediatype="
-            -> example: "mediatype=movie" "medianame=Avatar"
-            -> example: "mediatype=tvshow" "medianame=House"
+            -> example: mediatype=movie, medianame=$INFO[ListItem.Title]
+            -> example: mediatype=movie, medianame=Avatar
+            -> example: mediatype=tvshow, medianame=$INFO[ListItem.TVShowTitle]
+            -> example: mediatype=tvshow, medianame=House
 
             
 Available options "<art_type>"
     List of options a skinners can chose from
     Movie: poster, fanart, extrafanart, extrathumbs, defaultthumb
     TV Show: poster, fanart, extrafanart, clearart, clearlogo, tvthumb, banner, characterart, defaultthumb
+	NOTE: when chosen 'clearlogo'  this will download 'logo.png'
 
