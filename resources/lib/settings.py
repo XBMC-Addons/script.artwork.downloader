@@ -66,9 +66,9 @@ class _settings:
         self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
         
         # temporary force these to false
-        self.tvshow_seasonposter    = 'false'
-        self.tvshow_seasonbanner    = 'false'
-        self.tvshow_seasonthumbs    = 'false'
+        self.tvshow_seasonposter    = False
+        self.tvshow_seasonbanner    = False
+        self.tvshow_seasonthumbs    = False
         
     def _get_limit(self):    
         self.limit_artwork              = __addon__.getSetting("limit_artwork") == 'true'
