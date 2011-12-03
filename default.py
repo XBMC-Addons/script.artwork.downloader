@@ -101,11 +101,6 @@ class Main:
             if not self.mediatype == '':
                 # Check if medianame is specified
                 if not self.medianame == '':
-                    # activate both movie/tvshow for custom r
-                    if self.mode == 'custom':
-                        self.settings.movie_enable = True
-                        self.settings.tvshow_enable = True
-                    
                     if self.mode == 'gui':
                         # GUI mode check is at the end of: 'def download_artwork'
                         solo_mode(self, self.mediatype, self.medianame)
@@ -210,6 +205,10 @@ def runmode_args(self):
 
 ### solo mode
 def solo_mode(self, itemtype, itemname):
+    # activate both movie/tvshow for custom r
+    if self.mode == 'custom':
+        self.settings.movie_enable = True
+        self.settings.tvshow_enable = True
     if itemtype == 'movie':
         log("## Solo mode: Movie...")
         self.Medialist = media_listing('movie')
