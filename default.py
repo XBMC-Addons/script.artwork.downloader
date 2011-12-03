@@ -216,11 +216,8 @@ def solo_mode(self, itemtype, itemname):
     elif itemtype == 'tvshow':
         self.Medialist = media_listing('tvshow')
         log("## Solo mode: TV Show...")
-    elif itemtype == 'music':
-        self.Medialist = media_listing('music')
-        log("## Solo mode: Music...")
     else:
-        log("Error: type must be one of 'movie', 'tvshow' or 'music', aborting", xbmc.LOGERROR)
+        log("Error: type must be one of 'movie', 'tvshow', aborting", xbmc.LOGERROR)
         return False
     log('Retrieving fanart for: %s' % itemname)
     for currentitem in self.Medialist:
