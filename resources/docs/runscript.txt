@@ -5,27 +5,40 @@ The script searches in the XBMC library for the corresponding values as describe
 
 Code to run script solo:
 	XBMC.RunScript(script.extrafanartdownloader, mediatype=?, medianame=?)
+            -> Runs automated using all add-on settings
 
-Code to run script solo with GUI:
 	XBMC.RunScript(script.extrafanartdownloader, mode=gui, mediatype=?, medianame=?)
+            -> Runs using the GUI dialog. No add-on settings applied
     
+    XBMC.runscript(script.extrafanartdownloader, mode=custom, mediatype=?,medianame=?,<art_type>,<art_type>,<art_type>)
+			-> downloads according to specified art_type. Use as many as you like. Only add-on limits apply
+
 Code to run script bulk mode:
 	XBMC.runscript(script.extrafanartdownloader)
 			-> downloads according to add-on settings	
 	
 	XBMC.runscript(script.extrafanartdownloader, mediatype=?)
 			-> downloads according to media type
-
+	
+    XBMC.runscript(script.extrafanartdownloader, mode=custom, mediatype=?,<art_type>,<art_type>,<art_type>)
+			-> downloads according to media type and specified art_type. Use as many as you like
+            
 Available options "mediatype=?":
 	mediatype=movie
 	mediatype=tvshow
 
 Available options "mode=?"
-    mode=gui (this is at the moment the custom mode available.)
+    mode=gui (user can select from GUI list of enabled arttypes)
+    mode=custom (skinner can specify what artwork he wants to download)
     For bulk/solo do not provide "mode=?"
     
 Available options "medianame=?":
 	Any name/title that fits the corresponding "mediatype="
 			-> example: "mediatype=movie" "medianame=Avatar"
 			-> example: "mediatype=tvshow" "medianame=House"
+            
+Available options "<art_type>"
+    List of options a skinners can chose from
+    Movie: poster, fanart, extrafanart, extrathumbs, defaultthumb
+    TV Show: poster, fanart, extrafanart, clearart, clearlogo, tvthumb, banner, characterart, defaultthumb
 
