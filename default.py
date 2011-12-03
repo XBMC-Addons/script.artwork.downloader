@@ -86,22 +86,32 @@ class Main:
         self.settings._artype_list()# Fill out the GUI and Arttype lists with enabled options
         runmode_args(self)          # Check for script call methods
         if initialise(self):
+            # Check for silent background mode
             if self.silent:
                 log('Silent mode')
                 self.settings.background = True
                 self.settings.notify = False
+            # Check for gui mode
             elif self.mode == 'gui':
                 log('set dialog true')
                 self.settings.background = False
                 self.settings.notify = False
             dialog('create', line1 = __localize__(32008), background = self.settings.background)
+            # Check if mediatype is specified
             if not self.mediatype == '':
+                # Check if medianame is specified
                 if not self.medianame == '':
+                    # activate both movie/tvshow for custom r
+                    if self.mode == 'custom':
+                        self.settings.movie_enable = True
+                        self.settings.tvshow_enable = True
+                    
                     if self.mode == 'gui':
                         # GUI mode check is at the end of: 'def download_artwork'
                         solo_mode(self, self.mediatype, self.medianame)
                     else:
                         solo_mode(self, self.mediatype, self.medianame)
+                # No medianame specified
                 else:
                     if self.mediatype == 'movie':
                         self.Medialist = media_listing('movie')
@@ -117,10 +127,13 @@ class Main:
                         download_artwork(self, self.Medialist, self.tv_providers)
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
+            # No mediatype is specified
             else:
+                # activate both movie/tvshow for custom run
                 if self.mode == 'custom':
                     self.settings.movie_enable = True
                     self.settings.tvshow_enable = True
+                # Normal oprations check
                 if self.settings.movie_enable:
                     self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
