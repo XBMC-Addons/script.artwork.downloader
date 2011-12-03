@@ -314,14 +314,9 @@ class _settings:
         settings_faulty = True
         while settings_faulty:
             settings_faulty = True
-            check_sections = check_movie = check_tvshow = check_centralize = True
+            check_movie = check_tvshow = check_centralize = True
             # re-check settings after posible change
             self._get()
-            # Check if artwork section enabled
-            if not (self.movie_enable or self.tvshow_enable):
-                check_sections = False
-                log('Setting check: No artwork section enabled')
-            else: check_sections = True
             # Check if faulty setting in movie section
             if self.movie_enable:
                 if not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_poster and not self.movie_defaultthumb:
@@ -341,7 +336,7 @@ class _settings:
                     log('Setting check: No centralized folder chosen')
                 else: check_centralize = True
             # Compare all setting check
-            if check_sections and check_movie and check_tvshow and check_centralize:
+            if check_movie and check_tvshow and check_centralize:
                 settings_faulty = False
             else: settings_faulty = True
             # Faulty setting found
