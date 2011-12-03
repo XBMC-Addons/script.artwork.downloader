@@ -59,8 +59,8 @@ def cleanup(self):
     if self.settings.notify:
         log('Notify on finished/error enabled')
         self.settings.background = False
-    if xbmc.Player().isPlayingVideo():
-        #log('Silent finish because of playing a video')
+    if xbmc.Player().isPlayingVideo() or self.silent:
+        log('Silent finish because of playing a video or silent mode')
         self.settings.background = True
     if not self.settings.failcount < self.settings.failthreshold:
         log('Network error detected, script aborted', xbmc.LOGERROR)
@@ -87,8 +87,9 @@ class Main:
         runmode_args(self)          # Check for script call methods
         if initialise(self):
             if self.silent:
-                self.settings.background = 'true'
-                self.settings.notify = 'true'
+                log('Silent mode')
+                self.settings.background = True
+                self.settings.notify = False
             elif self.mode == 'gui':
                 log('set dialog true')
                 self.settings.background = False
@@ -380,7 +381,6 @@ def _custom_process(self):
         for arttypes in self.settings.movie_arttype_list:
             for item in sys.argv:
                 if item == arttypes['art_type']:
-                    log('enable')
                     if arttypes['art_type'] == 'extrafanart':
                         _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                     elif arttypes['art_type'] == 'defaultthumb':
@@ -394,7 +394,6 @@ def _custom_process(self):
         for arttypes in self.settings.tvshow_arttype_list:
             for item in sys.argv:
                 if item == arttypes['art_type']:
-                    log('enable')
                     if arttypes['art_type'] == 'extrafanart':
                         _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                     elif arttypes['art_type'] == 'defaultthumb':
