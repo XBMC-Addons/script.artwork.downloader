@@ -1,4 +1,6 @@
 [B]1.0.1[/B]
+- Added: Ability for skinners to run a custom mode specifying artwork types
+	see /resources/docs/runscript.txt
 - Fixed: Downloading logos in overwrite all mode
 - Fixed: Problems with folder creation for rared media
 - Removed: Version/settings.xml check
