@@ -28,6 +28,9 @@ Code to run script bulk mode:
     
     XBMC.runscript(script.artwork.downloader, mode=custom, mediatype=?,<art_type>,<art_type>,<art_type>)
             -> downloads according to media type and specified art_type. Use as many as you like
+
+    XBMC.runscript(script.artwork.downloader, mode=custom, <art_type>,<art_type>,<art_type>)
+            -> downloads for movie and tvshow according to specified art_type. Use as many as you like
  
 
 Available options "silent=true":

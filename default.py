@@ -118,6 +118,9 @@ class Main:
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
             else:
+                if self.mode == 'custom':
+                    self.settings.movie_enable = True
+                    self.settings.tvshow_enable = True
                 if self.settings.movie_enable:
                     self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
