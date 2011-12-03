@@ -9,24 +9,24 @@ EXCEPT MOVIE/TVSHOW NAMES THAT MUST MATCH THE LIBRARY
 
 
 Code to run script solo:
-    XBMC.RunScript(script.extrafanartdownloader, mediatype=?, medianame=?)
+    XBMC.RunScript(script.artwork.downloader, mediatype=?, medianame=?)
             -> Runs automated using all add-on settings
 
-    XBMC.RunScript(script.extrafanartdownloader, mode=gui, mediatype=?, medianame=?)
+    XBMC.RunScript(script.artwork.downloader, mode=gui, mediatype=?, medianame=?)
             -> Runs using the GUI dialog. No add-on settings applied
     
-    XBMC.runscript(script.extrafanartdownloader, mode=custom, mediatype=?,medianame=?,<art_type>,<art_type>,<art_type>)
+    XBMC.runscript(script.artwork.downloader, mode=custom, mediatype=?,medianame=?,<art_type>,<art_type>,<art_type>)
             -> downloads according to specified art_type. Use as many as you like. Only add-on limits apply
 
 
 Code to run script bulk mode:
-    XBMC.runscript(script.extrafanartdownloader)
+    XBMC.runscript(script.artwork.downloader)
             -> downloads according to add-on settings    
     
-    XBMC.runscript(script.extrafanartdownloader, mediatype=?)
+    XBMC.runscript(script.artwork.downloader, mediatype=?)
             -> downloads according to media type
     
-    XBMC.runscript(script.extrafanartdownloader, mode=custom, mediatype=?,<art_type>,<art_type>,<art_type>)
+    XBMC.runscript(script.artwork.downloader, mode=custom, mediatype=?,<art_type>,<art_type>,<art_type>)
             -> downloads according to media type and specified art_type. Use as many as you like
  
 
