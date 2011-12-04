@@ -58,6 +58,7 @@ Skins using this Add-On:
     - Aeon MQ3 (made by MarcosQui)
     - Xperience (made by Black)
     - reFocus (made by Jeroen)
+    - Convergence (made by Mudislander)
 
 ----------------------------------------------------------------------------------------------
 To run the script in bulk mode simply click on it in the 'Addons' or 'Programs' menu in XBMC.
