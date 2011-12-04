@@ -59,6 +59,7 @@ Skins using this Add-On:
     - Xperience (made by Black)
     - reFocus (made by Jeroen)
     - Convergence (made by Mudislander)
+    - Backrow (by Sharpe)
 
 ----------------------------------------------------------------------------------------------
 To run the script in bulk mode simply click on it in the 'Addons' or 'Programs' menu in XBMC.
