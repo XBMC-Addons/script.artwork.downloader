@@ -104,7 +104,7 @@ class fileops:
             log("Copied successfully: %s" % targetpath)
 
     # download file
-    def _downloadfile(self, url, filename, targetdirs, files_overwrite):
+    def _downloadfile(self, url, filename, targetdirs, media_name):
 
         """
         Download url to filename and place in all targetdirs.  If file
@@ -116,10 +116,6 @@ class fileops:
         filenotexistspaths = []
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
-            if files_overwrite:
-                fileexists.append(False)
-                filenotexistspaths.append(path)
-            else:
                 if self._exists(path):
                     fileexists.append(True)
                     existspath = path
@@ -145,14 +141,12 @@ class fileops:
             except socket.timeout, e:
                 raise HTTPTimeout(url)
             else:
-                log("Downloaded successfully: %s" % filename, xbmc.LOGNOTICE)
+                log("Downloaded (%s): %s" % (media_name, filename), xbmc.LOGNOTICE)
                 self.downloadcount = self.downloadcount + 1
                 for filenotexistspath in filenotexistspaths:
                     self._copyfile(temppath, filenotexistspath)
                     if self.settings.xbmc_caching_enabled:
                         self.erase_current_cache(filenotexistspath)
-        elif not False in fileexists:
-            log("Ignoring (Exists in all target directories): %s" % filename, xbmc.LOGINFO)
         else:
             for filenotexistspath in filenotexistspaths:
                 self._copyfile(existspath, filenotexistspath)

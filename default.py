@@ -172,7 +172,7 @@ def initial_vars(self):
 ### Report the total numbers of downloaded images (needs some work for correct totals)
 def finished_log(self):
     log('## Download totaliser:')
-    log('- Total Artwork: %s' % self.fileops.downloadcount, xbmc.LOGNOTICE)
+    log('- Total Artwork: %s' % self.download_counter['Total Artwork'], xbmc.LOGNOTICE)
     for artwork_type in self.download_counter:
         log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
 
@@ -545,10 +545,10 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
 
 def _batch_download(self, image_list):
     log('########################################################')
-    log('Starting bulk download')
-    downloaded_artwork = 0
+    log('Starting download')
     download_list = []
     self.download_counter = {}
+    self.download_counter['Total Artwork'] = 0
     for image in image_list:
             # Check for set limits
             limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], image['artwork_number'])
@@ -557,21 +557,24 @@ def _batch_download(self, image_list):
             elif limited[0]:
                 log("Ignoring (%s): %s" % (limited[1], image['filename']))
             else:
-                missingfiles = False
-                for targetdir in image['targetdirs']:
-                    if not self.fileops._exists(os.path.join(targetdir, image['filename'])):
-                        missingfiles = True
-                if missingfiles:
+                if self.files_overwrite:
                     download_list.append(image)
                 else:
-                    log("Ignoring (Exists in all target directories): %s" % image['filename'])
+                    missingfiles = False
+                    for targetdir in image['targetdirs']:
+                        if not self.fileops._exists(os.path.join(targetdir, image['filename'])):
+                            missingfiles = True
+                    if missingfiles:
+                        download_list.append(image)
+                    else:
+                        log("Ignoring (Exists in all target directories): %s" % image['filename'])
     for image in download_list:
         if dialog('iscanceled', background = self.settings.background):
             break
         dialog('update', percentage = int(float(downloaded_artwork) / float(len(download_list)) * 100.0), line1 = image['media_name'], line2 = __localize__(32009) + ' ' + image['artwork_string'], line3 = image['filename'], background = self.settings.background)
         # Try downloading the file and catch errors while trying to
         try:
-            self.fileops._downloadfile(image['url'], image['filename'], image['targetdirs'], self.settings.files_overwrite)
+            self.fileops._downloadfile(image['url'], image['filename'], image['targetdirs'], image['media_name'])
         except HTTP404Error, e:
             log("URL not found: %s" % str(e), xbmc.LOGERROR)
             self._download_art_succes = False
@@ -590,13 +593,13 @@ def _batch_download(self, image_list):
             log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
             self._download_art_succes = False
         else:
-            downloaded_artwork = downloaded_artwork + 1
             try:
                 self.download_counter[image['artwork_string']] = self.download_counter[image['artwork_string']] + 1
             except KeyError:
                 self.download_counter[image['artwork_string']] = 1
+            self.download_counter['Total Artwork'] = self.download_counter['Total Artwork'] + 1
             self._download_art_succes = True
-    log('Finished bulk download')
+    log('Finished download')
     log('########################################################')
 
 
