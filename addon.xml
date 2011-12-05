@@ -3,7 +3,7 @@
 	id="script.artwork.downloader"
 	name="Artwork Downloader"
 	version="1.0.1"
-	provider-name="paddycarey, putneyj, Machine-Sanctum"
+	provider-name="paddycarey, putneyj, Martijn Kaijser"
     >
   <requires>
     <import addon="xbmc.python" version="2.0"/>
