@@ -116,12 +116,12 @@ class fileops:
         filenotexistspaths = []
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
-                if self._exists(path):
-                    fileexists.append(True)
-                    existspath = path
-                else:
-                    fileexists.append(False)
-                    filenotexistspaths.append(path)
+            if self._exists(path):
+                fileexists.append(True)
+                existspath = path
+            else:
+                fileexists.append(False)
+                filenotexistspaths.append(path)
         if not True in fileexists:
             try:
                 temppath = os.path.join(self.tempdir, filename)
