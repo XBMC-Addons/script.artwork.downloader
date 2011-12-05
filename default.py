@@ -532,39 +532,47 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
             else: artworkfile = filename
             #increase  artwork counter
             current_artwork = current_artwork + 1
-            # Check for set limits
-            limited = self.filters.do_filter(art_type, self.mediatype, artwork, downloaded_artwork)
-            if limited[0] and art_type =='extrafanart':
-                self.fileops._delete_file_in_dirs(artworkfile, targetdirs, limited[1])
-            elif limited[0]:
-                log('Skipped. Reason: %s' %limited[1])
-            else:
-                image = {}
-                image['url'] = imageurl
-                image['filename'] = artworkfile
-                image['targetdirs'] = targetdirs
-                image['media_name'] = self.media_name
-                image['msg'] = msg
-                self.download_list.append(image)
+            image = {}
+            image['url'] = imageurl
+            image['filename'] = artworkfile
+            image['targetdirs'] = targetdirs
+            image['media_name'] = self.media_name
+            image['media_type'] = self.mediatype
+            image['artwork_type'] = art_type
+            image['artwork_string'] = msg
+            image['artwork_details'] = artwork
+            self.download_list.append(image)
     if current_artwork == 0:
         log('No %s found' %art_type)
     log('Finished with: %s' %art_type)
 
 def _batch_download(self, image_list):
     downloaded_artwork = 0
+    download_list = []
     self.download_counter = {}
     for image in image_list:
+            # Check for set limits
+            limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], downloaded_artwork)
+            if limited[0] and art_type =='extrafanart':
+                self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
+            elif limited[0]:
+                log('Skipped. Reason: %s' %limited[1])
+            else:
+                missingfiles = False
+                for targetdir in image['targetdirs']:
+                    if not self.fileops._exists(os.path.join(targetdir, image['filename'])):
+                        missingfiles = True
+                if missingfiles:
+                    download_list.append(image)
+                else:
+                    log("Ignoring (Exists in all target directories): %s" % image['filename'])
+    for image in download_list:
         if dialog('iscanceled', background = self.settings.background):
             break
-        url = image['url']
-        filename = image['filename']
-        targetdirs = image['targetdirs']
-        media_name = image['media_name']
-        msg = image['msg']
-        dialog('update', percentage = int(float(downloaded_artwork) / float(len(image_list)) * 100.0), line1 = media_name, line2 = __localize__(32009) + ' ' + msg, line3 = filename, background = self.settings.background)
+        dialog('update', percentage = int(float(downloaded_artwork) / float(len(download_list)) * 100.0), line1 = image['media_name'], line2 = __localize__(32009) + ' ' + image['artwork_string'], line3 = image['filename'], background = self.settings.background)
         # Try downloading the file and catch errors while trying to
         try:
-            self.fileops._downloadfile(url, filename, targetdirs, self.settings.files_overwrite)
+            self.fileops._downloadfile(image['url'], image['filename'], image['targetdirs'], self.settings.files_overwrite)
         except HTTP404Error, e:
             log("URL not found: %s" % str(e), xbmc.LOGERROR)
             self._download_art_succes = False
