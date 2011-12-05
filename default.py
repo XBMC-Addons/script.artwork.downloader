@@ -546,7 +546,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
                 image['filename'] = artworkfile
                 image['targetdirs'] = targetdirs
                 image['media_name'] = self.media_name
-                self.download_list.append(item)
+                self.download_list.append(image)
     if current_artwork == 0:
         log('No %s found' %art_type)
     log('Finished with: %s' %art_type)
