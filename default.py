@@ -579,7 +579,7 @@ def _batch_download(self, image_list):
             log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
         else:
             downloaded_artwork = downloaded_artwork + 1
-        dialog('update', percentage = int(float(downloaded_artwork) / float(len(image_list) * 100.0), line1 = media_name, line2 = __localize__(32009) + ' ' + msg, line3 = filename, background = self.settings.background))
+        dialog('update', percentage = int(float(downloaded_artwork) / float(len(image_list)) * 100.0), line1 = media_name, line2 = __localize__(32009) + ' ' + msg, line3 = filename, background = self.settings.background))
 
 
 def _gui_solomode(self):
