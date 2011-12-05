@@ -591,9 +591,9 @@ def _batch_download(self, image_list):
         else:
             downloaded_artwork = downloaded_artwork + 1
             try:
-                self.download_counter[msg] = self.download_counter[msg] + 1
+                self.download_counter[image['artwork_string']] = self.download_counter[image['artwork_string']] + 1
             except KeyError:
-                self.download_counter[msg] = 1
+                self.download_counter[image['artwork_string']] = 1
             self._download_art_succes = True
     log('Finished bulk download')
     log('########################################################')
