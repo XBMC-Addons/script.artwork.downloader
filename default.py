@@ -557,7 +557,7 @@ def _batch_download(self, image_list):
             elif limited[0]:
                 log("Ignoring (%s): %s" % (limited[1], image['filename']))
             else:
-                if self.files_overwrite:
+                if self.settings.files_overwrite:
                     download_list.append(image)
                 else:
                     missingfiles = False
