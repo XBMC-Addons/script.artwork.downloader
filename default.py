@@ -571,7 +571,7 @@ def _batch_download(self, image_list):
     for image in download_list:
         if dialog('iscanceled', background = self.settings.background):
             break
-        dialog('update', percentage = int(float(downloaded_artwork) / float(len(download_list)) * 100.0), line1 = image['media_name'], line2 = __localize__(32009) + ' ' + image['artwork_string'], line3 = image['filename'], background = self.settings.background)
+        dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(download_list)) * 100.0), line1 = image['media_name'], line2 = __localize__(32009) + ' ' + image['artwork_string'], line3 = image['filename'], background = self.settings.background)
         # Try downloading the file and catch errors while trying to
         try:
             self.fileops._downloadfile(image['url'], image['filename'], image['targetdirs'], image['media_name'])
