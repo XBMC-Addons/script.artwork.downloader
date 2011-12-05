@@ -141,7 +141,8 @@ class Main:
                     download_artwork(self, self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
-            _batch_download(self, self.download_list)
+            if not dialog('iscanceled', background = self.settings.background):
+                _batch_download(self, self.download_list)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
@@ -171,12 +172,9 @@ def initial_vars(self):
 ### Report the total numbers of downloaded images (needs some work for correct totals)
 def finished_log(self):
     log('## Download totaliser:')
-    log('- Artwork: %s' % self.fileops.downloadcount, xbmc.LOGNOTICE)
-    log('Movie download totals:')
-    log('- Extrafanart: %s' % self.settings.count_movie_extrafanart, xbmc.LOGNOTICE)
-    log('- Extrathumbs: %s' % self.settings.count_movie_extrathumbs, xbmc.LOGNOTICE)
-    log('TV Show download totals:')
-    log('- Extrafanart: %s' % self.settings.count_tvshow_extrafanart, xbmc.LOGNOTICE)
+    log('- Total Artwork: %s' % self.fileops.downloadcount, xbmc.LOGNOTICE)
+    for artwork_type in self.download_counter:
+        log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
 
     
 ### Check for script starting arguments used by skins
@@ -554,32 +552,43 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
 
 def _batch_download(self, image_list):
     downloaded_artwork = 0
+    self.download_counter = {}
     for image in image_list:
+        if dialog('iscanceled', background = self.settings.background):
+            break
         url = image['url']
         filename = image['filename']
         targetdirs = image['targetdirs']
         media_name = image['media_name']
         msg = image['msg']
+        dialog('update', percentage = int(float(downloaded_artwork) / float(len(image_list)) * 100.0), line1 = media_name, line2 = __localize__(32009) + ' ' + msg, line3 = filename, background = self.settings.background)
         # Try downloading the file and catch errors while trying to
         try:
             self.fileops._downloadfile(url, filename, targetdirs, self.settings.files_overwrite)
         except HTTP404Error, e:
             log("URL not found: %s" % str(e), xbmc.LOGERROR)
+            self._download_art_succes = False
         except HTTPTimeout, e:
             self.settings.failcount = self.settings.failcount + 1
             log("Download timed out: %s" % str(e), xbmc.LOGERROR)
+            self._download_art_succes = False
         except CreateDirectoryError, e:
             log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
-            break
+            self._download_art_succes = False
         except CopyError, e:
             log("Could not copy file (Destination may be read only), skipping: %s" % str(e), xbmc.LOGWARNING)
-            break
+            self._download_art_succes = False
         except DownloadError, e:
             self.settings.failcount = self.settings.failcount + 1
             log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
+            self._download_art_succes = False
         else:
             downloaded_artwork = downloaded_artwork + 1
-        dialog('update', percentage = int(float(downloaded_artwork) / float(len(image_list)) * 100.0), line1 = media_name, line2 = __localize__(32009) + ' ' + msg, line3 = filename, background = self.settings.background)
+            try:
+                self.download_counter[msg] = self.download_counter[msg] + 1
+            except KeyError:
+                self.download_counter[msg] = 1
+            self._download_art_succes = True
 
 
 def _gui_solomode(self):
