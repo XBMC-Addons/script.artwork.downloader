@@ -508,7 +508,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, msg):
 def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     self.settings.failcount = 0
     current_artwork = 0
-    downloaded_artwork = 0
+    artwork_number = 0
     for artwork in self.image_list:
         imageurl = artwork['url']
         if image_type == artwork['type']:
@@ -522,14 +522,13 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
             if art_type == 'extrafanart':
                 artworkfile = ('%s.jpg'%artwork['id'])
             elif art_type == 'extrathumbs':
-                artworkfile = (filename+'%s.jpg' % str(downloaded_artwork+1))
+                artworkfile = (filename+'%s.jpg' % str(current_artwork + 1))
             elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
                 artworkfile = (filename+'%s.jpg' %artwork['season'])
             elif art_type == 'seasonposter':
                 artworkfile = (filename+'%s.jpg' %artwork['season'])
             else: artworkfile = filename
             #increase  artwork counter
-            current_artwork = current_artwork + 1
             image = {}
             image['url'] = imageurl
             image['filename'] = artworkfile
@@ -539,7 +538,9 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
             image['artwork_type'] = art_type
             image['artwork_string'] = msg
             image['artwork_details'] = artwork
+            image['artwork_number'] = current_artwork
             self.download_list.append(image)
+            current_artwork = current_artwork + 1
     log('Found: %s %s' % (current_artwork, art_type))
 
 def _batch_download(self, image_list):
@@ -550,7 +551,7 @@ def _batch_download(self, image_list):
     self.download_counter = {}
     for image in image_list:
             # Check for set limits
-            limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], downloaded_artwork)
+            limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], image['artwork_number'])
             if limited[0] and image['artwork_type'] =='extrafanart':
                 self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
             elif limited[0]:
