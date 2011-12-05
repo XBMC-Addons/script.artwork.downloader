@@ -384,7 +384,6 @@ def download_artwork(self, media_list, providers):
                     _custom_process(self)
                 else:
                     _download_process(self)
-        log('Finished processing media: %s' % self.media_name, xbmc.LOGDEBUG)
         self.processeditems = self.processeditems + 1
 
 ### Processes the custom mode downloading of files
@@ -507,7 +506,6 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, msg):
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, filename, targetdirs, msg):
-    log('Starting with processing: %s' %art_type)
     self.settings.failcount = 0
     current_artwork = 0
     downloaded_artwork = 0
@@ -542,9 +540,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
             image['artwork_string'] = msg
             image['artwork_details'] = artwork
             self.download_list.append(image)
-    if current_artwork == 0:
-        log('No %s found' %art_type)
-    log('Finished with: %s' %art_type)
+    log('Found: %s %s' % (current_artwork, art_type))
 
 def _batch_download(self, image_list):
     downloaded_artwork = 0
@@ -553,7 +549,7 @@ def _batch_download(self, image_list):
     for image in image_list:
             # Check for set limits
             limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], downloaded_artwork)
-            if limited[0] and art_type =='extrafanart':
+            if limited[0] and image['artwork_type'] =='extrafanart':
                 self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
             elif limited[0]:
                 log('Skipped. Reason: %s' %limited[1])
