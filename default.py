@@ -546,6 +546,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
                 image['filename'] = artworkfile
                 image['targetdirs'] = targetdirs
                 image['media_name'] = self.media_name
+                image['msg'] = msg
                 self.download_list.append(image)
     if current_artwork == 0:
         log('No %s found' %art_type)
@@ -558,6 +559,7 @@ def _batch_download(self, image_list):
         filename = image['filename']
         targetdirs = image['targetdirs']
         media_name = image['media_name']
+        msg = image['msg']
         # Try downloading the file and catch errors while trying to
         try:
             self.fileops._downloadfile(url, filename, targetdirs, self.settings.files_overwrite)
