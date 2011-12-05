@@ -541,10 +541,10 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
             elif limited[0]:
                 log('Skipped. Reason: %s' %limited[1])
             else:
-                item = {}
-                item['url'] = imageurl
-                item['filename'] = artworkfile
-                item['targetdirs'] = targetdirs
+                image = {}
+                image['url'] = imageurl
+                image['filename'] = artworkfile
+                image['targetdirs'] = targetdirs
                 item['media_name'] = self.media_name
                 self.download_list.append(item)
     if current_artwork == 0:
@@ -553,11 +553,11 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
 
 def _batch_download(self, image_list):
     downloaded_artwork = 0
-    for item in image_list:
-        url = item['url']
-        filename = item['filename']
-        targetdirs = item['targetdirs']
-        media_name = item['media_name']
+    for image in image_list:
+        url = image['url']
+        filename = image['filename']
+        targetdirs = image['targetdirs']
+        media_name = image['media_name']
         # Try downloading the file and catch errors while trying to
         try:
             self.fileops._downloadfile(url, filename, targetdirs, self.settings.files_overwrite)
@@ -577,7 +577,7 @@ def _batch_download(self, image_list):
             log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
         else:
             downloaded_artwork = downloaded_artwork + 1
-        dialog('update', percentage = int(float(downloaded_artwork) / float(len(image_list) * 100.0), line1 = media_name, line2 = __localize__(32009) + ' ' + msg, line3 = filename, background = self.settings.background)
+        dialog('update', percentage = int(float(downloaded_artwork) / float(len(image_list) * 100.0), line1 = media_name, line2 = __localize__(32009) + ' ' + msg, line3 = filename, background = self.settings.background))
 
 
 def _gui_solomode(self):
