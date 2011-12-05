@@ -141,7 +141,7 @@ class Main:
                     download_artwork(self, self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
-            _batch_download(self.download_list)
+            _batch_download(self, self.download_list)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
