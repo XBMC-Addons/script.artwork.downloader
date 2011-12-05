@@ -58,7 +58,7 @@ class fileops:
                 log("Deleted (%s): %s" % (reason, path), xbmc.LOGNOTICE)
                 isdeleted = True
         if not isdeleted:
-            log("Ignoring (%s): %s" % (reason, filename), xbmc.LOGINFO)
+            log("Ignoring (%s): %s" % (reason, filename))
 
     ### erase old cache file and copy new one
     def erase_current_cache(self,filename):

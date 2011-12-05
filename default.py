@@ -543,6 +543,8 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     log('Found: %s %s' % (current_artwork, art_type))
 
 def _batch_download(self, image_list):
+    log('########################################################')
+    log('Starting bulk download')
     downloaded_artwork = 0
     download_list = []
     self.download_counter = {}
@@ -552,7 +554,7 @@ def _batch_download(self, image_list):
             if limited[0] and image['artwork_type'] =='extrafanart':
                 self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
             elif limited[0]:
-                log('Skipped. Reason: %s' %limited[1])
+                log("Ignoring (%s): %s" % (limited[1], image['filename']))
             else:
                 missingfiles = False
                 for targetdir in image['targetdirs']:
@@ -593,6 +595,8 @@ def _batch_download(self, image_list):
             except KeyError:
                 self.download_counter[msg] = 1
             self._download_art_succes = True
+    log('Finished bulk download')
+    log('########################################################')
 
 
 def _gui_solomode(self):
