@@ -107,46 +107,31 @@ class fileops:
     def _downloadfile(self, url, filename, targetdirs, media_name):
 
         """
-        Download url to filename and place in all targetdirs.  If file
-        already exists in any of the targetdirs it is copied from there
-        to the others instead of being downloaded again.
+        Download url to filename and place in all targetdirs.
         """
 
-        fileexists = []
-        filenotexistspaths = []
-        for targetdir in targetdirs:
-            path = os.path.join(targetdir, filename)
-            if self._exists(path):
-                fileexists.append(True)
-                existspath = path
+        try:
+            temppath = os.path.join(self.tempdir, filename)
+            url = url.replace(" ", "%20")
+            tempfile = open(temppath, "wb")
+            response = urllib2.urlopen(url)
+            tempfile.write(response.read())
+            tempfile.close()
+            response.close()
+        except HTTPError, e:
+            if e.code == 404:
+                raise HTTP404Error(url)
             else:
-                fileexists.append(False)
-                filenotexistspaths.append(path)
-        if not True in fileexists:
-            try:
-                temppath = os.path.join(self.tempdir, filename)
-                url = url.replace(" ", "%20")
-                tempfile = open(temppath, "wb")
-                response = urllib2.urlopen(url)
-                tempfile.write(response.read())
-                tempfile.close()
-                response.close()
-            except HTTPError, e:
-                if e.code == 404:
-                    raise HTTP404Error(url)
-                else:
-                    raise DownloadError(str(e))
-            except URLError:
-                raise HTTPTimeout(url)
-            except socket.timeout, e:
-                raise HTTPTimeout(url)
-            else:
-                log("Downloaded (%s): %s" % (media_name, filename), xbmc.LOGNOTICE)
-                self.downloadcount = self.downloadcount + 1
-                for filenotexistspath in filenotexistspaths:
-                    self._copyfile(temppath, filenotexistspath)
-                    if self.settings.xbmc_caching_enabled:
-                        self.erase_current_cache(filenotexistspath)
+                raise DownloadError(str(e))
+        except URLError:
+            raise HTTPTimeout(url)
+        except socket.timeout, e:
+            raise HTTPTimeout(url)
         else:
-            for filenotexistspath in filenotexistspaths:
-                self._copyfile(existspath, filenotexistspath)
+            log("Downloaded (%s): %s" % (media_name, filename), xbmc.LOGNOTICE)
+            self.downloadcount = self.downloadcount + 1
+            for targetdir in targetdirs:
+                targetpath = os.path.join(targetdir, filename)
+                self._copyfile(temppath, targetpath)
+                if self.settings.xbmc_caching_enabled:
+                    self.erase_current_cache(targetpath)

@@ -480,7 +480,7 @@ def _download_art_solo(self, art_type, image_type, filename, targetdirs, msg):
     
     # Try downloading the file and catch errors while trying to
     try:
-        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, 'true')
+        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, self.media_name)
         self._download_art_succes = True
     except HTTP404Error, e:
         log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
