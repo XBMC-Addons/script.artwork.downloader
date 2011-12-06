@@ -477,7 +477,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     else:
         for item in self.image_list:
             final_image_list.append(item)
-    for artwork in self.final_image_list:
+    for artwork in final_image_list:
         imageurl = artwork['url']
         if image_type == artwork['type']:
             ### check if script has been cancelled by user
