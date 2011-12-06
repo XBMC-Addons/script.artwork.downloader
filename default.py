@@ -157,6 +157,8 @@ def initial_vars(self):
     self.movie_providers = providers['movie_providers']
     self.tv_providers = providers['tv_providers']
     self.music_providers = providers['music_providers']
+    self.download_counter = {}
+    self.download_counter['Total Artwork'] = 0
     self.mediatype = ''
     self.medianame = ''
     self.mode = ''
@@ -510,8 +512,6 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     log('Found: %s %s' % (current_artwork, art_type))
 
 def _batch_download(self, image_list):
-    self.download_counter = {}
-    self.download_counter['Total Artwork'] = 0
     log('########################################################')
     if len(image_list) == 0:
         log('Nothing to download')
