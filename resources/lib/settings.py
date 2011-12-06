@@ -92,9 +92,7 @@ class _settings:
         self.api_timedelay              = 5
         self.mediatype                  = ''
         self.medianame                  = ''
-        self.count_tvshow_extrafanart   = 0
-        self.count_movie_extrafanart    = 0
-        self.count_movie_extrathumbs    = 0
+
 
     ### Log settings in debug mode
     def _initiallog(self):
