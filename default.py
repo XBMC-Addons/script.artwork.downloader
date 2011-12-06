@@ -65,15 +65,13 @@ def cleanup(self):
     if not self.settings.failcount < self.settings.failthreshold:
         log('Network error detected, script aborted', xbmc.LOGERROR)
         dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
-    if self.mode == 'gui':
-        log('GUI mode finished')
-        if self._download_art_succes:
-            xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
     if not xbmc.abortRequested:
         dialog('okdialog', line1 = summary, background = self.settings.background)
     else:
         dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
-
+    if self.mode == 'gui':
+        if self._download_art_succes:
+            xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
 
 class Main:
     def __init__(self):
