@@ -110,6 +110,8 @@ class Main:
                         solo_mode(self, self.mediatype, self.medianame)
                     else:
                         solo_mode(self, self.mediatype, self.medianame)
+                        if not dialog('iscanceled', background = self.settings.background):
+                            _batch_download(self, self.download_list)
                 # No medianame specified
                 else:
                     if self.mediatype == 'movie':
@@ -126,6 +128,8 @@ class Main:
                         download_artwork(self, self.Medialist, self.tv_providers)
                     elif self.mediatype == 'music':
                         log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
+                    if not dialog('iscanceled', background = self.settings.background):
+                        _batch_download(self, self.download_list)
             # No mediatype is specified
             else:
                 # activate both movie/tvshow for custom run
@@ -145,6 +149,8 @@ class Main:
                     download_artwork(self, self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
+                if not dialog('iscanceled', background = self.settings.background):
+                    _batch_download(self, self.download_list)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
@@ -379,42 +385,29 @@ def download_artwork(self, media_list, providers):
                 if self.mode == 'gui':
                     log('Using GUI mode')
                     _gui_solomode(self)
-                elif self.mode == 'custom':
-                    _custom_process(self)
                 else:
                     _download_process(self)
         self.processeditems = self.processeditems + 1
-    if not self.mode == 'gui' and not dialog('iscanceled', background = self.settings.background):
-        _batch_download(self, self.download_list)
 
 ### Processes the custom mode downloading of files
-def _custom_process(self):
-    if self.settings.movie_enable and self.mediatype == 'movie':
-        for arttypes in self.settings.movie_arttype_list:
-            for item in sys.argv:
-                if item == arttypes['art_type']:
-                    if arttypes['art_type'] == 'extrafanart':
-                        _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
-                    elif arttypes['art_type'] == 'defaultthumb':
-                        _download_art(self, arttypes['art_type'], 'poster', arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])    
-                    elif arttypes['art_type'] == 'extrathumbs':
-                        _download_art(self, arttypes['art_type'], 'thumb', arttypes['filename'], self.target_extrathumbsdirs,  arttypes['gui_string'])
-                    else:
-                        _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
-
-    if self.settings.tvshow_enable and self.mediatype == 'tvshow':
-        for arttypes in self.settings.tvshow_arttype_list:
-            for item in sys.argv:
-                if item == arttypes['art_type']:
-                    if arttypes['art_type'] == 'extrafanart':
-                        _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
-                    elif arttypes['art_type'] == 'defaultthumb':
-                        _download_art(self, arttypes['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
-                    else:
-                        _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
-
-### Processes the bulk/solo mode downloading of files
 def _download_process(self):
+    
+    download_arttypes = []
+    
+    if self.mode == 'custom':
+        for item in sys.argv:
+            if not '=' in item:
+                download_arttypes.append(item)
+    else:
+        if self.mediatype == 'tvshow':
+            for arttypes in self.settings.tvshow_arttype_list:
+                if arttypes['bulk_enabled']:
+                    download_arttypes.append(arttypes['art_type'])
+        elif self.mediatype == 'movie':
+            for arttypes in self.settings.movie_arttype_list:
+                if arttypes['bulk_enabled']:
+                    download_arttypes.append(arttypes['art_type'])
+    
     if self.settings.movie_enable and self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
             if arttypes['bulk_enabled']:
