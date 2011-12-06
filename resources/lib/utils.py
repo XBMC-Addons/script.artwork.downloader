@@ -40,11 +40,10 @@ def _normalize_string( text ):
 def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
-    try:
-        message = _normalize_string('Artwork Downloader: %s' % txt)
-        xbmc.log(msg=message, level=severity)
-    except:
-        xbmc.log('ASCII character error')
+
+    message = _normalize_string('Artwork Downloader: %s' % txt)
+    xbmc.log(msg=message, level=severity)
+
 
 
 def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', background = False):
