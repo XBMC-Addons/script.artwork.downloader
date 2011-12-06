@@ -589,7 +589,7 @@ def _gui_solomode(self):
     if len(self.GUI_type_list) == 1:
         self.GUI_type_list[0] = "True"
     if ( len(self.GUI_type_list) == 1 ) or _choice_type(self):
-        self.tmp_image_list = False
+        self.gui_imagelist = False
         
         _gui_solomode_imagelist(self, self.gui_selected_type, self.gui_selected_type)
         log('Image put to GUI: %s' %self.gui_imagelist)
