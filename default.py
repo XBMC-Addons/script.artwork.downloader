@@ -410,7 +410,7 @@ def _download_process(self):
     
     if self.settings.movie_enable and self.mediatype == 'movie':
         for arttypes in self.settings.movie_arttype_list:
-            if arttypes['bulk_enabled']:
+            if arttypes['art_type'] in download_artypes:
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                 elif arttypes['art_type'] == 'defaultthumb':
@@ -422,7 +422,7 @@ def _download_process(self):
 
     if self.settings.tvshow_enable and self.mediatype == 'tvshow':
         for arttypes in self.settings.tvshow_arttype_list:
-            if arttypes['bulk_enabled']:
+            if arttypes['art_type'] in download_artypes:
                 if arttypes['art_type'] == 'extrafanart':
                     _download_art(self, arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                 elif arttypes['art_type'] == 'defaultthumb':
