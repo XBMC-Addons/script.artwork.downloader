@@ -383,6 +383,9 @@ def download_artwork(self, media_list, providers):
                     log('Using Bulk/Solo mode')
                     _download_process(self)
         self.processeditems = self.processeditems + 1
+    if not self.mode == 'gui' and not dialog('iscanceled', background = self.settings.background):
+        _batch_download(self, self.download_list)
+        
 
 ### Processes the custom mode downloading of files
 def _custom_process(self):
@@ -410,9 +413,6 @@ def _custom_process(self):
                     else:
                         _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
-    if not dialog('iscanceled', background = self.settings.background):
-        _batch_download(self, self.download_list)
-
 
 ### Processes the bulk/solo mode downloading of files
 def _download_process(self):
@@ -437,9 +437,6 @@ def _download_process(self):
                     _download_art(self, arttypes['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
                 else:
                     _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
-    
-    if not dialog('iscanceled', background = self.settings.background):
-        _batch_download(self, self.download_list)
 
 
 ### Retrieves imagelist for GUI solo mode
