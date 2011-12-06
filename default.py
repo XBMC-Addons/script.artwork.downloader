@@ -378,7 +378,7 @@ def download_artwork(self, media_list, providers):
                 if self.mode == 'gui':
                     log('Using GUI mode')
                     _gui_solomode(self)
-                if self.mode == 'custom':
+                elif self.mode == 'custom':
                     log('Using Custom mode')
                     _custom_process(self)
                 else:
