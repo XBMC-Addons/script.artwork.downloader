@@ -50,7 +50,7 @@ def cleanup(self):
         if self.fileops._exists(self.fileops.tempdir):
             log('Error deleting temp directory: %s' % self.fileops.tempdir, xbmc.LOGERROR)
         else:
-            log('Deleted temp directory: %s' % self.fileops.tempdir, xbmc.LOGNOTICE)
+            log('Deleted temp directory: %s' % self.fileops.tempdir)
     ### log results and notify user
     summary_tmp = __localize__(32012) + ': %s ' % self.fileops.downloadcount
     summary = summary_tmp + __localize__(32016)
@@ -96,6 +96,7 @@ class Main:
                 log('set dialog true')
                 self.settings.background = False
                 self.settings.notify = False
+                self.settings.files_overwrite = True
             dialog('create', line1 = __localize__(32008), background = self.settings.background)
             # Check if mediatype is specified
             if not self.mediatype == '':
@@ -141,8 +142,6 @@ class Main:
                     download_artwork(self, self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
-            if not dialog('iscanceled', background = self.settings.background):
-                _batch_download(self, self.download_list)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
@@ -436,6 +435,9 @@ def _download_process(self):
                     _download_art(self, arttypes['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
                 else:
                     _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
+    
+    if not dialog('iscanceled', background = self.settings.background):
+        _batch_download(self, self.download_list)
 
 
 ### Retrieves imagelist for GUI solo mode
@@ -462,54 +464,20 @@ def _gui_solomode_imagelist(self, art_type, image_type):
 
 
 ### Artwork downloading
-def _download_art_solo(self, art_type, image_type, filename, targetdirs, msg):
-    log('Starting with processing: %s' %art_type)
-    self._download_art_succes = False
-    self.settings.failcount = 0
-    # File naming
-    if art_type == 'extrafanart':
-        artworkfile = ('%s.jpg'%self.gui_imagelist['id'])
-    elif art_type == 'extrathumbs':
-        artworkfile = (filename+'%s.jpg' % str(downloaded_artwork+1))
-    elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
-        artworkfile = (filename+'%s.jpg' %artwork['season'])
-    elif art_type == 'seasonposter':
-        artworkfile = (filename+'%s.tbn' %artwork['season'])
-    else: artworkfile = filename
-    dialog('create', line1 = self.media_name, line2 = __localize__(32009) + ' ' + msg + ': ' + artworkfile)
-    
-    # Try downloading the file and catch errors while trying to
-    try:
-        self.fileops._downloadfile(self.image_url, artworkfile, targetdirs, self.media_name)
-        self._download_art_succes = True
-    except HTTP404Error, e:
-        log("File does not exist at URL: %s" % str(e), xbmc.LOGWARNING)
-        self._download_art_succes = False
-    except HTTPTimeout, e:
-        self.settings.failcount = self.settings.failcount + 1
-        log("Error downloading file: %s, timed out" % str(e), xbmc.LOGERROR)
-        self._download_art_succes = False
-    except CreateDirectoryError, e:
-        log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
-        self._download_art_succes = False
-    except CopyError, e:
-        log("Could not copy file (Destination may be read only), skipping: %s" % str(e), xbmc.LOGWARNING)
-        self._download_art_succes = False
-    except DownloadError, e:
-        self.settings.failcount = self.settings.failcount + 1
-        log('Error downloading file: %s (Possible network error: %s), skipping' % (self.image_url, str(e)), xbmc.LOGERROR)
-        self._download_art_succes = False
-    dialog('close')
-    dialog('okdialog', line1 = self.media_name, line2 = __localize__(32020) + ' ' + msg + ': ' + artworkfile)
-    log('Finished with: %s' %art_type)
-
-
-### Artwork downloading
 def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     self.settings.failcount = 0
     current_artwork = 0
     artwork_number = 0
-    for artwork in self.image_list:
+    final_image_list = []
+    if self.mode == 'gui' and not art_type == 'extrafanart' and not art_type == 'extrathumbs':
+        artwork = []
+        artwork['url'] = self.image_url
+        artwork['type'] = image_type
+        final_image_list.append(artwork)
+    else:
+        for item in self.image_list:
+            final_image_list.append(item)
+    for artwork in self.final_image_list:
         imageurl = artwork['url']
         if image_type == artwork['type']:
             ### check if script has been cancelled by user
@@ -520,15 +488,14 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
                 break
             # File naming
             if art_type == 'extrafanart':
-                artworkfile = ('%s.jpg'%artwork['id'])
+                artworkfile = ('%s.jpg'% artwork['id'])
             elif art_type == 'extrathumbs':
                 artworkfile = (filename+'%s.jpg' % str(current_artwork + 1))
             elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
-                artworkfile = (filename+'%s.jpg' %artwork['season'])
+                artworkfile = (filename+'%s.jpg' % artwork['season'])
             elif art_type == 'seasonposter':
-                artworkfile = (filename+'%s.jpg' %artwork['season'])
+                artworkfile = (filename+'%s.jpg' % artwork['season'])
             else: artworkfile = filename
-            #increase  artwork counter
             image = {}
             image['url'] = imageurl
             image['filename'] = artworkfile
@@ -634,7 +601,8 @@ def _gui_solomode(self):
     # Download the selected image
     if self.gui_imagelist:
         if _choose_image(self):
-            _download_art_solo(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
+            _download_art(self, self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
+            _batch_download(self, self.download_list)
             if not self._download_art_succes:
                 xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
     if not self.gui_imagelist and not self.gui_selected_type == '':
@@ -679,7 +647,6 @@ def _choose_image(self):
         return True
     else:
         return False
-
 
 class MainGui( xbmcgui.WindowXMLDialog ):
     def __init__( self, *args, **kwargs ):
