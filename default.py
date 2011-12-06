@@ -531,7 +531,7 @@ def _batch_download(self, image_list):
                         else:
                             log("Ignoring (Exists in all target directories): %s" % image['filename'])
             apply_filters_counter = apply_filters_counter + 1
-            dialog('update', percentage = int(float(apply_filters_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32191), background = self.settings.background)
+            dialog('update', percentage = int(float(apply_filters_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
         for image in download_list:
             if dialog('iscanceled', background = self.settings.background):
                 break
