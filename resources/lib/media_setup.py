@@ -15,11 +15,12 @@ def _media_listing(media_type):
         Medialist = []
         if media_type == 'tvshow':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
+            json_response = normalize_string(json_response)
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('tvshows'):
                 for item in jsonobject['result']['tvshows']:
                     Media = {}
-                    Media['name'] = normalize_string(item['label'])
+                    Media['name'] = item['label']
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['tvshowid'] = item['tvshowid']
@@ -34,11 +35,12 @@ def _media_listing(media_type):
                     Medialist.append(Media)
         elif media_type == 'movie':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
+            json_response = normalize_string(json_response)
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
                     Media = {}
-                    Media['name'] = normalize_string(item['label'])
+                    Media['name'] = item['label']
                     Media['path'] = item['file']
                     Media['id'] = item['imdbnumber']
                     Media['movieid'] = item['movieid']
