@@ -410,6 +410,9 @@ def _custom_process(self):
                     else:
                         _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
+    if not dialog('iscanceled', background = self.settings.background):
+        _batch_download(self, self.download_list)
+
 
 ### Processes the bulk/solo mode downloading of files
 def _download_process(self):
@@ -510,65 +513,68 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     log('Found: %s %s' % (current_artwork, art_type))
 
 def _batch_download(self, image_list):
-    log('########################################################')
-    log('Starting download')
-    download_list = []
     self.download_counter = {}
     self.download_counter['Total Artwork'] = 0
-    for image in image_list:
-        if self.mode == 'gui' and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
-            download_list = image_list
-        else:
-            # Check for set limits
-            limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], image['artwork_number'])
-            if limited[0] and image['artwork_type'] =='extrafanart':
-                self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
-            elif limited[0]:
-                log("Ignoring (%s): %s" % (limited[1], image['filename']))
+    log('########################################################')
+    if len(image_list) == 0:
+        log('Nothing to download')
+    else:
+        log('Starting download')
+        download_list = []
+        for image in image_list:
+            if self.mode == 'gui' and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
+                download_list = image_list
             else:
-                if self.settings.files_overwrite:
-                    download_list.append(image)
+                # Check for set limits
+                limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], image['artwork_number'])
+                if limited[0] and image['artwork_type'] =='extrafanart':
+                    self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
+                elif limited[0]:
+                    log("Ignoring (%s): %s" % (limited[1], image['filename']))
                 else:
-                    missingfiles = False
-                    for targetdir in image['targetdirs']:
-                        if not self.fileops._exists(os.path.join(targetdir, image['filename'])):
-                            missingfiles = True
-                    if missingfiles:
+                    if self.settings.files_overwrite:
                         download_list.append(image)
                     else:
-                        log("Ignoring (Exists in all target directories): %s" % image['filename'])
-    for image in download_list:
-        if dialog('iscanceled', background = self.settings.background):
-            break
-        dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(download_list)) * 100.0), line1 = image['media_name'], line2 = __localize__(32009) + ' ' + image['artwork_string'], line3 = image['filename'], background = self.settings.background)
-        # Try downloading the file and catch errors while trying to
-        try:
-            self.fileops._downloadfile(image['url'], image['filename'], image['targetdirs'], image['media_name'])
-        except HTTP404Error, e:
-            log("URL not found: %s" % str(e), xbmc.LOGERROR)
-            self._download_art_succes = False
-        except HTTPTimeout, e:
-            self.settings.failcount = self.settings.failcount + 1
-            log("Download timed out: %s" % str(e), xbmc.LOGERROR)
-            self._download_art_succes = False
-        except CreateDirectoryError, e:
-            log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
-            self._download_art_succes = False
-        except CopyError, e:
-            log("Could not copy file (Destination may be read only), skipping: %s" % str(e), xbmc.LOGWARNING)
-            self._download_art_succes = False
-        except DownloadError, e:
-            self.settings.failcount = self.settings.failcount + 1
-            log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
-            self._download_art_succes = False
-        else:
+                        missingfiles = False
+                        for targetdir in image['targetdirs']:
+                            if not self.fileops._exists(os.path.join(targetdir, image['filename'])):
+                                missingfiles = True
+                        if missingfiles:
+                            download_list.append(image)
+                        else:
+                            log("Ignoring (Exists in all target directories): %s" % image['filename'])
+        for image in download_list:
+            if dialog('iscanceled', background = self.settings.background):
+                break
+            dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(download_list)) * 100.0), line1 = image['media_name'], line2 = __localize__(32009) + ' ' + image['artwork_string'], line3 = image['filename'], background = self.settings.background)
+            # Try downloading the file and catch errors while trying to
             try:
-                self.download_counter[image['artwork_string']] = self.download_counter[image['artwork_string']] + 1
-            except KeyError:
-                self.download_counter[image['artwork_string']] = 1
-            self.download_counter['Total Artwork'] = self.download_counter['Total Artwork'] + 1
-            self._download_art_succes = True
-    log('Finished download')
+                self.fileops._downloadfile(image['url'], image['filename'], image['targetdirs'], image['media_name'])
+            except HTTP404Error, e:
+                log("URL not found: %s" % str(e), xbmc.LOGERROR)
+                self._download_art_succes = False
+            except HTTPTimeout, e:
+                self.settings.failcount = self.settings.failcount + 1
+                log("Download timed out: %s" % str(e), xbmc.LOGERROR)
+                self._download_art_succes = False
+            except CreateDirectoryError, e:
+                log("Could not create directory, skipping: %s" % str(e), xbmc.LOGWARNING)
+                self._download_art_succes = False
+            except CopyError, e:
+                log("Could not copy file (Destination may be read only), skipping: %s" % str(e), xbmc.LOGWARNING)
+                self._download_art_succes = False
+            except DownloadError, e:
+                self.settings.failcount = self.settings.failcount + 1
+                log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
+                self._download_art_succes = False
+            else:
+                try:
+                    self.download_counter[image['artwork_string']] = self.download_counter[image['artwork_string']] + 1
+                except KeyError:
+                    self.download_counter[image['artwork_string']] = 1
+                self.download_counter['Total Artwork'] = self.download_counter['Total Artwork'] + 1
+                self._download_art_succes = True
+        log('Finished download')
     log('########################################################')
 
 
