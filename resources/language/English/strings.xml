@@ -31,6 +31,7 @@
         <string id="32028">48</string>
         <string id="32029">[I](After changes are made you must restart XBMC) [/I]</string>
         <string id="32030">No ID found for looking up artwork</string>
+        <string id="32191">Processing Artwork</string>
 
     <!-- Add-on settings: General section id=32031 to 32050 -->
         <string id="32031">General settings</string>
