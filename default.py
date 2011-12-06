@@ -22,6 +22,7 @@ from xml.parsers.expat import ExpatError
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
 from resources.lib.media_setup import _media_listing as media_listing
+
 ### get addon info
 __addon__       = xbmcaddon.Addon()
 __addonid__     = __addon__.getAddonInfo('id')
@@ -33,7 +34,6 @@ __addonpath__   = __addon__.getAddonInfo('path')
 __language__    = language.get_abbrev()
 
 ACTION_PREVIOUS_MENU = ( 9, 10, 92, 216, 247, 257, 275, 61467, 61448, )
-
 
 
 ### clean up temporary folder
@@ -52,8 +52,13 @@ def cleanup(self):
         else:
             log('Deleted temp directory: %s' % self.fileops.tempdir)
     ### log results and notify user
-    summary_tmp = __localize__(32012) + ': %s ' % self.fileops.downloadcount
+    summary_tmp = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork']
     summary = summary_tmp + __localize__(32016)
+    summary_breakdown = ''
+    for artwork_type in self.download_counter:
+        if not artwork_type == 'Total Artwork':
+            summary_tmp = '- %s: %s' % (artwork_type, self.download_counter[artwork_type])
+            summary_breakdown = summary_breakdown + ', ' + summary_tmp
     dialog('close', background = self.settings.background)
     # Some dialog checks
     if self.settings.notify:
@@ -148,7 +153,6 @@ class Main:
         cleanup(self)
         finished_log(self)
 
-
 ### Declare standard vars   
 def initial_vars(self):
     providers = provider.get_providers()
@@ -175,7 +179,6 @@ def finished_log(self):
     for artwork_type in self.download_counter:
         log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
 
-    
 ### Check for script starting arguments used by skins
 def runmode_args(self):
     log("## Checking for starting arguments used by skins")
@@ -230,7 +233,6 @@ def solo_mode(self, itemtype, itemname):
                 download_artwork(self, self.Medialist, self.tv_providers)
             break
 
-           
 ### load settings and initialise needed directories
 def initialise(self):
     log("## Checking for downloading mode...")
@@ -266,7 +268,6 @@ def initialise(self):
         return False
     else:
         return True 
-
 
 ### download media fanart
 def download_artwork(self, media_list, providers):
@@ -385,7 +386,6 @@ def download_artwork(self, media_list, providers):
         self.processeditems = self.processeditems + 1
     if not self.mode == 'gui' and not dialog('iscanceled', background = self.settings.background):
         _batch_download(self, self.download_list)
-        
 
 ### Processes the custom mode downloading of files
 def _custom_process(self):
@@ -413,7 +413,6 @@ def _custom_process(self):
                     else:
                         _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
-
 ### Processes the bulk/solo mode downloading of files
 def _download_process(self):
     if self.settings.movie_enable and self.mediatype == 'movie':
@@ -438,7 +437,6 @@ def _download_process(self):
                 else:
                     _download_art(self, arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
-
 ### Retrieves imagelist for GUI solo mode
 def _gui_solomode_imagelist(self, art_type, image_type):
     log('Retrieving image list for GUI')
@@ -460,7 +458,6 @@ def _gui_solomode_imagelist(self, art_type, image_type):
         return False
     else:
         return True
-
 
 ### Artwork downloading
 def _download_art(self, art_type, image_type, filename, targetdirs, msg):
@@ -571,7 +568,6 @@ def _batch_download(self, image_list):
                 self._download_art_succes = True
         log('Finished download')
     log('########################################################')
-
 
 def _gui_solomode(self):
     # Close the 'checking for artwork' dialog before opening the GUI list
