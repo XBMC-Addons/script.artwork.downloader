@@ -517,7 +517,10 @@ def _batch_download(self, image_list):
     download_list = []
     self.download_counter = {}
     self.download_counter['Total Artwork'] = 0
-    for image in image_list:
+    if self.mode == 'gui' and not art_type == 'extrafanart' and not art_type == 'extrathumbs':
+        download_list.append(image)
+    else:
+        for image in image_list:
             # Check for set limits
             limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], image['artwork_number'])
             if limited[0] and image['artwork_type'] =='extrafanart':
