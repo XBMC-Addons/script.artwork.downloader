@@ -376,12 +376,13 @@ def download_artwork(self, media_list, providers):
                     self.download_max = len(self.image_list)
                 # Check for GUI mode
                 if self.mode == 'gui':
-                    log('here goes gui mode')
+                    log('Using GUI mode')
                     _gui_solomode(self)
                 if self.mode == 'custom':
-                    log('here goes custom mode')
+                    log('Using Custom mode')
                     _custom_process(self)
                 else:
+                    log('Using Bulk/Solo mode')
                     _download_process(self)
         self.processeditems = self.processeditems + 1
 
