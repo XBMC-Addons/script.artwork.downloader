@@ -183,7 +183,8 @@ def finished_log(self):
     log('## Download totaliser:')
     log('- Total Artwork: %s' % self.download_counter['Total Artwork'], xbmc.LOGNOTICE)
     for artwork_type in self.download_counter:
-        log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
+        if not artwork_type == 'Total Artwork':
+            log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
 
 ### Check for script starting arguments used by skins
 def runmode_args(self):
