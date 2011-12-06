@@ -379,10 +379,8 @@ def download_artwork(self, media_list, providers):
                     log('Using GUI mode')
                     _gui_solomode(self)
                 elif self.mode == 'custom':
-                    log('Using Custom mode')
                     _custom_process(self)
                 else:
-                    log('Using Bulk/Solo mode')
                     _download_process(self)
         self.processeditems = self.processeditems + 1
     if not self.mode == 'gui' and not dialog('iscanceled', background = self.settings.background):
