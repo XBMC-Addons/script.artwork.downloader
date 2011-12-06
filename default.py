@@ -256,7 +256,7 @@ def initialise(self):
         match = re.search("mediatype=(.*)" , item)
         if match:
             self.mediatype = match.group(1)
-            if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'music':
+            if self.mediatype == 'tvshow' or self.mediatype == 'movie':
                 pass
             else:
                 log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
