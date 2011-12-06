@@ -470,7 +470,7 @@ def _download_art(self, art_type, image_type, filename, targetdirs, msg):
     artwork_number = 0
     final_image_list = []
     if self.mode == 'gui' and not art_type == 'extrafanart' and not art_type == 'extrathumbs':
-        artwork = []
+        artwork = {}
         artwork['url'] = self.image_url
         artwork['type'] = image_type
         final_image_list.append(artwork)
