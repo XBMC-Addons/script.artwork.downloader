@@ -40,8 +40,10 @@ def _normalize_string( text ):
 def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
-    txt = unicode(txt,'utf-8', errors='ignore')
-    message = ('Artwork Downloader: %s' % txt)
+    try:
+        message = ('Artwork Downloader: %s' % unicode(txt,'utf-8', errors='ignore'))
+    except TypeError:
+        message = ('Artwork Downloader: %s' % txt)
     xbmc.log(msg=message, level=severity)
 
 
