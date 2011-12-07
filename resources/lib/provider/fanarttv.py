@@ -78,12 +78,3 @@ class FTV_MovieProvider(BaseProvider):
             raise NoFanartError(media_id)
         else:
             return image_list
-
-
-class FTV_MusicProvider(BaseProvider):
-    """
-    Setup provider for TheTVDB.com
-    """
-    def __init__(self):
-        self.name = 'fanart.tv - Music API'
-        self.url = 'http://fanart.tv/api/music.php?id=%s&type=background'
