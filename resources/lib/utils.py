@@ -40,7 +40,7 @@ def _normalize_string( text ):
 def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
-    message = unicode(message,'utf-8', errors='ignore')
+    txt = unicode(txt,'utf-8', errors='ignore')
     message = ('Artwork Downloader: %s' % txt)
     xbmc.log(msg=message, level=severity)
 
