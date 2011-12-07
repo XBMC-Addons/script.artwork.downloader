@@ -2,7 +2,7 @@
 <strings>
     <!-- Add-on messages id=32001 to 32030 -->
         <string id="32001">-</string>
-        <string id="32002">Different settings version found!</string>
+        <string id="32002">-</string>
         <string id="32003">Faulty/empty settings combination found!</string>
         <string id="32004">Select your preferences and press OK to save</string>
         <string id="32005">Cleaning up</string>
@@ -21,7 +21,7 @@
         <string id="32018">Download canceled by user</string>
         <string id="32019">Which one to download?</string>
         <string id="32020">Downloaded</string>
-        <string id="32021">-</string>
+        <string id="32021">Processing Artwork</string>
         <string id="32022">not found!</string>
         <string id="32023">Run add-on at start-up / login</string>
         <string id="32024">Run add-on as a service</string>
@@ -122,7 +122,7 @@
         <string id="32185">[I]www.thetvdb.com[/I] </string>
         <string id="32186">[I]www.themoviedb.org[/I] </string>
         <string id="32187">Add-on authors:</string>
-        <string id="32188">[I]paddycarey, machine-sanctum, putneyj [/I] </string>
+        <string id="32188">[I]paddycarey, Martijn Kaijser, putneyj [/I] </string>
         <string id="32191">[I]For bugs, requests or general questions visit the [/I]</string>
         <string id="32192">[I]  Artwork Downloader thread on the XBMC forum. [/I]</string>
         <string id="32189">Thanks to:</string>

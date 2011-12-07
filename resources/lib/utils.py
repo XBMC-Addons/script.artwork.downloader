@@ -3,6 +3,7 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 import platform
+import unicodedata
 
 
 """
@@ -24,14 +25,25 @@ dialog = xbmcgui.DialogProgress()
 timeout = 20
 socket.setdefaulttimeout(timeout)
 
+
+# Fixes unicode problems
+def _unicode( text, encoding='utf-8' ):
+    try: text = unicode( text, encoding )
+    except: pass
+    return text
+
+def _normalize_string( text ):
+    try: text = unicodedata.normalize( 'NFKD', _unicode( text ) ).encode( 'ascii', 'ignore' )
+    except: pass
+    return text
+
 def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
-    try:
-        message = 'Artwork Downloader: %s' % txt
-        xbmc.log(msg=message, level=severity)
-    except:
-        xbmc.log('ASCII character error')
+    message = unicode(message,'utf-8', errors='ignore')
+    message = ('Artwork Downloader: %s' % txt)
+    xbmc.log(msg=message, level=severity)
+
 
 
 def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', background = False):
