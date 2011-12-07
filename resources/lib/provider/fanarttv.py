@@ -9,6 +9,7 @@ class FTV_TVProvider(BaseProvider):
 
     def __init__(self):
         self.name = 'fanart.tv - TV API'
+        self.api_key = '586118be1ac673f74963cc284d46bd8e'
         self.url = 'http://fanart.tv/api/fanart.php?v=4&id=%s'
         self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart']
     
