@@ -47,8 +47,12 @@ def _log(txt, severity=xbmc.LOGDEBUG):
     try:
         xbmc.log(msg=message, level=severity)
     except UnicodeEncodeError:
-        message = ('Artwork Downloader: UnicodeEncodeError')
-        xbmc.log(msg=message, level=xbmc.LOGWARNING)
+        try:
+            _normalize_string(message)
+            xbmc.log(msg=message, level=severity)
+        except:
+            message = ('Artwork Downloader: UnicodeEncodeError')
+            xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
 
 def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', background = False):
