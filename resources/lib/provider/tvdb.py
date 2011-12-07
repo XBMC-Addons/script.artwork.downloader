@@ -1,7 +1,6 @@
 from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import _log as log
-
 from elementtree import ElementTree as ET
 
 class TVDBProvider(BaseProvider):
@@ -25,6 +24,7 @@ class TVDBProvider(BaseProvider):
             info = {}
             if image.findtext('BannerPath'):
                 info['url'] = self.url_prefix + image.findtext('BannerPath')
+                info['preview'] = self.url_prefix + image.findtext('ThumbnailPath')
                 info['language'] = image.findtext('Language')
                 info['id'] = image.findtext('id')
                 info['size'] = ''
