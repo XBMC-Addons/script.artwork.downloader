@@ -40,7 +40,7 @@ class FTV_TVProvider(BaseProvider):
                     else:
                         info['season'] = 'NA'
                     '''
-                    if info
+                    if info:
                         image_list.append(info)
         if image_list == []:
             raise NoFanartError(media_id)
