@@ -1,20 +1,18 @@
 from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
-from resources.lib import language
-
 from elementtree import ElementTree as ET
 
 class FTV_TVProvider(BaseProvider):
-
     def __init__(self):
         self.name = 'fanart.tv - TV API'
         self.api_key = '586118be1ac673f74963cc284d46bd8e'
+        #self.url = "http://fanart.tv/webservice/series/%s/%s/xml/all/1/2"
         self.url = 'http://fanart.tv/api/fanart.php?v=4&id=%s'
         self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart']
-    
-        
+
     def get_image_list(self, media_id):
+        #xml_url = self.url % (self.api_key,media_id)
         xml_url = self.url % (media_id)
         log('API: %s ' % xml_url)
         image_list = []
@@ -25,30 +23,28 @@ class FTV_TVProvider(BaseProvider):
             for images in tree.findall(imageroot):
                 for image in images:
                     info = {}
-                    info['url'] = image.get('url')
                     info['id'] = image.get('id')
+                    info['url'] = image.get('url')
                     info['type'] = imagetype
                     '''
-                    Disabled seasonthumbs because there's now way of telling to what season or thumbset it belongs.
-                    Needs to be fixed in the API first.
-                    
+                    info['language'] = image.get('lang')
+                    info['likes'] = image.get('likes')
                     if imagetype == 'seasonthumb':
-                        try:
-                            x,y = info['url'].split('(')
-                            y,z = str(y).split(')')
-                            info['season'] = "%.2d" % int(str(y)) #ouput is double digit int
-                        except:
-                            log('Failed retrieving season number')
-                            info['season'] = ''
-                    else: info['season'] = ''
+                        seasonxx = "%.2d" % int(image.findtext('season')) #ouput is double digit int
+                        if seasonxx == '00':
+                            info['season'] = '-specials'
+                        else:
+                            info['season'] = str(seasonxx)
+                        info['season'] = "%.2d" % int(image.get('season')) #ouput is double digit int
+                    else:
+                        info['season'] = 'NA'
                     '''
-                    
-                    if info:            
+                    if info
                         image_list.append(info)
         if image_list == []:
             raise NoFanartError(media_id)
         else:
-            return image_list 
+            return image_list
         
 class FTV_MovieProvider(BaseProvider):
     """
