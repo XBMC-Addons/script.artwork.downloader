@@ -123,7 +123,6 @@ class Main:
         self.filters = apply_filters()
         self.movie_providers = providers['movie_providers']
         self.tv_providers = providers['tv_providers']
-        self.music_providers = providers['music_providers']
         self.download_counter = {}
         self.download_counter['Total Artwork'] = 0
         self.mediatype = ''
