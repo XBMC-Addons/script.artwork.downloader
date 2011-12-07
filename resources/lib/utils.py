@@ -41,14 +41,11 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 
     """Log to txt xbmc.log at specified severity"""
     try:
-        message = ('Artwork Downloader: %s' % unicode(txt,'utf-8', errors='ignore'))
-    except TypeError:
         message = ('Artwork Downloader: %s' % txt)
-    try:
         xbmc.log(msg=message, level=severity)
     except UnicodeEncodeError:
         try:
-            _normalize_string(message)
+            message = _normalize_string('Artwork Downloader: %s' % txt)
             xbmc.log(msg=message, level=severity)
         except:
             message = ('Artwork Downloader: UnicodeEncodeError')
