@@ -4,6 +4,7 @@ from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
 
 class FTV_TVProvider(BaseProvider):
+
     def __init__(self):
         self.name = 'fanart.tv - TV API'
         self.api_key = '586118be1ac673f74963cc284d46bd8e'
@@ -45,15 +46,40 @@ class FTV_TVProvider(BaseProvider):
             raise NoFanartError(media_id)
         else:
             return image_list
-        
+
+
 class FTV_MovieProvider(BaseProvider):
-    """
-    Setup provider for TheTVDB.com
-    """
+
     def __init__(self):
         self.name = 'fanart.tv - Music API'
-        self.url = 'http://fanart.tv/api/fanart.php?id=%s'
-        
+        self.api_key = '586118be1ac673f74963cc284d46bd8e'
+        self.url = "http://fanart.tv/webservice/movie/%s/%s/xml/all/1/2/"
+        self.imagetypes = ['clearlogo', 'clearart', 'cdart']
+
+    def get_image_list(self, media_id):
+        xml_url = self.url % (self.api_key,media_id)
+        log('API: %s ' % xml_url)
+        image_list = []
+        data = self.get_xml(xml_url)
+        tree = ET.fromstring(data)
+        for imagetype in self.imagetypes:
+            imageroot = imagetype + 's'
+            for images in tree.findall(imageroot):
+                for image in images:
+                    info = {}
+                    info['id'] = image.get('id')
+                    info['url'] = image.get('url')
+                    info['type'] = imagetype
+                    info['language'] = image.get('lang')
+                    info['likes'] = image.get('likes')
+                    if info:            
+                        image_list.append(info)
+        if image_list == []:
+            raise NoFanartError(media_id)
+        else:
+            return image_list
+
+
 class FTV_MusicProvider(BaseProvider):
     """
     Setup provider for TheTVDB.com
