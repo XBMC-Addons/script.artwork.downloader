@@ -24,7 +24,10 @@ class TVDBProvider(BaseProvider):
             info = {}
             if image.findtext('BannerPath'):
                 info['url'] = self.url_prefix + image.findtext('BannerPath')
-                info['preview'] = self.url_prefix + image.findtext('ThumbnailPath')
+                if image.findtext('ThumbnailPath'):
+                    info['preview'] = self.url_prefix + image.findtext('ThumbnailPath')
+                else:
+                    info['preview'] = self.url_prefix + image.findtext('BannerPath')
                 info['language'] = image.findtext('Language')
                 info['id'] = image.findtext('id')
                 info['size'] = ''
