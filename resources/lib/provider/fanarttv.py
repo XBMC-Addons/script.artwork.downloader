@@ -2,6 +2,7 @@ from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
+import urllib
 
 class FTV_TVProvider(BaseProvider):
 
@@ -25,10 +26,10 @@ class FTV_TVProvider(BaseProvider):
                 for image in images:
                     info = {}
                     info['id'] = image.get('id')
-                    info['url'] = image.get('url').replace(' ', '%20')
+                    info['url'] = urllib.quote(image.get('url'), ':/')
                     info['type'] = imagetype
                     '''
-                    info['preview'] = image.get('preview').replace(' ', '%20')
+                    info['preview'] = urllib.quote(image.get('preview'), ':/')
                     info['language'] = image.get('lang')
                     info['likes'] = image.get('likes')
                     if imagetype == 'seasonthumb':
@@ -69,8 +70,8 @@ class FTV_MovieProvider(BaseProvider):
                 for image in images:
                     info = {}
                     info['id'] = image.get('id')
-                    info['url'] = image.get('url').replace(' ', '%20')
-                    info['preview'] = image.get('preview').replace(' ', '%20')
+                    info['url'] = urllib.quote(image.get('url'), ':/')
+                    info['preview'] = urllib.quote(image.get('preview'), ':/')
                     info['type'] = imagetype
                     info['language'] = image.get('lang')
                     info['likes'] = image.get('likes')
