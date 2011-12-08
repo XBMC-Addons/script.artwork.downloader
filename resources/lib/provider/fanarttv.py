@@ -25,10 +25,10 @@ class FTV_TVProvider(BaseProvider):
                 for image in images:
                     info = {}
                     info['id'] = image.get('id')
-                    info['url'] = image.get('url')
+                    info['url'] = image.get('url').replace(' ', '%20')
                     info['type'] = imagetype
                     '''
-                    info['preview'] = image.get('preview')
+                    info['preview'] = image.get('preview').replace(' ', '%20')
                     info['language'] = image.get('lang')
                     info['likes'] = image.get('likes')
                     if imagetype == 'seasonthumb':
@@ -69,8 +69,8 @@ class FTV_MovieProvider(BaseProvider):
                 for image in images:
                     info = {}
                     info['id'] = image.get('id')
-                    info['url'] = image.get('url')
-                    info['preview'] = image.get('preview')
+                    info['url'] = image.get('url').replace(' ', '%20')
+                    info['preview'] = image.get('preview').replace(' ', '%20')
                     info['type'] = imagetype
                     info['language'] = image.get('lang')
                     info['likes'] = image.get('likes')
