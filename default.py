@@ -420,7 +420,8 @@ class Main:
                         self._download_art(arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
     ### Retrieves imagelist for GUI solo mode
-    def _gui_imagelist(self, art_type, image_type):
+    def _gui_imagelist(self, art_type):
+        image_type = art_type
         log('Retrieving image list for GUI')
         self.gui_imagelist = []
         # do some check for special cases
@@ -575,7 +576,7 @@ class Main:
         if ( len(self.GUI_type_list) == 1 ) or self._choice_type():
             self.gui_imagelist = False
             
-            self._gui_imagelist(self.gui_selected_type, self.gui_selected_type)
+            self._gui_imagelist(self.gui_selected_type)
             log('Image put to GUI: %s' %self.gui_imagelist)
         
         # Download the selected image
@@ -633,11 +634,11 @@ class Main:
             log('Start custom solomode')
             for types in self.download_arttypes:
                 gui_arttype = types
-            self._gui_imagelist(gui_arttype,gui_arttype)
+            self._gui_imagelist(gui_arttype)
             log('Number of images: %s' %len(self.gui_imagelist))
             if len(self.gui_imagelist) > 1:
                 self.mode = 'customgui'
-                log('Debug: Image list larger than 1')
+                log('Image list larger than 1')
                 if self._choose_image():
                     log('Chosen: %s'%self.image_url)
                     if self.mediatype == 'tvshow':
