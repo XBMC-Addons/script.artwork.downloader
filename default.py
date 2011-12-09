@@ -389,7 +389,7 @@ class Main:
     ### Processes the custom mode downloading of files
     def _download_process(self):
         if not self.mode == 'custom':
-            download_arttypes = []
+            self.download_arttypes = []
             if self.mediatype == 'tvshow':
                 for arttypes in self.settings.tvshow_arttype_list:
                     if arttypes['bulk_enabled']:
