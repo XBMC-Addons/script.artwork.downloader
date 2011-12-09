@@ -420,7 +420,7 @@ class Main:
                         self._download_art(arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
     ### Retrieves imagelist for GUI solo mode
-    def _gui_mode_imagelist(self, art_type, image_type):
+    def _gui_imagelist(self, art_type, image_type):
         log('Retrieving image list for GUI')
         self.gui_imagelist = []
         # do some check for special cases
@@ -575,7 +575,7 @@ class Main:
         if ( len(self.GUI_type_list) == 1 ) or self._choice_type():
             self.gui_imagelist = False
             
-            self._gui_mode_imagelist(self.gui_selected_type, self.gui_selected_type)
+            self._gui_imagelist(self.gui_selected_type, self.gui_selected_type)
             log('Image put to GUI: %s' %self.gui_imagelist)
         
         # Download the selected image
@@ -626,19 +626,18 @@ class Main:
         for item in sys.argv:
             for type in (self.settings.tvshow_arttype_list or self.settings.movie_arttype_list):
                 if type['art_type'] in item:
-                    log('found: %s' %type['art_type'])
+                    log('Custom mode arttype: %s' %type['art_type'])
                     self.download_arttypes.append(item)
         # If only one specified
         if len(self.download_arttypes) == 1:
             log('Start custom solomode')
             for types in self.download_arttypes:
                 gui_arttype = types
-                log('%s' %gui_arttype)
-            self._gui_mode_imagelist(gui_arttype,gui_arttype)
+            self._gui_imagelist(gui_arttype,gui_arttype)
             log('Number of images: %s' %len(self.gui_imagelist))
             if len(self.gui_imagelist) > 1:
                 self.mode = 'customgui'
-                log('Debug: List bigger than 1')
+                log('Debug: Image list larger than 1')
                 if self._choose_image():
                     log('Chosen: %s'%self.image_url)
                     if self.mediatype == 'tvshow':
@@ -664,7 +663,7 @@ class Main:
                     xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
             else:
                 self._download_process()
-                log('Debug: List not bigger than 1')
+                log('Debug: Image list not larger than 1')
 
         # If more than one specified
         else:
