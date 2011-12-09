@@ -655,8 +655,13 @@ class Main:
                                 self.gui_selected_msg = arttypes['gui_string']
                     self._download_art(self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
                     self._batch_download(self.download_list)
-                if not self._download_art_succes:
-                    xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
+                    if not self._download_art_succes:
+                        xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
+                if self._download_art_succes:
+                    log('Download succesfull')
+                else:
+                    log('cancelled')
+                    xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
             else:
                 self._download_process()
                 log('Debug: List not bigger than 1')
