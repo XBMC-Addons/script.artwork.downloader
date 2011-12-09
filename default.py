@@ -377,30 +377,30 @@ class Main:
                     # Check for GUI mode
                     if self.mode == 'gui':
                         log('Using GUI mode')
-                        self._gui_solomode()
+                        self._gui_mode()
+                    elif self.mode == 'custom':
+                        log('Using custom mode')
+                        self.custom_mode()
                     else:
+                        log('Using bulk mode')
                         self._download_process()
             self.processeditems = self.processeditems + 1
 
     ### Processes the custom mode downloading of files
     def _download_process(self):
-        download_arttypes = []
-        if self.mode == 'custom':
-            for item in sys.argv:
-                if not '=' in item:
-                    download_arttypes.append(item)
-        else:
+        if not self.mode == 'custom':
+            download_arttypes = []
             if self.mediatype == 'tvshow':
                 for arttypes in self.settings.tvshow_arttype_list:
                     if arttypes['bulk_enabled']:
-                        download_arttypes.append(arttypes['art_type'])
+                        self.download_arttypes.append(arttypes['art_type'])
             elif self.mediatype == 'movie':
                 for arttypes in self.settings.movie_arttype_list:
                     if arttypes['bulk_enabled']:
-                        download_arttypes.append(arttypes['art_type'])
+                        self.download_arttypes.append(arttypes['art_type'])
         if self.settings.movie_enable and self.mediatype == 'movie':
             for arttypes in self.settings.movie_arttype_list:
-                if arttypes['art_type'] in download_arttypes:
+                if arttypes['art_type'] in self.download_arttypes:
                     if arttypes['art_type'] == 'extrafanart':
                         self._download_art(arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                     elif arttypes['art_type'] == 'defaultthumb':
@@ -411,7 +411,7 @@ class Main:
                         self._download_art(arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
         if self.settings.tvshow_enable and self.mediatype == 'tvshow':
             for arttypes in self.settings.tvshow_arttype_list:
-                if arttypes['art_type'] in download_arttypes:
+                if arttypes['art_type'] in self.download_arttypes:
                     if arttypes['art_type'] == 'extrafanart':
                         self._download_art(arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
                     elif arttypes['art_type'] == 'defaultthumb':
@@ -420,7 +420,7 @@ class Main:
                         self._download_art(arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
 
     ### Retrieves imagelist for GUI solo mode
-    def _gui_solomode_imagelist(self, art_type, image_type):
+    def _gui_mode_imagelist(self, art_type, image_type):
         log('Retrieving image list for GUI')
         self.gui_imagelist = []
         # do some check for special cases
@@ -434,7 +434,6 @@ class Main:
         for artwork in self.image_list:
             if  artwork['type'] == image_type:
                 self.gui_imagelist.append(artwork['url'])
-                log('Image url: %s'%artwork['url'])
         if self.gui_imagelist == '':
             return False
         else:
@@ -446,7 +445,7 @@ class Main:
         current_artwork = 0
         artwork_number = 0
         final_image_list = []
-        if self.mode == 'gui' and not art_type == 'extrafanart' and not art_type == 'extrathumbs':
+        if (self.mode == 'gui' or self.mode == 'customgui') and not art_type == 'extrafanart' and not art_type == 'extrathumbs':
             artwork = {}
             artwork['url'] = self.image_url
             artwork['type'] = image_type
@@ -496,7 +495,7 @@ class Main:
             log('Starting download')
             download_list = []
             for image in image_list:
-                if self.mode == 'gui' and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
+                if (self.mode == 'gui' or self.mode == 'customgui') and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
                     download_list = image_list
                 else:
                     # Check for set limits
@@ -553,11 +552,10 @@ class Main:
             log('Finished download')
         log('########################################################')
 
-    def _gui_solomode(self):
+    def _gui_mode(self):
         # Close the 'checking for artwork' dialog before opening the GUI list
         dialog('close', background = self.settings.background)
         self.GUI_type_list = []
-        
         # Fill GUI art type list
         if self.mediatype == 'tvshow':
             for arttypes in self.settings.tvshow_arttype_list:
@@ -571,14 +569,13 @@ class Main:
                 if arttypes['solo_enabled'] == 'true':
                     gui = arttypes['gui_string']
                     self.GUI_type_list.append (gui)
-        
         # 
         if len(self.GUI_type_list) == 1:
             self.GUI_type_list[0] = "True"
         if ( len(self.GUI_type_list) == 1 ) or self._choice_type():
             self.gui_imagelist = False
             
-            self._gui_solomode_imagelist(self.gui_selected_type, self.gui_selected_type)
+            self._gui_mode_imagelist(self.gui_selected_type, self.gui_selected_type)
             log('Image put to GUI: %s' %self.gui_imagelist)
         
         # Download the selected image
@@ -623,6 +620,52 @@ class Main:
             else:
                 return False
 
+    def custom_mode(self):
+        self.download_arttypes = []
+        # Look for argument matching artwork types
+        for item in sys.argv:
+            for type in (self.settings.tvshow_arttype_list or self.settings.movie_arttype_list):
+                if type['art_type'] in item:
+                    log('found: %s' %type['art_type'])
+                    self.download_arttypes.append(item)
+        # If only one specified
+        if len(self.download_arttypes) == 1:
+            log('Start custom solomode')
+            for types in self.download_arttypes:
+                gui_arttype = types
+                log('%s' %gui_arttype)
+            self._gui_mode_imagelist(gui_arttype,gui_arttype)
+            log('Number of images: %s' %len(self.gui_imagelist))
+            if len(self.gui_imagelist) > 1:
+                self.mode = 'customgui'
+                log('Debug: List bigger than 1')
+                if self._choose_image():
+                    log('Chosen: %s'%self.image_url)
+                    if self.mediatype == 'tvshow':
+                        for arttypes in self.settings.tvshow_arttype_list:
+                            if gui_arttype == arttypes['art_type']:
+                                self.gui_selected_type = arttypes['art_type']
+                                self.gui_selected_filename = arttypes['filename']
+                                self.gui_selected_msg = arttypes['gui_string']
+                    if self.mediatype == 'movie':
+                        for arttypes in self.settings.movie_arttype_list:
+                            if gui_arttype == arttypes['art_type']:
+                                self.gui_selected_type = arttypes['art_type']
+                                self.gui_selected_filename = arttypes['filename']
+                                self.gui_selected_msg = arttypes['gui_string']
+                    self._download_art(self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
+                    self._batch_download(self.download_list)
+                if not self._download_art_succes:
+                    xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
+            else:
+                self._download_process()
+                log('Debug: List not bigger than 1')
+
+        # If more than one specified
+        else:
+            log('Start custom bulkmode')
+            self._download_process()
+
     def _choose_image(self):
         log( "### image list: %s" % self.gui_imagelist)
         self.image_url = self.MyDialog(self.gui_imagelist)
@@ -664,7 +707,6 @@ class MainGui( xbmcgui.WindowXMLDialog ):
             listitem = xbmcgui.ListItem( image.split("/")[-1] )
             listitem.setIconImage( image )
             listitem.setLabel2(image)
-            log( "### image: %s" % image )
             self.img_list.addItem( listitem )
         self.setFocus(self.img_list)
 
