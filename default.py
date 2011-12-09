@@ -434,8 +434,7 @@ class Main:
         for artwork in self.image_list:
             if  artwork['type'] == image_type:
                 self.gui_imagelist.append(artwork['url'])
-                log('url: %s'%artwork['url'])
-        log('Image list: %s' %self.gui_imagelist)
+                log('Image url: %s'%artwork['url'])
         if self.gui_imagelist == '':
             return False
         else:
