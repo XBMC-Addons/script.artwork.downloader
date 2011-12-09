@@ -716,10 +716,10 @@ class MainGui( xbmcgui.WindowXMLDialog ):
 
 
     def onClick(self, controlID):
-        log( "### control: %s" % controlID )
+        log( "# GUI control: %s" % controlID )
         if controlID == 6 or controlID == 3: 
             num = self.img_list.getSelectedPosition()
-            log( "### position: %s" % num )
+            log( "# GUI position: %s" % num )
             self.selected_url = self.img_list.getSelectedItem().getLabel2()
             self.close()
 
