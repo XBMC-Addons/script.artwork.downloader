@@ -380,7 +380,7 @@ class Main:
                         self._gui_mode()
                     elif self.mode == 'custom':
                         log('Using custom mode')
-                        self.custom_mode()
+                        self._custom_mode()
                     else:
                         log('Using bulk mode')
                         self._download_process()
@@ -621,7 +621,7 @@ class Main:
             else:
                 return False
 
-    def custom_mode(self):
+    def _custom_mode(self):
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
