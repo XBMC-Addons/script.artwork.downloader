@@ -679,8 +679,8 @@ class Main:
         else:
             return False
 
-    def MyDialog(self, tv_list):
-        w = MainGui( "DialogSelect.xml", __addonpath__, listing=tv_list )
+    def MyDialog(self, image_list):
+        w = MainGui( "DialogSelect.xml", __addonpath__, listing=image_list )
         w.doModal()
         try: return w.selected_url
         except: 
