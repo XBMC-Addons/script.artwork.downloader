@@ -1,4 +1,5 @@
 [B]1.0.2[/B]
+- Added: Support the providers message on finished
 - Added: Custom mode pops-up a image selection when run on single tvshow/movie
 - Added: First retrieve image list(s) and then do batch download
 - Fixed: Problems caused with UTF-8 characters in titles

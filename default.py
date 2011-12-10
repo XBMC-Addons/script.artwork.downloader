@@ -210,6 +210,8 @@ class Main:
         ### log results and notify user
         summary_tmp = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork']
         summary = summary_tmp + __localize__(32016)
+        provider_msg1 = __localize__(32001)
+        provider_msg2 = __localize__(32184) + ', ' + __localize__(32185) + ', ' + __localize__(32186)
         summary_breakdown = ''
         for artwork_type in self.download_counter:
             if not artwork_type == 'Total Artwork':
@@ -227,7 +229,10 @@ class Main:
             log('Network error detected, script aborted', xbmc.LOGERROR)
             dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
         if not xbmc.abortRequested:
-            dialog('okdialog', line1 = summary, background = self.settings.background)
+            if self.settings.background:
+                dialog('okdialog', line1 = summary, background = self.settings.background)
+            else:
+                dialog('okdialog', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background)
         else:
             dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
         if self.mode == 'gui':
