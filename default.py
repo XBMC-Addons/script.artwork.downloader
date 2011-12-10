@@ -68,7 +68,7 @@ class Main:
                         self.solo_mode(self.mediatype, self.medianame)
                     else:
                         self.solo_mode(self.mediatype, self.medianame)
-                        if not dialog('iscanceled', background = self.settings.background) and not self.mode = 'customgui':
+                        if not dialog('iscanceled', background = self.settings.background) and not self.mode == 'customgui':
                             self._batch_download(self.download_list)
                 # No medianame specified
                 else:
