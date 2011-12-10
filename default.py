@@ -630,7 +630,7 @@ class Main:
                     log('Custom mode arttype: %s' %type['art_type'])
                     self.download_arttypes.append(item)
         # If only one specified
-        if len(self.download_arttypes) == 1:
+        if len(self.download_arttypes) == 1 and not self.medianame == '':
             log('Start custom solomode')
             for types in self.download_arttypes:
                 gui_arttype = types
