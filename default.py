@@ -235,9 +235,11 @@ class Main:
                 dialog('okdialog', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background)
         else:
             dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
-        if self.mode == 'gui':
+        '''
+        if self.mode == 'gui' or self.mode == 'customgui':
             if self._download_art_succes:
                 xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
+        '''
         # print download totals to log
         log('## Download totaliser:')
         log('- Total Artwork: %s' % self.download_counter['Total Artwork'], xbmc.LOGNOTICE)

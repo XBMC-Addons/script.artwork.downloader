@@ -77,4 +77,4 @@ def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = 
                 msg = line1
             else:
                 msg = line1 + ': ' + line2
-            xbmc.executebuiltin("XBMC.Notification(%s, %s, 1000, %s)" % (line0, msg, __icon__))
+            xbmc.executebuiltin("XBMC.Notification(%s, %s, 10000, %s)" % (line0, msg, __icon__))
