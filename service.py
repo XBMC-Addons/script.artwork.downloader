@@ -19,7 +19,7 @@ def autostart():
         tempdir = os.path.join(addondir, 'temp')
         log('Service - Run at startup: %s'%settings.service_startup)        
         log('Service - Run as service: %s'%settings.service_enable)
-        log('Service - Time interval: %s'%settings.service_time)
+        log('Service - Time: %s:00'%settings.service_runtime)
         if settings.service_startup:
             xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
             time.sleep(60)
