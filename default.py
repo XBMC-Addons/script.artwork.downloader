@@ -211,7 +211,7 @@ class Main:
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         provider_msg1 = __localize__(32001)
-        provider_msg2 = __localize__(32184) + ', ' + __localize__(32185) + ', ' + __localize__(32186)
+        provider_msg2 = __localize__(32184) + " | " + __localize__(32185) + " | " + __localize__(32186)
         summary_breakdown = ''
         for artwork_type in self.download_counter:
             if not artwork_type == 'Total Artwork':
