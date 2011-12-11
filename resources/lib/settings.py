@@ -102,7 +102,7 @@ class _settings:
         log('## - Notify                = %s' % str(self.notify))
         log('## Run at startup / login  = %s' % str(self.service_startup))
         log('## Run as service          = %s' % str(self.service_enable))
-        log('## - Time interval         = %s' % str(self.service_time))
+        log('## - Time                  = %s' % str(self.service_runtime))
         log('## Overwrite all files     = %s' % str(self.files_overwrite))
         log('##')
         log('## Movie Artwork           = %s' % str(self.movie_enable))
