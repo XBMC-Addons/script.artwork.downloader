@@ -61,7 +61,7 @@ class _settings:
         self.notify                 = __addon__.getSetting("notify") == 'true'
         self.service_startup        = __addon__.getSetting("service_startup") == 'true'
         self.service_enable         = __addon__.getSetting("service_enable") == 'true'
-        self.service_time           = __addon__.getSetting("service_time")
+        self.service_runtime        = __addon__.getSetting("service_runtime")
         self.files_overwrite        = __addon__.getSetting("files_overwrite") == 'true'
         self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
         
