@@ -52,7 +52,11 @@ def _log(txt, severity=xbmc.LOGDEBUG):
             xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
 
-def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', background = False):
+def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False):
+    if not line0 == '':
+        line0 = __addonname__ + line0
+    else:
+        line0 = __addonname__
     if not background:
         if action == 'create':
             dialog.create(__addonname__, line1, line2, line3)
@@ -66,11 +70,11 @@ def _dialog(action, percentage = 0, line1 = '', line2 = '', line3 = '', backgrou
             else:
                 return False
         if action == 'okdialog':
-            xbmcgui.Dialog().ok(__addonname__, line1, line2, line3)
+            xbmcgui.Dialog().ok(line0, line1, line2, line3)
     if background:
         if (action == 'create' or action == 'okdialog'):
             if line2 == '':
                 msg = line1
             else:
                 msg = line1 + ': ' + line2
-            xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (__addonname__, msg, __icon__))
+            xbmc.executebuiltin("XBMC.Notification(%s, %s, 1000, %s)" % (line0, msg, __icon__))

@@ -208,8 +208,8 @@ class Main:
             else:
                 log('Deleted temp directory: %s' % self.fileops.tempdir)
         ### log results and notify user
-        summary_tmp = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork']
-        summary = summary_tmp + __localize__(32016)
+        summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
+        summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         provider_msg1 = __localize__(32001)
         provider_msg2 = __localize__(32184) + ', ' + __localize__(32185) + ', ' + __localize__(32186)
         summary_breakdown = ''
@@ -222,7 +222,7 @@ class Main:
         if self.settings.notify:
             log('Notify on finished/error enabled')
             self.settings.background = False
-        if xbmc.Player().isPlayingVideo() or self.silent:
+        if xbmc.Player().isPlayingVideo() or self.silent or self.mode == 'gui' or self.mode == 'customgui' or self.mode == 'custom':
             log('Silent finish because of playing a video or silent mode')
             self.settings.background = True
         if not self.settings.failcount < self.settings.failthreshold:
@@ -230,7 +230,7 @@ class Main:
             dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
         if not xbmc.abortRequested:
             if self.settings.background:
-                dialog('okdialog', line1 = summary, background = self.settings.background)
+                dialog('okdialog', line0 = summary_notify, line1 = provider_msg1 + ' ' + provider_msg2, background = self.settings.background)
             else:
                 dialog('okdialog', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background)
         else:
