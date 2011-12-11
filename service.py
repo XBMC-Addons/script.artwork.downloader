@@ -21,6 +21,7 @@ def autostart():
         log('Service - Run as service: %s'%settings.service_enable)
         log('Service - Time: %s:00'%settings.service_runtime)
         if settings.service_startup:
+            time.sleep(10)
             xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
             time.sleep(60)
         if settings.service_enable:
