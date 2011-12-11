@@ -23,13 +23,14 @@ def autostart():
         if settings.service_startup:
             time.sleep(10)
             xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
-            time.sleep(60)
         if settings.service_enable:
             while (not xbmc.abortRequested):
+                time.sleep(60)
                 if not settings.service_runtime == time.strftime('%H') and not time.strftime('%M') == '00':
-                    time.sleep(60)
+                    pass
                 else:
                     if not xbmcvfs.exists(tempdir):
                         xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
-                        time.sleep(60)
+                    else:
+                        log('Addon already running, scheduled run aborted')
 autostart()
