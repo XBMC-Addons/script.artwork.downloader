@@ -131,6 +131,7 @@ class Main:
         self.silent = ''
         self.gui_selected_type = ''
         self.gui_imagelist = ''
+        self.failed_items = []
         self.download_list = []
         self._download_art_succes = False
 
@@ -208,6 +209,17 @@ class Main:
             else:
                 log('Deleted temp directory: %s' % self.fileops.tempdir)
         ### log results and notify user
+        # print download totals to log
+        log('## Download totaliser:')
+        log('- Total Artwork: %s' % self.download_counter['Total Artwork'], xbmc.LOGNOTICE)
+        for artwork_type in self.download_counter:
+            if not artwork_type == 'Total Artwork':
+                log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
+        # print failed items
+        log('## Failed items:')
+        for item in self.failed_items:
+            log(' - %s' %item, xbmc.LOGNOTICE)
+        # dialogs
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         provider_msg1 = __localize__(32001)
@@ -240,12 +252,7 @@ class Main:
             if self._download_art_succes:
                 xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
         '''
-        # print download totals to log
-        log('## Download totaliser:')
-        log('- Total Artwork: %s' % self.download_counter['Total Artwork'], xbmc.LOGNOTICE)
-        for artwork_type in self.download_counter:
-            if not artwork_type == 'Total Artwork':
-                log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
+
 
     ### solo mode
     def solo_mode(self, itemtype, itemname):
@@ -326,8 +333,10 @@ class Main:
                 dialog('okdialog','' ,self.media_name , __localize__(32030))
             elif self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
+                self.failed_items.append('%s: No ID found, skipping' % self.media_name)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
+                self.failed_items.append('%s: IMDB ID found for TV show, skipping' % self.media_name)
             # If correct ID found continue
             else:
                 self.temp_image_list = []
@@ -351,8 +360,9 @@ class Main:
                             errmsg = '503: API Limit Exceeded'
                             artwork_result = 'retrying'
                         except NoFanartError, e:
-                            errmsg = 'No fanart found'
+                            errmsg = 'No artwork found'
                             artwork_result = 'skipping'
+                            self.failed_items.append('%s: No fanart found' %self.media_name)
                         except ItemNotFoundError, e:
                             errmsg = '%s not found' % self.media_id
                             artwork_result = 'skipping'
@@ -498,6 +508,7 @@ class Main:
         log('########################################################')
         if len(image_list) == 0:
             log('Nothing to download')
+            self.failed_items.append('%s: No specified artwork found' %self.media_name)
         else:
             apply_filters_counter = 0
             log('Starting download')
@@ -512,6 +523,9 @@ class Main:
                         self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
                     elif limited[0]:
                         log("Ignoring (%s): %s" % (limited[1], image['filename']))
+                        # Check if artwork doesn't exist and the one available below settings
+                        if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
+                            self.failed_items.append('%s: Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
                     else:
                         if self.settings.files_overwrite:
                             download_list.append(image)
