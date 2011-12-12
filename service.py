@@ -30,6 +30,7 @@ def autostart():
                     pass
                 else:
                     if not xbmcvfs.exists(tempdir):
+                        log('Time is %s:%s, Scheduled run starting' % (time.strftime('%H'), time.strftime('%M')))
                         xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
                     else:
                         log('Addon already running, scheduled run aborted')
