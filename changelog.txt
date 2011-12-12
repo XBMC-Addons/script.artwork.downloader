@@ -1,7 +1,9 @@
 [B]1.0.2[/B]
+- Added: Log summary on failed/missing items
 - Added: Support the providers message on finished
 - Added: Custom mode pops-up a image selection when run on single tvshow/movie
 - Added: First retrieve image list(s) and then do batch download
+- Added: Run time on specified time of day instead on interval
 - Fixed: Problems caused with UTF-8 characters in titles
 - Fixed: Some images didn't show in GUI because of spaces in image URL
 - Fixed: Show correct download count in log
