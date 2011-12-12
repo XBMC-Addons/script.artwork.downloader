@@ -217,7 +217,7 @@ class Main:
                 log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
         # print failed items
         log('## Failed items:')
-        for item in self.failed_items:
+        for item in self.getUniq(self.failed_items):
             log(' - %s' %item, xbmc.LOGNOTICE)
         # dialogs
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
@@ -502,6 +502,9 @@ class Main:
                 image['artwork_number'] = current_artwork
                 self.download_list.append(image)
                 current_artwork = current_artwork + 1
+        # add to failed items if 0    
+        if current_artwork == 0:
+            self.failed_items.append('%s: No %s found' % (self.media_name,art_type))
         log('Found: %s %s' % (current_artwork, art_type))
 
     def _batch_download(self, image_list):
@@ -690,6 +693,16 @@ class Main:
         else:
             log('Start custom bulkmode')
             self._download_process()
+
+    # order preserving and get unique entry
+    def getUniq(self,seq):
+        seen = []
+        result = []
+        for item in seq:
+            if item in seen: continue
+            seen.append(item)
+            result.append(item)
+        return result
 
     def _choose_image(self):
         log( "### image list: %s" % self.gui_imagelist)
