@@ -20,13 +20,16 @@ def autostart():
         log('Service - Run at startup: %s'%settings.service_startup)        
         log('Service - Run as service: %s'%settings.service_enable)
         log('Service - Time: %s:00'%settings.service_runtime)
+        service_runtime = settings.service_runtime
+        if len(service_runtime) == '1':
+            service_runtime = '0' + service_runtime
         if settings.service_startup:
             time.sleep(10)
             xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
         if settings.service_enable:
             while (not xbmc.abortRequested):
                 time.sleep(60)
-                if not settings.service_runtime == time.strftime('%H') and not time.strftime('%M') == '00':
+                if ((not time.strftime('%H') == service_runtime) and (not time.strftime('%M') == '00')):
                     pass
                 else:
                     if not xbmcvfs.exists(tempdir):
