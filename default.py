@@ -403,7 +403,7 @@ class Main:
                         self._download_process()
             self.processeditems = self.processeditems + 1
 
-    ### Processes the custom mode downloading of files
+    ### Processes the bulk mode downloading of files
     def _download_process(self):
         if not self.mode == 'custom':
             self.download_arttypes = []
