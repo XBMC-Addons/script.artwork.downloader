@@ -508,7 +508,6 @@ class Main:
         log('########################################################')
         if len(image_list) == 0:
             log('Nothing to download')
-            self.failed_items.append('%s: No specified artwork found' %self.media_name)
         else:
             apply_filters_counter = 0
             log('Starting download')
