@@ -17,22 +17,22 @@ def autostart():
         settings._get()
         addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
         tempdir = os.path.join(addondir, 'temp')
-        log('Service - Run at startup: %s'%settings.service_startup)        
-        log('Service - Run as service: %s'%settings.service_enable)
-        log('Service - Time: %s:00'%settings.service_runtime)
-        service_runtime  = "%.2d" % int(settings.service_runtime)
+        service_runtime  = "%s:00" % settings.service_runtime
+        log('Service - Run at startup: %s'%settings.service_startup, xbmc.LOGNOTICE)        
+        log('Service - Run as service: %s'%settings.service_enable, xbmc.LOGNOTICE)
+        log('Service - Time: %s:00'%service_runtime, xbmc.LOGNOTICE)
         if settings.service_startup:
             time.sleep(10)
             xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
         if settings.service_enable:
             while (not xbmc.abortRequested):
                 time.sleep(60)
-                if ((not time.strftime('%H') == service_runtime) and (not time.strftime('%M') == '00')):
+                if not(time.strftime('%H:%M') == service_runtime):
                     pass
                 else:
                     if not xbmcvfs.exists(tempdir):
                         log('Time is %s:%s, Scheduled run starting' % (time.strftime('%H'), time.strftime('%M')))
                         xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
                     else:
-                        log('Addon already running, scheduled run aborted')
+                        log('Addon already running, scheduled run aborted', xbmc.LOGNOTICE)
 autostart()
