@@ -38,7 +38,7 @@
         <string id="32033">Run in background</string>        
         <string id="32034">Show dialog on finished/errors</string>
         <string id="32035">Overwrite all existing artwork [I](will be automaticly disabled after downloading)[/I] </string>
-        <string id="32036">Centralize fanart [I](Can be used for fanart slideshow)[/I] </string>
+        <string id="32036">Centralize extrafanart [I](Can be used for extrafanart slideshow)[/I] </string>
         <string id="32037">Central TV fanart directory</string>
         <string id="32038">Central Movie fanart directory</string>
         <string id="32039">-</string>
