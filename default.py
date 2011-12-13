@@ -530,8 +530,9 @@ class Main:
                     elif limited[0]:
                         log("Ignoring (%s): %s" % (limited[1], image['filename']))
                         # Check if artwork doesn't exist and the one available below settings
-                        if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
-                            self.failed_items.append('%s: Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
+                        for targetdir in image['targetdirs']:
+                            if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
+                                self.failed_items.append('%s: Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
                     else:
                         if self.settings.files_overwrite:
                             download_list.append(image)
