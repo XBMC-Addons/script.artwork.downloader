@@ -21,6 +21,7 @@ def autostart():
         log('Service - Run at startup: %s'%settings.service_startup, xbmc.LOGNOTICE)        
         log('Service - Run as service: %s'%settings.service_enable, xbmc.LOGNOTICE)
         log('Service - Time: %s:00'%service_runtime, xbmc.LOGNOTICE)
+        xbmcvfs.rmdir(tempdir)
         if settings.service_startup:
             time.sleep(10)
             xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
