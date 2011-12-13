@@ -334,6 +334,10 @@ class Main:
             elif self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: No ID found, skipping' % self.media_name)
+            elif self.mediatype == 'movie' and not self.media_id.startswith('tt'):
+                self.media_id_old = self.media_id
+                self.media_id = "tt%.7d" % int(self.media_id)
+                log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: IMDB ID found for TV show, skipping' % self.media_name)
