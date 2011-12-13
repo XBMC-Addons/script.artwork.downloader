@@ -26,9 +26,9 @@
         <string id="32023">Run add-on at start-up / login</string>
         <string id="32024">Run add-on as a service</string>
         <string id="32025">-</string>
-        <string id="32026">24</string>
-        <string id="32027">36</string>
-        <string id="32028">48</string>
+        <string id="32026">-</string>
+        <string id="32027">-</string>
+        <string id="32028">-</string>
         <string id="32029">[I](After changes are made you must restart XBMC) [/I]</string>
         <string id="32030">No ID found for looking up artwork</string>
 
