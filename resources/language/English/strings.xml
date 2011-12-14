@@ -2,7 +2,7 @@
 <strings>
     <!-- Add-on messages id=32001 to 32030 -->
         <string id="32001">Please help get more art or donate on:</string>
-        <string id="32002">Run add-on at time: (24h)</string>
+        <string id="32002">Scheduled run at time: (24h)</string>
         <string id="32003">Faulty/empty settings combination found!</string>
         <string id="32004">Select your preferences and press OK to save</string>
         <string id="32005">Cleaning up</string>
@@ -30,7 +30,7 @@
         <string id="32027">-</string>
         <string id="32028">-</string>
         <string id="32029">[I](After changes are made you must restart XBMC) [/I]</string>
-        <string id="32030">No ID found for looking up artwork</string>
+        <string id="32030">No provider ID found for looking up artwork</string>
 
     <!-- Add-on settings: General section id=32031 to 32050 -->
         <string id="32031">General settings</string>
