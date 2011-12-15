@@ -84,8 +84,6 @@ class Main:
                         self.Medialist = media_listing('tvshow')
                         log("Bulk mode: TV Shows")
                         self.download_artwork(self.Medialist, self.tv_providers)
-                    elif self.mediatype == 'music':
-                        log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
                     if not dialog('iscanceled', background = self.settings.background):
                         self._batch_download(self.download_list)
             # No mediatype is specified
