@@ -11,18 +11,18 @@ import urllib
 from traceback import print_exc
 
 ### import libraries
+from resources.lib import language
 from resources.lib import media_setup
 from resources.lib import provider
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
+from resources.lib.utils import _getUniq as getUniq
 from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError, CopyError
-from resources.lib import language
 from resources.lib.fileops import fileops
-from xml.parsers.expat import ExpatError
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
 from resources.lib.media_setup import _media_listing as media_listing
-
+from xml.parsers.expat import ExpatError
 ### get addon info
 __addon__       = xbmcaddon.Addon()
 __addonid__     = __addon__.getAddonInfo('id')
@@ -215,8 +215,11 @@ class Main:
                 log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
         # print failed items
         log('## Failed items:')
-        for item in self.getUniq(self.failed_items):
-            log(' - %s' %item, xbmc.LOGNOTICE)
+        if not self.failed_items:
+            log(' - No failed/missing items found')
+        else:
+            for item in self.getUniq(self.failed_items):
+                log(' - %s' %item, xbmc.LOGNOTICE)
         # dialogs
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
