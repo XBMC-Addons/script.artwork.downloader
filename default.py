@@ -138,27 +138,14 @@ class Main:
     def initialise(self):
         log("## Checking for script arguments")
         try: log( "## arg 0: %s" % sys.argv[0] )
-        except: log( "## no arg0" )
         try: log( "## arg 1: %s" % sys.argv[1] )
-        except: log( "## no arg1" )
         try: log( "## arg 2: %s" % sys.argv[2] )
-        except: log( "## no arg2" )
         try: log( "## arg 3: %s" % sys.argv[3] )
-        except: log( "## no arg3" )
         try: log( "## arg 4: %s" % sys.argv[4] )
-        except: log( "## no arg4" )
         try: log( "## arg 5: %s" % sys.argv[5] )
-        except: log( "## no arg5" )
         try: log( "## arg 6: %s" % sys.argv[6] )
-        except: log( "## no arg6" )
         try: log( "## arg 7: %s" % sys.argv[7] )
-        except: log( "## no arg7" )
-        try: log( "## arg 8: %s" % sys.argv[8] )
-        except: log( "## no arg8" )
-        try: log( "## arg 9: %s" % sys.argv[9] )
-        except: log( "## no arg8" )
-        try: log( "## arg 10: %s" % sys.argv[10] )
-        except: log( "## no arg8" )
+
         log("## Checking for downloading mode...")
         for item in sys.argv:
             # Check for download mode
