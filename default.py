@@ -11,18 +11,18 @@ import urllib
 from traceback import print_exc
 
 ### import libraries
+from resources.lib import language
 from resources.lib import media_setup
 from resources.lib import provider
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
+from resources.lib.utils import _getUniq as getUniq
 from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError, CopyError
-from resources.lib import language
 from resources.lib.fileops import fileops
-from xml.parsers.expat import ExpatError
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
 from resources.lib.media_setup import _media_listing as media_listing
-
+from xml.parsers.expat import ExpatError
 ### get addon info
 __addon__       = xbmcaddon.Addon()
 __addonid__     = __addon__.getAddonInfo('id')
@@ -84,8 +84,6 @@ class Main:
                         self.Medialist = media_listing('tvshow')
                         log("Bulk mode: TV Shows")
                         self.download_artwork(self.Medialist, self.tv_providers)
-                    elif self.mediatype == 'music':
-                        log('Bulk mode: Music not yet implemented', xbmc.LOGNOTICE)
                     if not dialog('iscanceled', background = self.settings.background):
                         self._batch_download(self.download_list)
             # No mediatype is specified
@@ -95,13 +93,13 @@ class Main:
                     self.settings.movie_enable = True
                     self.settings.tvshow_enable = True
                 # Normal oprations check
-                if self.settings.movie_enable:
+                if self.settings.movie_enable and not dialog('iscanceled'):
                     self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
                     self.download_artwork(self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
-                if self.settings.tvshow_enable:
+                if self.settings.tvshow_enable and not dialog('iscanceled'):
                     self.Medialist = media_listing('tvshow')
                     self.mediatype = 'tvshow'
                     self.download_artwork(self.Medialist, self.tv_providers)
@@ -217,8 +215,11 @@ class Main:
                 log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
         # print failed items
         log('## Failed items:')
-        for item in self.getUniq(self.failed_items):
-            log(' - %s' %item, xbmc.LOGNOTICE)
+        if not self.failed_items:
+            log(' - No failed/missing items found')
+        else:
+            for item in self.getUniq(self.failed_items):
+                log(' - %s' %item, xbmc.LOGNOTICE)
         # dialogs
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
@@ -334,6 +335,10 @@ class Main:
             elif self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: No ID found, skipping' % self.media_name)
+            elif self.mediatype == 'movie' and not self.media_id.startswith('tt'):
+                self.media_id_old = self.media_id
+                self.media_id = "tt%.7d" % int(self.media_id)
+                log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: IMDB ID found for TV show, skipping' % self.media_name)
@@ -526,8 +531,9 @@ class Main:
                     elif limited[0]:
                         log("Ignoring (%s): %s" % (limited[1], image['filename']))
                         # Check if artwork doesn't exist and the one available below settings
-                        if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
-                            self.failed_items.append('%s: Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
+                        for targetdir in image['targetdirs']:
+                            if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
+                                self.failed_items.append('%s: Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
                     else:
                         if self.settings.files_overwrite:
                             download_list.append(image)
@@ -648,10 +654,16 @@ class Main:
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
-            for type in (self.settings.tvshow_arttype_list or self.settings.movie_arttype_list):
-                if type['art_type'] in item:
-                    log('Custom mode arttype: %s' %type['art_type'])
-                    self.download_arttypes.append(item)
+            if self.mediatype == 'movie':
+                for type in self.settings.movie_arttype_list:
+                    if type['art_type'] == item:
+                        log('Custom mode arttype: %s' %type['art_type'])
+                        self.download_arttypes.append(item)
+            elif self.mediatype == 'tvshow':
+                for type in self.settings.tvshow_arttype_list:
+                    if type['art_type'] == item:
+                        log('Custom mode arttype: %s' %type['art_type'])
+                        self.download_arttypes.append(item)
         # If only one specified
         if len(self.download_arttypes) == 1 and not self.medianame == '':
             log('Start custom solomode')

@@ -1,3 +1,8 @@
+[B]1.0.3[/B]
+- Fixed: Error below limit check
+- Fixed: Custom download for specific movie artwork only
+- Added: Try conversion of non standard IMDB Id 
+
 [B]1.0.2[/B]
 - Added: Log summary on failed/missing items
 - Added: Support the providers message on finished
