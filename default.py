@@ -706,15 +706,6 @@ class Main:
             log('Start custom bulkmode')
             self._download_process()
 
-    # order preserving and get unique entry
-    def getUniq(self,seq):
-        seen = []
-        result = []
-        for item in seq:
-            if item in seen: continue
-            seen.append(item)
-            result.append(item)
-        return result
 
     def _choose_image(self):
         log( "### image list: %s" % self.gui_imagelist)
