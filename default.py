@@ -137,15 +137,17 @@ class Main:
     ### load settings and initialise needed directories
     def initialise(self):
         log("## Checking for script arguments")
-        try: log( "## arg 0: %s" % sys.argv[0] )
-        try: log( "## arg 1: %s" % sys.argv[1] )
-        try: log( "## arg 2: %s" % sys.argv[2] )
-        try: log( "## arg 3: %s" % sys.argv[3] )
-        try: log( "## arg 4: %s" % sys.argv[4] )
-        try: log( "## arg 5: %s" % sys.argv[5] )
-        try: log( "## arg 6: %s" % sys.argv[6] )
-        try: log( "## arg 7: %s" % sys.argv[7] )
-
+        try:
+            log( "## arg 0: %s" % sys.argv[0] )
+            log( "## arg 1: %s" % sys.argv[1] )
+            log( "## arg 2: %s" % sys.argv[2] )
+            log( "## arg 3: %s" % sys.argv[3] )
+            log( "## arg 4: %s" % sys.argv[4] )
+            log( "## arg 5: %s" % sys.argv[5] )
+            log( "## arg 6: %s" % sys.argv[6] )
+            log( "## arg 7: %s" % sys.argv[7] )
+        except:
+            log( "## No more arg" )
         log("## Checking for downloading mode...")
         for item in sys.argv:
             # Check for download mode
