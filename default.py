@@ -1,4 +1,4 @@
-﻿### import
+﻿#import modules
 import re
 import os
 import time
@@ -33,6 +33,7 @@ __localize__    = __addon__.getLocalizedString
 __addonpath__   = __addon__.getAddonInfo('path')
 __language__    = language.get_abbrev()
 
+### set button actions for GUI
 ACTION_PREVIOUS_MENU = ( 9, 10, 92, 216, 247, 257, 275, 61467, 61448, )
 
 
@@ -218,7 +219,7 @@ class Main:
         if not self.failed_items:
             log(' - No failed/missing items found')
         else:
-            for item in self.getUniq(self.failed_items):
+            for item in getUniq(self.failed_items):
                 log(' - %s' %item, xbmc.LOGNOTICE)
         # dialogs
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
@@ -412,34 +413,23 @@ class Main:
     def _download_process(self):
         if not self.mode == 'custom':
             self.download_arttypes = []
-            if self.mediatype == 'tvshow':
-                for arttypes in self.settings.tvshow_arttype_list:
-                    if arttypes['bulk_enabled']:
-                        self.download_arttypes.append(arttypes['art_type'])
-            elif self.mediatype == 'movie':
-                for arttypes in self.settings.movie_arttype_list:
-                    if arttypes['bulk_enabled']:
-                        self.download_arttypes.append(arttypes['art_type'])
-        if self.settings.movie_enable and self.mediatype == 'movie':
-            for arttypes in self.settings.movie_arttype_list:
-                if arttypes['art_type'] in self.download_arttypes:
-                    if arttypes['art_type'] == 'extrafanart':
-                        self._download_art(arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
-                    elif arttypes['art_type'] == 'defaultthumb':
-                        self._download_art(arttypes['art_type'], 'poster', arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])    
-                    elif arttypes['art_type'] == 'extrathumbs':
-                        self._download_art(arttypes['art_type'], 'thumb', arttypes['filename'], self.target_extrathumbsdirs,  arttypes['gui_string'])
-                    else:
-                        self._download_art(arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
-        if self.settings.tvshow_enable and self.mediatype == 'tvshow':
-            for arttypes in self.settings.tvshow_arttype_list:
-                if arttypes['art_type'] in self.download_arttypes:
-                    if arttypes['art_type'] == 'extrafanart':
-                        self._download_art(arttypes['art_type'], 'fanart', arttypes['filename'], self.target_extrafanartdirs,  arttypes['gui_string'])
-                    elif arttypes['art_type'] == 'defaultthumb':
-                        self._download_art(arttypes['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
-                    else:
-                        self._download_art(arttypes['art_type'], arttypes['art_type'], arttypes['filename'], self.target_artworkdir,  arttypes['gui_string'])
+            for item in self.settings.available_arttypes:
+                if item['bulk_enabled'] and self.mediatype == item['media_type']:
+                    self.download_arttypes.append(item['art_type'])
+
+        for item in self.settings.available_arttypes:
+            if item['art_type'] in self.download_arttypes and ((self.settings.movie_enable and self.mediatype == item['media_type']) or (self.settings.tvshow_enable and self.mediatype == item['media_type'])):
+                if item['art_type'] == 'extrafanart':
+                    self._download_art(item['art_type'], 'fanart', item['filename'], self.target_extrafanartdirs,  item['gui_string'])
+                elif item['art_type'] == 'defaultthumb' and self.mediatype == 'movie':
+                    self._download_art(item['art_type'], 'poster', item['filename'], self.target_artworkdir,  item['gui_string'])    
+                elif item['art_type'] == 'defaultthumb' and self.mediatype == 'tvshow':
+                    self._download_art(item['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), item['filename'], self.target_artworkdir,  item['gui_string'])
+                elif item['art_type'] == 'extrathumbs':
+                    self._download_art(item['art_type'], 'thumb', item['filename'], self.target_extrathumbsdirs,  item['gui_string'])
+                else:
+                    self._download_art(item['art_type'], item['art_type'], item['filename'], self.target_artworkdir,  item['gui_string'])
+
 
     ### Retrieves imagelist for GUI solo mode
     def _gui_imagelist(self, art_type):
@@ -587,18 +577,10 @@ class Main:
         dialog('close', background = self.settings.background)
         self.GUI_type_list = []
         # Fill GUI art type list
-        if self.mediatype == 'tvshow':
-            for arttypes in self.settings.tvshow_arttype_list:
-                if arttypes['solo_enabled'] == 'true':
-                    gui = arttypes['gui_string']
-                    self.GUI_type_list.append (gui)
-        
-        # Fill GUI art type list
-        if self.mediatype == 'movie':
-            for arttypes in self.settings.movie_arttype_list:
-                if arttypes['solo_enabled'] == 'true':
-                    gui = arttypes['gui_string']
-                    self.GUI_type_list.append (gui)
+        for item in self.settings.available_arttypes:
+            if item['solo_enabled'] == 'true' and self.mediatype == item['media_type']:
+                gui = item['gui_string']
+                self.GUI_type_list.append (gui)
         # 
         if len(self.GUI_type_list) == 1:
             self.GUI_type_list[0] = "True"
@@ -633,20 +615,12 @@ class Main:
             return False
         else:
             # Check what artwork type has been chosen and parse the image restraints
-            if self.mediatype == 'tvshow':
-                for arttypes in self.settings.tvshow_arttype_list:
-                    if self.GUI_type_list[select] == arttypes['gui_string']:
-                        self.gui_selected_type = arttypes['art_type']
-                        self.gui_selected_filename = arttypes['filename']
-                        self.gui_selected_msg = arttypes['gui_string']
-                        return True
-            if self.mediatype == 'movie':
-                for arttypes in self.settings.movie_arttype_list:
-                    if self.GUI_type_list[select] == arttypes['gui_string']:
-                        self.gui_selected_type = arttypes['art_type']
-                        self.gui_selected_filename = arttypes['filename']
-                        self.gui_selected_msg = arttypes['gui_string']
-                        return True
+            for item in self.settings.available_arttypes:
+                if self.GUI_type_list[select] == item['gui_string'] and self.mediatype == item['media_type']:
+                    self.gui_selected_type = item['art_type']
+                    self.gui_selected_filename = item['filename']
+                    self.gui_selected_msg = item['gui_string']
+                    return True
             else:
                 return False
 
@@ -654,16 +628,11 @@ class Main:
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
-            if self.mediatype == 'movie':
-                for type in self.settings.movie_arttype_list:
-                    if type['art_type'] == item:
-                        log('Custom mode arttype: %s' %type['art_type'])
-                        self.download_arttypes.append(item)
-            elif self.mediatype == 'tvshow':
-                for type in self.settings.tvshow_arttype_list:
-                    if type['art_type'] == item:
-                        log('Custom mode arttype: %s' %type['art_type'])
-                        self.download_arttypes.append(item)
+            for type in self.settings.available_arttypes:
+                if item == type['art_type'] and self.mediatype == type['media_type']:
+                    log('Custom mode arttype: %s' %type['art_type'])
+                    self.download_arttypes.append(item)
+
         # If only one specified
         if len(self.download_arttypes) == 1 and not self.medianame == '':
             log('Start custom solomode')
@@ -676,18 +645,11 @@ class Main:
                 log('Image list larger than 1')
                 if self._choose_image():
                     log('Chosen: %s'%self.image_url)
-                    if self.mediatype == 'tvshow':
-                        for arttypes in self.settings.tvshow_arttype_list:
-                            if gui_arttype == arttypes['art_type']:
-                                self.gui_selected_type = arttypes['art_type']
-                                self.gui_selected_filename = arttypes['filename']
-                                self.gui_selected_msg = arttypes['gui_string']
-                    if self.mediatype == 'movie':
-                        for arttypes in self.settings.movie_arttype_list:
-                            if gui_arttype == arttypes['art_type']:
-                                self.gui_selected_type = arttypes['art_type']
-                                self.gui_selected_filename = arttypes['filename']
-                                self.gui_selected_msg = arttypes['gui_string']
+                    for item in self.settings.available_arttypes:
+                        if gui_arttype == item['art_type'] and self.mediatype == item['media_type']:
+                            self.gui_selected_type = item['art_type']
+                            self.gui_selected_filename = item['filename']
+                            self.gui_selected_msg = item['gui_string']
                     self._download_art(self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
                     self._batch_download(self.download_list)
                     if not self._download_art_succes:
@@ -699,7 +661,7 @@ class Main:
                     xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
             else:
                 self._download_process()
-                log('Debug: Image list not larger than 1')
+                log('Debug: More than 1 image available')
 
         # If more than one specified
         else:
