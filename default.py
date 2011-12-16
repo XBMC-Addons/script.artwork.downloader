@@ -654,10 +654,16 @@ class Main:
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
-            for type in (self.settings.tvshow_arttype_list or self.settings.movie_arttype_list):
-                if type['art_type'] in item:
-                    log('Custom mode arttype: %s' %type['art_type'])
-                    self.download_arttypes.append(item)
+            if self.mediatype == 'movie':
+                for type in self.settings.movie_arttype_list:
+                    if type['art_type'] == item:
+                        log('Custom mode arttype: %s' %type['art_type'])
+                        self.download_arttypes.append(item)
+            elif self.mediatype == 'tvshow':
+                for type in self.settings.tvshow_arttype_list:
+                    if type['art_type'] == item:
+                        log('Custom mode arttype: %s' %type['art_type'])
+                        self.download_arttypes.append(item)
         # If only one specified
         if len(self.download_arttypes) == 1 and not self.medianame == '':
             log('Start custom solomode')
