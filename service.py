@@ -23,9 +23,9 @@ def autostart():
         log('Service - Time: %s:00'%service_runtime, xbmc.LOGNOTICE)
         try:
             xbmcvfs.rmdir(tempdir)
-            log('Removing temp folder from previous runs')
+            log('Removing temp folder from previous run.')
         except:
-            log('No temp folder found from previous run. Continue starting service')
+            log('No temp folder found from previous run. Continue starting service.')
         if settings.service_startup:
             time.sleep(10)
             xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
