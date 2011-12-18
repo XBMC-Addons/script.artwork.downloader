@@ -1,4 +1,4 @@
-﻿#import modules
+#import modules
 import re
 import os
 import time
@@ -94,13 +94,13 @@ class Main:
                     self.settings.movie_enable = True
                     self.settings.tvshow_enable = True
                 # Normal oprations check
-                if self.settings.movie_enable and not dialog('iscanceled'):
+                if self.settings.movie_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
                     self.download_artwork(self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
-                if self.settings.tvshow_enable and not dialog('iscanceled'):
+                if self.settings.tvshow_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('tvshow')
                     self.mediatype = 'tvshow'
                     self.download_artwork(self.Medialist, self.tv_providers)
