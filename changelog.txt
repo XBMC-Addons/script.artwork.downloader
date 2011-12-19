@@ -1,7 +1,9 @@
 [B]1.0.3[/B]
 - Fixed: Error below limit check
 - Fixed: Custom download for specific movie artwork only
-- Added: Try conversion of non standard IMDB Id 
+- Fixed: Downloads artwork for selected movie when multiple exist with same name
+         Needs extra argument from skin.
+- Added: Try conversion of non standard IMDB Id
 
 [B]1.0.2[/B]
 - Added: Log summary on failed/missing items

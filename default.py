@@ -66,9 +66,9 @@ class Main:
                 if not self.medianame == '':
                     if self.mode == 'gui':
                         # GUI mode check is at the end of: 'def download_artwork'
-                        self.solo_mode(self.mediatype, self.medianame)
+                        self.solo_mode(self.mediatype, self.medianame, self.mediapath)
                     else:
-                        self.solo_mode(self.mediatype, self.medianame)
+                        self.solo_mode(self.mediatype, self.medianame, self.mediapath)
                         if not dialog('iscanceled', background = self.settings.background) and not self.mode == 'customgui':
                             self._batch_download(self.download_list)
                 # No medianame specified
@@ -126,6 +126,7 @@ class Main:
         self.download_counter['Total Artwork'] = 0
         self.mediatype = ''
         self.medianame = ''
+        self.mediapath = ''
         self.mode = ''
         self.silent = ''
         self.gui_selected_type = ''
@@ -168,11 +169,14 @@ class Main:
                     log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
                     return False
             # Check for medianame
-            match = re.search("medianame=" , item)
+            match = re.search("medianame=(.*)" , item)
             if match:
-                self.medianame = item.replace("medianame=" , "")
-            else:
-                pass
+                self.medianame = match.group(1)
+            # Check for mediapath
+            match = re.search("mediapath=(.*)" , item)
+            if match:
+                self.mediapath = (match.group(1).rstrip(' /\ '))
+                log('matchgroup: %s' %self.mediapath)
         try:
             # Creates temp folder
             self.fileops = fileops()
@@ -244,9 +248,13 @@ class Main:
                 xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
         '''
 
-
     ### solo mode
-    def solo_mode(self, itemtype, itemname):
+    def solo_mode(self, itemtype, itemname, itempath):
+        log('################')
+        log('Debugging type: %s' %itemtype)
+        log('Debugging name: %s' %itemname)
+        log('Debugging path: %s' %itempath)
+        log('################')
         # activate both movie/tvshow for custom r
         if self.mode == 'custom':
             self.settings.movie_enable = True
@@ -261,17 +269,26 @@ class Main:
             log("Error: type must be one of 'movie', 'tvshow', aborting", xbmc.LOGERROR)
             return False
         log('Retrieving fanart for: %s' % itemname)
+        # Search through the media lists for match
         for currentitem in self.Medialist:
             if itemname == currentitem["name"]:
-                if itemtype == 'movie':
+                # Check on exact path match when provided
+                if itempath == currentitem['path']:
                     self.Medialist = []
                     self.Medialist.append(currentitem)
-                    self.download_artwork(self.Medialist, self.movie_providers)
-                if itemtype == 'tvshow':
+                    break
+                # Just pick first one that matches from the list
+                elif itempath == '':
                     self.Medialist = []
                     self.Medialist.append(currentitem)
-                    self.download_artwork(self.Medialist, self.tv_providers)
-                break
+                    break
+                else:
+                    self.Medialist = []
+        if itemtype == 'movie':
+            self.download_artwork(self.Medialist, self.movie_providers)
+        elif itemtype == 'tvshow':
+            self.download_artwork(self.Medialist, self.tv_providers)
+
 
     ### download media fanart
     def download_artwork(self, media_list, providers):
