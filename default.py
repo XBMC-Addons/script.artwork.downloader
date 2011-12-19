@@ -286,17 +286,10 @@ class Main:
                 break
             if not self.settings.failcount < self.settings.failthreshold:
                 break
-            # Check for stacked movies
-            try:
-                self.media_path = os.path.split(currentmedia["path"])[0].rsplit(' , ', 1)[1]
-            except:
-                self.media_path = os.path.split(currentmedia["path"])[0]
-            # Fixes problems with rared movies
-            if self.media_path.startswith("rar"):
-                self.media_path = os.path.split(urllib.url2pathname(self.media_path.replace("rar://","")))[0]
             # Declare some vars
-            self.media_id = currentmedia["id"]
+            self.media_id   = currentmedia["id"]
             self.media_name = currentmedia["name"]
+            self.media_path = currentmedia["path"]
             dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(32008), line3 = '', background = self.settings.background)
             log('########################################################')
             log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
