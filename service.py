@@ -13,6 +13,7 @@ from resources.lib.settings import _settings
 
 # starts update/sync
 def autostart():
+        xbmcaddon.Addon().setSetting(id="files_overwrite", value='false')
         settings = _settings()
         settings._get()
         addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
