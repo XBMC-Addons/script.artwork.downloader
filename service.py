@@ -17,10 +17,10 @@ def autostart():
         settings._get()
         addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
         tempdir = os.path.join(addondir, 'temp')
-        service_runtime  = "%s:00" % settings.service_runtime
+        service_runtime  = str('%.2d'%int(settings.service_runtime) + ':00')
         log('Service - Run at startup: %s'%settings.service_startup, xbmc.LOGNOTICE)        
         log('Service - Run as service: %s'%settings.service_enable, xbmc.LOGNOTICE)
-        log('Service - Time: %s:00'%service_runtime, xbmc.LOGNOTICE)
+        log('Service - Time: %s'%service_runtime, xbmc.LOGNOTICE)
         if xbmcvfs.exists(tempdir):
             xbmcvfs.rmdir(tempdir)
             log('Removing temp folder from previous run.')
