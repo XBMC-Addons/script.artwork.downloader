@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
     <!-- Add-on messages id=32001 to 32030 -->
-        <string id="32001">Please help get more art or donate on:</string>
+        <string id="32001">Please help get more artwork or donate on:</string>
         <string id="32002">Scheduled run at time: (24h)</string>
         <string id="32003">Faulty/empty settings combination found!</string>
         <string id="32004">Select your preferences and press OK to save</string>
