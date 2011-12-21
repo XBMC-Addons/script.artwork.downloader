@@ -273,15 +273,9 @@ class Main:
         for currentitem in self.Medialist:
             if itemname == currentitem["name"]:
                 # Check on exact path match when provided
-                if itempath == currentitem['path']:
+                if itempath == currentitem['path'] or itempath == '':
                     self.Medialist = []
                     self.Medialist.append(currentitem)
-                    break
-                # Just pick first one that matches from the list
-                elif itempath == '':
-                    self.Medialist = []
-                    self.Medialist.append(currentitem)
-                    break
                 else:
                     self.Medialist = []
         if itemtype == 'movie':
