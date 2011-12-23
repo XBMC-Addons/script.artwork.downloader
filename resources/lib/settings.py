@@ -201,7 +201,7 @@ class _settings:
         info['solo_enabled']    = 'false'
         info['gui_string']      = __localize__(32132)
         info['art_type']        = 'discart'
-        info['filename']        = 'cdart.png'
+        info['filename']        = 'disc.png'
         self.available_arttypes.append(info)
 
         info = {}
