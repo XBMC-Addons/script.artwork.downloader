@@ -439,7 +439,7 @@ class Main:
         #retrieve list
         for artwork in self.image_list:
             if  artwork['type'] == image_type:
-                self.gui_imagelist.append(artwork['url'])
+                self.gui_imagelist.append(artwork)
         if self.gui_imagelist == '':
             return False
         else:
@@ -699,10 +699,10 @@ class MainGui( xbmcgui.WindowXMLDialog ):
         self.getControl(5).setVisible(False)
         self.getControl(1).setLabel(__localize__(32019))
 
-        for image in self.listing :
-            listitem = xbmcgui.ListItem( image.split("/")[-1] )
-            listitem.setIconImage( image )
-            listitem.setLabel2(image)
+        for image in self.listing:
+            listitem = xbmcgui.ListItem( 'Language: %s  -  Rating: %s' %(image['language'],image['rating']) )
+            listitem.setIconImage( image['url'] )
+            listitem.setLabel2( image['url'] )
             self.img_list.addItem( listitem )
         self.setFocus(self.img_list)
 

@@ -6,6 +6,8 @@ from urllib2 import HTTPError, URLError, urlopen
 from resources.lib.script_exceptions import HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
 from resources.lib.utils import _log as log
 
+###required info labels in the imagelist: id, type, type2, url, preview, height, width, season, language, rating,series_name
+
 ### adjust default timeout to stop script hanging
 timeout = 20
 socket.setdefaulttimeout(timeout)
