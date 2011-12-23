@@ -27,6 +27,7 @@ class FTV_TVProvider(BaseProvider):
                     info = {}
                     info['id'] = image.get('id')
                     info['url'] = urllib.quote(image.get('url'), ':/')
+                    info['preview'] = info['url']
                     info['type'] = imagetype
                     '''
                     info['preview'] = urllib.quote(image.get('preview'), ':/')
