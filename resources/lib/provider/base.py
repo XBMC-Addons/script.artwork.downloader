@@ -22,8 +22,30 @@ class BaseProvider:
     fanart_element = ''
     fanart_root = ''
     url_prefix = ''
-    
-    
+
+
+    def get_json(self, url):
+        try:
+            log('API: %s'% url)
+            req = urllib2.urlopen(url)
+            log('Requested data:%s'% req)
+            json_string = req.read()
+            req.close()
+        except HTTPError, e:
+            if e.code == 404:
+                raise HTTP404Error(url)
+            elif e.code == 503:
+                raise HTTP503Error(url)
+            else:
+                raise DownloadError(str(e))
+        except:
+            json_string = ''
+        try:
+            parsed_json = simplejson.loads(json_string)
+        except:
+            parsed_json = ''
+        return parsed_json
+
     def get_xml(self, url):
         try:
             client = urlopen(url)
