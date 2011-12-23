@@ -1,8 +1,10 @@
 import socket
 import sys
+import simplejson
+import urllib2
 from urllib2 import HTTPError, URLError, urlopen
 from resources.lib.script_exceptions import HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
-
+from resources.lib.utils import _log as log
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -45,6 +47,7 @@ class BaseProvider:
         except:
             parsed_json = ''
         return parsed_json
+
 
     def get_xml(self, url):
         try:
