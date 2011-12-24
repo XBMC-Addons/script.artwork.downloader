@@ -1,3 +1,8 @@
+[B]1.0.4[/B]
+- Fixed: movie defaulthumb followed tvshow setting
+- Changed: Reverted old change of using image ID from tmdb as filename. This is not available anymore in new API v3.
+- Added: Extra info to gui dialog
+
 [B]1.0.3[/B]
 - Fixed: Error below limit check
 - Fixed: Custom download for specific movie artwork only
