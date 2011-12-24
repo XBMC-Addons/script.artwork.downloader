@@ -430,8 +430,10 @@ class Main:
         log('Retrieving image list for GUI')
         self.gui_imagelist = []
         # do some check for special cases
-        if art_type == 'defaultthumb':
+        if art_type == 'defaultthumb' and self.mediatype == 'tvshow':
             image_type = str.lower(self.settings.tvshow_defaultthumb_type)
+        elif art_type == 'defaultthumb' and self.mediatype == 'movie':
+            image_type = 'poster'
         elif art_type == 'extrafanart':
             image_type == 'fanart'
         elif art_type == 'extrathumbs':
