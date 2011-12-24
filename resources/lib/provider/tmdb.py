@@ -40,6 +40,8 @@ class TMDBProvider(BaseProvider):
                         if not info['type'] == '' and sizes.get('size') == 'thumb':
                             info['preview'] = sizes.get('url')
                         info['url'] = sizes.get('url')
+                        info['language'] = 'n/a'
+                        info['rating'] = 'n/a'
                         info['preview'] = info['url']
                         info['height'] = int(sizes.get('height'))
                         info['width'] = int(sizes.get('width'))
