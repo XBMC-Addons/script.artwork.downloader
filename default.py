@@ -471,7 +471,9 @@ class Main:
                 if not self.settings.failcount < self.settings.failthreshold:
                     break
                 # File naming
-                if art_type == 'extrafanart':
+                if art_type == 'extrafanart' and self.mediatype == 'movie':
+                    artworkfile = imageurl.rsplit('/', 1)[1]
+                elif art_type == 'extrafanart' and self.mediatype == 'tvshow':
                     artworkfile = ('%s.jpg'% artwork['id'])
                 elif art_type == 'extrathumbs':
                     artworkfile = (filename+'%s.jpg' % str(current_artwork + 1))
