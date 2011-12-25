@@ -34,7 +34,7 @@ def _media_listing(media_type):
                         Media['seasonend'] = limits['end']
                     Medialist.append(Media)
         elif media_type == 'movie':
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year"], "sort": { "method": "label" } }, "id": 1}')
             json_response = unicode(json_response,'utf-8', errors='ignore')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('movies'):
