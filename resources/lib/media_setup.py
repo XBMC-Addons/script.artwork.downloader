@@ -36,27 +36,26 @@ def _media_listing(media_type):
                         Media['seasonend'] = limits['end']
                     Medialist.append(Media)
         elif media_type == 'movie':
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year"], "sort": { "method": "label" } }, "id": 1}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer"], "sort": { "method": "label" } }, "id": 1}')
             json_response = unicode(json_response,'utf-8', errors='ignore')
-            log('%s'% json_response)
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
                     Media = {}
+                    Media['movieid'] = item['movieid']
                     Media['name'] = item['label']
                     Media['year'] = item['year']
                     Media['path'] = _media_path(item['file'])
+                    Media['trailer'] = item['trailer']
                     if item['imdbnumber'] == '':
                         try:
-                            Media['id'] = tmdb._search_movie(item['label'],item['year'])
+                            Media['id'] = 'tmdb%s' %tmdb._search_movie(item['label'],item['year'])
+                            log('Retrieved tmdb ID: %s' %Media['id'])
                         except:
                             Media['id'] = ''
-                            log('could not find an tmdb ID')
+                            log('Could not retrieve an tmdb ID')
                     else:
                         Media['id'] = item['imdbnumber']
-                    log('%s' %Media['name'])
-                    log('%s' %Media['id'])
-                    Media['movieid'] = item['movieid']
                     Medialist.append(Media)
         else:
             log('No JSON results found')
