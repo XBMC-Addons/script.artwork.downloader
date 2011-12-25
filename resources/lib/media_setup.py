@@ -5,7 +5,9 @@ import urllib
 import simplejson
 from resources.lib.utils import _normalize_string as normalize_string
 from resources.lib.utils import _log as log
-
+from resources.lib.utils import _log as log
+from resources.lib.provider import tmdb
+from elementtree import ElementTree as ET
 ### get list of all tvshows and movies with their imdbnumber from library
 
 
@@ -36,13 +38,24 @@ def _media_listing(media_type):
         elif media_type == 'movie':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year"], "sort": { "method": "label" } }, "id": 1}')
             json_response = unicode(json_response,'utf-8', errors='ignore')
+            log('%s'% json_response)
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
                     Media = {}
                     Media['name'] = item['label']
+                    Media['year'] = item['year']
                     Media['path'] = _media_path(item['file'])
-                    Media['id'] = item['imdbnumber']
+                    if item['imdbnumber'] == '':
+                        try:
+                            Media['id'] = tmdb._search_movie(item['label'],item['year'])
+                        except:
+                            Media['id'] = ''
+                            log('could not find an tmdb ID')
+                    else:
+                        Media['id'] = item['imdbnumber']
+                    log('%s' %Media['name'])
+                    log('%s' %Media['id'])
                     Media['movieid'] = item['movieid']
                     Medialist.append(Media)
         else:

@@ -53,3 +53,29 @@ class TMDBProvider(BaseProvider):
                 raise NoFanartError(media_id)
             else:
                 return image_list
+
+def _search_movie(medianame,year=''):
+    log('API: %s ' % medianame)
+    illegal_char = ' -<>:"/\|?*%'
+    for char in illegal_char:
+        medianame = medianame.replace( char , '+' ).replace( '++', '+' ).replace( '+++', '+' )
+    api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
+    #xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/4be68d7eab1fbd1b6fd8a3b80a65a95e/%s+%s' %(self.api_key,medianame,year)
+    xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/%s/%s+%s' %(api_key,medianame,year)
+    log('API: %s ' % xml_url)
+    data = _get_xml(xml_url)
+    tree = ET.fromstring(data)
+    tmdb_id = ''
+    print data
+    try:
+        for image in tree.findall('movie'):
+            if image.findtext('id'):
+                tmdb_id = 'tmdb%s' %image.findtext('id')
+                print tmdb_id
+    except:
+        log('Some weird error')
+    if not tmdb_id == '':
+        log('Found tmdb ID: %s'%tmdb_id)
+    else:
+        log('Did not find tmdb ID')
+    return tmdb_id

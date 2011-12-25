@@ -329,7 +329,7 @@ class Main:
             elif self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: No ID found, skipping' % self.media_name)
-            elif self.mediatype == 'movie' and not self.media_id.startswith('tt'):
+            elif self.mediatype == 'movie' and not self.media_id.startswith('tt') and not self.media_id.startswith('tmdb'):
                 self.media_id_old = self.media_id
                 self.media_id = "tt%.7d" % int(self.media_id)
                 log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
