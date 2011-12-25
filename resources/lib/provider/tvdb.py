@@ -2,6 +2,7 @@ from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
+from resources.lib.utils import _get_xml as _get_xml
 
 class TVDBProvider(BaseProvider):
     """
@@ -18,7 +19,7 @@ class TVDBProvider(BaseProvider):
         xml_url = self.url % (self.api_key, media_id)
         log('API: %s ' % xml_url)
         image_list = []
-        data = self.get_xml(xml_url)
+        data = _get_xml(xml_url)
         tree = ET.fromstring(data)
         for image in tree.findall('Banner'):
             info = {}

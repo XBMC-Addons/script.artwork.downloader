@@ -3,6 +3,7 @@ from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
 import urllib
+from resources.lib.utils import _get_xml as _get_xml
 
 class FTV_TVProvider(BaseProvider):
 
@@ -18,7 +19,7 @@ class FTV_TVProvider(BaseProvider):
         xml_url = self.url % (media_id)
         log('API: %s ' % xml_url)
         image_list = []
-        data = self.get_xml(xml_url)
+        data = _get_xml(xml_url)
         tree = ET.fromstring(data)
         for imagetype in self.imagetypes:
             imageroot = imagetype + 's'
@@ -65,7 +66,7 @@ class FTV_MovieProvider(BaseProvider):
         xml_url = self.url % (self.api_key,media_id)
         log('API: %s ' % xml_url)
         image_list = []
-        data = self.get_xml(xml_url)
+        data = _get_xml(xml_url)
         tree = ET.fromstring(data)
         for imagetype in self.imagetypes:
             imageroot = imagetype + 's'
