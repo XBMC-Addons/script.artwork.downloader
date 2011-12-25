@@ -55,17 +55,16 @@ class TMDBProvider(BaseProvider):
                 return image_list
 
 def _search_movie(medianame,year=''):
-    log('API: %s ' % medianame)
+    log('TMDB API search criteria: %s | %s' % (medianame,year) )
     illegal_char = ' -<>:"/\|?*%'
     for char in illegal_char:
         medianame = medianame.replace( char , '+' ).replace( '++', '+' ).replace( '+++', '+' )
     api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
-    #xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/4be68d7eab1fbd1b6fd8a3b80a65a95e/%s+%s' %(self.api_key,medianame,year)
     xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/%s/%s+%s' %(api_key,medianame,year)
-    log('API: %s ' % xml_url)
+    tmdb_id = ''
+    log('TMDB API search url: %s ' % xml_url)
     data = _get_xml(xml_url)
     tree = ET.fromstring(data)
-    tmdb_id = ''
     print data
     try:
         for image in tree.findall('movie'):
