@@ -49,7 +49,7 @@ def _media_listing(media_type):
                     Media['trailer'] = item['trailer']
                     if item['imdbnumber'] == '':
                         try:
-                            Media['id'] = 'tmdb%s' %tmdb._search_movie(item['label'],item['year'])
+                            Media['id'] = tmdb._search_movie(item['label'],item['year'])
                             log('Retrieved tmdb ID: %s' %Media['id'])
                         except:
                             Media['id'] = ''
