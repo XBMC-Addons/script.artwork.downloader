@@ -15,11 +15,11 @@
         <string id="32012">Finished</string>
         <string id="32013">Enable downloading</string>
         <string id="32014">extrafanart centralized</string>
-        <string id="32015">Choose what to download</string>
+        <string id="32015">Please choose</string>
         <string id="32016">downloaded</string>
         <string id="32017">Cancelled</string>
         <string id="32018">Download canceled by user</string>
-        <string id="32019">Which one to download?</string>
+        <string id="32019">-</string>
         <string id="32020">Downloaded</string>
         <string id="32021">Processing Artwork</string>
         <string id="32022">not found!</string>
@@ -33,7 +33,7 @@
         <string id="32030">No provider ID found for looking up artwork</string>
 
     <!-- Add-on settings: General section id=32031 to 32050 -->
-        <string id="32031">General settings</string>
+        <string id="32031">General</string>
         <string id="32032">[B]General settings used in Extrafanart Downloader[/B]</string>
         <string id="32033">Run in background</string>        
         <string id="32034">Show dialog on finished/errors</string>
