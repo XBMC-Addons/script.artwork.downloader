@@ -306,7 +306,7 @@ class Main:
             log('########################################################')
             log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
             # do some id conversions 
-            if self.media_id == '' and self.mediatype == 'movie':
+            if self.mediatype == 'movie' and self.media_id == '':
                 self.media_id = tmdb._search_movie(self.media_name,currentmedia["year"])
             elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
                 self.media_id_old = self.media_id
@@ -315,6 +315,7 @@ class Main:
 
             log('Provider ID: %s' % self.media_id)
             log('Path: %s' % self.media_path)
+            
             # Declare the target folders
             self.target_extrafanartdirs = []
             self.target_extrathumbsdirs = []
@@ -325,6 +326,7 @@ class Main:
             self.target_artworkdir.append(artwork_dir)
             self.target_extrafanartdirs.append(extrafanart_dir)
             self.target_extrathumbsdirs.append(extrathumbs_dir)
+            
             # Check if using the centralize option
             if self.settings.centralize_enable:
                 if self.mediatype == 'tvshow':
@@ -514,6 +516,7 @@ class Main:
             apply_filters_counter = 0
             log('Starting download')
             download_list = []
+            # Check for set limits
             for image in image_list:
                 if (self.mode == 'gui' or self.mode == 'customgui') and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
                     download_list = image_list
@@ -542,6 +545,8 @@ class Main:
                                 log("Ignoring (Exists in all target directories): %s" % image['filename'])
                 apply_filters_counter = apply_filters_counter + 1
                 dialog('update', percentage = int(float(apply_filters_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
+            
+            # Download artwork that passed the limit check
             for image in download_list:
                 if dialog('iscanceled', background = self.settings.background):
                     break
