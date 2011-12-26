@@ -49,16 +49,16 @@ class fileops:
         return xbmcvfs.copy(source, target)
 
     ### Delete file from all targetdirs
-    def _delete_file_in_dirs(self, filename, targetdirs, reason):
+    def _delete_file_in_dirs(self, filename, targetdirs, reason, media_name = '' ):
         isdeleted = False
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
             if self._exists(path):
                 self._delete(path)
-                log("Deleted (%s): %s" % (reason, path), xbmc.LOGNOTICE)
+                log("[%s] Deleted (%s): %s" % (media_name, reason, path), xbmc.LOGNOTICE)
                 isdeleted = True
         if not isdeleted:
-            log("Ignoring (%s): %s" % (reason, filename))
+            log("[%s] Ignoring (%s): %s" % (media_name, reason, filename))
 
     ### erase old cache file and copy new one
     def erase_current_cache(self,filename):
@@ -128,7 +128,7 @@ class fileops:
         except socket.timeout, e:
             raise HTTPTimeout(url)
         else:
-            log("Downloaded (%s): %s" % (media_name, filename), xbmc.LOGNOTICE)
+            log("[%s] Downloaded: %s" % (media_name, filename), xbmc.LOGNOTICE)
             self.downloadcount = self.downloadcount + 1
             for targetdir in targetdirs:
                 targetpath = os.path.join(targetdir, filename)

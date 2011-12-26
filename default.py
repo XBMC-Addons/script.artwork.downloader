@@ -513,18 +513,23 @@ class Main:
         if len(image_list) == 0:
             log('Nothing to download')
         else:
-            apply_filters_counter = 0
             log('Starting download')
+            image_counter = limit_counter = 0
+            currentmedia = currenttype = ''
             download_list = []
             # Check for set limits
             for image in image_list:
                 if (self.mode == 'gui' or self.mode == 'customgui') and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
                     download_list = image_list
                 else:
+                    if not currentmedia == image['media_name'] and not currenttype == image['media_type']:
+                        currentmedia = image['media_name']
+                        currenttype = image['media_type']
+                        limit_counter = 0                        
                     # Check for set limits
-                    limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], image['artwork_number'])
+                    limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], limit_counter)
                     if limited[0] and image['artwork_type'] =='extrafanart':
-                        self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
+                        self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1],image['media_name'])
                     elif limited[0]:
                         log("[%s] Ignoring (%s): %s" % (image['media_name'],limited[1], image['filename']))
                         # Check if artwork doesn't exist and the one available below settings
@@ -543,8 +548,10 @@ class Main:
                                 download_list.append(image)
                             else:
                                 log("[%s] Ignoring (Exists in all target directories): %s" % (image['media_name'],image['filename']) )
-                apply_filters_counter = apply_filters_counter + 1
-                dialog('update', percentage = int(float(apply_filters_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
+                            if currentmedia == image['media_name'] and currenttype == image['media_type']:
+                                limit_counter = limit_counter+1
+                image_counter = image_counter + 1
+                dialog('update', percentage = int(float(image_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
             
             # Download artwork that passed the limit check
             for image in download_list:
