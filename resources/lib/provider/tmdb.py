@@ -1,17 +1,16 @@
-from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
 from resources.lib.utils import _normalize_string as normalize
+from resources.lib.utils import _get_xml as _get_xml
 from resources.lib import language
 from elementtree import ElementTree as ET
-from resources.lib.utils import _get_xml as _get_xml
 
-class TMDBProvider(BaseProvider):
+
+class TMDBProvider():
 
     def __init__(self):
         self.name = 'TMDB'
         self.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
-        self.api_limits = True
         self.url = "http://api.themoviedb.org/2.1/Movie.getImages/" + language.get_abbrev() + "/xml/%s/%s"
 
     def get_image_list(self, media_id):
@@ -66,18 +65,11 @@ def _search_movie(medianame,year=''):
     log('TMDB API search url: %s ' % xml_url)
     data = _get_xml(xml_url)
     tree = ET.fromstring(data)
-    #log('%s'%data)
-    '''
-    for item in tree.getiterator():
-        if item.tag == ('id'):
-            tmdb_id = 'tmdb%s' %item.text
-            print tmdb_id
-    '''
     for item in tree.getiterator():
         if item.findtext('id'):
             tmdb_id = item.findtext('id')
-            log('Found tmdb ID: %s'%tmdb_id)
+            log('TMDB API search found ID: %s'%tmdb_id)
             break
     if tmdb_id == '':
-        log('Did not find tmdb ID')
+        log('TMDB API search found no ID')
     return tmdb_id

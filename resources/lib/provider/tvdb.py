@@ -1,10 +1,9 @@
-from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import _log as log
-from elementtree import ElementTree as ET
 from resources.lib.utils import _get_xml as _get_xml
+from elementtree import ElementTree as ET
 
-class TVDBProvider(BaseProvider):
+class TVDBProvider():
     """
     Setup provider for TheTVDB.com
     """
@@ -14,10 +13,9 @@ class TVDBProvider(BaseProvider):
         self.url = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml'
         self.url_prefix = 'http://www.thetvdb.com/banners/'
 
-
     def get_image_list(self, media_id):
         xml_url = self.url % (self.api_key, media_id)
-        log('API: %s ' % xml_url)
+        log('TVDB API: %s ' % xml_url)
         image_list = []
         data = _get_xml(xml_url)
         tree = ET.fromstring(data)

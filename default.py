@@ -312,12 +312,8 @@ class Main:
                 self.media_id_old = self.media_id
                 self.media_id = "tt%.7d" % int(self.media_id)
                 log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
-            '''
-            elif self.media_id.startswith('tmdb_'):
-                self.media_id = self.media_id.replace( 'tmdb_', '' )
-                log('Remove temporary ''tmdb_'' prefix and keep original id -> %s' %self.media_id )
-            '''
-            log('ID: %s' % self.media_id)
+
+            log('Provider ID: %s' % self.media_id)
             log('Path: %s' % self.media_path)
             # Declare the target folders
             self.target_extrafanartdirs = []
