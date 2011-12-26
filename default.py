@@ -302,13 +302,12 @@ class Main:
             self.media_id   = currentmedia["id"]
             self.media_name = currentmedia["name"]
             self.media_path = currentmedia["path"]
-            self.media_year = currentmedia["year"]
             dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(32008), line3 = '', background = self.settings.background)
             log('########################################################')
             log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
             # do some id conversions 
             if self.media_id == '' and self.mediatype == 'movie':
-                self.media_id = tmdb._search_movie(self.media_name,self.media_year)
+                self.media_id = tmdb._search_movie(self.media_name,currentmedia["year"])
             elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
                 self.media_id_old = self.media_id
                 self.media_id = "tt%.7d" % int(self.media_id)
