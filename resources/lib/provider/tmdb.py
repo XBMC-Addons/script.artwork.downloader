@@ -1,6 +1,7 @@
 from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
+from resources.lib.utils import _normalize_string as normalize
 from resources.lib import language
 from elementtree import ElementTree as ET
 from resources.lib.utils import _get_xml as _get_xml
@@ -54,6 +55,7 @@ class TMDBProvider(BaseProvider):
                 return image_list
 
 def _search_movie(medianame,year=''):
+    medianame = normalize(medianame)
     log('TMDB API search criteria: Title[''%s''] | Year[''%s'']' % (medianame,year) )
     illegal_char = ' -<>:"/\|?*%'
     for char in illegal_char:
@@ -64,7 +66,7 @@ def _search_movie(medianame,year=''):
     log('TMDB API search url: %s ' % xml_url)
     data = _get_xml(xml_url)
     tree = ET.fromstring(data)
-    log('%s'%data)
+    #log('%s'%data)
     '''
     for item in tree.getiterator():
         if item.tag == ('id'):
@@ -73,7 +75,7 @@ def _search_movie(medianame,year=''):
     '''
     for item in tree.getiterator():
         if item.findtext('id'):
-            tmdb_id = 'tmdb_%s' %item.findtext('id')
+            tmdb_id = item.findtext('id')
             log('Found tmdb ID: %s'%tmdb_id)
             break
     if tmdb_id == '':

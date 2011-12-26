@@ -14,6 +14,7 @@ from traceback import print_exc
 from resources.lib import language
 from resources.lib import media_setup
 from resources.lib import provider
+from resources.lib.provider import tmdb
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
 from resources.lib.utils import _getUniq as getUniq
@@ -301,9 +302,22 @@ class Main:
             self.media_id   = currentmedia["id"]
             self.media_name = currentmedia["name"]
             self.media_path = currentmedia["path"]
+            self.media_year = currentmedia["year"]
             dialog('update', percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0), line1 = self.media_name, line2 = __localize__(32008), line3 = '', background = self.settings.background)
             log('########################################################')
             log('Processing media: %s' % self.media_name, xbmc.LOGNOTICE)
+            # do some id conversions 
+            if self.media_id == '' and self.mediatype == 'movie':
+                self.media_id = tmdb._search_movie(self.media_name,self.media_year)
+            elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
+                self.media_id_old = self.media_id
+                self.media_id = "tt%.7d" % int(self.media_id)
+                log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
+            '''
+            elif self.media_id.startswith('tmdb_'):
+                self.media_id = self.media_id.replace( 'tmdb_', '' )
+                log('Remove temporary ''tmdb_'' prefix and keep original id -> %s' %self.media_id )
+            '''
             log('ID: %s' % self.media_id)
             log('Path: %s' % self.media_path)
             # Declare the target folders
@@ -322,16 +336,7 @@ class Main:
                     self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
                 elif self.mediatype == 'movie':
                     self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
-            
-            # do some id conversions 
-            if self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt') and not self.media_id.startswith('tmdb_'):
-                self.media_id_old = self.media_id
-                self.media_id = "tt%.7d" % int(self.media_id)
-                log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
-            elif self.media_id.startswith('tmdb_'):
-                self.media_id = self.media_id.replace( 'tmdb_', '' )
-                log('Remove tempprary tmdb_ prefix and keep original id -> %s' %self.media_id )
-            
+
             # Check for presence of id used by source sites
             if self.mode == 'gui' and ((self.media_id == '') or (self.mediatype == 'tvshow' and self.media_id.startswith('tt'))):
                 dialog('close', background = self.settings.background)
