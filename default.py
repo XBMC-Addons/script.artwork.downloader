@@ -526,11 +526,11 @@ class Main:
                     if limited[0] and image['artwork_type'] =='extrafanart':
                         self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
                     elif limited[0]:
-                        log("Ignoring (%s): %s" % (limited[1], image['filename']))
+                        log("[%s] Ignoring (%s): %s" % (image['media_name'],limited[1], image['filename']))
                         # Check if artwork doesn't exist and the one available below settings
                         for targetdir in image['targetdirs']:
                             if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
-                                self.failed_items.append('%s: Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
+                                self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
                     else:
                         if self.settings.files_overwrite:
                             download_list.append(image)
@@ -542,7 +542,7 @@ class Main:
                             if missingfiles:
                                 download_list.append(image)
                             else:
-                                log("Ignoring (Exists in all target directories): %s" % image['filename'])
+                                log("[%s] Ignoring (Exists in all target directories): %s" % (image['media_name'],image['filename']) )
                 apply_filters_counter = apply_filters_counter + 1
                 dialog('update', percentage = int(float(apply_filters_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
             
