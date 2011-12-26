@@ -5,7 +5,6 @@ from resources.lib import language
 from elementtree import ElementTree as ET
 from resources.lib.utils import _get_xml as _get_xml
 
-
 class TMDBProvider(BaseProvider):
 
     def __init__(self):
@@ -55,7 +54,7 @@ class TMDBProvider(BaseProvider):
                 return image_list
 
 def _search_movie(medianame,year=''):
-    log('TMDB API search criteria: %s | %s' % (medianame,year) )
+    log('TMDB API search criteria: Title[''%s''] | Year[''%s'']' % (medianame,year) )
     illegal_char = ' -<>:"/\|?*%'
     for char in illegal_char:
         medianame = medianame.replace( char , '+' ).replace( '++', '+' ).replace( '+++', '+' )
@@ -65,16 +64,18 @@ def _search_movie(medianame,year=''):
     log('TMDB API search url: %s ' % xml_url)
     data = _get_xml(xml_url)
     tree = ET.fromstring(data)
-    print data
-    try:
-        for image in tree.findall('movie'):
-            if image.findtext('id'):
-                tmdb_id = 'tmdb%s' %image.findtext('id')
-                print tmdb_id
-    except:
-        log('Some weird error')
-    if not tmdb_id == '':
-        log('Found tmdb ID: %s'%tmdb_id)
-    else:
+    log('%s'%data)
+    '''
+    for item in tree.getiterator():
+        if item.tag == ('id'):
+            tmdb_id = 'tmdb%s' %item.text
+            print tmdb_id
+    '''
+    for item in tree.getiterator():
+        if item.findtext('id'):
+            tmdb_id = 'tmdb_%s' %item.findtext('id')
+            log('Found tmdb ID: %s'%tmdb_id)
+            break
+    if tmdb_id == '':
         log('Did not find tmdb ID')
     return tmdb_id

@@ -1,65 +1,69 @@
 import os
 import re
+import sys
 import xbmc
+import xbmcgui
 import urllib
 import simplejson
 from resources.lib.utils import _normalize_string as normalize_string
 from resources.lib.utils import _log as log
-from resources.lib.utils import _log as log
+from resources.lib.utils import _dialog as dialog
 from resources.lib.provider import tmdb
 from elementtree import ElementTree as ET
+from resources.lib.settings import _settings
 ### get list of all tvshows and movies with their imdbnumber from library
 
 
 # Retrieve JSON list
 def _media_listing(media_type):
-        log('Using JSON for retrieving %s info' %media_type)
-        Medialist = []
-        if media_type == 'tvshow':
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
-            json_response = unicode(json_response,'utf-8', errors='ignore')
-            jsonobject = simplejson.loads(json_response)
-            if jsonobject['result'].has_key('tvshows'):
-                for item in jsonobject['result']['tvshows']:
-                    Media = {}
-                    Media['name'] = item['label']
-                    Media['path'] = _media_path(item['file'])
+    settings = _settings()
+    settings._get()
+    log('Using JSON for retrieving %s info' %media_type)
+    Medialist = []
+    if media_type == 'tvshow':
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
+        json_response = unicode(json_response,'utf-8', errors='ignore')
+        jsonobject = simplejson.loads(json_response)
+        if jsonobject['result'].has_key('tvshows'):
+            for item in jsonobject['result']['tvshows']:
+                if dialog('iscanceled', background = settings.background):
+                    break
+                Media = {}
+                Media['name'] = item['label']
+                Media['path'] = _media_path(item['file'])
+                Media['id'] = item['imdbnumber']
+                Media['tvshowid'] = item['tvshowid']
+                ### Search for season numbers
+                json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
+                jsonobject_season = simplejson.loads(json_response_season)
+                if jsonobject_season['result'].has_key('limits'):
+                    limits = jsonobject_season['result']['limits']
+                    Media['seasontotal'] = limits['total']
+                    Media['seasonstart'] = limits['start']
+                    Media['seasonend'] = limits['end']
+                Medialist.append(Media)
+    elif media_type == 'movie':
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer"], "sort": { "method": "label" } }, "id": 1}')
+        json_response = unicode(json_response,'utf-8', errors='ignore')
+        jsonobject = simplejson.loads(json_response)
+        if jsonobject['result'].has_key('movies'):
+            for item in jsonobject['result']['movies']:
+                if dialog('iscanceled', background = settings.background):
+                    break
+                Media = {}
+                Media['movieid'] = item['movieid']
+                Media['name'] = item['label']
+                Media['year'] = item['year']
+                Media['path'] = _media_path(item['file'])
+                Media['trailer'] = item['trailer']
+                if item['imdbnumber'] == '':
+                    Media['id'] = tmdb._search_movie(item['label'],item['year'])
+                else:
                     Media['id'] = item['imdbnumber']
-                    Media['tvshowid'] = item['tvshowid']
-                    ### Search for season numbers
-                    json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
-                    jsonobject_season = simplejson.loads(json_response_season)
-                    if jsonobject_season['result'].has_key('limits'):
-                        limits = jsonobject_season['result']['limits']
-                        Media['seasontotal'] = limits['total']
-                        Media['seasonstart'] = limits['start']
-                        Media['seasonend'] = limits['end']
-                    Medialist.append(Media)
-        elif media_type == 'movie':
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer"], "sort": { "method": "label" } }, "id": 1}')
-            json_response = unicode(json_response,'utf-8', errors='ignore')
-            jsonobject = simplejson.loads(json_response)
-            if jsonobject['result'].has_key('movies'):
-                for item in jsonobject['result']['movies']:
-                    Media = {}
-                    Media['movieid'] = item['movieid']
-                    Media['name'] = item['label']
-                    Media['year'] = item['year']
-                    Media['path'] = _media_path(item['file'])
-                    Media['trailer'] = item['trailer']
-                    if item['imdbnumber'] == '':
-                        try:
-                            Media['id'] = tmdb._search_movie(item['label'],item['year'])
-                            log('Retrieved tmdb ID: %s' %Media['id'])
-                        except:
-                            Media['id'] = ''
-                            log('Could not retrieve an tmdb ID')
-                    else:
-                        Media['id'] = item['imdbnumber']
-                    Medialist.append(Media)
-        else:
-            log('No JSON results found')
-        return Medialist
+                Medialist.append(Media)
+    else:
+        log('No JSON results found')
+    return Medialist
 
 
 def _media_path(path):

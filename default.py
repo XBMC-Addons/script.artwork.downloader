@@ -322,20 +322,27 @@ class Main:
                     self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
                 elif self.mediatype == 'movie':
                     self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
-            # Check for id used by source sites
+            
+            # do some id conversions 
+            if self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt') and not self.media_id.startswith('tmdb_'):
+                self.media_id_old = self.media_id
+                self.media_id = "tt%.7d" % int(self.media_id)
+                log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
+            elif self.media_id.startswith('tmdb_'):
+                self.media_id = self.media_id.replace( 'tmdb_', '' )
+                log('Remove tempprary tmdb_ prefix and keep original id -> %s' %self.media_id )
+            
+            # Check for presence of id used by source sites
             if self.mode == 'gui' and ((self.media_id == '') or (self.mediatype == 'tvshow' and self.media_id.startswith('tt'))):
                 dialog('close', background = self.settings.background)
                 dialog('okdialog','' ,self.media_name , __localize__(32030))
             elif self.media_id == '':
                 log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: No ID found, skipping' % self.media_name)
-            elif self.mediatype == 'movie' and not self.media_id.startswith('tt') and not self.media_id.startswith('tmdb'):
-                self.media_id_old = self.media_id
-                self.media_id = "tt%.7d" % int(self.media_id)
-                log('%s: No IMDB ID found, try ID conversion: %s -> %s' % (self.media_name, self.media_id_old,self.media_id), xbmc.LOGNOTICE)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
                 log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: IMDB ID found for TV show, skipping' % self.media_name)
+            
             # If correct ID found continue
             else:
                 self.temp_image_list = []
