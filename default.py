@@ -515,17 +515,19 @@ class Main:
         else:
             log('Starting download')
             image_counter = limit_counter = 0
-            currentmedia = currenttype = ''
+            currentmedia = ''
+            currenttype = ''
             download_list = []
             # Check for set limits
             for image in image_list:
+                if not currenttype == image['artwork_type']:
+                    currenttype = image['artwork_type']
+                    limit_counter = 0
+                    if not currentmedia == image['media_name']:
+                        currentmedia = image['media_name']
                 if (self.mode == 'gui' or self.mode == 'customgui') and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
                     download_list = image_list
                 else:
-                    if not currentmedia == image['media_name'] and not currenttype == image['media_type']:
-                        currentmedia = image['media_name']
-                        currenttype = image['media_type']
-                        limit_counter = 0                        
                     # Check for set limits
                     limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], limit_counter)
                     if limited[0] and image['artwork_type'] =='extrafanart':
@@ -548,8 +550,7 @@ class Main:
                                 download_list.append(image)
                             else:
                                 log("[%s] Ignoring (Exists in all target directories): %s" % (image['media_name'],image['filename']) )
-                            if currentmedia == image['media_name'] and currenttype == image['media_type']:
-                                limit_counter = limit_counter+1
+                        limit_counter = limit_counter + 1
                 image_counter = image_counter + 1
                 dialog('update', percentage = int(float(image_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
             

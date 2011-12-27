@@ -93,7 +93,7 @@ class fileops:
         return thumbpath         
 
     # copy filen from temp to final location
-    def _copyfile(self, sourcepath, targetpath):
+    def _copyfile(self, sourcepath, targetpath, media_name = ''):
         targetdir = os.path.dirname(targetpath)
         if not self._exists(targetdir):
             if not self._mkdir(targetdir):
@@ -101,7 +101,7 @@ class fileops:
         if not self._copy(sourcepath, targetpath):
             raise CopyError(targetpath)
         else:
-            log("Copied successfully: %s" % targetpath)
+            log("[%s] Copied successfully: %s" % (media_name, targetpath) )
 
     # download file
     def _downloadfile(self, url, filename, targetdirs, media_name):
@@ -132,6 +132,6 @@ class fileops:
             self.downloadcount = self.downloadcount + 1
             for targetdir in targetdirs:
                 targetpath = os.path.join(targetdir, filename)
-                self._copyfile(temppath, targetpath)
+                self._copyfile(temppath, targetpath, media_name)
                 if self.settings.xbmc_caching_enabled:
                     self.erase_current_cache(targetpath)
