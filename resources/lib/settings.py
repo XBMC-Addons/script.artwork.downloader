@@ -207,7 +207,7 @@ class _settings:
         info = {}
         info['media_type']      = 'movie'
         info['bulk_enabled']    = self.movie_defaultthumb
-        info['solo_enabled']    = 'true'
+        info['solo_enabled']    = 'false'
         info['gui_string']      = __localize__(32133)
         info['art_type']        = 'defaultthumb'
         info['filename']        = 'folder.jpg'
@@ -316,7 +316,7 @@ class _settings:
         info = {}
         info['media_type']      = 'tvshow'
         info['bulk_enabled']    = self.tvshow_defaultthumb
-        info['solo_enabled']    = 'true'
+        info['solo_enabled']    = 'false'
         info['gui_string']      = __localize__(32133)
         info['art_type']        = 'defaultthumb'
         info['filename']        = 'folder.jpg'
