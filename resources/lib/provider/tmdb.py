@@ -63,16 +63,16 @@ def _search_movie(medianame,year=''):
     xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/%s/%s+%s' %(api_key,medianame,year)
     tmdb_id = ''
     log('TMDB API search url: %s ' % xml_url)
-    data = get_xml(xml_url)
-    tree = ET.fromstring(data)
     try:
+        data = get_xml(xml_url)
+        tree = ET.fromstring(data)
         for item in tree.getiterator():
             if item.findtext('id'):
                 tmdb_id = item.findtext('id')
                 log('TMDB API search found ID: %s'%tmdb_id)
                 break
     except:
-        pass
+        log('Problem getting XML data')
     if tmdb_id == '':
         log('TMDB API search found no ID')
     return tmdb_id
