@@ -49,16 +49,16 @@ class fileops:
         return xbmcvfs.copy(source, target)
 
     ### Delete file from all targetdirs
-    def _delete_file_in_dirs(self, filename, targetdirs, reason):
+    def _delete_file_in_dirs(self, filename, targetdirs, reason, media_name = '' ):
         isdeleted = False
         for targetdir in targetdirs:
             path = os.path.join(targetdir, filename)
             if self._exists(path):
                 self._delete(path)
-                log("Deleted (%s): %s" % (reason, path), xbmc.LOGNOTICE)
+                log("[%s] Deleted (%s): %s" % (media_name, reason, path), xbmc.LOGNOTICE)
                 isdeleted = True
         if not isdeleted:
-            log("Ignoring (%s): %s" % (reason, filename))
+            log("[%s] Ignoring (%s): %s" % (media_name, reason, filename))
 
     ### erase old cache file and copy new one
     def erase_current_cache(self,filename):
@@ -93,7 +93,7 @@ class fileops:
         return thumbpath         
 
     # copy filen from temp to final location
-    def _copyfile(self, sourcepath, targetpath):
+    def _copyfile(self, sourcepath, targetpath, media_name = ''):
         targetdir = os.path.dirname(targetpath)
         if not self._exists(targetdir):
             if not self._mkdir(targetdir):
@@ -101,7 +101,7 @@ class fileops:
         if not self._copy(sourcepath, targetpath):
             raise CopyError(targetpath)
         else:
-            log("Copied successfully: %s" % targetpath)
+            log("[%s] Copied successfully: %s" % (media_name, targetpath) )
 
     # download file
     def _downloadfile(self, url, filename, targetdirs, media_name):
@@ -128,10 +128,10 @@ class fileops:
         except socket.timeout, e:
             raise HTTPTimeout(url)
         else:
-            log("Downloaded (%s): %s" % (media_name, filename), xbmc.LOGNOTICE)
+            log("[%s] Downloaded: %s" % (media_name, filename), xbmc.LOGNOTICE)
             self.downloadcount = self.downloadcount + 1
             for targetdir in targetdirs:
                 targetpath = os.path.join(targetdir, filename)
-                self._copyfile(temppath, targetpath)
+                self._copyfile(temppath, targetpath, media_name)
                 if self.settings.xbmc_caching_enabled:
                     self.erase_current_cache(targetpath)

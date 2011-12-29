@@ -471,7 +471,6 @@ class Main:
             for item in self.image_list:
                 final_image_list.append(item)
         for artwork in final_image_list:
-            imageurl = artwork['url']
             if image_type == artwork['type']:
                 ### check if script has been cancelled by user
                 if dialog('iscanceled', background = self.settings.background):
@@ -481,7 +480,7 @@ class Main:
                     break
                 # File naming
                 if art_type == 'extrafanart' and self.mediatype == 'movie':
-                    artworkfile = imageurl.rsplit('/', 1)[1]
+                    artworkfile = artwork['url'].rsplit('/', 1)[1]
                 elif art_type == 'extrafanart' and self.mediatype == 'tvshow':
                     artworkfile = ('%s.jpg'% artwork['id'])
                 elif art_type == 'extrathumbs':
@@ -492,7 +491,7 @@ class Main:
                     artworkfile = (filename+'%s.jpg' % artwork['season'])
                 else: artworkfile = filename
                 image = {}
-                image['url'] = imageurl
+                image['url'] = artwork['url']
                 image['filename'] = artworkfile
                 image['targetdirs'] = targetdirs
                 image['media_name'] = self.media_name
@@ -513,18 +512,25 @@ class Main:
         if len(image_list) == 0:
             log('Nothing to download')
         else:
-            apply_filters_counter = 0
             log('Starting download')
+            image_counter = limit_counter = 0
+            currentmedia = ''
+            currenttype = ''
             download_list = []
             # Check for set limits
             for image in image_list:
+                if not currenttype == image['artwork_type']:
+                    currenttype = image['artwork_type']
+                    limit_counter = 0
+                    if not currentmedia == image['media_name']:
+                        currentmedia = image['media_name']
                 if (self.mode == 'gui' or self.mode == 'customgui') and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
                     download_list = image_list
                 else:
                     # Check for set limits
-                    limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], image['artwork_number'])
+                    limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], limit_counter)
                     if limited[0] and image['artwork_type'] =='extrafanart':
-                        self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1])
+                        self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1],image['media_name'])
                     elif limited[0]:
                         log("[%s] Ignoring (%s): %s" % (image['media_name'],limited[1], image['filename']))
                         # Check if artwork doesn't exist and the one available below settings
@@ -543,8 +549,9 @@ class Main:
                                 download_list.append(image)
                             else:
                                 log("[%s] Ignoring (Exists in all target directories): %s" % (image['media_name'],image['filename']) )
-                apply_filters_counter = apply_filters_counter + 1
-                dialog('update', percentage = int(float(apply_filters_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
+                        limit_counter = limit_counter + 1
+                image_counter = image_counter + 1
+                dialog('update', percentage = int(float(image_counter) / float(len(image_list)) * 100.0), line1 = __localize__(32021), background = self.settings.background)
             
             # Download artwork that passed the limit check
             for image in download_list:
