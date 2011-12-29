@@ -203,13 +203,13 @@ class Main:
                 log('Deleted temp directory: %s' % self.fileops.tempdir)
         ### log results and notify user
         # print download totals to log
-        log('## Download totaliser:')
+        log('##### Download totaliser:')
         log('- Total Artwork: %s' % self.download_counter['Total Artwork'], xbmc.LOGNOTICE)
         for artwork_type in self.download_counter:
             if not artwork_type == 'Total Artwork':
                 log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
         # print failed items
-        log('## Failed items:')
+        log('##### Failed items:')
         if not self.failed_items:
             log(' - No failed/missing items found')
         else:
@@ -339,10 +339,10 @@ class Main:
                 dialog('close', background = self.settings.background)
                 dialog('okdialog','' ,self.media_name , __localize__(32030))
             elif self.media_id == '':
-                log('%s: No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
-                self.failed_items.append('%s: No ID found, skipping' % self.media_name)
+                log('[%s] No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
+                self.failed_items.append('[%s] No ID found, skipping' % self.media_name)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
-                log('%s: IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
+                log('[%s] IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
                 self.failed_items.append('%s: IMDB ID found for TV show, skipping' % self.media_name)
             
             # If correct ID found continue
@@ -413,6 +413,7 @@ class Main:
 
     ### Processes the bulk mode downloading of files
     def _download_process(self):
+        log('########################################################')
         if not self.mode == 'custom':
             self.download_arttypes = []
             for item in self.settings.available_arttypes:
@@ -458,6 +459,7 @@ class Main:
 
     ### Artwork downloading
     def _download_art(self, art_type, image_type, filename, targetdirs, msg):
+        log('###### %s' %image_type)
         self.settings.failcount = 0
         current_artwork = 0
         artwork_number = 0
@@ -471,68 +473,76 @@ class Main:
         else:
             for item in self.image_list:
                 final_image_list.append(item)
-        for artwork in final_image_list:
-            if image_type ==  artwork['type']:
-                ### check if script has been cancelled by user
-                if dialog('iscanceled', background = self.settings.background):
-                    dialog('close', background = self.settings.background)
-                    break
-                if not self.settings.failcount < self.settings.failthreshold:
-                    break   
-                # File naming
-                current_artwork = current_artwork + 1
-                if art_type == 'extrafanart' and self.mediatype == 'movie':
-                    artworkfile = artwork['url'].rsplit('/', 1)[1]
-                elif art_type == 'extrafanart' and self.mediatype == 'tvshow':
-                    artworkfile = ('%s.jpg'% artwork['id'])
-                elif art_type == 'extrathumbs':
-                    artworkfile = (filename+'%s.jpg' % str(limit_counter + 1))
-                elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
-                    artworkfile = (filename+'%s.jpg' % artwork['season'])
-                elif art_type == 'seasonposter':
-                    artworkfile = (filename+'%s.jpg' % artwork['season'])
-                else: artworkfile = filename
-                image = {}
-                image['url'] = artwork['url']
-                image['filename'] = artworkfile
-                image['targetdirs'] = targetdirs
-                image['media_name'] = self.media_name
-                image['media_type'] = self.mediatype
-                image['artwork_type'] = art_type
-                image['artwork_string'] = msg
-                image['artwork_details'] = artwork
-                # Continue 
-                if (self.mode == 'gui' or self.mode == 'customgui') and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
-                    self.download_list = image_list
-                elif image_type == artwork['type']:
-                    # Check for set limits
-                    limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], limit_counter)
-                    if limited[0] and image['artwork_type'] =='extrafanart':
-                        self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1],image['media_name'])
-                    elif limited[0]:
-                        log("[%s] Ignoring (%s): %s" % (image['media_name'],limited[1], image['filename']))
-                        # Check if artwork doesn't exist and the one available below settings
-                        for targetdir in image['targetdirs']:
-                            if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
-                                self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
-                    else:
-                        if self.settings.files_overwrite:
-                            self.download_list.append(image)
-                        else:
-                            missingfiles = False
+        if len(final_image_list) == 0:
+            log('Nothing to download')
+        else:
+            for artwork in final_image_list:
+                if image_type ==  artwork['type']:
+                    ### check if script has been cancelled by user
+                    if dialog('iscanceled', background = self.settings.background):
+                        dialog('close', background = self.settings.background)
+                        break
+                    if not self.settings.failcount < self.settings.failthreshold:
+                        break   
+                    # File naming
+                    current_artwork = current_artwork + 1
+                    if art_type == 'extrafanart' and self.mediatype == 'movie':
+                        artworkfile = artwork['url'].rsplit('/', 1)[1]
+                    elif art_type == 'extrafanart' and self.mediatype == 'tvshow':
+                        artworkfile = ('%s.jpg'% artwork['id'])
+                    elif art_type == 'extrathumbs':
+                        artworkfile = (filename+'%s.jpg' % str(limit_counter + 1))
+                    elif art_type == 'seasonthumbs' or art_type == 'seasonbanner':
+                        artworkfile = (filename+'%s.jpg' % artwork['season'])
+                    elif art_type == 'seasonposter':
+                        artworkfile = (filename+'%s.jpg' % artwork['season'])
+                    else: artworkfile = filename
+                    image = {}
+                    image['url'] = artwork['url']
+                    image['filename'] = artworkfile
+                    image['targetdirs'] = targetdirs
+                    image['media_name'] = self.media_name
+                    image['media_type'] = self.mediatype
+                    image['artwork_type'] = art_type
+                    image['artwork_string'] = msg
+                    image['artwork_details'] = artwork
+                    # Continue 
+                    if (self.mode == 'gui' or self.mode == 'customgui') and not image['artwork_type'] == 'extrafanart' and not image['artwork_type'] == 'extrathumbs':
+                        self.download_list = image_list
+                    elif image_type == artwork['type']:
+                        # Check for set limits
+                        limited = self.filters.do_filter(image['artwork_type'], image['media_type'], image['artwork_details'], limit_counter)
+                        # Delete extrafanart when below settings
+                        if limited[0] and image['artwork_type'] =='extrafanart':
+                            self.fileops._delete_file_in_dirs(image['filename'], image['targetdirs'], limited[1],image['media_name'])
+                        # Just ignore image when it's below settings
+                        elif limited[0]:
+                            log("[%s] Ignoring (%s): %s" % (image['media_name'],limited[1], image['filename']))
+                            # Check if artwork doesn't exist and the ones available are below settings
                             for targetdir in image['targetdirs']:
-                                if not self.fileops._exists(os.path.join(targetdir, image['filename'])):
-                                    missingfiles = True
-                            if missingfiles:
+                                if not self.fileops._exists(os.path.join(targetdir, image['filename'])) and not image['artwork_type'] =='extrafanart' and not image['artwork_type'] =='extrathumbs':
+                                    self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,image['artwork_type']))
+                        else:
+                            # Always add to list when set to overwrite
+                            if self.settings.files_overwrite:
                                 self.download_list.append(image)
                             else:
-                                log("[%s] Ignoring (Exists in all target directories): %s" % (image['media_name'],image['filename']) )
-                        limit_counter = limit_counter + 1
-                else: pass
-            # add to failed items if 0    
-        if current_artwork == 0:
-            self.failed_items.append('%s: No %s found' % (self.media_name,art_type))
-        log('Found: %s %s' % (current_artwork, art_type))
+                                # Check if image already exist
+                                missingfiles = False
+                                for targetdir in image['targetdirs']:
+                                    if not self.fileops._exists(os.path.join(targetdir, image['filename'])):
+                                        missingfiles = True
+                                if missingfiles:
+                                    self.download_list.append(image)
+                                else:
+                                    log("[%s] Ignoring (Exists in all target directories): %s" % (image['media_name'],image['filename']) )
+                            limit_counter = limit_counter + 1
+                    else: pass
+            # Add to failed items if 0
+            if current_artwork == 0:
+                self.failed_items.append('[%s] No %s found' % (self.media_name,art_type))
+            # Print log message number of found images per art type
+            log('Found: %s %s' % (current_artwork, art_type))
 
     def _batch_download(self, image_list):
         log('########################################################')
@@ -541,13 +551,13 @@ class Main:
         else:
             log('Starting download')
             # Download artwork that passed the limit check
-            for image in image_list:
+            for item in image_list:
                 if dialog('iscanceled', background = self.settings.background):
                     break
-                dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = image['media_name'], line2 = __localize__(32009) + ' ' + image['artwork_string'], line3 = image['filename'], background = self.settings.background)
+                dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
                 # Try downloading the file and catch errors while trying to
                 try:
-                    self.fileops._downloadfile(image['url'], image['filename'], image['targetdirs'], image['media_name'])
+                    self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'])
                 except HTTP404Error, e:
                     log("URL not found: %s" % str(e), xbmc.LOGERROR)
                     self._download_art_succes = False
@@ -567,9 +577,9 @@ class Main:
                     self._download_art_succes = False
                 else:
                     try:
-                        self.download_counter[image['artwork_string']] = self.download_counter[image['artwork_string']] + 1
+                        self.download_counter[ item['artwork_string'] ] = self.download_counter[ item['artwork_string'] ] + 1
                     except KeyError:
-                        self.download_counter[image['artwork_string']] = 1
+                        self.download_counter[ item['artwork_string'] ] = 1
                     self.download_counter['Total Artwork'] = self.download_counter['Total Artwork'] + 1
                     self._download_art_succes = True
             log('Finished download')
