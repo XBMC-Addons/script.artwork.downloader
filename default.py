@@ -471,7 +471,6 @@ class Main:
             for item in self.image_list:
                 final_image_list.append(item)
         for artwork in final_image_list:
-            imageurl = artwork['url']
             if image_type == artwork['type']:
                 ### check if script has been cancelled by user
                 if dialog('iscanceled', background = self.settings.background):
@@ -481,7 +480,7 @@ class Main:
                     break
                 # File naming
                 if art_type == 'extrafanart' and self.mediatype == 'movie':
-                    artworkfile = imageurl.rsplit('/', 1)[1]
+                    artworkfile = artwork['url'].rsplit('/', 1)[1]
                 elif art_type == 'extrafanart' and self.mediatype == 'tvshow':
                     artworkfile = ('%s.jpg'% artwork['id'])
                 elif art_type == 'extrathumbs':
@@ -492,7 +491,7 @@ class Main:
                     artworkfile = (filename+'%s.jpg' % artwork['season'])
                 else: artworkfile = filename
                 image = {}
-                image['url'] = imageurl
+                image['url'] = artwork['url']
                 image['filename'] = artworkfile
                 image['targetdirs'] = targetdirs
                 image['media_name'] = self.media_name
