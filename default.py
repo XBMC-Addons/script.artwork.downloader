@@ -337,11 +337,11 @@ class Main:
                 dialog('close', background = self.settings.background)
                 dialog('okdialog','' ,self.media_name , __localize__(32030))
             elif self.media_id == '':
-                log('[%s] No ID found, skipping' % self.media_name, xbmc.LOGNOTICE)
+                log('- No ID found, skipping', xbmc.LOGNOTICE)
                 self.failed_items.append('[%s] No ID found, skipping' % self.media_name)
             elif self.mediatype == 'tvshow' and self.media_id.startswith('tt'):
-                log('[%s] IMDB ID found for TV show, skipping' % self.media_name, xbmc.LOGNOTICE)
-                self.failed_items.append('%s: IMDB ID found for TV show, skipping' % self.media_name)
+                log('- IMDB ID found for TV show, skipping', xbmc.LOGNOTICE)
+                self.failed_items.append('[%s]: IMDB ID found for TV show, skipping' % self.media_name)
             
             # If correct ID found continue
             else:
@@ -368,7 +368,7 @@ class Main:
                         except NoFanartError, e:
                             errmsg = 'No artwork found'
                             artwork_result = 'skipping'
-                            self.failed_items.append('%s: No fanart found' %self.media_name)
+                            self.failed_items.append('[%s] No fanart found' %self.media_name)
                         except ItemNotFoundError, e:
                             errmsg = '%s not found' % self.media_id
                             artwork_result = 'skipping'
@@ -399,19 +399,19 @@ class Main:
                         self.download_max = len(self.image_list)
                     # Check for GUI mode
                     if self.mode == 'gui':
-                        log('Using GUI mode')
+                        log('- Using GUI mode')
                         self._gui_mode()
                     elif self.mode == 'custom':
-                        log('Using custom mode')
+                        log('- Using custom mode')
                         self._custom_mode()
                     else:
-                        log('Using bulk mode')
+                        #log('- Using bulk mode')
                         self._download_process()
             self.processeditems = self.processeditems + 1
 
     ### Processes the bulk mode downloading of files
     def _download_process(self):
-        log('Start processing image list')
+        log('- Start processing image list')
         if not self.mode == 'custom':
             self.download_arttypes = []
             for item in self.settings.available_arttypes:
@@ -435,7 +435,7 @@ class Main:
     ### Retrieves imagelist for GUI solo mode
     def _gui_imagelist(self, art_type):
         image_type = art_type
-        log('Retrieving image list for GUI')
+        log('- Retrieving image list for GUI')
         self.gui_imagelist = []
         # do some check for special cases
         if art_type == 'defaultthumb' and self.mediatype == 'tvshow':
@@ -472,7 +472,7 @@ class Main:
             for item in self.image_list:
                 final_image_list.append(item)
         if len(final_image_list) == 0:
-            log('Nothing to download')
+            log('- Nothing to download')
         else:
             for artwork in final_image_list:
                 if image_type ==  artwork['type']:
@@ -521,7 +521,7 @@ class Main:
                             log( "- Ignoring (%s): %s" % ( limited[1], item['filename']) )
                             # Check if artwork doesn't exist and the ones available are below settings
                             for targetdir in item['targetdirs']:
-                                if not self.fileops._exists(os.path.join(targetdir, item['filename']) ) and not item['artwork_type'] == ( 'extrafanart' or 'extrathumbs' ):
+                                if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not item['artwork_type'] == 'extrafanart' or not item['artwork_type'] == 'extrathumbs':
                                     self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,item['artwork_type']) )
                         else:
                             # Always add to list when set to overwrite
@@ -544,14 +544,14 @@ class Main:
             if current_artwork == 0:
                 self.failed_items.append('[%s] No %s found' % (self.media_name,art_type) )
             # Print log message number of found images per art type
-            log('! Found a total of: %s %s' % (current_artwork, art_type) )
+            log('- Found a total of: %s %s' % (current_artwork, art_type) )
 
     def _batch_download(self, image_list):
         log('########################################################')
         if len(image_list) == 0:
-            log('Nothing to download')
+            log('- Nothing to download')
         else:
-            log('Starting download')
+            log('- Starting download')
             # Download artwork that passed the limit check
             for item in image_list:
                 if dialog('iscanceled', background = self.settings.background):
@@ -603,7 +603,7 @@ class Main:
             self.gui_imagelist = False
             
             self._gui_imagelist(self.gui_selected_type)
-            log('Image put to GUI: %s' %self.gui_imagelist)
+            log('- Image put to GUI: %s' %self.gui_imagelist)
         
         # Download the selected image
         if self.gui_imagelist:
@@ -613,12 +613,12 @@ class Main:
                 if not self._download_art_succes:
                     xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
         if not self.gui_imagelist and not self.gui_selected_type == '':
-            log('no artwork')
+            log('- No artwork found')
             xbmcgui.Dialog().ok(self.media_name , self.gui_selected_msg + ' ' + __localize__(32022) )
         elif self._download_art_succes:
-            log('Download succesfull')
+            log('- Download succesfull')
         else:
-            log('cancelled')
+            log('- Cancelled')
             xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
 
     # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
@@ -645,21 +645,21 @@ class Main:
         for item in sys.argv:
             for type in self.settings.available_arttypes:
                 if item == type['art_type'] and self.mediatype == type['media_type']:
-                    log('Custom mode arttype: %s' %type['art_type'])
+                    log('- Custom mode arttype: %s' %type['art_type'])
                     self.download_arttypes.append(item)
 
         # If only one specified
         if len(self.download_arttypes) == 1 and not self.medianame == '':
-            log('Start custom solomode')
+            log('- Start custom solomode')
             for types in self.download_arttypes:
                 gui_arttype = types
             self._gui_imagelist(gui_arttype)
-            log('Number of images: %s' %len(self.gui_imagelist))
+            log('- Number of images: %s' %len(self.gui_imagelist))
             if len(self.gui_imagelist) > 1:
                 self.mode = 'customgui'
-                log('Image list larger than 1')
+                log('- Image list larger than 1')
                 if self._choose_image():
-                    log('Chosen: %s'%self.image_url)
+                    log('- Chosen: %s'%self.image_url)
                     for item in self.settings.available_arttypes:
                         if gui_arttype == item['art_type'] and self.mediatype == item['media_type']:
                             self.gui_selected_type = item['art_type']
@@ -670,17 +670,17 @@ class Main:
                     if not self._download_art_succes:
                         xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
                 if self._download_art_succes:
-                    log('Download succesfull')
+                    log('- Download succesfull')
                 else:
-                    log('cancelled')
+                    log('- Cancelled')
                     xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
             else:
                 self._download_process()
-                log('Debug: More than 1 image available')
+                log('- More than 1 image available')
 
         # If more than one specified
         else:
-            log('Start custom bulkmode')
+            log('- Start custom bulkmode')
             self._download_process()
 
 
