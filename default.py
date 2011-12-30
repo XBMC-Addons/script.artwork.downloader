@@ -522,7 +522,7 @@ class Main:
                             log( "- Ignoring (%s): %s" % ( limited[1], item['filename']) )
                             # Check if artwork doesn't exist and the ones available are below settings
                             for targetdir in item['targetdirs']:
-                                if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not item['artwork_type'] == 'extrafanart' or not item['artwork_type'] == 'extrathumbs':
+                                if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not art_type in ['extrafanart', 'extrathumbs']:
                                     self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,item['artwork_type']) )
                         else:
                             # Always add to list when set to overwrite
