@@ -2,8 +2,6 @@
 import xbmc
 import xbmcaddon
 import os
-import sys
-import platform
 import xbmcgui
 
 #import libraries
@@ -201,13 +199,13 @@ class _settings:
         info['solo_enabled']    = 'false'
         info['gui_string']      = __localize__(32132)
         info['art_type']        = 'discart'
-        info['filename']        = 'cdart.png'
+        info['filename']        = 'disc.png'
         self.available_arttypes.append(info)
 
         info = {}
         info['media_type']      = 'movie'
         info['bulk_enabled']    = self.movie_defaultthumb
-        info['solo_enabled']    = 'true'
+        info['solo_enabled']    = 'false'
         info['gui_string']      = __localize__(32133)
         info['art_type']        = 'defaultthumb'
         info['filename']        = 'folder.jpg'
@@ -316,7 +314,7 @@ class _settings:
         info = {}
         info['media_type']      = 'tvshow'
         info['bulk_enabled']    = self.tvshow_defaultthumb
-        info['solo_enabled']    = 'true'
+        info['solo_enabled']    = 'false'
         info['gui_string']      = __localize__(32133)
         info['art_type']        = 'defaultthumb'
         info['filename']        = 'folder.jpg'
