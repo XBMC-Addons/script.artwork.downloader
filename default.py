@@ -43,7 +43,7 @@ class Main:
     def __init__(self):
         self.initial_vars() 
         self.settings._get()        # Get settings from settings.xml
-        self.settings._get_limit() # Get settings from settings.xml
+        self.settings._get_limit()  # Get settings from settings.xml
         self.settings._check()      # Check if there are some faulty combinations present
         self.settings._initiallog() # Create debug log for settings
         self.settings._vars()       # Get some settings vars
@@ -612,15 +612,15 @@ class Main:
                 self._download_art(self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
                 self._batch_download(self.download_list)
                 if not self._download_art_succes:
-                    xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
+                    dialog('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007) )
         if not self.gui_imagelist and not self.gui_selected_type == '':
             log('- No artwork found')
-            xbmcgui.Dialog().ok(self.media_name , self.gui_selected_msg + ' ' + __localize__(32022) )
+            dialog('okdialog', line1 = self.media_name , line2 = self.gui_selected_msg + ' ' + __localize__(32022) )
         elif self._download_art_succes:
             log('- Download succesfull')
         else:
             log('- Cancelled')
-            xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
+            dialog('okdialog', line1 = __localize__(32017) , line2 =  __localize__(32018) )
 
     # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
     def _choice_type(self):
@@ -669,12 +669,12 @@ class Main:
                     self._download_art(self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
                     self._batch_download(self.download_list)
                     if not self._download_art_succes:
-                        xbmcgui.Dialog().ok(__localize__(32006) , __localize__(32007) )
+                        dialog('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007) )
                 if self._download_art_succes:
                     log('- Download succesfull')
                 else:
                     log('- Cancelled')
-                    xbmcgui.Dialog().ok(__localize__(32017) , __localize__(32018) )
+                    dialog('okdialog', line1 = __localize__(32017) , line2 = __localize__(32018) )
             else:
                 self._download_process()
                 log('- More than 1 image available')
