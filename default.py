@@ -463,14 +463,13 @@ class Main:
         artwork_number = 0
         limit_counter = 0
         final_image_list = []
-        if (self.mode == 'gui' or self.mode == 'customgui') and not art_type == 'extrafanart' and not art_type == 'extrathumbs':
-            artwork = {}
-            artwork['url'] = self.image_url
-            artwork['type'] = image_type
-            final_image_list.append(artwork)
+        if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
+            item = {}
+            item['url']  = self.image_url
+            item['type'] = image_type
+            final_image_list.append(item)
         else:
-            for item in self.image_list:
-                final_image_list.append(item)
+            final_image_list = self.image_list
         if len(final_image_list) == 0:
             log('- Nothing to download')
         else:
@@ -485,31 +484,33 @@ class Main:
 
                     # Create an image info list
                     item = {}
-                    item['url'] = artwork['url']
-                    item['targetdirs'] = targetdirs
-                    item['media_name'] = self.media_name
-                    item['media_type'] = self.mediatype
-                    item['artwork_type'] = art_type
-                    item['artwork_string'] = msg
+                    item['url']             = artwork['url']
+                    item['targetdirs']      = targetdirs
+                    item['media_name']      = self.media_name
+                    item['media_type']      = self.mediatype
+                    item['artwork_type']    = art_type
+                    item['artwork_string']  = msg
                     item['artwork_details'] = artwork
-                    current_artwork = current_artwork + 1
+                    current_artwork         = current_artwork + 1
 
                     # File naming
-                    if item['artwork_type'] == 'extrafanart' and item['media_type'] == 'movie':
+                    if item['artwork_type']     == 'extrafanart' and item['media_type'] == 'movie':
                         item['filename'] = artwork['url'].rsplit('/', 1)[1]
-                    elif item['artwork_type'] == 'extrafanart' and item['media_type'] == 'tvshow':
+                    elif item['artwork_type']   == 'extrafanart' and item['media_type'] == 'tvshow':
                         item['filename'] = ('%s.jpg'% artwork['id'])
-                    elif item['artwork_type'] == 'extrathumbs':
+                    elif item['artwork_type']   == 'extrathumbs':
                         item['filename'] = (filename+'%s.jpg' % str(limit_counter + 1))
-                    elif item['artwork_type'] == 'seasonthumbs' or item['artwork_type'] == 'seasonbanner':
+                    elif item['artwork_type']   == 'seasonthumbs' or item['artwork_type'] == 'seasonbanner':
                         item['filename'] = (filename+'%s.jpg' % artwork['season'])
-                    elif item['artwork_type'] == 'seasonposter':
+                    elif item['artwork_type']   == 'seasonposter':
                         item['filename'] = (filename+'%s.jpg' % artwork['season'])
-                    else: item['filename'] = filename
+                    else:
+                        item['filename'] = filename
 
-                    # Continue 
-                    if (self.mode == 'gui' or self.mode == 'customgui') and not item['artwork_type'] == 'extrafanart' and not item['artwork_type'] == 'extrathumbs':
-                        self.download_list = image_list
+                    # Continue
+                    if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
+                    #if (self.mode == 'gui' or self.mode == 'customgui') and not item['artwork_type'] == 'extrafanart' and not item['artwork_type'] == 'extrathumbs':
+                        self.download_list.append(item)
                     elif image_type == artwork['type']:
                         # Check for set limits
                         limited = self.filters.do_filter( item['artwork_type'], item['media_type'], item['artwork_details'], limit_counter )

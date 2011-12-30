@@ -2,8 +2,6 @@
 import xbmc
 import xbmcaddon
 import os
-import sys
-import platform
 import xbmcgui
 
 #import libraries

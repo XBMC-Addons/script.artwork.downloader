@@ -22,10 +22,10 @@ def _media_listing(media_type):
         if jsonobject['result'].has_key('tvshows'):
             for item in jsonobject['result']['tvshows']:
                 Media = {}
-                Media['name'] = item['label']
-                Media['path'] = _media_path(item['file'])
-                Media['id'] = item['imdbnumber']
-                Media['tvshowid'] = item['tvshowid']
+                Media['name']       = item['label']
+                Media['path']       = media_path(item['file'])
+                Media['id']         = item['imdbnumber']
+                Media['tvshowid']   = item['tvshowid']
                 ### Search for season numbers
                 json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
                 jsonobject_season = simplejson.loads(json_response_season)
@@ -42,19 +42,19 @@ def _media_listing(media_type):
         if jsonobject['result'].has_key('movies'):
             for item in jsonobject['result']['movies']:
                 Media = {}
-                Media['movieid'] = item['movieid']
-                Media['name'] = item['label']
-                Media['year'] = item['year']
-                Media['path'] = _media_path(item['file'])
-                Media['trailer'] = item['trailer']
-                Media['id'] = item['imdbnumber']
+                Media['movieid']    = item['movieid']
+                Media['name']       = item['label']
+                Media['year']       = item['year']
+                Media['path']       = media_path(item['file'])
+                Media['trailer']    = item['trailer']
+                Media['id']         = item['imdbnumber']
                 Medialist.append(Media)
     else:
         log('No JSON results found')
     return Medialist
 
 
-def _media_path(path):
+def media_path(path):
     # Check for stacked movies
     try:
         path = os.path.split(path)[0].rsplit(' , ', 1)[1]
