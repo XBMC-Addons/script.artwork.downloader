@@ -92,14 +92,15 @@ def _getUniq(seq):
 
 # Retrieve JSON data from site
 def _get_json(url):
+    _log('API: %s'% url)
     try:
-        log( 'API: %s'% url )
-        req = urllib2.urlopen( url )
-        log( 'Requested data:%s' % req)
+        request = urllib2.Request(url)
+        request.add_header("Accept", "application/json")
+        req = urllib2.urlopen(request) 
         json_string = req.read()
         req.close()
     except HTTPError, e:
-        if e.code   == 404:
+        if e.code == 404:
             raise HTTP404Error(url)
         elif e.code == 503:
             raise HTTP503Error(url)
