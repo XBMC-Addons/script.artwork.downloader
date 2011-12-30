@@ -15,7 +15,7 @@ class TMDBProvider():
 
     def get_image_list(self, media_id):
         xml_url = self.url % (self.api_key, media_id)
-        log('API: %s ' % xml_url)
+        log('API:               %s ' % xml_url)
         image_list = []
         data = get_xml(xml_url)
         tree = ET.fromstring(data)
@@ -62,7 +62,7 @@ def _search_movie(medianame,year=''):
     api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
     xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/%s/%s+%s' %(api_key,medianame,year)
     tmdb_id = ''
-    log('TMDB API search url: %s ' % xml_url)
+    log('TMDB API search:   %s ' % xml_url)
     try:
         data = get_xml(xml_url)
         tree = ET.fromstring(data)
@@ -72,7 +72,7 @@ def _search_movie(medianame,year=''):
                 log('TMDB API search found ID: %s'%tmdb_id)
                 break
     except:
-        log('Problem getting XML data')
+        log('TMDB API problem getting XML data')
     if tmdb_id == '':
         log('TMDB API search found no ID')
     return tmdb_id

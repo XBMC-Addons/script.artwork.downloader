@@ -17,7 +17,7 @@ class FTV_TVProvider():
     def get_image_list(self, media_id):
         #xml_url = self.url % (self.api_key,media_id)
         xml_url = self.url % (media_id)
-        log('API: %s ' % xml_url)
+        log('API:               %s ' % xml_url)
         image_list = []
         data = get_xml(xml_url)
         tree = ET.fromstring(data)

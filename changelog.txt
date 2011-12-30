@@ -1,6 +1,7 @@
 [B]1.0.4[/B]
-- Fixed: movie defaulthumb followed tvshow setting
+- Fixed: Movie defaulthumb followed tvshow setting
 - Fixed: After doing ID conversion it skipped that movie
+- Fixed: Some mayor bug that no ones has noticed so far
 - Changed: Reverted old change of using image ID from tmdb as filename. This is not available any more in new API v3
 - Added: Extra info to gui dialog
 - Added: Now tries to look up the 'tmdb ID' if no 'imdb ID' is found and retrieves artwork using that
