@@ -2,11 +2,136 @@ from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
 from resources.lib.utils import _normalize_string as normalize
 from resources.lib.utils import _get_xml as get_xml
+from resources.lib.utils import _get_json as get_json
 from resources.lib import language
 from elementtree import ElementTree as ET
 
 
 class TMDBProvider():
+
+    def __init__(self):
+        self.name = 'TMDB'
+        self.api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
+        self.url = "http://api.themoviedb.org/3/movie/%s/images?api_key=%s"
+        self.imageurl = "http://cf2.imgobject.com/t/p/"
+
+    def get_image_list(self, media_id):
+        data = get_json(self.url %(media_id, self.api_key))
+        log('%s' %data)
+        image_list = []
+        # Get fanart
+        for item in data['backdrops']:
+            info = {}
+            info['url'] = self.imageurl + 'original' + item['file_path']    # Original image url
+            info['preview'] = self.imageurl + 'w300' + item['file_path']    # Create a preview url for later use
+            info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
+            info['type'] = 'fanart'                                         # Set standard to 'fanart'
+            info['height'] = item['height']
+            info['width'] = item['width']
+            #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
+            # Convert the 'None' value to default 'en'
+            if not item['iso_639_1']:
+                info['language'] = 'en'
+            else:
+                info['language'] = item['iso_639_1']
+            info['rating'] = 'n/a'                                          # Rating may be integrated at later time
+            print info
+            if info:
+                image_list.append(info)
+        # Get thumbs
+        for item in data['backdrops']:
+            info = {}
+            info['url'] = self.imageurl + 'w780' + item['file_path']    # Original image url
+            info['preview'] = self.imageurl + 'w300' + item['file_path']    # Create a preview url for later use
+            info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
+            info['type'] = 'thumb'                                         # Set standard to 'fanart'
+            info['height'] = item['height']
+            info['width'] = item['width']
+            #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
+            # Convert the 'None' value to default 'en'
+            if not item['iso_639_1']:
+                info['language'] = 'en'
+            else:
+                info['language'] = item['iso_639_1']
+            info['rating'] = 'n/a'                                          # Rating may be integrated at later time
+            print info
+            if info:
+                image_list.append(info)
+        # Get posters
+        for item in data['posters']:
+            info = {}
+            info['url'] = self.imageurl + 'original' + item['file_path']    # Original image url
+            info['preview'] = self.imageurl + 'w185' + item['file_path']    # Create a preview url for later use
+            info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
+            info['type'] = 'poster'                                         # Set standard to 'fanart'
+            info['height'] = item['height']
+            info['width'] = item['width']
+            #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
+            # Convert the 'None' value to default 'en'
+            if not item['iso_639_1']:
+                info['language'] = 'en'
+            else:
+                info['language'] = item['iso_639_1']
+            info['rating'] = 'n/a'                                          # Rating may be integrated at later time
+            print info
+            if info:
+                image_list.append(info)
+        if image_list == []:
+            raise NoFanartError(media_id)
+        else:
+            return image_list
+
+
+def _search_movie(medianame,year=''):
+    medianame = normalize(medianame)
+    log('TMDB API search criteria: Title[''%s''] | Year[''%s'']' % (medianame,year) )
+    illegal_char = ' -<>:"/\|?*%'
+    for char in illegal_char:
+        medianame = medianame.replace( char , '+' ).replace( '++', '+' ).replace( '+++', '+' )
+    api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
+    json_url = 'http://api.themoviedb.org/3/search/movie?query=%s+%s&api_key=%s' %( medianame, year, api_key )
+    tmdb_id = ''
+    log('TMDB API search:   %s ' % json_url)
+    try:
+        data = get_json(json_url)
+        for item in data['results']:
+            if item['id']:
+                tmdb_id = item['id']
+                break
+    except:
+        log('TMDB API problem getting JSON data')
+    if tmdb_id == '':
+        log('TMDB API search found no ID')
+    return tmdb_id
+
+
+def _search_movie_old(medianame,year=''):
+    medianame = normalize(medianame)
+    log('TMDB API search criteria: Title[''%s''] | Year[''%s'']' % (medianame,year) )
+    illegal_char = ' -<>:"/\|?*%'
+    for char in illegal_char:
+        medianame = medianame.replace( char , '+' ).replace( '++', '+' ).replace( '+++', '+' )
+    api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
+    xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/%s/%s+%s' %(api_key,medianame,year)
+    tmdb_id = ''
+    log('TMDB API search:   %s ' % xml_url)
+    try:
+        data = get_xml(xml_url)
+        tree = ET.fromstring(data)
+        for item in tree.getiterator():
+            if item.findtext('id'):
+                tmdb_id = item.findtext('id')
+                log('TMDB API search found ID: %s'%tmdb_id)
+                break
+    except:
+        log('TMDB API problem getting XML data')
+    if tmdb_id == '':
+        log('TMDB API search found no ID')
+    return tmdb_id
+
+
+
+class TMDBProvider_old():
 
     def __init__(self):
         self.name = 'TMDB'
@@ -52,27 +177,3 @@ class TMDBProvider():
                 raise NoFanartError(media_id)
             else:
                 return image_list
-
-def _search_movie(medianame,year=''):
-    medianame = normalize(medianame)
-    log('TMDB API search criteria: Title[''%s''] | Year[''%s'']' % (medianame,year) )
-    illegal_char = ' -<>:"/\|?*%'
-    for char in illegal_char:
-        medianame = medianame.replace( char , '+' ).replace( '++', '+' ).replace( '+++', '+' )
-    api_key = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
-    xml_url = 'http://api.themoviedb.org/2.1/Movie.search/en/xml/%s/%s+%s' %(api_key,medianame,year)
-    tmdb_id = ''
-    log('TMDB API search:   %s ' % xml_url)
-    try:
-        data = get_xml(xml_url)
-        tree = ET.fromstring(data)
-        for item in tree.getiterator():
-            if item.findtext('id'):
-                tmdb_id = item.findtext('id')
-                log('TMDB API search found ID: %s'%tmdb_id)
-                break
-    except:
-        log('TMDB API problem getting XML data')
-    if tmdb_id == '':
-        log('TMDB API search found no ID')
-    return tmdb_id
