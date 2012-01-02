@@ -19,7 +19,6 @@ dialog = xbmcgui.DialogProgress()
 __addon__           = xbmcaddon.Addon()
 __addonid__         = __addon__.getAddonInfo('id')
 __addonname__       = __addon__.getAddonInfo('name')
-__addonversion__    = __addon__.getAddonInfo('version')
 __icon__            = __addon__.getAddonInfo('icon')
 __localize__        = __addon__.getLocalizedString
 
@@ -42,14 +41,14 @@ def _normalize_string( text ):
 # Define log messages
 def _log(txt, severity=xbmc.LOGDEBUG):
     try:
-        message = ('Artwork Downloader: %s' % txt)
+        message = ('%s: %s' % (__addonname__,txt) )
         xbmc.log(msg=message, level=severity)
     except UnicodeEncodeError:
         try:
-            message = _normalize_string('Artwork Downloader: %s' % txt)
+            message = _normalize_string('%s: %s' % (__addonname__,txt) )
             xbmc.log(msg=message, level=severity)
         except:
-            message = ('Artwork Downloader: UnicodeEncodeError')
+            message = ('%s: UnicodeEncodeError' %__addonname__)
             xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
 # Define dialogs
