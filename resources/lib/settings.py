@@ -85,7 +85,7 @@ class _settings:
         self.failcount                  = 0
         self.failthreshold              = 3
         self.xmlfailthreshold           = 5
-        self.api_timedelay              = 5
+        self.api_timedelay              = 5000  #msec
         self.mediatype                  = ''
         self.medianame                  = ''
 

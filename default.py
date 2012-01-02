@@ -1,7 +1,6 @@
 #import modules
 import re
 import os
-import time
 import sys
 import xbmc
 import xbmcaddon
@@ -355,7 +354,7 @@ class Main:
                     xmlfailcount = 0
                     while not artwork_result == 'pass' and not artwork_result == 'skipping':
                         if artwork_result == 'retrying':
-                            time.sleep(self.settings.api_timedelay)
+                            xbmc.sleep(self.settings.api_timedelay)
                         try:
                             self.temp_image_list = self.provider.get_image_list(self.media_id)
                         except HTTP404Error, e:
