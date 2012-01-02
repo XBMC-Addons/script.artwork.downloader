@@ -6,6 +6,16 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 
+### get addon info
+__addon__       = xbmcaddon.Addon()
+__addonid__     = __addon__.getAddonInfo('id')
+__addonname__   = __addon__.getAddonInfo('name')
+__author__      = __addon__.getAddonInfo('author')
+__version__     = __addon__.getAddonInfo('version')
+__addonpath__   = __addon__.getAddonInfo('path')
+__icon__        = __addon__.getAddonInfo('icon')
+__localize__    = __addon__.getLocalizedString
+
 #import libraries
 from resources.lib import utils
 from resources.lib.utils import _log as log
@@ -39,4 +49,6 @@ def autostart():
                         xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
                     else:
                         log('Addon already running, scheduled run aborted', xbmc.LOGNOTICE)
-autostart()
+
+if (__name__ == "__main__"):
+    autostart()

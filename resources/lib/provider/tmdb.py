@@ -1,3 +1,4 @@
+### import libraries
 from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
 from resources.lib.utils import _normalize_string as normalize

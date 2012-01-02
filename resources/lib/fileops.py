@@ -1,8 +1,11 @@
+#import modules
 import os
 import socket
 import urllib2
 import xbmc
 import xbmcvfs
+
+### import libraries
 from traceback import print_exc
 from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError

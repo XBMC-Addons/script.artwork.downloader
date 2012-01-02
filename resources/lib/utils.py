@@ -1,3 +1,4 @@
+#import modules
 import socket
 import xbmc
 import xbmcgui
@@ -5,6 +6,17 @@ import xbmcaddon
 import unicodedata
 import simplejson
 import urllib2
+import sys
+
+### get addon info
+__addon__       = ( sys.modules[ "__main__" ].__addon__ )
+__addonid__     = ( sys.modules[ "__main__" ].__addonid__ )
+__addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
+__icon__        = ( sys.modules[ "__main__" ].__icon__ )
+__localize__    = ( sys.modules[ "__main__" ].__localize__ )
+__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
+
+### import libraries
 from urllib2 import HTTPError, URLError, urlopen
 from resources.lib.script_exceptions import *
 #HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
@@ -14,13 +26,6 @@ timeout = 20
 socket.setdefaulttimeout(timeout)
 ### Declare dialog
 dialog = xbmcgui.DialogProgress()
-
-### get addon info
-__addon__           = xbmcaddon.Addon()
-__addonid__         = __addon__.getAddonInfo('id')
-__addonname__       = __addon__.getAddonInfo('name')
-__icon__            = __addon__.getAddonInfo('icon')
-__localize__        = __addon__.getLocalizedString
 
 
 # Fixes unicode problems

@@ -1,3 +1,4 @@
+#import modules
 import xbmc
 
 def get_abbrev():

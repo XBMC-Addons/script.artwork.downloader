@@ -7,9 +7,19 @@ import xbmcaddon
 import platform
 import xbmcgui
 import urllib
-from traceback import print_exc
+
+### get addon info
+__addon__       = xbmcaddon.Addon()
+__addonid__     = __addon__.getAddonInfo('id')
+__addonname__   = __addon__.getAddonInfo('name')
+__author__      = __addon__.getAddonInfo('author')
+__version__     = __addon__.getAddonInfo('version')
+__addonpath__   = __addon__.getAddonInfo('path')
+__icon__        = __addon__.getAddonInfo('icon')
+__localize__    = __addon__.getLocalizedString
 
 ### import libraries
+from traceback import print_exc
 from resources.lib import language
 from resources.lib import media_setup
 from resources.lib import provider
@@ -23,14 +33,8 @@ from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import _settings
 from resources.lib.media_setup import _media_listing as media_listing
 from xml.parsers.expat import ExpatError
-### get addon info
-__addon__       = xbmcaddon.Addon()
-__addonid__     = __addon__.getAddonInfo('id')
-__addonname__   = __addon__.getAddonInfo('name')
-__author__      = __addon__.getAddonInfo('author')
-__version__     = __addon__.getAddonInfo('version')
-__localize__    = __addon__.getLocalizedString
-__addonpath__   = __addon__.getAddonInfo('path')
+
+### get abbreviation
 __language__    = language.get_abbrev()
 
 ### set button actions for GUI

@@ -1,3 +1,4 @@
+#import libraries
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import _log as log
 from resources.lib.utils import _get_xml as get_xml

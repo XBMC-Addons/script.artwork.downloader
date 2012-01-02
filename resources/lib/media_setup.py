@@ -1,14 +1,16 @@
+#import modules
 import os
 import xbmc
 import urllib
 import simplejson
+
+### import libraries
 from resources.lib.utils import _normalize_string as normalize_string
 from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
 from resources.lib.settings import _settings
+
 ### get list of all tvshows and movies with their imdbnumber from library
-
-
 # Retrieve JSON list
 def _media_listing(media_type):
     settings = _settings()

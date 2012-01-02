@@ -1,10 +1,14 @@
+#import modules
 import xbmc
 import xbmcaddon
+
+### import libraries
 from resources.lib.fileops import fileops
 from resources.lib.settings import _settings
 from resources.lib import language
 from resources.lib.utils import _log as log
 
+### get abbreviation
 __language__ = language.get_abbrev()
 
 class apply_filters:

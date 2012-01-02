@@ -3,27 +3,29 @@ import xbmc
 import xbmcaddon
 import os
 import xbmcgui
+import sys
+
+### get addon info
+__addon__       = xbmcaddon.Addon('script.artwork.downloader')
+__addonid__     = ( sys.modules[ "__main__" ].__addonid__ )
+__addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
+__author__      = ( sys.modules[ "__main__" ].__author__ )
+__version__     = ( sys.modules[ "__main__" ].__version__ )
+__localize__    = ( sys.modules[ "__main__" ].__localize__ )
+__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
+settings_file   = os.path.join(__addondir__, "settings.xml")
 
 #import libraries
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
 from resources.lib import language
 
-
-### get addon info
-__addon__       = xbmcaddon.Addon('script.artwork.downloader')
-__addonid__     = __addon__.getAddonInfo('id')
-__addonname__   = __addon__.getAddonInfo('name')
-__author__      = __addon__.getAddonInfo('author')
-__version__     = __addon__.getAddonInfo('version')
-__localize__    = __addon__.getLocalizedString
+### get abbreviation
 __language__    = language.get_abbrev()
-__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
-settings_file   = os.path.join(__addondir__, "settings.xml")
 
-
+### Get settings from settings.xml
 class _settings:
-    ### Get settings from settings.xml
+    ### Initial artwork vars
     def _get(self):
         self.movie_enable           = __addon__.getSetting("movie_enable") == 'true'
         self.movie_poster           = __addon__.getSetting("movie_poster") == 'true'
@@ -66,6 +68,7 @@ class _settings:
         self.tvshow_seasonbanner    = False
         self.tvshow_seasonthumbs    = False
 
+    ### Initial limit vars
     def _get_limit(self):    
         self.limit_artwork              = __addon__.getSetting("limit_artwork") == 'true'
         self.limit_extrafanart_max      = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
