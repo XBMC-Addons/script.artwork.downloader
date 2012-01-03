@@ -36,7 +36,6 @@ class TMDBProvider():
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
-            print info
             if info:
                 image_list.append(info)
         # Get thumbs
@@ -55,7 +54,6 @@ class TMDBProvider():
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
-            print info
             if info:
                 image_list.append(info)
         # Get posters
@@ -74,7 +72,6 @@ class TMDBProvider():
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
-            print info
             if info:
                 image_list.append(info)
         if image_list == []:
