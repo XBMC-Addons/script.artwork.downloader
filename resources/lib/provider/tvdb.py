@@ -61,7 +61,7 @@ class TVDBProvider():
 
                 # find image ratings
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
-                    info['rating'] = float(image.findtext('Rating'))
+                    info['rating'] = float( "%.1f" % float( image.findtext('Rating')) ) #output string with one decimal
                 else:
                     info['rating'] = 0
 
