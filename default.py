@@ -718,7 +718,7 @@ class Main:
             log('- Start custom bulkmode')
             self._download_process()
 
-
+    # Return the selected url to the GUI part
     def _choose_image(self):
         log( "### image list: %s" % self.gui_imagelist)
         self.image_url = self.MyDialog(self.gui_imagelist)
@@ -727,10 +727,16 @@ class Main:
         else:
             return False
 
+    # Pass the imagelist to the dialog and return the selection
     def MyDialog(self, image_list):
         w = MainGui( "DialogSelect.xml", __addonpath__, listing=image_list )
         w.doModal()
-        try: return w.selected_url
+        try:
+            # Go through the image list and match the chooosen image id and return the image url
+            for item in image_list:
+                if w.selected_id == item['id']:
+                    selected_url = item['url']
+            return selected_url
         except: 
             print_exc()
             return False
@@ -758,8 +764,8 @@ class MainGui( xbmcgui.WindowXMLDialog ):
 
         for image in self.listing:
             listitem = xbmcgui.ListItem( '%s' %(image['generalinfo']) )
-            listitem.setIconImage( image['url'] )
-            listitem.setLabel2( image['url'] )
+            listitem.setIconImage( image['preview'] )
+            listitem.setLabel2( image['id'] )
             self.img_list.addItem( listitem )
         self.setFocus(self.img_list)
 
@@ -773,7 +779,8 @@ class MainGui( xbmcgui.WindowXMLDialog ):
         if controlID == 6 or controlID == 3: 
             num = self.img_list.getSelectedPosition()
             log( "# GUI position: %s" % num )
-            self.selected_url = self.img_list.getSelectedItem().getLabel2()
+            self.selected_id = self.img_list.getSelectedItem().getLabel2()
+            log( "# GUI selected image ID: %s" % self.selected_id )
             self.close()
 
     def onFocus(self, controlID):
