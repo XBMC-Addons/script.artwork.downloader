@@ -55,7 +55,6 @@ def _media_listing(media_type):
 
     elif media_type == 'musicvideo':
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre"], "sort": { "method": "album" } }, "id": 1}')
-        print json_response
         json_response = unicode(json_response,'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_response)
         if jsonobject['result'].has_key('musicvideos'):
