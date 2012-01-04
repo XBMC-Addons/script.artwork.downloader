@@ -298,6 +298,7 @@ class Main:
         log('Retrieving fanart for: %s' % itemname)
         # Search through the media lists for match
         for currentitem in self.Medialist:
+            # Check on exact match
             if itemname == currentitem["name"]:
                 # Check on exact path match when provided
                 if itempath == currentitem['path'] or itempath == '':
@@ -305,6 +306,9 @@ class Main:
                     self.Medialist.append(currentitem)
                 else:
                     self.Medialist = []
+            # Empty medialist to prevent running through all media
+            else:
+                self.Medialist = []
         if itemtype == 'movie':
             self.download_artwork(self.Medialist, self.movie_providers)
         elif itemtype == 'tvshow':
