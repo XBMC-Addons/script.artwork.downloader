@@ -50,7 +50,13 @@ class _settings:
         self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart") == 'true'
         self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb") == 'true'
         self.tvshow_defaultthumb_type    = __addon__.getSetting("tvshow_defaultthumb_type")
-        
+
+        self.musicvideo_enable      = __addon__.getSetting("musicvideo_enable") == 'true'
+        self.musicvideo_poster      = __addon__.getSetting("musicvideo_poster") == 'true'
+        self.musicvideo_fanart      = __addon__.getSetting("musicvideo_fanart") == 'true'
+        self.musicvideo_extrafanart = __addon__.getSetting("musicvideo_extrafanart") == 'true'
+        self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs") == 'true'
+
         self.centralize_enable      = __addon__.getSetting("centralize_enable") == 'true'
         self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
@@ -127,6 +133,12 @@ class _settings:
         log('## - Show Characterart     = %s' % str(self.tvshow_characterart))
         log('## - Default Thumb         = %s' % str(self.tvshow_defaultthumb))
         log('## - Default Thumb Type    = %s' % str(self.tvshow_defaultthumb_type))
+        log('##')
+        log('## Musicvideo Artwork      = %s' % str(self.musicvideo_enable))
+        log('## - Poster                = %s' % str(self.musicvideo_poster))
+        log('## - Fanart                = %s' % str(self.musicvideo_fanart))
+        log('## - ExtraFanart           = %s' % str(self.musicvideo_extrafanart))
+        log('## - ExtraThumbs           = %s' % str(self.musicvideo_extrathumbs))
         log('##')
         log('## Centralize Extrafanart  = %s' % str(self.centralize_enable))
         log('## - Movies Folder         = %s' % str(self.centralfolder_movies))
@@ -323,12 +335,49 @@ class _settings:
         info['filename']        = 'folder.jpg'
         self.available_arttypes.append(info)
 
+        # Musicvideo
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_poster
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32128)
+        info['art_type']        = 'poster'
+        info['filename']        = 'poster.jpg'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_fanart 
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32121)
+        info['art_type']        = 'fanart'
+        info['filename']        = 'fanart.jpg'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_extrafanart
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32122)
+        info['art_type']        = 'extrafanart'
+        info['filename']        = ''
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_extrathumbs
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32131)
+        info['art_type']        = 'extrathumbs'
+        info['filename']        = 'thumb'
+        self.available_arttypes.append(info)
+
     ### Check for faulty setting combinations
     def _check(self):
         settings_faulty = True
         while settings_faulty:
             settings_faulty = True
-            check_movie = check_tvshow = check_centralize = True
+            check_movie = check_tvshow = check_musicvideo = check_centralize = True
             # re-check settings after posible change
             self._get()
             # Check if faulty setting in movie section
@@ -343,6 +392,12 @@ class _settings:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True
+            # Check if faulty setting in musicvideo section
+            if self.musicvideo_enable:
+                if not self.musicvideo_fanart and not self.musicvideo_extrafanart and not self.musicvideo_extrathumbs and not self.musicvideo_poster:
+                    check_musicvideo = False
+                    log('Setting check: No subsetting of musicvideo enabled')
+                else: check_musicvideo = True
             # Check if faulty setting in centralize section
             if self.centralize_enable:
                 if self.centralfolder_movies == '' and self.centralfolder_tvshows == '':
@@ -350,7 +405,7 @@ class _settings:
                     log('Setting check: No centralized folder chosen')
                 else: check_centralize = True
             # Compare all setting check
-            if check_movie and check_tvshow and check_centralize:
+            if check_movie and check_tvshow and check_musicvideo and check_centralize:
                 settings_faulty = False
             else: settings_faulty = True
             # Faulty setting found

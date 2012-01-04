@@ -37,6 +37,7 @@ def _media_listing(media_type):
                     Media['seasonstart'] = limits['start']
                     Media['seasonend'] = limits['end']
                 Medialist.append(Media)
+
     elif media_type == 'movie':
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer"], "sort": { "method": "label" } }, "id": 1}')
         json_response = unicode(json_response,'utf-8', errors='ignore')
@@ -50,6 +51,25 @@ def _media_listing(media_type):
                 Media['path']       = media_path(item['file'])
                 Media['trailer']    = item['trailer']
                 Media['id']         = item['imdbnumber']
+                Medialist.append(Media)
+
+    elif media_type == 'musicvideo':
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre"], "sort": { "method": "album" } }, "id": 1}')
+        print json_response
+        json_response = unicode(json_response,'utf-8', errors='ignore')
+        jsonobject = simplejson.loads(json_response)
+        if jsonobject['result'].has_key('musicvideos'):
+            for item in jsonobject['result']['musicvideos']:
+                Media = {}
+                Media['id']         = ''
+                Media['movieid']    = item['musicvideoid']
+                Media['name']       = item['label']
+                Media['artist']     = item['artist']
+                Media['album']      = item['album']
+                Media['track']      = item['track']
+                Media['runtime']    = item['runtime']
+                Media['year']       = item['year']
+                Media['path']       = media_path(item['file'])
                 Medialist.append(Media)
     else:
         log('No JSON results found')

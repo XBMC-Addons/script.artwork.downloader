@@ -67,8 +67,8 @@
         <string id="32083">Choose what type to use for default thumb:</string>
 
     <!-- Add-on settings: Music section id=32091 to 32100 -->
-        <string id="32091">Music</string>
-        <string id="32092">[B]Options for downloading Music artwork[/B]</string>
+        <string id="32091">Musicvideo</string>
+        <string id="32092">[B]Options for downloading Musicvideo artwork[/B]</string>
 
     <!-- Add-on settings: Advanced settings section id=32101 to 32020 -->   
         <string id="32101">Advanced</string>

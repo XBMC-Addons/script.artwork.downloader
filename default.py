@@ -78,17 +78,26 @@ class Main:
                 # No medianame specified
                 else:
                     if self.mediatype == 'movie':
-                        self.Medialist = media_listing('movie')
                         log("Bulk mode: movie")
+                        self.Medialist = media_listing('movie')
                         self.settings.movie_enable = 'true'
                         self.settings.tvshow_enable = 'false'
+                        self.settings.musicvideo_enable = 'false'
                         self.download_artwork(self.Medialist, self.movie_providers)
                     elif self.mediatype == 'tvshow':
+                        log("Bulk mode: TV Shows")
                         self.settings.movie_enable = 'false'
                         self.settings.tvshow_enable = 'true'
+                        self.settings.musicvideo_enable = 'false'
                         self.Medialist = media_listing('tvshow')
-                        log("Bulk mode: TV Shows")
                         self.download_artwork(self.Medialist, self.tv_providers)
+                    elif self.mediatype == 'musicvideo':
+                        log("Bulk mode: musicvideo")
+                        self.Medialist = media_listing('musicvideo')
+                        self.settings.movie_enable = 'false'
+                        self.settings.tvshow_enable = 'false'
+                        self.settings.musicvideo_enable = 'true'
+                        self.download_artwork(self.Medialist, self.musicvideo_providers)
                     if not dialog('iscanceled', background = self.settings.background):
                         self._batch_download(self.download_list)
             # No mediatype is specified
@@ -97,6 +106,8 @@ class Main:
                 if self.mode == 'custom':
                     self.settings.movie_enable = True
                     self.settings.tvshow_enable = True
+                    self.settings.musicvideo_enable = True
+                
                 # Normal oprations check
                 if self.settings.movie_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('movie')
@@ -104,12 +115,20 @@ class Main:
                     self.download_artwork(self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
+                
                 if self.settings.tvshow_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('tvshow')
                     self.mediatype = 'tvshow'
                     self.download_artwork(self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
+                
+                if self.settings.musicvideo_enable and not dialog('iscanceled', background = True):
+                    self.Medialist = media_listing('musicvideo')
+                    self.mediatype = 'musicvideo'
+                    self.download_artwork(self.Medialist, self.musicvideo_providers)
+                else:
+                    log('Musicvideo fanart disabled, skipping', xbmc.LOGINFO)
                 if not dialog('iscanceled', background = self.settings.background):
                     self._batch_download(self.download_list)
         else:
@@ -126,6 +145,7 @@ class Main:
         self.filters = apply_filters()
         self.movie_providers = providers['movie_providers']
         self.tv_providers = providers['tv_providers']
+        self.musicvideo_providers = providers['musicvideo_providers']
         self.download_counter = {}
         self.download_counter['Total Artwork'] = 0
         self.mediatype = ''
@@ -167,10 +187,10 @@ class Main:
             match = re.search("mediatype=(.*)" , item)
             if match:
                 self.mediatype = match.group(1)
-                if self.mediatype == 'tvshow' or self.mediatype == 'movie':
+                if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'musicvideo':
                     pass
                 else:
-                    log('Error: invalid mediatype, must be one of movie, tvshow or music', xbmc.LOGERROR)
+                    log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
                     return False
             # Check for medianame
             match = re.search("medianame=(.*)" , item)
@@ -269,8 +289,11 @@ class Main:
         elif itemtype == 'tvshow':
             self.Medialist = media_listing('tvshow')
             log("## Solo mode: TV Show...")
+        elif itemtype == 'musicvideo':
+            self.Medialist = media_listing('musicvideo')
+            log("## Solo mode: Musicvideo...")
         else:
-            log("Error: type must be one of 'movie', 'tvshow', aborting", xbmc.LOGERROR)
+            log("Error: type must be one of 'movie', 'tvshow', 'musicvideo'...... aborting", xbmc.LOGERROR)
             return False
         log('Retrieving fanart for: %s' % itemname)
         # Search through the media lists for match
@@ -286,6 +309,8 @@ class Main:
             self.download_artwork(self.Medialist, self.movie_providers)
         elif itemtype == 'tvshow':
             self.download_artwork(self.Medialist, self.tv_providers)
+        elif itemtype == 'musicvideo':
+            self.download_artwork(self.Medialist, self.musicvideo_providers)
 
 
     ### download media fanart
@@ -309,14 +334,14 @@ class Main:
             log('########################################################')
             log('Processing media:  %s' % self.media_name, xbmc.LOGNOTICE)
             # do some id conversions 
-            if self.mediatype == 'movie' and self.media_id == '':
+            if not self.mediatype == 'tvshow' and self.media_id == '':
                 self.media_id = tmdb._search_movie(self.media_name,currentmedia["year"])
             elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
                 self.media_id_old = self.media_id
                 self.media_id = "tt%.7d" % int(self.media_id)
                 log('No IMDB ID found, try ID conversion: %s -> %s' % (self.media_id_old,self.media_id), xbmc.LOGNOTICE)
             log('Provider ID:       %s' % self.media_id)
-            log('Movie path:        %s' % self.media_path)
+            log('Media path:        %s' % self.media_path)
             # Declare the target folders
             self.target_extrafanartdirs = []
             self.target_extrathumbsdirs = []
@@ -422,10 +447,10 @@ class Main:
                     self.download_arttypes.append(item['art_type'])
 
         for item in self.settings.available_arttypes:
-            if item['art_type'] in self.download_arttypes and ((self.settings.movie_enable and self.mediatype == item['media_type']) or (self.settings.tvshow_enable and self.mediatype == item['media_type'])):
+            if item['art_type'] in self.download_arttypes and ((self.settings.movie_enable and self.mediatype == item['media_type']) or (self.settings.tvshow_enable and self.mediatype == item['media_type']) or (self.settings.musicvideo_enable and self.mediatype == item['media_type']) ):
                 if item['art_type'] == 'extrafanart':
                     self._download_art(item['art_type'], 'fanart', item['filename'], self.target_extrafanartdirs,  item['gui_string'])
-                elif item['art_type'] == 'defaultthumb' and self.mediatype == 'movie':
+                elif item['art_type'] == 'defaultthumb' and not self.mediatype == 'tvshow':
                     self._download_art(item['art_type'], 'poster', item['filename'], self.target_artworkdir,  item['gui_string'])    
                 elif item['art_type'] == 'defaultthumb' and self.mediatype == 'tvshow':
                     self._download_art(item['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), item['filename'], self.target_artworkdir,  item['gui_string'])
@@ -497,7 +522,7 @@ class Main:
                     current_artwork         = current_artwork + 1
 
                     # File naming
-                    if item['artwork_type']     == 'extrafanart' and item['media_type'] == 'movie':
+                    if item['artwork_type']     == 'extrafanart' and not item['media_type'] == 'tvshow':
                         item['filename'] = artwork['url'].rsplit('/', 1)[1]
                     elif item['artwork_type']   == 'extrafanart' and item['media_type'] == 'tvshow':
                         item['filename'] = ('%s.jpg'% artwork['id'])
