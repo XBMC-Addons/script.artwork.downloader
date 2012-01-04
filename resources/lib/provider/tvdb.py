@@ -74,7 +74,10 @@ class TVDBProvider():
                     else:
                         info['season'] = str(seasonxx)
                 else:
-                    info['season'] = 'NA'
+                    info['season'] = 'n/a'
+                
+                # Create Gui string to display
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Season: %s   ' %(info['language'], info['rating'], info['season'])
             if info:
                 image_list.append(info)
         if image_list == []:

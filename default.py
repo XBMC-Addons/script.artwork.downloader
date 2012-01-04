@@ -757,7 +757,7 @@ class MainGui( xbmcgui.WindowXMLDialog ):
         self.getControl(1).setLabel(__localize__(32015))
 
         for image in self.listing:
-            listitem = xbmcgui.ListItem( 'Language: %s  -  Rating: %s' %(image['language'],image['rating']) )
+            listitem = xbmcgui.ListItem( '%s' %(image['generalinfo']) )
             listitem.setIconImage( image['url'] )
             listitem.setLabel2( image['url'] )
             self.img_list.addItem( listitem )
