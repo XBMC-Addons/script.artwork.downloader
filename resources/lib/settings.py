@@ -12,7 +12,7 @@ __addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
 __author__      = ( sys.modules[ "__main__" ].__author__ )
 __version__     = ( sys.modules[ "__main__" ].__version__ )
 __localize__    = ( sys.modules[ "__main__" ].__localize__ )
-__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
+__addondir__    = ( sys.modules[ "__main__" ].__addondir__ )
 settings_file   = os.path.join(__addondir__, "settings.xml")
 
 #import libraries
@@ -27,47 +27,47 @@ __language__    = language.get_abbrev()
 class _settings:
     ### Initial artwork vars
     def _get(self):
-        self.movie_enable           = __addon__.getSetting("movie_enable") == 'true'
-        self.movie_poster           = __addon__.getSetting("movie_poster") == 'true'
-        self.movie_fanart           = __addon__.getSetting("movie_fanart") == 'true'
-        self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart") == 'true'
-        self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs") == 'true'
-        self.movie_logo             = __addon__.getSetting("movie_logo") == 'true'
-        self.movie_discart          = __addon__.getSetting("movie_discart") == 'true'
-        self.movie_defaultthumb     = __addon__.getSetting("movie_defaultthumb") == 'true'
+        self.movie_enable           = __addon__.getSetting("movie_enable")          == 'true'
+        self.movie_poster           = __addon__.getSetting("movie_poster")          == 'true'
+        self.movie_fanart           = __addon__.getSetting("movie_fanart")          == 'true'
+        self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart")     == 'true'
+        self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs")     == 'true'
+        self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
+        self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
+        self.movie_defaultthumb     = __addon__.getSetting("movie_defaultthumb")    == 'true'
 
-        self.tvshow_enable          = __addon__.getSetting("tvshow_enable") == 'true'
-        self.tvshow_poster          = __addon__.getSetting("tvshow_poster") == 'true'
-        self.tvshow_seasonposter    = __addon__.getSetting("tvshow_seasonposter") == 'true'
-        self.tvshow_fanart          = __addon__.getSetting("tvshow_fanart") == 'true'
-        self.tvshow_extrafanart     = __addon__.getSetting("tvshow_extrafanart") == 'true'
-        self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart") == 'true'
-        self.tvshow_logo            = __addon__.getSetting("tvshow_logo") == 'true'
-        self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb") == 'true'
-        self.tvshow_seasonthumbs    = __addon__.getSetting("tvshow_seasonthumbs") == 'true'
-        self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner") == 'true'
-        self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner") == 'true'
-        self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart") == 'true'
-        self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb") == 'true'
+        self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
+        self.tvshow_poster          = __addon__.getSetting("tvshow_poster")         == 'true'
+        self.tvshow_seasonposter    = __addon__.getSetting("tvshow_seasonposter")   == 'true'
+        self.tvshow_fanart          = __addon__.getSetting("tvshow_fanart")         == 'true'
+        self.tvshow_extrafanart     = __addon__.getSetting("tvshow_extrafanart")    == 'true'
+        self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart")       == 'true'
+        self.tvshow_logo            = __addon__.getSetting("tvshow_logo")           == 'true'
+        self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb")          == 'true'
+        self.tvshow_seasonthumbs    = __addon__.getSetting("tvshow_seasonthumbs")   == 'true'
+        self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner")     == 'true'
+        self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner")   == 'true'
+        self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart")   == 'true'
+        self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb")   == 'true'
         self.tvshow_defaultthumb_type    = __addon__.getSetting("tvshow_defaultthumb_type")
 
-        self.musicvideo_enable      = __addon__.getSetting("musicvideo_enable") == 'true'
-        self.musicvideo_poster      = __addon__.getSetting("musicvideo_poster") == 'true'
-        self.musicvideo_fanart      = __addon__.getSetting("musicvideo_fanart") == 'true'
-        self.musicvideo_extrafanart = __addon__.getSetting("musicvideo_extrafanart") == 'true'
-        self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs") == 'true'
+        self.musicvideo_enable      = __addon__.getSetting("musicvideo_enable")     == 'true'
+        self.musicvideo_poster      = __addon__.getSetting("musicvideo_poster")     == 'true'
+        self.musicvideo_fanart      = __addon__.getSetting("musicvideo_fanart")     == 'true'
+        self.musicvideo_extrafanart = __addon__.getSetting("musicvideo_extrafanart")== 'true'
+        self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs")== 'true'
 
-        self.centralize_enable      = __addon__.getSetting("centralize_enable") == 'true'
+        self.centralize_enable      = __addon__.getSetting("centralize_enable")     == 'true'
         self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
 
-        self.background             = __addon__.getSetting("background") == 'true'
-        self.notify                 = __addon__.getSetting("notify") == 'true'
-        self.service_startup        = __addon__.getSetting("service_startup") == 'true'
-        self.service_enable         = __addon__.getSetting("service_enable") == 'true'
+        self.background             = __addon__.getSetting("background")            == 'true'
+        self.notify                 = __addon__.getSetting("notify")                == 'true'
+        self.service_startup        = __addon__.getSetting("service_startup")       == 'true'
+        self.service_enable         = __addon__.getSetting("service_enable")        == 'true'
         self.service_runtime        = __addon__.getSetting("service_runtime")
-        self.files_overwrite        = __addon__.getSetting("files_overwrite") == 'true'
-        self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
+        self.files_overwrite        = __addon__.getSetting("files_overwrite")       == 'true'
+        self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled")  == 'true'
 
         # temporary force these to false
         self.tvshow_seasonposter    = False
