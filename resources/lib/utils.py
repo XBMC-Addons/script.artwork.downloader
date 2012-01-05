@@ -145,3 +145,19 @@ def _clean_filename( filename ):
     for char in illegal_char:
         filename = filename.replace( char , '' )
     return filename
+    
+def _save_nfo_file( data, target ):
+    try:
+        # open source path for writing
+        file_object = open( target.encode( "utf-8" ), "w" )
+        # write xmlSource
+        file_object.write( data.encode( "utf-8" ) )
+        # close file object
+        file_object.close()
+        # return successful
+        return True
+    except Exception, e:
+        # oops, notify user what error occurred
+        log( str( e ), xbmc.LOGERROR )
+        # return failed
+        return False

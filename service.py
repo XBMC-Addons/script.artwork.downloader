@@ -15,6 +15,7 @@ __version__     = __addon__.getAddonInfo('version')
 __addonpath__   = __addon__.getAddonInfo('path')
 __icon__        = __addon__.getAddonInfo('icon')
 __localize__    = __addon__.getLocalizedString
+__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 
 #import libraries
 from resources.lib import utils

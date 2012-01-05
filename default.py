@@ -7,6 +7,7 @@ import xbmcaddon
 import platform
 import xbmcgui
 import urllib
+import time
 
 ### get addon info
 __addon__       = xbmcaddon.Addon()
@@ -15,6 +16,7 @@ __addonname__   = __addon__.getAddonInfo('name')
 __author__      = __addon__.getAddonInfo('author')
 __version__     = __addon__.getAddonInfo('version')
 __addonpath__   = __addon__.getAddonInfo('path')
+__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 __icon__        = __addon__.getAddonInfo('icon')
 __localize__    = __addon__.getLocalizedString
 
@@ -27,6 +29,7 @@ from resources.lib.provider import tmdb
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
 from resources.lib.utils import _getUniq as getUniq
+from resources.lib.utils import _save_nfo_file as save_nfo_file
 from resources.lib.script_exceptions import DownloadError, CreateDirectoryError, HTTP404Error, HTTP503Error, NoFanartError, HTTPTimeout, ItemNotFoundError, CopyError
 from resources.lib.fileops import fileops
 from resources.lib.apply_filters import apply_filters
@@ -224,31 +227,34 @@ class Main:
                 log('Error deleting temp directory: %s' % self.fileops.tempdir, xbmc.LOGERROR)
             else:
                 log('Deleted temp directory: %s' % self.fileops.tempdir)
+        
         ### log results and notify user
-        # print download totals to log
-        log('##### Download totaliser:')
-        log('- Total Artwork: %s' % self.download_counter['Total Artwork'], xbmc.LOGNOTICE)
+        # Download totals to log and to download report
+        reportdata  = ( '[B]Artwork Downloader:[/B]\n - Time of finish: %s' %time.strftime('%d %B %Y - %H:%M') )
+        reportdata += ( '\n[B]Download totaliser:[/B]' )
+        reportdata += ( '\n - Total Artwork: %s' % self.download_counter['Total Artwork'] )
+        # Cycle through the download totals
         for artwork_type in self.download_counter:
             if not artwork_type == 'Total Artwork':
-                log('- %s: %s' % (artwork_type, self.download_counter[artwork_type]), xbmc.LOGNOTICE)
-        # print failed items
-        log('##### Failed items:')
+                reportdata += '\n - %s: %s' % ( artwork_type, self.download_counter[artwork_type] )
+        reportdata += '\n[B]Failed items:[/B]'
+        # Cycle through the download totals
         if not self.failed_items:
-            log(' - No failed/missing items found')
+            reportdata += '\n - No failed or missing items found'
         else:
             for item in getUniq(self.failed_items):
-                log(' - %s' %item, xbmc.LOGNOTICE)
-        # dialogs
+                reportdata += '\n - %s' %item
+        # Build dialog messages
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         provider_msg1 = __localize__(32001)
         provider_msg2 = __localize__(32184) + " | " + __localize__(32185) + " | " + __localize__(32186)
-        summary_breakdown = ''
-        for artwork_type in self.download_counter:
-            if not artwork_type == 'Total Artwork':
-                summary_tmp = '- %s: %s' % (artwork_type, self.download_counter[artwork_type])
-                summary_breakdown = summary_breakdown + ', ' + summary_tmp
+        # Close dialog in case it was open before doing a notification
         dialog('close', background = self.settings.background)
+        # Print the reportdata log message
+        log('Failed data to file: %s' % reportdata.replace('[B]', '').replace('[/B]', '') )
+        # Safe the downloadreport to settings folder using save function
+        save_nfo_file(reportdata, os.path.join( __addondir__ , 'downloadreport.txt' ) )
         # Some dialog checks
         if self.settings.notify:
             log('Notify on finished/error enabled')
@@ -260,17 +266,18 @@ class Main:
             log('Network error detected, script aborted', xbmc.LOGERROR)
             dialog('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
         if not xbmc.abortRequested:
+            # Show dialog/notification
             if self.settings.background:
                 dialog('okdialog', line0 = summary_notify, line1 = provider_msg1 + ' ' + provider_msg2, background = self.settings.background)
             else:
                 dialog('okdialog', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background)
         else:
             dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
-        '''
+        # Container refresh
         if self.mode == 'gui' or self.mode == 'customgui':
             if self._download_art_succes:
-                xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
-        '''
+                xbmc.executebuiltin( "Container.Refresh" )
+                #xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
 
     ### solo mode
     def solo_mode(self, itemtype, itemname, itempath):
