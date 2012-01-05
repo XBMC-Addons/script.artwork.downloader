@@ -571,7 +571,7 @@ class Main:
                                 if missingfiles:
                                     self.download_list.append(item)
                                 else:
-                                    log("- Ignoring (Exists in all target directories): %s" % item['filename'] )
+                                    log("[%s] Ignoring (Exists in all target directories): %s" % (self.media_name, item['filename'] ) )
                             # Raise limit counter because image was added to list
                             limit_counter = limit_counter + 1
                     else: pass
