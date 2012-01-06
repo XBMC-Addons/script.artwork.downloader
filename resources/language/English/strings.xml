@@ -34,13 +34,13 @@
 
     <!-- Add-on settings: General section id=32031 to 32050 -->
         <string id="32031">General</string>
-        <string id="32032">[B]General settings used in Extrafanart Downloader[/B]</string>
+        <string id="32032">[B]General settings used in Artwork Downloader[/B]</string>
         <string id="32033">Run in background</string>        
         <string id="32034">Show dialog on finished/errors</string>
         <string id="32035">Overwrite all existing artwork [I](will be automaticly disabled after downloading)[/I] </string>
         <string id="32036">Centralize extrafanart [I](Can be used for extrafanart slideshow)[/I] </string>
-        <string id="32037">Central TV fanart directory</string>
-        <string id="32038">Central Movie fanart directory</string>
+        <string id="32037">Central TV extrafanart directory</string>
+        <string id="32038">Central Movie extrafanart directory</string>
         <string id="32039">View download report from latest download run</string>
         <string id="32040">-</string>
         
@@ -52,10 +52,11 @@
         <string id="32055">Current language only</string>
         <string id="32056">Exclude fanart that has text</string>
         <string id="32057">Minimum fanart size: Movies</string>
-        <string id="32058">Minimum fanart size: TV Show</string>
+        <string id="32058">Minimum fanart size: TV Shows</string>
         <string id="32059">1080</string>
         <string id="32060">720</string>
         <string id="32061">480</string>
+        <string id="32062">Minimum fanart size: Musicvideos</string>
 
     <!-- Add-on settings: Movie section id=32071 to 32080 -->
         <string id="32071">Movies</string>

@@ -56,6 +56,7 @@
         <string id="32059">1080</string>
         <string id="32060">720</string>
         <string id="32061">480</string>
+        <string id="32062">Minimum fanart size: Musicvideos</string>
 
     <!-- Add-on settings: Movie section id=32071 to 32080 -->
         <string id="32071">Filmy</string>
