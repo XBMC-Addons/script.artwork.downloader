@@ -6,6 +6,7 @@
 - Changed: Reverted old change of using image ID from tmdb as filename. This is not available any more in new API v3
 - Changed: Use the new TMDB API v3
 - Changed: Use smaller image in GUI dialog for faster loading of images (when posible)
+- Added: Polish translation (thx cienislaw)
 - Added: Download report is accessible from the add-on settings window
 - Added: Download report is accessible from the yes/no dialog when finished (not when background/silent/custom run)
 - Added: Extra info to gui dialog (language and rating)
