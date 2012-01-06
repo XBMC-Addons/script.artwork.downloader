@@ -578,6 +578,7 @@ class Main:
                         else:
                             # Always add to list when set to overwrite
                             if self.settings.files_overwrite:
+                                log("[%s] Adding to download list (overwrite enabled): %s" % (self.media_name, item['filename'] ) )
                                 self.download_list.append(item)
                             else:
                                 # Check if image already exist
@@ -587,6 +588,7 @@ class Main:
                                         missingfiles = True
                                 if missingfiles:
                                     # If missing add to list
+                                    log("[%s] Adding to download list (does not exist in all target directories): %s" % (self.media_name, item['filename'] ) )
                                     self.download_list.append(item)
                                 else:
                                     log("[%s] Ignoring (Exists in all target directories): %s" % (self.media_name, item['filename'] ) )
