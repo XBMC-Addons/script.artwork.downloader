@@ -62,7 +62,7 @@ class Main:
                 self.settings.notify = False
             # Check for gui mode
             elif self.mode == 'gui':
-                log('set dialog true')
+                log('Set dialog and file overwrite true')
                 self.settings.background = False
                 self.settings.notify = False
                 self.settings.files_overwrite = True
@@ -105,7 +105,7 @@ class Main:
                         self._batch_download(self.download_list)
             # No mediatype is specified
             else:
-                # activate both movie/tvshow for custom run
+                # activate movie/tvshow/musicvideo for custom run
                 if self.mode == 'custom':
                     self.settings.movie_enable = True
                     self.settings.tvshow_enable = True
@@ -252,7 +252,7 @@ class Main:
         # Close dialog in case it was open before doing a notification
         dialog('close', background = self.settings.background)
         # Print the reportdata log message
-        log('Failed data to file: %s' % reportdata.replace('[B]', '').replace('[/B]', '') )
+        log('Failed items report: %s' % reportdata.replace('[B]', '').replace('[/B]', '') )
         # Safe the downloadreport to settings folder using save function
         save_nfo_file(reportdata, os.path.join( __addondir__ , 'downloadreport.txt' ) )
         # Some dialog checks
@@ -328,6 +328,8 @@ class Main:
                 self.download_artwork(self.Medialist, self.tv_providers)
             elif itemtype == 'musicvideo':
                 self.download_artwork(self.Medialist, self.musicvideo_providers)
+        else:
+            log('No matching medianame found in library')
 
 
     ### download media fanart
@@ -407,7 +409,7 @@ class Main:
                             errmsg = '404: File not found'
                             artwork_result = 'skipping'
                         except HTTP503Error, e:
-                            xmlfailcount = xmlfailcount + 1
+                            xmlfailcount += 1
                             errmsg = '503: API Limit Exceeded'
                             artwork_result = 'retrying'
                         except NoFanartError, e:
@@ -418,15 +420,15 @@ class Main:
                             errmsg = '%s not found' % self.media_id
                             artwork_result = 'skipping'
                         except ExpatError, e:
-                            xmlfailcount = xmlfailcount + 1
+                            xmlfailcount += 1
                             errmsg = 'Error parsing xml: %s' % str(e)
                             artwork_result = 'retrying'
                         except HTTPTimeout, e:
-                            self.settings.failcount = self.settings.failcount + 1
+                            self.settings.failcount += 1
                             errmsg = 'Timed out'
                             artwork_result = 'skipping'
                         except DownloadError, e:
-                            self.settings.failcount = self.settings.failcount + 1
+                            self.settings.failcount += 1
                             errmsg = 'Possible network error: %s' % str(e)
                             artwork_result = 'skipping'
                         else:
@@ -452,7 +454,7 @@ class Main:
                     else:
                         #log('- Using bulk mode')
                         self._download_process()
-            self.processeditems = self.processeditems + 1
+            self.processeditems += 1
 
     ### Processes the bulk mode downloading of files
     def _download_process(self):
@@ -536,12 +538,16 @@ class Main:
                     item['artwork_type']    = art_type
                     item['artwork_string']  = msg
                     item['artwork_details'] = artwork
-                    current_artwork         = current_artwork + 1
+                    current_artwork        += 1
 
                     # File naming
+                    '''
                     if item['artwork_type']     == 'extrafanart' and not item['media_type'] == 'tvshow':
                         item['filename'] = artwork['url'].rsplit('/', 1)[1]
                     elif item['artwork_type']   == 'extrafanart' and item['media_type'] == 'tvshow':
+                        item['filename'] = ('%s.jpg'% artwork['id'])
+                    '''
+                    if item['artwork_type']   == 'extrafanart':
                         item['filename'] = ('%s.jpg'% artwork['id'])
                     elif item['artwork_type']   == 'extrathumbs':
                         item['filename'] = (filename+'%s.jpg' % str(limit_counter + 1))
@@ -554,12 +560,12 @@ class Main:
 
                     # Continue
                     if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
-                    #if (self.mode == 'gui' or self.mode == 'customgui') and not item['artwork_type'] == 'extrafanart' and not item['artwork_type'] == 'extrathumbs':
+                        # Add image to download list
                         self.download_list.append(item)
                     elif image_type == artwork['type']:
                         # Check for set limits
                         limited = self.filters.do_filter( item['artwork_type'], item['media_type'], item['artwork_details'], limit_counter )
-                        # Delete extrafanart when below settings
+                        # Delete extrafanart when below settings and parsing the reason message
                         if limited[0] and item['artwork_type'] =='extrafanart':
                             self.fileops._delete_file_in_dirs( item['filename'], item['targetdirs'], limited[1],item['media_name'] )
                         # Just ignore image when it's below settings
@@ -580,11 +586,12 @@ class Main:
                                     if not self.fileops._exists( os.path.join(targetdir, item['filename']) ):
                                         missingfiles = True
                                 if missingfiles:
+                                    # If missing add to list
                                     self.download_list.append(item)
                                 else:
                                     log("[%s] Ignoring (Exists in all target directories): %s" % (self.media_name, item['filename'] ) )
-                            # Raise limit counter because image was added to list
-                            limit_counter = limit_counter + 1
+                            # Raise limit counter because image was added to list or it already existed
+                            limit_counter += 1
                     else: pass
             # Add to failed items if 0
             if current_artwork == 0:
@@ -594,14 +601,18 @@ class Main:
 
     def _batch_download(self, image_list):
         log('########################################################')
+        # If image list is empty print log message
         if len(image_list) == 0:
             log('- Nothing to download')
+        # If not empty process the image list
         else:
             log('- Starting download')
             # Download artwork that passed the limit check
             for item in image_list:
+                # Check if cancel has been called to break the loop
                 if dialog('iscanceled', background = self.settings.background):
                     break
+                # Update the dialog
                 dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
                 # Try downloading the file and catch errors while trying to
                 try:
@@ -610,7 +621,7 @@ class Main:
                     log("URL not found: %s" % str(e), xbmc.LOGERROR)
                     self._download_art_succes = False
                 except HTTPTimeout, e:
-                    self.settings.failcount = self.settings.failcount + 1
+                    self.settings.failcount += 1
                     log("Download timed out: %s" % str(e), xbmc.LOGERROR)
                     self._download_art_succes = False
                 except CreateDirectoryError, e:
@@ -620,15 +631,15 @@ class Main:
                     log("Could not copy file (Destination may be read only), skipping: %s" % str(e), xbmc.LOGWARNING)
                     self._download_art_succes = False
                 except DownloadError, e:
-                    self.settings.failcount = self.settings.failcount + 1
+                    self.settings.failcount += 1
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
                     self._download_art_succes = False
                 else:
                     try:
-                        self.download_counter[ item['artwork_string'] ] = self.download_counter[ item['artwork_string'] ] + 1
+                        self.download_counter[ item['artwork_string'] ] += 1
                     except KeyError:
                         self.download_counter[ item['artwork_string'] ] = 1
-                    self.download_counter['Total Artwork'] = self.download_counter['Total Artwork'] + 1
+                    self.download_counter['Total Artwork'] += 1
                     self._download_art_succes = True
             log('Finished download')
         log('########################################################')

@@ -132,7 +132,7 @@ class fileops:
             raise HTTPTimeout(url)
         else:
             log("[%s] Downloaded: %s" % (media_name, filename), xbmc.LOGNOTICE)
-            self.downloadcount = self.downloadcount + 1
+            self.downloadcount += 1
             for targetdir in targetdirs:
                 targetpath = os.path.join(targetdir, filename)
                 self._copyfile(temppath, targetpath, media_name)
