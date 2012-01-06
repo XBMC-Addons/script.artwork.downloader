@@ -16,13 +16,21 @@
   <extension point="xbmc.service" library="service.py" start="startup|login"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Downloads Artwork for TV shows and Movies in your library</summary>
+    <summary lang="pl">Pobiera grafiki dla Seriali TV i Filmów z twojej biblioteki</summary>
     <description lang="en">
 	Downloads all available artwork for TV shows, Movies, Musicvideos in your library. Check the options for supported artwork[CR]
 	Artwork sources:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]
 	Remark:[CR]Check your skin to see what type of artwork is supported![CR]Each TV Show/Movie must have its own folder![CR]
 	Skin integration:[CR]See readme file
 	</description>
-    <disclaimer>For bugs, requests or general questions visit the Artwork Downloader thread on the XBMC forum.</disclaimer>
+    <description lang="pl">
+	Pobiera wszystkie dostępne grafiki dla Seriali TV, Filmów i Teledysków z twojej biblioteki. Sprawdź w opcjach obsługiwane rodzaje grafik.[CR]
+	Źródła grafik:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]
+	Uwaga:[CR]Sprawdź w dokumentacji używanej skóry, jakie grafiki obsługuje![CR]Każdy Serial TV / Film musi być w osobnym folderze![CR]
+	Integracja ze skórami:[CR]Zobacz plik readme
+	</description>
+    <disclaimer lang="en">By zgłosić błąd, prośbę lub zadać pytanie odwiedź wątek poświęcony Artwork Downladerowi na forum XBMC.</disclaimer>
+    <disclaimer lang="pl">For bugs, requests or general questions visit the Artwork Downloader thread on the XBMC forum.</disclaimer>
     <platform>all</platform>
   </extension>
 </addon>
