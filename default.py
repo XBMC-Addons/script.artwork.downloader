@@ -270,7 +270,11 @@ class Main:
             if self.settings.background:
                 dialog('okdialog', line0 = summary_notify, line1 = provider_msg1 + ' ' + provider_msg2, background = self.settings.background)
             else:
-                dialog('okdialog', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background)
+                # When chosen no in the 'yes/no' dialog exicute the viewer.py and parse 'downloadreport'
+                if dialog('yesno', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background, nolabel = __localize__(32027), yeslabel = __localize__(32028)):
+                    runcmd = os.path.join(__addonpath__, 'resources/lib/viewer.py')
+                    xbmc.executebuiltin('XBMC.RunScript (%s,%s) '%(runcmd, 'downloadreport') )
+                    
         else:
             dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
         # Container refresh

@@ -7,6 +7,7 @@
 - Changed: Use the new TMDB API v3
 - Changed: Use smaller image in GUI dialog for faster loading of images (when posible)
 - Added: Download report is accessible from the add-on settings window
+- Added: Download report is accessible from the yes/no dialog when finished (not when background/silent/custom run)
 - Added: Extra info to gui dialog (language and rating)
 - Added: Now tries to look up the 'tmdb ID' if no 'imdb ID' is found and retrieves artwork using that
 - Added: Added musicvideo section that uses the title to search for artwork on TMDB

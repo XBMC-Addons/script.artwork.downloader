@@ -57,7 +57,7 @@ def _log(txt, severity=xbmc.LOGDEBUG):
             xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
 # Define dialogs
-def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False):
+def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025) ):
     if not line0 == '':
         line0 = __addonname__ + line0
     else:
@@ -76,6 +76,8 @@ def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = 
                 return False
         if action == 'okdialog':
             xbmcgui.Dialog().ok(line0, line1, line2, line3)
+        if action == 'yesno':
+            return xbmcgui.Dialog().yesno(line0, line1, line2, line3, nolabel, yeslabel)
     if background:
         if (action == 'create' or action == 'okdialog'):
             if line2 == '':
