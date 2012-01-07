@@ -73,8 +73,10 @@ def _media_listing(media_type):
                     Medialist.append(Media)
         else:
             log('No JSON results found')
-    except:
-        log('No JSON results found')
+    except Exception, NoneType:
+        log('No %s found in your library' %media_type)
+    except Exception, e:
+        log( str( e ), xbmc.LOGERROR )
     return Medialist
 
 
