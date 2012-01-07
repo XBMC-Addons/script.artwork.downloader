@@ -18,7 +18,6 @@ class TMDBProvider():
 
     def get_image_list(self, media_id):
         data = get_json(self.url %(media_id, self.api_key))
-        log('%s' %data)
         image_list = []
         # Get fanart
         for item in data['backdrops']:
