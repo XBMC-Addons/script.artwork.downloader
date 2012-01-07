@@ -17,7 +17,7 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Downloads Artwork for TV shows, Movies and Musicvideos in your library</summary>
     <summary lang="nl">Download Artwork voor TV series, Films en Muziekvideos in jouw bibliotheek</summary>
-    <summary lang="pl">Pobiera grafiki dla Seriali TV i Filmów z twojej biblioteki</summary>
+    <summary lang="pl">Pobiera grafiki dla Seriali TV, Filmów i Teledysków z twojej biblioteki</summary>
     <description lang="en">
 	Downloads all available artwork for TV shows, Movies and Musicvideos in your library. Check the options for supported artwork[CR]
 	Artwork sources:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]

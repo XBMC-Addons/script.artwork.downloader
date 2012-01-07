@@ -39,8 +39,8 @@
         <string id="32034">Pokazuj powiadomienie po zakończeniu / błędach</string>
         <string id="32035">Zastąp wszystkie istniejące grafiki [I](zostanie automatycznie wyłączone po pobraniu)[/I] </string>
         <string id="32036">Centralne foldery ExtraFanArtów [I](można ich użyć do pokazów slajdów)[/I] </string>
-        <string id="32037">Folder na FanArty Seriali TV</string>
-        <string id="32038">Folder na FanArty Filmów </string>
+        <string id="32037">Folder na ExtraFanArty Seriali TV</string>
+        <string id="32038">Folder na ExtraFanArty Filmów</string>
         <string id="32039">Pokaż raport z ostatniego uruchomienia</string>
         <string id="32040">-</string>
         
@@ -49,14 +49,14 @@
         <string id="32052">[B]Opcje ograniczania rodzajów i ilości pobieranych grafik[/B]</string>
         <string id="32053">Maksymalna ilość ExtraFanArtów</string>
         <string id="32054">Minimalna ocena</string>
-        <string id="32055">Tylko w aktualnym języku</string>
+        <string id="32055">Tylko w aktywnym języku interfejsu</string>
         <string id="32056">Wyklucz FanArt z napisami</string>
-        <string id="32057">Minimalny rozmiar FanArt: Filmy</string>
-        <string id="32058">Minimalny rozmiar FanArt: Seriale TV</string>
+        <string id="32057">Minimalny rozmiar FanArtów: Filmy</string>
+        <string id="32058">Minimalny rozmiar FanArtów: Seriale TV</string>
         <string id="32059">1080</string>
         <string id="32060">720</string>
         <string id="32061">480</string>
-        <string id="32062">Minimum fanart size: Musicvideos</string>
+        <string id="32062">Minimalny rozmiar FanArtów: Teledyski</string>
 
     <!-- Add-on settings: Movie section id=32071 to 32080 -->
         <string id="32071">Filmy</string>
