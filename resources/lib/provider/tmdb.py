@@ -31,7 +31,7 @@ class TMDBProvider():
             #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
             # Convert the 'None' value to default 'en'
             if not item['iso_639_1']:
-                info['language'] = 'en'
+                info['language'] = 'n/a'
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
@@ -52,7 +52,7 @@ class TMDBProvider():
             #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
             # Convert the 'None' value to default 'en'
             if not item['iso_639_1']:
-                info['language'] = 'en'
+                info['language'] = 'n/a'
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
@@ -73,7 +73,7 @@ class TMDBProvider():
             #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
             # Convert the 'None' value to default 'en'
             if not item['iso_639_1']:
-                info['language'] = 'en'
+                info['language'] = 'n/a'
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
