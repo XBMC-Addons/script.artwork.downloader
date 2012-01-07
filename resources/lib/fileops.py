@@ -32,7 +32,7 @@ class fileops:
 
         log("Setting up fileops")
         self.settings = _settings()
-        self.settings._get()
+        self.settings._get_general()
         self._exists = lambda path: xbmcvfs.exists(path)
         self._rmdir = lambda path: xbmcvfs.rmdir(path)
         self._mkdir = lambda path: xbmcvfs.mkdir(path)

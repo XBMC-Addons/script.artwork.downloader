@@ -26,7 +26,7 @@ __language__    = language.get_abbrev()
 ### Get settings from settings.xml
 class _settings:
     ### Initial artwork vars
-    def _get(self):
+    def _get_artwork(self):
         self.movie_enable           = __addon__.getSetting("movie_enable")          == 'true'
         self.movie_poster           = __addon__.getSetting("movie_poster")          == 'true'
         self.movie_fanart           = __addon__.getSetting("movie_fanart")          == 'true'
@@ -57,6 +57,13 @@ class _settings:
         self.musicvideo_extrafanart = __addon__.getSetting("musicvideo_extrafanart")== 'true'
         self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs")== 'true'
 
+        # temporary force these to false
+        self.tvshow_seasonposter    = False
+        self.tvshow_seasonbanner    = False
+        self.tvshow_seasonthumbs    = False
+
+    ### Initial genral vars
+    def _get_general(self):
         self.centralize_enable      = __addon__.getSetting("centralize_enable")     == 'true'
         self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
         self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
@@ -68,11 +75,6 @@ class _settings:
         self.service_runtime        = __addon__.getSetting("service_runtime")
         self.files_overwrite        = __addon__.getSetting("files_overwrite")       == 'true'
         self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled")  == 'true'
-
-        # temporary force these to false
-        self.tvshow_seasonposter    = False
-        self.tvshow_seasonbanner    = False
-        self.tvshow_seasonthumbs    = False
 
     ### Initial limit vars
     def _get_limit(self):    
@@ -87,8 +89,6 @@ class _settings:
         self.limit_language             = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext               = __addon__.getSetting("limit_notext") == 'true'
 
-
-
     ### Initial startup vars
     def _vars(self):
         self.failcount                  = 0
@@ -97,7 +97,6 @@ class _settings:
         self.api_timedelay              = 5000  #msec
         self.mediatype                  = ''
         self.medianame                  = ''
-
 
     ### Log settings in debug mode
     def _initiallog(self):
@@ -379,7 +378,8 @@ class _settings:
             settings_faulty = True
             check_movie = check_tvshow = check_musicvideo = check_centralize = True
             # re-check settings after posible change
-            self._get()
+            self._get_general()
+            self._get_artwork()
             # Check if faulty setting in movie section
             if self.movie_enable:
                 if not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_poster and not self.movie_defaultthumb:

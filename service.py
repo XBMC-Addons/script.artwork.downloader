@@ -26,7 +26,7 @@ from resources.lib.settings import _settings
 def autostart():
         xbmcaddon.Addon().setSetting(id="files_overwrite", value='false')
         settings = _settings()
-        settings._get()
+        settings._get_general()
         addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
         tempdir = os.path.join(addondir, 'temp')
         service_runtime  = str('%.2d'%int(settings.service_runtime) + ':00')

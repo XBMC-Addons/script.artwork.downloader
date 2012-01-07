@@ -48,12 +48,13 @@ class Main:
 
     def __init__(self):
         self.initial_vars() 
-        self.settings._get()        # Get settings from settings.xml
-        self.settings._get_limit()  # Get settings from settings.xml
-        self.settings._check()      # Check if there are some faulty combinations present
-        self.settings._initiallog() # Create debug log for settings
-        self.settings._vars()       # Get some settings vars
-        self.settings._artype_list()# Fill out the GUI and Arttype lists with enabled options
+        self.settings._get_general()    # Get settings from settings.xml
+        self.settings._get_artwork()    # Get settings from settings.xml
+        self.settings._get_limit()      # Get settings from settings.xml
+        self.settings._check()          # Check if there are some faulty combinations present
+        self.settings._initiallog()     # Create debug log for settings
+        self.settings._vars()           # Get some settings vars
+        self.settings._artype_list()    # Fill out the GUI and Arttype lists with enabled options
         if self.initialise():
             # Check for silent background mode
             if self.silent:
