@@ -8,13 +8,10 @@ import simplejson
 from resources.lib.utils import _normalize_string as normalize_string
 from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
-from resources.lib.settings import _settings
 
 ### get list of all tvshows and movies with their imdbnumber from library
 # Retrieve JSON list
 def _media_listing(media_type):
-    settings = _settings()
-    settings._get()
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     try:
