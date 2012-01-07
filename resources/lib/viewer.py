@@ -41,8 +41,8 @@ class Viewer:
         try:
             if sys.argv[ 1 ] == "downloadreport":
                 return "Download report", self.readFile( os.path.join( ADDON_PROFILE, "downloadreport.txt" ) )
-        except:
-            print('error')
+        except Exception, e:
+            xbmc.log( ADDON_NAME + ': ' + str( e ), xbmc.LOGERROR )
         return "", ""
 
     def readFile( self, filename ):
@@ -60,8 +60,8 @@ class WebBrowser:
             xbmc.sleep( 100 )
             # launch url
             self.launchUrl( url )
-        except:
-            print('error')
+        except Exception, e:
+            xbmc.log( ADDON_NAME + ': ' + str( e ), xbmc.LOGERROR )
 
     def launchUrl( self, url ):
         import webbrowser
@@ -74,8 +74,8 @@ def Main():
             WebBrowser()
         else:
             Viewer()
-    except:
-        print('error')
+    except Exception, e:
+        xbmc.log( ADDON_NAME + ': ' + str( e ), xbmc.LOGERROR )
 
 
 
