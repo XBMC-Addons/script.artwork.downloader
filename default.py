@@ -519,7 +519,7 @@ class Main:
         else:
             final_image_list = self.image_list
         if len(final_image_list) == 0:
-            log('- Nothing to download')
+            log(' - Nothing to download')
         else:
             for artwork in final_image_list:
                 if image_type ==  artwork['type']:
@@ -542,12 +542,6 @@ class Main:
                     current_artwork        += 1
 
                     # File naming
-                    '''
-                    if item['artwork_type']     == 'extrafanart' and not item['media_type'] == 'tvshow':
-                        item['filename'] = artwork['url'].rsplit('/', 1)[1]
-                    elif item['artwork_type']   == 'extrafanart' and item['media_type'] == 'tvshow':
-                        item['filename'] = ('%s.jpg'% artwork['id'])
-                    '''
                     if item['artwork_type']   == 'extrafanart':
                         item['filename'] = ('%s.jpg'% artwork['id'])
                     elif item['artwork_type']   == 'extrathumbs':
@@ -571,15 +565,15 @@ class Main:
                             self.fileops._delete_file_in_dirs( item['filename'], item['targetdirs'], limited[1],item['media_name'] )
                         # Just ignore image when it's below settings
                         elif limited[0]:
-                            log( "- Ignoring (%s): %s" % ( limited[1], item['filename']) )
+                            log( " - Ignoring (%s): %s" % ( limited[1], item['filename']) )
                             # Check if artwork doesn't exist and the ones available are below settings
                             for targetdir in item['targetdirs']:
                                 if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not art_type in ['extrafanart', 'extrathumbs']:
-                                    self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,item['artwork_type']) )
+                                    self.failed_items.append(' - Skipping %s - Below limit setting' % item['artwork_type'] )
                         else:
                             # Always add to list when set to overwrite
                             if self.settings.files_overwrite:
-                                log("[%s] Adding to download list (overwrite enabled): %s" % (self.media_name, item['filename'] ) )
+                                log(" - Adding to download list (overwrite enabled): %s" % item['filename'] )
                                 self.download_list.append(item)
                             else:
                                 # Check if image already exist
@@ -589,10 +583,10 @@ class Main:
                                         missingfiles = True
                                 if missingfiles:
                                     # If missing add to list
-                                    log("[%s] Adding to download list (does not exist in all target directories): %s" % (self.media_name, item['filename'] ) )
+                                    log(" - Adding to download list (does not exist in all target directories): %s" % item['filename'] )
                                     self.download_list.append(item)
                                 else:
-                                    log("[%s] Ignoring (Exists in all target directories): %s" % (self.media_name, item['filename'] ) )
+                                    log(" - Ignoring (Exists in all target directories): %s" % item['filename'] )
                             # Raise limit counter because image was added to list or it already existed
                             limit_counter += 1
                     else: pass
@@ -600,7 +594,7 @@ class Main:
             if current_artwork == 0:
                 self.failed_items.append('[%s] No %s found' % (self.media_name,art_type) )
             # Print log message number of found images per art type
-            log('- Found a total of: %s %s' % (current_artwork, art_type) )
+            log(' - Found a total of: %s %s' % (current_artwork, art_type) )
 
     def _batch_download(self, image_list):
         log('########################################################')
