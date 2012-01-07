@@ -30,7 +30,6 @@ class TVDBProvider():
                     info['preview'] = self.url_prefix + image.findtext('BannerPath')
                 info['language'] = image.findtext('Language')
                 info['id'] = image.findtext('id')
-                info['size'] = ''
                 info['type'] = ''
                 # process fanarts
                 if image.findtext('BannerType') == 'fanart':
@@ -73,11 +72,13 @@ class TVDBProvider():
                         info['season'] = '-specials'
                     else:
                         info['season'] = str(seasonxx)
-                else:
-                    info['season'] = 'n/a'
                 
                 # Create Gui string to display
-                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Season: %s   ' %(info['language'], info['rating'], info['season'])
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  ' %( info['language'], info['rating'] )
+                if 'season'in info:
+                    info['generalinfo'] += 'Season: %s  |  ' %( info['season'] )
+                if 'height' in info:
+                    info['generalinfo'] += 'Size: %sx%s  |  ' %( info['height'], info['width'] )
             if info:
                 image_list.append(info)
         if image_list == []:

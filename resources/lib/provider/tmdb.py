@@ -37,7 +37,7 @@ class TMDBProvider():
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
             
             # Create Gui string to display
-            info['generalinfo'] = 'Language: %s  |  Rating: %s   ' %(info['language'], info['rating'])
+            info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])
             if info:
                 image_list.append(info)
         # Get thumbs
@@ -79,7 +79,7 @@ class TMDBProvider():
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
             
             # Create Gui string to display
-            info['generalinfo'] = 'Language: %s  |  Rating: %s   ' %(info['language'], info['rating'])
+            info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])
             if info:
                 image_list.append(info)
         if image_list == []:
