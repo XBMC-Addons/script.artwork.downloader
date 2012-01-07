@@ -105,8 +105,8 @@ def _search_movie(medianame,year=''):
             if item['id']:
                 tmdb_id = item['id']
                 break
-    except:
-        log('TMDB API problem getting JSON data')
+    except Exception, e:
+        log( str( e ), xbmc.LOGERROR )
     if tmdb_id == '':
         log('TMDB API search found no ID')
     return tmdb_id
