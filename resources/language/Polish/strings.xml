@@ -19,7 +19,7 @@
         <string id="32016">pobrano</string>
         <string id="32017">Anulowano</string>
         <string id="32018">Pobierane zostało anulowane przez użytkownika</string>
-        <string id="32019">-</string>
+        <string id="32019">Delayed start in minutes: [I]( -- is none ) [/I]</string>
         <string id="32020">Pobrano</string>
         <string id="32021">Przetwarzanie grafiki</string>
         <string id="32022">nie znaleziono!</string>
@@ -37,8 +37,8 @@
         <string id="32032">[B]Ogólne ustawienia używane w Artwork Downloader[/B]</string>
         <string id="32033">Uruchom w tle</string>        
         <string id="32034">Pokazuj powiadomienie po zakończeniu / błędach</string>
-        <string id="32035">Zastąp wszystkie istniejące grafiki [I](zostanie automatycznie wyłączone po pobraniu)[/I] </string>
-        <string id="32036">Centralne foldery ExtraFanArtów [I](można ich użyć do pokazów slajdów)[/I] </string>
+        <string id="32035">Zastąp wszystkie istniejące grafiki [I](zostanie automatycznie wyłączone po pobraniu) [/I]</string>
+        <string id="32036">Centralne foldery ExtraFanArtów [I](można ich użyć do pokazów slajdów) [/I]</string>
         <string id="32037">Folder na ExtraFanArty Seriali TV</string>
         <string id="32038">Folder na ExtraFanArty Filmów</string>
         <string id="32039">Pokaż raport z ostatniego uruchomienia</string>
@@ -118,12 +118,12 @@
     <!-- Add-on settings: Info section id=32181 to 32190-->   
         <string id="32181">Info</string>
         <string id="32182">Prosimy o datki na rzecz lub pomoc przy tworzeniu poniższych witryn:</string>
-        <string id="32183">[I]www.xbmc.org[/I] </string>
-        <string id="32184">[I]fanart.tv[/I] </string>
-        <string id="32185">[I]www.thetvdb.com[/I] </string>
-        <string id="32186">[I]www.themoviedb.org[/I] </string>
+        <string id="32183">[I]www.xbmc.org [/I]</string>
+        <string id="32184">[I]fanart.tv [/I]</string>
+        <string id="32185">[I]www.thetvdb.com [/I]</string>
+        <string id="32186">[I]www.themoviedb.org [/I]</string>
         <string id="32187">Autorzy wtyczki:</string>
-        <string id="32188">[I]paddycarey, Martijn Kaijser, putneyj [/I] </string>
+        <string id="32188">[I]paddycarey, Martijn Kaijser, putneyj [/I]</string>
         <string id="32191">[I]By zgłosić błąd, prośbę lub zadać pytanie odwiedź wątek [/I]</string>
         <string id="32192">[I]  poświęcony Artwork Downladerowi na forum XBMC. [/I]</string>
         <string id="32189">Podziękowania dla:</string>

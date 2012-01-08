@@ -29,16 +29,19 @@ def autostart():
         settings._get_general()
         addondir = xbmc.translatePath( utils.__addon__.getAddonInfo('profile') )
         tempdir = os.path.join(addondir, 'temp')
-        service_runtime  = str('%.2d'%int(settings.service_runtime) + ':00')
+        service_runtime  = str(settings.service_runtime + ':00')
         log('Service - Run at startup: %s'%settings.service_startup, xbmc.LOGNOTICE)        
+        log('Service - Delayed startup: %s minutes'%settings.service_startupdelay, xbmc.LOGNOTICE)   
         log('Service - Run as service: %s'%settings.service_enable, xbmc.LOGNOTICE)
         log('Service - Time: %s'%service_runtime, xbmc.LOGNOTICE)
         if xbmcvfs.exists(tempdir):
             xbmcvfs.rmdir(tempdir)
             log('Removing temp folder from previous run.')
         if settings.service_startup:
-            xbmc.sleep(5000)
-            xbmc.executebuiltin('XBMC.RunScript(script.artwork.downloader,silent=true)')
+            if settings.service_startupdelay != '--':
+                xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:%s:00,silent)' %settings.service_startupdelay) 
+            else:
+                xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:00:20,silent)') 
         if settings.service_enable:
             while (not xbmc.abortRequested):
                 xbmc.sleep(10000)

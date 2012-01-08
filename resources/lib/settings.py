@@ -71,6 +71,7 @@ class _settings:
         self.background             = __addon__.getSetting("background")            == 'true'
         self.notify                 = __addon__.getSetting("notify")                == 'true'
         self.service_startup        = __addon__.getSetting("service_startup")       == 'true'
+        self.service_startupdelay   = __addon__.getSetting("service_startupdelay")
         self.service_enable         = __addon__.getSetting("service_enable")        == 'true'
         self.service_runtime        = __addon__.getSetting("service_runtime")
         self.files_overwrite        = __addon__.getSetting("files_overwrite")       == 'true'
@@ -105,6 +106,7 @@ class _settings:
         log('## Background Run          = %s' % str(self.background))
         log('## - Notify                = %s' % str(self.notify))
         log('## Run at startup / login  = %s' % str(self.service_startup))
+        log('## - Delay in minutes      = %s' % str(self.service_startupdelay))
         log('## Run as service          = %s' % str(self.service_enable))
         log('## - Time                  = %s' % str(self.service_runtime))
         log('## Overwrite all files     = %s' % str(self.files_overwrite))

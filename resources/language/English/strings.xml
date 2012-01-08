@@ -19,7 +19,7 @@
         <string id="32016">downloaded</string>
         <string id="32017">Cancelled</string>
         <string id="32018">Download canceled by user</string>
-        <string id="32019">-</string>
+        <string id="32019">Delayed start in minutes: [I]( -- is none ) [/I]</string>
         <string id="32020">Downloaded</string>
         <string id="32021">Processing Artwork</string>
         <string id="32022">not found!</string>
@@ -37,8 +37,8 @@
         <string id="32032">[B]General settings used in Artwork Downloader[/B]</string>
         <string id="32033">Run in background</string>        
         <string id="32034">Show dialog on finished/errors</string>
-        <string id="32035">Overwrite all existing artwork [I](will be automaticly disabled after downloading)[/I] </string>
-        <string id="32036">Centralize extrafanart [I](Can be used for extrafanart slideshow)[/I] </string>
+        <string id="32035">Overwrite all existing artwork [I](will be automaticly disabled after downloading) [/I]</string>
+        <string id="32036">Centralize extrafanart [I](Can be used for extrafanart slideshow) [/I]</string>
         <string id="32037">Central TV extrafanart directory</string>
         <string id="32038">Central Movie extrafanart directory</string>
         <string id="32039">View download report from latest download run</string>
@@ -118,12 +118,12 @@
     <!-- Add-on settings: Info section id=32181 to 32190-->   
         <string id="32181">Info</string>
         <string id="32182">Please donate or contribute to the following sites to show your support:</string>
-        <string id="32183">[I]www.xbmc.org[/I] </string>
-        <string id="32184">[I]fanart.tv[/I] </string>
-        <string id="32185">[I]www.thetvdb.com[/I] </string>
-        <string id="32186">[I]www.themoviedb.org[/I] </string>
+        <string id="32183">[I]www.xbmc.org [/I]</string>
+        <string id="32184">[I]fanart.tv [/I]</string>
+        <string id="32185">[I]www.thetvdb.com [/I]</string>
+        <string id="32186">[I]www.themoviedb.org [/I]</string>
         <string id="32187">Add-on authors:</string>
-        <string id="32188">[I]paddycarey, Martijn Kaijser, putneyj [/I] </string>
+        <string id="32188">[I]paddycarey, Martijn Kaijser, putneyj [/I]</string>
         <string id="32191">[I]For bugs, requests or general questions visit the [/I]</string>
         <string id="32192">[I]  Artwork Downloader thread on the XBMC forum. [/I]</string>
         <string id="32189">Thanks to:</string>
