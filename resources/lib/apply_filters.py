@@ -106,7 +106,7 @@ class apply_filters:
             reason = 'Has text'
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
+        elif self.settings.limit_artwork and self.settings.limit_language and artwork['language'] != __language__ and artwork['language'] != 'n/a':
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
         return [limited, reason]
@@ -136,7 +136,7 @@ class apply_filters:
             reason = 'Size was to small: %s' % artwork['height']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
+        elif self.settings.limit_artwork and self.settings.limit_language and artwork['language'] != __language__ and artwork['language'] != 'n/a':
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
         return [limited, reason]
@@ -153,7 +153,7 @@ class apply_filters:
             reason = 'Size was to small: %s' % artwork['height']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
+        elif self.settings.limit_artwork and self.settings.limit_language and artwork['language'] != __language__ and artwork['language'] != 'n/a':
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
         return [limited, reason]
@@ -170,7 +170,7 @@ class apply_filters:
             reason = 'Rating too low: %s' % artwork['rating']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
+        elif self.settings.limit_artwork and self.settings.limit_language and artwork['language'] != __language__ and artwork['language'] != 'n/a':
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
         return [limited, reason]
@@ -191,7 +191,7 @@ class apply_filters:
             reason = 'Rating too low: %s' % artwork['rating']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and 'language' in artwork and artwork['language'] != __language__:
+        elif self.settings.limit_artwork and self.settings.limit_language and artwork['language'] != __language__ and artwork['language'] != 'n/a':
             reason = "Doesn't match current language: %s" % xbmc.getLanguage()
             limited = True
         return [limited, reason]
