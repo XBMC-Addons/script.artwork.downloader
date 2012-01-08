@@ -569,7 +569,7 @@ class Main:
                             # Check if artwork doesn't exist and the ones available are below settings
                             for targetdir in item['targetdirs']:
                                 if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not art_type in ['extrafanart', 'extrathumbs']:
-                                    self.failed_items.append(' - Skipping %s - Below limit setting' % item['artwork_type'] )
+                                    self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,item['artwork_type']) )
                         else:
                             # Always add to list when set to overwrite
                             if self.settings.files_overwrite:
