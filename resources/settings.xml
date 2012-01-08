@@ -4,17 +4,17 @@
         <setting type="sep" />
         <setting label="32032" type="lsep" />
         <setting type="sep" />
-        <setting label="32033" id="background" type="bool" default="false"/>
-        <setting label="32034" id="notify" subsetting="true" type="bool"  default="false" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting label="32033" type="bool"      id="background"         default="false"/>
+        <setting label="32034" type="bool"      id="notify"             subsetting="true"   default="false" enable="eq(-1,true)" visible="eq(-1,true)"/>
         <setting type="sep" />
-        <setting label="32023" id="service_startup" type="bool" default="false"/>
-        <setting label="32019" id="service_startupdelay" subsetting="true" type="labelenum" values="--|10|20|30" default="--" visible="eq(-1,true)"/>
+        <setting label="32023" type="bool"      id="service_startup"    default="false"/>
+        <setting label="32019" type="labelenum" id="service_startupdelay" subsetting="true" values="--|10|20|30" default="--" visible="eq(-1,true)"/>
         <setting type="sep" />
-        <setting label="32024" id="service_enable"  type="bool" default="false"/>
-        <setting label="32002" id="service_runtime" subsetting="true" type="labelenum" values="00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23" default="00" enable="eq(-1,true)" visible="eq(-1,true)"/>
-        <setting label="32029" type="text" subsetting="true" enable="false"/>
+        <setting label="32024" type="bool"      id="service_enable"     default="false"/>
+        <setting label="32002" type="labelenum" id="service_runtime"    subsetting="true" values="00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23" default="00" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting label="32029" type="text"      subsetting="true"       enable="false"/>
         <setting type="sep" />
-        <setting type="action" label="$ADDON[script.artwork.downloader 32039]" action="RunScript($CWD/resources/lib/viewer.py, downloadreport)" default="" />
+        <setting label="32039" type="action"    action="RunScript($CWD/resources/lib/viewer.py, downloadreport)" />
         <setting type="sep" />
     </category>
 
@@ -102,12 +102,12 @@
         <setting label="32184" type="lsep" subsetting= "true"/>
         <setting label="32185" type="lsep" subsetting= "true"/>
         <setting label="32186" type="lsep" subsetting= "true"/>
-        <setting label="" type="sep" />
+        <setting label=""      type="sep" />
         <setting label="32187" type="lsep" />
         <setting label="32188" type="lsep" subsetting= "true"/>
         <setting label="32191" type="lsep" subsetting= "true"/>
         <setting label="32192" type="lsep"/>
-        <setting label="" type="sep" />
+        <setting label=""      type="sep" />
         <setting label="32189" type="lsep" />
         <setting label="32190" type="lsep" subsetting= "true"/>
     </category>

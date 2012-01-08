@@ -80,7 +80,6 @@ class TVDBProvider():
                     info['generalinfo'] += 'Season: %s  |  ' %( info['season'].replace('-','') )
                 if 'height' in info:
                     info['generalinfo'] += 'Size: %sx%s  |  ' %( info['height'], info['width'] )
-                print info['generalinfo']
             if info:
                 image_list.append(info)
         if image_list == []:
