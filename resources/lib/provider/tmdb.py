@@ -28,14 +28,13 @@ class TMDBProvider():
             info['type'] = 'fanart'                                         # Set standard to 'fanart'
             info['height'] = item['height']
             info['width'] = item['width']
-            #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
-            # Convert the 'None' value to default 'en'
+            #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
+            # Convert the 'None' value to default 'n/a'
             if not item['iso_639_1']:
                 info['language'] = 'n/a'
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
-            
             # Create Gui string to display
             info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])
             if info:
@@ -49,14 +48,13 @@ class TMDBProvider():
             info['type'] = 'thumb'                                         # Set standard to 'fanart'
             info['height'] = item['height']
             info['width'] = item['width']
-            #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
-            # Convert the 'None' value to default 'en'
+            #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
+            # Convert the 'None' value to default 'n/a'
             if not item['iso_639_1']:
                 info['language'] = 'n/a'
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
-            
             # Create Gui string to display
             info['generalinfo'] = 'Language: %s  |  Rating: %s   ' %(info['language'], info['rating'])
             if info:
@@ -70,14 +68,13 @@ class TMDBProvider():
             info['type'] = 'poster'                                         # Set standard to 'fanart'
             info['height'] = item['height']
             info['width'] = item['width']
-            #info['aspect_ratio'] = item['aspect_ratio']                    # Who know when we may need it
-            # Convert the 'None' value to default 'en'
+            #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
+            # Convert the 'None' value to default 'n/a'
             if not item['iso_639_1']:
                 info['language'] = 'n/a'
             else:
                 info['language'] = item['iso_639_1']
             info['rating'] = 'n/a'                                          # Rating may be integrated at later time
-            
             # Create Gui string to display
             info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])
             if info:
