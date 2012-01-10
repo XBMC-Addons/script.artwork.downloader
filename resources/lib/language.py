@@ -1,10 +1,17 @@
+#import modules
 import xbmc
 
 def get_abbrev():
     language = xbmc.getLanguage().upper()
     translates = {
-        'ENGLISH':'en',
-        'GERMAN': 'de'
+        'DUTCH'     : 'nl',
+        'ENGLISH'   : 'en',
+        'FRENCH'    : 'fr',
+        'GERMAN'    : 'de',
+        'ITALIAN'   : 'it',
+        'POLISH'    : 'pl',
+        'RUSSIAN'   : 'ru',
+        'SPANISH'   : 'es'
     }
     if language in translates:
         return translates[language]

@@ -1,8 +1,11 @@
+#import modules
 import os
 import socket
 import urllib2
 import xbmc
 import xbmcvfs
+
+### import libraries
 from traceback import print_exc
 from resources.lib.script_exceptions import CopyError, DownloadError, CreateDirectoryError, HTTP404Error, HTTPTimeout, ItemNotFoundError
 from urllib2 import HTTPError, URLError
@@ -29,7 +32,7 @@ class fileops:
 
         log("Setting up fileops")
         self.settings = _settings()
-        self.settings._get()
+        self.settings._get_general()
         self._exists = lambda path: xbmcvfs.exists(path)
         self._rmdir = lambda path: xbmcvfs.rmdir(path)
         self._mkdir = lambda path: xbmcvfs.mkdir(path)
@@ -129,7 +132,7 @@ class fileops:
             raise HTTPTimeout(url)
         else:
             log("[%s] Downloaded: %s" % (media_name, filename), xbmc.LOGNOTICE)
-            self.downloadcount = self.downloadcount + 1
+            self.downloadcount += 1
             for targetdir in targetdirs:
                 targetpath = os.path.join(targetdir, filename)
                 self._copyfile(temppath, targetpath, media_name)

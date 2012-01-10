@@ -4,14 +4,17 @@
         <setting type="sep" />
         <setting label="32032" type="lsep" />
         <setting type="sep" />
-        <setting label="" type="lsep" />
-        <setting label="32033" id="background" type="bool" default="false"/>
-        <setting label="32034" id="notify" subsetting="true" type="bool"  default="false" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting label="32033" type="bool"      id="background"         default="false"/>
+        <setting label="32034" type="bool"      id="notify"             subsetting="true"   default="false" enable="eq(-1,true)" visible="eq(-1,true)"/>
         <setting type="sep" />
-        <setting label="32023" id="service_startup" type="bool" default="false"/>
-        <setting label="32024" id="service_enable" type="bool" default="false"/>
-        <setting label="32002" id="service_runtime" subsetting="true" type="enum" values="00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23" default="00" enable="eq(-1,true)" visible="eq(-1,true)"/>
-        <setting label="32029" type="text" subsetting="true" enable="false"/>
+        <setting label="32023" type="bool"      id="service_startup"    default="false"/>
+        <setting label="32019" type="labelenum" id="service_startupdelay" subsetting="true" values="--|10|20|30" default="--" visible="eq(-1,true)"/>
+        <setting type="sep" />
+        <setting label="32024" type="bool"      id="service_enable"     default="false"/>
+        <setting label="32002" type="labelenum" id="service_runtime"    subsetting="true" values="00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23" default="00" enable="eq(-1,true)" visible="eq(-1,true)"/>
+        <setting label="32029" type="text"      subsetting="true"       enable="false"/>
+        <setting type="sep" />
+        <setting label="32039" type="action"    action="RunScript($CWD/resources/lib/viewer.py, downloadreport)" />
         <setting type="sep" />
     </category>
 
@@ -28,8 +31,6 @@
         <setting label="32057" id="limit_size_moviefanart"  subsetting="true" type="labelenum"  enable="eq(-5,true)" lvalues="32061|32060|32059"    default="720"   visible="eq(-5,true)" />
         <setting label="32058" id="limit_size_tvshowfanart" subsetting="true" type="labelenum"  enable="eq(-6,true)" lvalues="32061|32060|32059"    default="720"   visible="eq(-6,true)" />
      </category>
-
-
 
 <!-- Plugin settings: Movie section -->
     <category label="32071" id="section_movie">
@@ -66,6 +67,18 @@
         <setting label="32133" type="bool"      id="tvshow_defaultthumb"        subsetting="true" enable="eq(-12,true)" default="false" />
         <setting label="32083" type="labelenum" id="tvshow_defaultthumb_type"   subsetting="true"  lvalues="32128|32123|32130" default="Poster" visible="eq(-13,true)" enable="eq(-1,true)"/>
     </category>
+
+<!-- Plugin settings: Movie section -->
+    <category label="32091" id="section_musicvideo">
+        <setting type="sep" />
+        <setting label="32092" type="lsep" />
+        <setting type="sep" />
+        <setting label="32013" type="bool" id="musicvideo_enable"                                               default="true" />
+        <setting label="32128" type="bool" id="musicvideo_poster"        subsetting="true" enable="eq(-1,true)" default="true" />
+        <setting label="32121" type="bool" id="musicvideo_fanart"        subsetting="true" enable="eq(-2,true)" default="true" />
+        <setting label="32122" type="bool" id="musicvideo_extrafanart"   subsetting="true" enable="eq(-3,true)" default="true" />
+        <setting label="32131" type="bool" id="musicvideo_extrathumbs"   subsetting="true" enable="eq(-4,true)" default="true" />
+    </category>
     
 <!-- Plugin settings: Advanced section -->
     <category label="32101" id="section_advanced">
@@ -89,12 +102,12 @@
         <setting label="32184" type="lsep" subsetting= "true"/>
         <setting label="32185" type="lsep" subsetting= "true"/>
         <setting label="32186" type="lsep" subsetting= "true"/>
-        <setting label="" type="sep" />
+        <setting label=""      type="sep" />
         <setting label="32187" type="lsep" />
         <setting label="32188" type="lsep" subsetting= "true"/>
         <setting label="32191" type="lsep" subsetting= "true"/>
         <setting label="32192" type="lsep"/>
-        <setting label="" type="sep" />
+        <setting label=""      type="sep" />
         <setting label="32189" type="lsep" />
         <setting label="32190" type="lsep" subsetting= "true"/>
     </category>

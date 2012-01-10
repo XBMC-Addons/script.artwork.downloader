@@ -1,3 +1,4 @@
+### import libraries
 from resources.lib.provider.base import BaseProvider
 from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
@@ -45,7 +46,10 @@ class FTV_TVProvider():
                         info['season'] = "%.2d" % int(image.get('season')) #ouput is double digit int
                     else:
                         info['season'] = 'NA'
+                    info['generalinfo'] = 'Language: %s , Likes: %s   ' %(info['language'], info['likes'])
                     '''
+                    # Create Gui string to display
+                    info['generalinfo'] = 'Language: %s  |  Rating: %s   ' %(info['language'], info['rating'])
                     if info:
                         image_list.append(info)
         if image_list == []:
@@ -79,6 +83,8 @@ class FTV_MovieProvider():
                     info['type'] = imagetype
                     info['language'] = image.get('lang')
                     info['likes'] = image.get('likes')
+                    # Create Gui string to display
+                    info['generalinfo'] = 'Language: %s  |  Likes: %s   ' %(info['language'], info['likes'])
                     if info:            
                         image_list.append(info)
         if image_list == []:

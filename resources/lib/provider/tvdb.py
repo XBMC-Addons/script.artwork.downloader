@@ -1,3 +1,4 @@
+#import libraries
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import _log as log
 from resources.lib.utils import _get_xml as get_xml
@@ -29,8 +30,6 @@ class TVDBProvider():
                     info['preview'] = self.url_prefix + image.findtext('BannerPath')
                 info['language'] = image.findtext('Language')
                 info['id'] = image.findtext('id')
-                info['size'] = ''
-                info['type'] = ''
                 # process fanarts
                 if image.findtext('BannerType') == 'fanart':
                     info['type'] = 'fanart'
@@ -46,6 +45,8 @@ class TVDBProvider():
                 # process seasonbanners
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
                     info['type'] = 'seasonbanner'
+                else:
+                    info['type'] = ''
                 # convert image size ...x... in Bannertype2
                 if image.findtext('BannerType2'):
                     try:
@@ -60,7 +61,7 @@ class TVDBProvider():
 
                 # find image ratings
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
-                    info['rating'] = float(image.findtext('Rating'))
+                    info['rating'] = float( "%.1f" % float( image.findtext('Rating')) ) #output string with one decimal
                 else:
                     info['rating'] = 0
 
@@ -72,8 +73,13 @@ class TVDBProvider():
                         info['season'] = '-specials'
                     else:
                         info['season'] = str(seasonxx)
-                else:
-                    info['season'] = 'NA'
+                
+                # Create Gui string to display
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  ' %( info['language'], info['rating'] )
+                if 'season'in info:
+                    info['generalinfo'] += 'Season: %s  |  ' %( info['season'].replace('-','') )
+                if 'height' in info:
+                    info['generalinfo'] += 'Size: %sx%s  |  ' %( info['height'], info['width'] )
             if info:
                 image_list.append(info)
         if image_list == []:

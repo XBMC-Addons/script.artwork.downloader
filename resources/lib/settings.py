@@ -3,69 +3,81 @@ import xbmc
 import xbmcaddon
 import os
 import xbmcgui
+import sys
+
+### get addon info
+__addon__       = xbmcaddon.Addon('script.artwork.downloader')
+__addonid__     = ( sys.modules[ "__main__" ].__addonid__ )
+__addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
+__author__      = ( sys.modules[ "__main__" ].__author__ )
+__version__     = ( sys.modules[ "__main__" ].__version__ )
+__localize__    = ( sys.modules[ "__main__" ].__localize__ )
+__addondir__    = ( sys.modules[ "__main__" ].__addondir__ )
+settings_file   = os.path.join(__addondir__, "settings.xml")
 
 #import libraries
 from resources.lib.utils import _log as log
 from resources.lib.utils import _dialog as dialog
 from resources.lib import language
 
-
-### get addon info
-__addon__       = xbmcaddon.Addon('script.artwork.downloader')
-__addonid__     = __addon__.getAddonInfo('id')
-__addonname__   = __addon__.getAddonInfo('name')
-__author__      = __addon__.getAddonInfo('author')
-__version__     = __addon__.getAddonInfo('version')
-__localize__    = __addon__.getLocalizedString
+### get abbreviation
 __language__    = language.get_abbrev()
-__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
-settings_file   = os.path.join(__addondir__, "settings.xml")
 
-
+### Get settings from settings.xml
 class _settings:
-    ### Get settings from settings.xml
-    def _get(self):
-        self.movie_enable           = __addon__.getSetting("movie_enable") == 'true'
-        self.movie_poster           = __addon__.getSetting("movie_poster") == 'true'
-        self.movie_fanart           = __addon__.getSetting("movie_fanart") == 'true'
-        self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart") == 'true'
-        self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs") == 'true'
-        self.movie_logo             = __addon__.getSetting("movie_logo") == 'true'
-        self.movie_discart          = __addon__.getSetting("movie_discart") == 'true'
-        self.movie_defaultthumb     = __addon__.getSetting("movie_defaultthumb") == 'true'
+    ### Initial artwork vars
+    def _get_artwork(self):
+        self.movie_enable           = __addon__.getSetting("movie_enable")          == 'true'
+        self.movie_poster           = __addon__.getSetting("movie_poster")          == 'true'
+        self.movie_fanart           = __addon__.getSetting("movie_fanart")          == 'true'
+        self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart")     == 'true'
+        self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs")     == 'true'
+        self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
+        self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
+        self.movie_defaultthumb     = __addon__.getSetting("movie_defaultthumb")    == 'true'
 
-        self.tvshow_enable          = __addon__.getSetting("tvshow_enable") == 'true'
-        self.tvshow_poster          = __addon__.getSetting("tvshow_poster") == 'true'
-        self.tvshow_seasonposter    = __addon__.getSetting("tvshow_seasonposter") == 'true'
-        self.tvshow_fanart          = __addon__.getSetting("tvshow_fanart") == 'true'
-        self.tvshow_extrafanart     = __addon__.getSetting("tvshow_extrafanart") == 'true'
-        self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart") == 'true'
-        self.tvshow_logo            = __addon__.getSetting("tvshow_logo") == 'true'
-        self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb") == 'true'
-        self.tvshow_seasonthumbs    = __addon__.getSetting("tvshow_seasonthumbs") == 'true'
-        self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner") == 'true'
-        self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner") == 'true'
-        self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart") == 'true'
-        self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb") == 'true'
+        self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
+        self.tvshow_poster          = __addon__.getSetting("tvshow_poster")         == 'true'
+        self.tvshow_seasonposter    = __addon__.getSetting("tvshow_seasonposter")   == 'true'
+        self.tvshow_fanart          = __addon__.getSetting("tvshow_fanart")         == 'true'
+        self.tvshow_extrafanart     = __addon__.getSetting("tvshow_extrafanart")    == 'true'
+        self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart")       == 'true'
+        self.tvshow_logo            = __addon__.getSetting("tvshow_logo")           == 'true'
+        self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb")          == 'true'
+        self.tvshow_seasonthumbs    = __addon__.getSetting("tvshow_seasonthumbs")   == 'true'
+        self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner")     == 'true'
+        self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner")   == 'true'
+        self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart")   == 'true'
+        self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb")   == 'true'
         self.tvshow_defaultthumb_type    = __addon__.getSetting("tvshow_defaultthumb_type")
-        
-        self.centralize_enable      = __addon__.getSetting("centralize_enable") == 'true'
-        self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
-        self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
 
-        self.background             = __addon__.getSetting("background") == 'true'
-        self.notify                 = __addon__.getSetting("notify") == 'true'
-        self.service_startup        = __addon__.getSetting("service_startup") == 'true'
-        self.service_enable         = __addon__.getSetting("service_enable") == 'true'
-        self.service_runtime        = __addon__.getSetting("service_runtime")
-        self.files_overwrite        = __addon__.getSetting("files_overwrite") == 'true'
-        self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled") == 'true'
+        self.musicvideo_enable      = __addon__.getSetting("musicvideo_enable")     == 'true'
+        self.musicvideo_poster      = __addon__.getSetting("musicvideo_poster")     == 'true'
+        self.musicvideo_fanart      = __addon__.getSetting("musicvideo_fanart")     == 'true'
+        self.musicvideo_extrafanart = __addon__.getSetting("musicvideo_extrafanart")== 'true'
+        self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs")== 'true'
 
         # temporary force these to false
         self.tvshow_seasonposter    = False
         self.tvshow_seasonbanner    = False
         self.tvshow_seasonthumbs    = False
 
+    ### Initial genral vars
+    def _get_general(self):
+        self.centralize_enable      = __addon__.getSetting("centralize_enable")     == 'true'
+        self.centralfolder_movies   = __addon__.getSetting("centralfolder_movies")
+        self.centralfolder_tvshows  = __addon__.getSetting("centralfolder_tvshows")
+
+        self.background             = __addon__.getSetting("background")            == 'true'
+        self.notify                 = __addon__.getSetting("notify")                == 'true'
+        self.service_startup        = __addon__.getSetting("service_startup")       == 'true'
+        self.service_startupdelay   = __addon__.getSetting("service_startupdelay")
+        self.service_enable         = __addon__.getSetting("service_enable")        == 'true'
+        self.service_runtime        = __addon__.getSetting("service_runtime")
+        self.files_overwrite        = __addon__.getSetting("files_overwrite")       == 'true'
+        self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled")  == 'true'
+
+    ### Initial limit vars
     def _get_limit(self):    
         self.limit_artwork              = __addon__.getSetting("limit_artwork") == 'true'
         self.limit_extrafanart_max      = int(__addon__.getSetting("limit_extrafanart_max").rstrip('0').rstrip('.'))
@@ -78,17 +90,14 @@ class _settings:
         self.limit_language             = __addon__.getSetting("limit_language") == 'true'
         self.limit_notext               = __addon__.getSetting("limit_notext") == 'true'
 
-
-
     ### Initial startup vars
     def _vars(self):
         self.failcount                  = 0
         self.failthreshold              = 3
         self.xmlfailthreshold           = 5
-        self.api_timedelay              = 5
+        self.api_timedelay              = 5000  #msec
         self.mediatype                  = ''
         self.medianame                  = ''
-
 
     ### Log settings in debug mode
     def _initiallog(self):
@@ -97,6 +106,7 @@ class _settings:
         log('## Background Run          = %s' % str(self.background))
         log('## - Notify                = %s' % str(self.notify))
         log('## Run at startup / login  = %s' % str(self.service_startup))
+        log('## - Delay in minutes      = %s' % str(self.service_startupdelay))
         log('## Run as service          = %s' % str(self.service_enable))
         log('## - Time                  = %s' % str(self.service_runtime))
         log('## Overwrite all files     = %s' % str(self.files_overwrite))
@@ -124,6 +134,12 @@ class _settings:
         log('## - Show Characterart     = %s' % str(self.tvshow_characterart))
         log('## - Default Thumb         = %s' % str(self.tvshow_defaultthumb))
         log('## - Default Thumb Type    = %s' % str(self.tvshow_defaultthumb_type))
+        log('##')
+        log('## Musicvideo Artwork      = %s' % str(self.musicvideo_enable))
+        log('## - Poster                = %s' % str(self.musicvideo_poster))
+        log('## - Fanart                = %s' % str(self.musicvideo_fanart))
+        log('## - ExtraFanart           = %s' % str(self.musicvideo_extrafanart))
+        log('## - ExtraThumbs           = %s' % str(self.musicvideo_extrathumbs))
         log('##')
         log('## Centralize Extrafanart  = %s' % str(self.centralize_enable))
         log('## - Movies Folder         = %s' % str(self.centralfolder_movies))
@@ -320,14 +336,52 @@ class _settings:
         info['filename']        = 'folder.jpg'
         self.available_arttypes.append(info)
 
+        # Musicvideo
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_poster
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32128)
+        info['art_type']        = 'poster'
+        info['filename']        = 'poster.jpg'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_fanart 
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32121)
+        info['art_type']        = 'fanart'
+        info['filename']        = 'fanart.jpg'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_extrafanart
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32122)
+        info['art_type']        = 'extrafanart'
+        info['filename']        = ''
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_extrathumbs
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32131)
+        info['art_type']        = 'extrathumbs'
+        info['filename']        = 'thumb'
+        self.available_arttypes.append(info)
+
     ### Check for faulty setting combinations
     def _check(self):
         settings_faulty = True
         while settings_faulty:
             settings_faulty = True
-            check_movie = check_tvshow = check_centralize = True
+            check_movie = check_tvshow = check_musicvideo = check_centralize = True
             # re-check settings after posible change
-            self._get()
+            self._get_general()
+            self._get_artwork()
             # Check if faulty setting in movie section
             if self.movie_enable:
                 if not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_poster and not self.movie_defaultthumb:
@@ -340,6 +394,12 @@ class _settings:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True
+            # Check if faulty setting in musicvideo section
+            if self.musicvideo_enable:
+                if not self.musicvideo_fanart and not self.musicvideo_extrafanart and not self.musicvideo_extrathumbs and not self.musicvideo_poster:
+                    check_musicvideo = False
+                    log('Setting check: No subsetting of musicvideo enabled')
+                else: check_musicvideo = True
             # Check if faulty setting in centralize section
             if self.centralize_enable:
                 if self.centralfolder_movies == '' and self.centralfolder_tvshows == '':
@@ -347,7 +407,7 @@ class _settings:
                     log('Setting check: No centralized folder chosen')
                 else: check_centralize = True
             # Compare all setting check
-            if check_movie and check_tvshow and check_centralize:
+            if check_movie and check_tvshow and check_musicvideo and check_centralize:
                 settings_faulty = False
             else: settings_faulty = True
             # Faulty setting found
