@@ -26,7 +26,8 @@ def _media_listing(media_type):
                     Media['path']       = media_path(item['file'])
                     Media['id']         = item['imdbnumber']
                     Media['tvshowid']   = item['tvshowid']
-                    ### Search for season numbers
+
+                    ### Search for season information
                     json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
                     jsonobject_season = simplejson.loads(json_response_season)
                     if jsonobject_season['result'].has_key('limits'):
@@ -34,6 +35,30 @@ def _media_listing(media_type):
                         Media['seasontotal'] = limits['total']
                         Media['seasonstart'] = limits['start']
                         Media['seasonend'] = limits['end']
+            
+                    # Retrieve season folder path
+                    i = Media['seasonstart']
+                    Media['seasonpaths'] = []
+                    while( i <= Media['seasonend'] and not xbmc.abortRequested ):
+                        json_response_episode = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid":%s, "season":%s, "properties": ["file"] }, "id": 1}' %(Media['tvshowid'],i) )
+                        jsonobject_episode = simplejson.loads(json_response_episode)
+                        itempath = ''
+                        Seasonitem = {}
+                        if jsonobject_episode['result'].has_key('episodes'):
+                            for item in jsonobject_episode['result']['episodes']:
+                                itempath = ( media_path(item['file']) )
+                                if itempath:
+                                    break
+                        Seasonitem['seasonpath'] = itempath
+                        Seasonitem['seasonnumber'] = str("%.2d" %i)
+                        if Seasonitem['seasonnumber'] == '00':
+                            Seasonitem['seasonnumber'] = '-specials'
+                        #log('Path: %s' %Seasonitem['seasonpath'] )
+                        #log('Number: %s'%Seasonitem['seasonnumber'] )
+                        if Seasonitem['seasonpath']:
+                            Media['seasonpaths'].append(Seasonitem)
+                        i += 1
+                    #log(Media)
                     Medialist.append(Media)
         
         elif media_type == 'movie':
