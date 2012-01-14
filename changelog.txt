@@ -6,8 +6,10 @@
 - Changed: Reverted old change of using image ID from tmdb as filename. This is not available any more in new API v3
 - Changed: Use the new TMDB API v3
 - Changed: Use smaller image in GUI dialog for faster loading of images (when posible)
+- Changed: You can now set preferred language. Will English as default fallback
 - Added: Polish translation (thx cienislaw)
 - Added: Dutch translation (thx Martijn)
+- Added: German translation (thx Suven)
 - Added: Download report is accessible from the add-on settings window
 - Added: Download report is accessible from the yes/no dialog when finished (not when background/silent/custom run)
 - Added: Extra info to gui dialog (language and rating)
