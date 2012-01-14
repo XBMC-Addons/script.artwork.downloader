@@ -1,5 +1,4 @@
 [B]1.0.4[/B]
-- Fixed: Movie defaulthumb followed tvshow setting
 - Fixed: After doing ID conversion it skipped that movie
 - Fixed: Some mayor bug that no ones has noticed so far
 - Fixed: When no exact title match was found it downloaded the entire library
