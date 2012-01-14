@@ -87,7 +87,7 @@ class _settings:
         self.limit_extrathumbs          = 'true'
         self.limit_extrathumbs_max      = 4
         self.limit_artwork_max          = 1
-        self.limit_language             = __addon__.getSetting("limit_language") == 'true'
+        self.limit_language             = __addon__.getSetting("limit_language")
         self.limit_notext               = __addon__.getSetting("limit_notext") == 'true'
 
     ### Initial startup vars

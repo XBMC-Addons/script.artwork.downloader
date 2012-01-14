@@ -7,6 +7,7 @@ from resources.lib import language
 from resources.lib.fileops import fileops
 from resources.lib.settings import _settings
 from resources.lib.utils import _log as log
+pref_language = xbmcaddon.Addon().getSetting("limit_language")
 
 class apply_filters:
 
@@ -79,7 +80,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [language, 'n/a']:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
         
@@ -104,7 +105,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
         return [limited, reason]
 
     def extrathumbs(self, mediatype, artwork, downloaded_artwork, language):
@@ -133,7 +134,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
 
@@ -150,7 +151,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
 
@@ -167,7 +168,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
         
@@ -188,7 +189,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
         
@@ -201,7 +202,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
         
@@ -214,7 +215,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
 
@@ -227,7 +228,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
         
@@ -240,7 +241,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
         
@@ -253,7 +254,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
 
@@ -266,7 +267,7 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]        
 
@@ -279,6 +280,6 @@ class apply_filters:
             limited = True
         # Correct language
         elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
-            reason = "Doesn't match current language: %s" % xbmc.getLanguage()
+            reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]

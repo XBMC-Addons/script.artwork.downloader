@@ -1,8 +1,8 @@
 #import modules
 import xbmc
-
+import xbmcaddon
 def get_abbrev():
-    language = xbmc.getLanguage().upper()
+    language = xbmcaddon.Addon().getSetting("limit_language").upper()
     translates = {
         'DUTCH'     : 'nl',
         'ENGLISH'   : 'en',

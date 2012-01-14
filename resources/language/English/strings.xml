@@ -49,7 +49,7 @@
         <string id="32052">[B]Options for limiting downloaded artwork[/B]</string>
         <string id="32053">Maximum extrafanart</string>
         <string id="32054">Minimum rating</string>
-        <string id="32055">Current language only</string>
+        <string id="32055">Preferred language:</string>
         <string id="32056">Exclude fanart that has text</string>
         <string id="32057">Minimum fanart size: Movies</string>
         <string id="32058">Minimum fanart size: TV Shows</string>

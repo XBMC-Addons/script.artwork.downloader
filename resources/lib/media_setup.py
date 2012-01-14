@@ -27,7 +27,7 @@ def _media_listing(media_type):
                     Media['id']         = item['imdbnumber']
                     Media['tvshowid']   = item['tvshowid']
 
-                    ### Search for season information
+                    # Search for season information
                     json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
                     jsonobject_season = simplejson.loads(json_response_season)
                     if jsonobject_season['result'].has_key('limits'):

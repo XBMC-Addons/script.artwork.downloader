@@ -49,7 +49,7 @@
         <string id="32052">[B]Opcje ograniczania rodzajów i ilości pobieranych grafik[/B]</string>
         <string id="32053">Maksymalna ilość ExtraFanArtów</string>
         <string id="32054">Minimalna ocena</string>
-        <string id="32055">Tylko w aktywnym języku interfejsu</string>
+        <string id="32055">Preferred language:</string>
         <string id="32056">Wyklucz FanArt z napisami</string>
         <string id="32057">Minimalny rozmiar FanArtów: Filmy</string>
         <string id="32058">Minimalny rozmiar FanArtów: Seriale TV</string>
