@@ -7,7 +7,7 @@ from resources.lib import language
 from resources.lib.fileops import fileops
 from resources.lib.settings import _settings
 from resources.lib.utils import _log as log
-pref_language = xbmcaddon.Addon().getSetting("limit_language")
+pref_language = xbmcaddon.Addon().getSetting("limit_preferred_language")
 
 class apply_filters:
 
@@ -79,7 +79,7 @@ class apply_filters:
             reason = 'Has text'
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [language, 'n/a']:
+        elif self.settings.limit_artwork and not artwork['language'] in [language, 'n/a']:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -104,7 +104,7 @@ class apply_filters:
             reason = 'Has text'
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
         return [limited, reason]
 
@@ -133,7 +133,7 @@ class apply_filters:
             reason = 'Size was to small: %s' % artwork['height']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -150,7 +150,7 @@ class apply_filters:
             reason = 'Size was to small: %s' % artwork['height']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -167,7 +167,7 @@ class apply_filters:
             reason = 'Rating too low: %s' % artwork['rating']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -188,7 +188,7 @@ class apply_filters:
             reason = 'Rating too low: %s' % artwork['rating']
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -201,7 +201,7 @@ class apply_filters:
             reason = 'Max number logos reached: %s' % self.settings.limit_artwork_max
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -214,7 +214,7 @@ class apply_filters:
             reason = 'Max number clearart reached: %s' % self.settings.limit_artwork_max
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -227,7 +227,7 @@ class apply_filters:
             reason = 'Max number characterart reached: %s' % self.settings.limit_artwork_max
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -240,7 +240,7 @@ class apply_filters:
             reason = 'Max number tvthumb reached: %s' % self.settings.limit_artwork_max
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -253,7 +253,7 @@ class apply_filters:
             reason = 'Max number seasonthumb reached: %s' % self.settings.limit_artwork_max
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]
@@ -266,7 +266,7 @@ class apply_filters:
             reason = 'Max number defaultthumb reached: %s' % self.settings.limit_artwork_max
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]        
@@ -279,7 +279,7 @@ class apply_filters:
             reason = 'Max number discart reached: %s' % self.settings.limit_artwork_max
             limited = True
         # Correct language
-        elif self.settings.limit_artwork and self.settings.limit_language and not artwork['language'] in [ language, 'n/a' ]:
+        elif self.settings.limit_artwork and not artwork['language'] in [ language, 'n/a' ]:
             reason = "Doesn't match preferred language: %s" % pref_language
             limited = True
         return [limited, reason]

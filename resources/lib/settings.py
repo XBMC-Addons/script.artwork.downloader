@@ -90,7 +90,7 @@ class _settings:
         self.limit_extrathumbs          = 'true'
         self.limit_extrathumbs_max      = 4
         self.limit_artwork_max          = 1
-        self.limit_language             = __addon__.getSetting("limit_language")
+        self.limit_preferred_language   = __addon__.getSetting("limit_preferred_language")
         self.limit_notext               = __addon__.getSetting("limit_notext") == 'true'
 
     ### Initial startup vars
@@ -155,7 +155,7 @@ class _settings:
         log('## - TV Show Fanart Size   = %s' % str(self.limit_size_tvshowfanart))
         log('## - Extrathumbs           = %s' % str(self.limit_extrathumbs))
         log('## - Extrathumbs Max       = %s' % str(self.limit_extrathumbs_max))
-        log('## - Language              = %s' % str(self.limit_language))
+        log('## - Language              = %s' % str(self.limit_preferred_language))
         log('## - Fanart with no text   = %s' % str(self.limit_notext))
         log('##')
         log('## XBMC caching enabled    = %s' % str(self.xbmc_caching_enabled))

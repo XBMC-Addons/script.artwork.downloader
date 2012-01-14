@@ -508,7 +508,7 @@ class Main:
         self.settings.failcount = 0
         current_artwork = 0 # Used in progras dialog
         limit_counter = 0   # Used for limiting on number
-        xbmc_language = language.get_abbrev()         # get abbreviation
+        pref_language = language.get_abbrev()         # get abbreviation
         i = 0               # Set loop counter
         imagefound = False  # Set found image false
         final_image_list = []
@@ -527,8 +527,8 @@ class Main:
             while ( i < 2 and not imagefound):
                 # when no image found found after one imagelist loop set to english
                 if not imagefound and i == 1:
-                    xbmc_language = 'en'
-                    log('! No matching %s artwork found. Searching for English backup' %xbmc.getLanguage(), xbmc.LOGNOTICE)
+                    pref_language = 'en'
+                    log('! No matching %s artwork found. Searching for English backup' %self.settings.limit_preferred_language, xbmc.LOGNOTICE)
                 # loop through image list
                 for artwork in final_image_list:
                     if image_type ==  artwork['type']:
@@ -568,7 +568,7 @@ class Main:
                             self.download_list.append(item)
                         elif image_type == artwork['type']:
                             # Check for set limits
-                            limited = self.filters.do_filter( item['artwork_type'], item['media_type'], item['artwork_details'], limit_counter, xbmc_language )
+                            limited = self.filters.do_filter( item['artwork_type'], item['media_type'], item['artwork_details'], limit_counter, pref_language )
                             # Delete extrafanart when below settings and parsing the reason message
                             if limited[0] and not i == 1 and item['artwork_type'] in [ 'extrafanart', 'extrathumbs' ]:
                                 self.fileops._delete_file_in_dirs( item['filename'], item['targetdirs'], limited[1],item['media_name'] )
