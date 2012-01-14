@@ -44,7 +44,7 @@
         <setting label="32131" type="bool" id="movie_extrathumbs"   subsetting="true" enable="eq(-4,true)" default="true" />
         <setting label="32126" type="bool" id="movie_logo"          subsetting="true" enable="eq(-5,true)" default="false" visible="false" />
         <setting label="32132" type="bool" id="movie_discart"       subsetting="true" enable="eq(-6,true)" default="false" visible="false" />
-        <setting label="32133" type="bool" id="movie_defaultthumb"  subsetting="true" enable="eq(-7,true)" default="false" />
+        <!-- <setting label="32133" type="bool" id="movie_defaultthumb"  subsetting="true" enable="eq(-7,true)" default="false" /> -->
     </category>
     
 <!-- Plugin settings: TV Show section -->
@@ -64,8 +64,8 @@
         <setting label="32124" type="bool"      id="tvshow_seasonbanner"        subsetting="true" enable="false"        default="false" visible="false" />
         <setting label="32130" type="bool"      id="tvshow_thumb"               subsetting="true" enable="eq(-10,true)" default="true" />
         <setting label="32134" type="bool"      id="tvshow_seasonthumbs"        subsetting="true" enable="false"        default="false" visible="false" />
-        <setting label="32133" type="bool"      id="tvshow_defaultthumb"        subsetting="true" enable="eq(-12,true)" default="false" />
-        <setting label="32083" type="labelenum" id="tvshow_defaultthumb_type"   subsetting="true"  lvalues="32128|32123|32130" default="Poster" visible="eq(-13,true)" enable="eq(-1,true)"/>
+        <!-- <setting label="32133" type="bool"      id="tvshow_defaultthumb"        subsetting="true" enable="eq(-12,true)" default="false" />
+        <setting label="32083" type="labelenum" id="tvshow_defaultthumb_type"   subsetting="true"  lvalues="32128|32123|32130" default="Poster" visible="eq(-13,true)" enable="eq(-1,true)"/> -->
     </category>
 
 <!-- Plugin settings: Movie section -->

@@ -61,6 +61,9 @@ class _settings:
         self.tvshow_seasonposter    = False
         self.tvshow_seasonbanner    = False
         self.tvshow_seasonthumbs    = False
+        
+        self.movie_defaultthumb     = False
+        self.tvshow_defaultthumb    = False
 
     ### Initial genral vars
     def _get_general(self):
