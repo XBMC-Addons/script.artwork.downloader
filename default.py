@@ -646,7 +646,7 @@ class Main:
                     self._download_art_succes = False
                 except DownloadError, e:
                     self.settings.failcount += 1
-                    log('Error downloading file: %s (Possible network error: %s), skipping' % (url, str(e)), xbmc.LOGERROR)
+                    log('Error downloading file: %s (Possible network error: %s), skipping' % (item['url'], str(e)), xbmc.LOGERROR)
                     self._download_art_succes = False
                 else:
                     try:
