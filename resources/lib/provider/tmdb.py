@@ -1,3 +1,6 @@
+#import modules
+import xbmc
+
 ### import libraries
 from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import _log as log
