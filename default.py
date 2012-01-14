@@ -37,8 +37,6 @@ from resources.lib.settings import _settings
 from resources.lib.media_setup import _media_listing as media_listing
 from xml.parsers.expat import ExpatError
 
-
-
 ### set button actions for GUI
 ACTION_PREVIOUS_MENU = ( 9, 10, 92, 216, 247, 257, 275, 61467, 61448, )
 
@@ -151,6 +149,7 @@ class Main:
         self.musicvideo_providers = providers['musicvideo_providers']
         self.download_counter = {}
         self.download_counter['Total Artwork'] = 0
+        self.reportdata = '[B]Artwork Downloader:[/B]'
         self.mediatype = ''
         self.medianame = ''
         self.mediapath = ''
@@ -230,20 +229,20 @@ class Main:
         
         ### log results and notify user
         # Download totals to log and to download report
-        reportdata  = ( '[B]Artwork Downloader:[/B]\n - Time of finish: %s' %time.strftime('%d %B %Y - %H:%M') )
-        reportdata += ( '\n[B]Download totaliser:[/B]' )
-        reportdata += ( '\n - Total Artwork: %s' % self.download_counter['Total Artwork'] )
+        self.reportdata += ( '\n - Time of finish: %s' %time.strftime('%d %B %Y - %H:%M') )
+        self.reportdata += ( '\n[B]Download totaliser:[/B]' )
+        self.reportdata += ( '\n - Total Artwork: %s' % self.download_counter['Total Artwork'] )
         # Cycle through the download totals
         for artwork_type in self.download_counter:
             if not artwork_type == 'Total Artwork':
-                reportdata += '\n - %s: %s' % ( artwork_type, self.download_counter[artwork_type] )
-        reportdata += '\n[B]Failed items:[/B]'
+                self.reportdata += '\n - %s: %s' % ( artwork_type, self.download_counter[artwork_type] )
+        self.reportdata += '\n[B]Failed items:[/B]'
         # Cycle through the download totals
         if not self.failed_items:
-            reportdata += '\n - No failed or missing items found'
+            self.reportdata += '\n - No failed or missing items found'
         else:
             for item in getUniq(self.failed_items):
-                reportdata += '\n - %s' %item
+                self.reportdata += '\n - %s' %item
         # Build dialog messages
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
         summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32016)
@@ -251,10 +250,10 @@ class Main:
         provider_msg2 = __localize__(32184) + " | " + __localize__(32185) + " | " + __localize__(32186)
         # Close dialog in case it was open before doing a notification
         dialog('close', background = self.settings.background)
-        # Print the reportdata log message
-        log('Failed items report: %s' % reportdata.replace('[B]', '').replace('[/B]', '') )
+        # Print the self.reportdata log message
+        log('Failed items report: %s' % self.reportdata.replace('[B]', '').replace('[/B]', '') )
         # Safe the downloadreport to settings folder using save function
-        save_nfo_file(reportdata, os.path.join( __addondir__ , 'downloadreport.txt' ) )
+        save_nfo_file(self.reportdata, os.path.join( __addondir__ , 'downloadreport.txt' ) )
         # Some dialog checks
         if self.settings.notify:
             log('Notify on finished/error enabled')
@@ -342,8 +341,10 @@ class Main:
                 break
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.settings.background):
+                self.reportdata += ( '\n - add-on cancelled: %s' %time.strftime('%d %B %Y - %H:%M') )
                 break
             if not self.settings.failcount < self.settings.failthreshold:
+                self.reportdata += ( '\n - add-on aborted because of problems. Check the log: %s' %time.strftime('%d %B %Y - %H:%M') )
                 break
             # Declare some vars
             self.media_id   = currentmedia["id"]
