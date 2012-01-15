@@ -130,6 +130,8 @@ class fileops:
             raise HTTPTimeout(url)
         except socket.timeout, e:
             raise HTTPTimeout(url)
+        except Exception, e:
+            log( str( e ), xbmc.LOGNOTICE )
         else:
             log("[%s] Downloaded: %s" % (media_name, filename), xbmc.LOGNOTICE)
             self.downloadcount += 1

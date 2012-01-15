@@ -66,18 +66,13 @@ class TVDBProvider():
                     info['rating'] = 0
 
                 # find season info
-                if image.findtext('Season') and int(image.findtext('Season')) >= 0:
-                    season = image.findtext('season')
-                    seasonxx = "%.2d" % int(image.findtext('Season')) #ouput is double digit int
-                    if seasonxx == '00':
-                        info['season'] = '-specials'
-                    else:
-                        info['season'] = str(seasonxx)
-                
+                if image.findtext('Season') != '':
+                    info['season'] = image.findtext('Season')
                 # Create Gui string to display
                 info['generalinfo'] = 'Language: %s  |  Rating: %s  |  ' %( info['language'], info['rating'] )
                 if 'season'in info:
-                    info['generalinfo'] += 'Season: %s  |  ' %( info['season'].replace('-','') )
+                    info['generalinfo'] += 'Season: %s  |  ' %( info['season'] )
+                    #info['generalinfo'] += 'Season: %s  |  ' %( info['season'].replace('-','') )
                 if 'height' in info:
                     info['generalinfo'] += 'Size: %sx%s  |  ' %( info['height'], info['width'] )
             if info:

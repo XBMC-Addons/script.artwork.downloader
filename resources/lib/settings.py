@@ -61,6 +61,9 @@ class _settings:
         self.tvshow_seasonposter    = False
         self.tvshow_seasonbanner    = False
         self.tvshow_seasonthumbs    = False
+        
+        self.movie_defaultthumb     = False
+        self.tvshow_defaultthumb    = False
 
     ### Initial genral vars
     def _get_general(self):
@@ -87,7 +90,7 @@ class _settings:
         self.limit_extrathumbs          = 'true'
         self.limit_extrathumbs_max      = 4
         self.limit_artwork_max          = 1
-        self.limit_language             = __addon__.getSetting("limit_language") == 'true'
+        self.limit_preferred_language   = __addon__.getSetting("limit_preferred_language")
         self.limit_notext               = __addon__.getSetting("limit_notext") == 'true'
 
     ### Initial startup vars
@@ -152,7 +155,7 @@ class _settings:
         log('## - TV Show Fanart Size   = %s' % str(self.limit_size_tvshowfanart))
         log('## - Extrathumbs           = %s' % str(self.limit_extrathumbs))
         log('## - Extrathumbs Max       = %s' % str(self.limit_extrathumbs_max))
-        log('## - Language              = %s' % str(self.limit_language))
+        log('## - Language              = %s' % str(self.limit_preferred_language))
         log('## - Fanart with no text   = %s' % str(self.limit_notext))
         log('##')
         log('## XBMC caching enabled    = %s' % str(self.xbmc_caching_enabled))
@@ -413,5 +416,8 @@ class _settings:
             # Faulty setting found
             if settings_faulty:
                 log('Faulty setting combination found')
-                dialog('okdialog', line1 = __localize__(32003), line2 = __localize__(32004))
-                __addon__.openSettings()
+                if dialog('yesno', line1 = __localize__(32003), line2 = __localize__(32004), background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025)):
+                    __addon__.openSettings()
+                else:
+                    xbmc.abortRequested = True
+                    break

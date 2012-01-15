@@ -44,7 +44,7 @@ def autostart():
                 xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:00:20,silent)') 
         if settings.service_enable:
             while (not xbmc.abortRequested):
-                xbmc.sleep(10000)
+                xbmc.sleep(5000)
                 if not(time.strftime('%H:%M') == service_runtime):
                     pass
                 else:
