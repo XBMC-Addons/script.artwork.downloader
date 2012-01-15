@@ -549,7 +549,8 @@ class Main:
                         item['artwork_type']    = art_type
                         item['artwork_string']  = msg
                         item['artwork_details'] = artwork
-                        current_artwork        += 1
+                        if i != 1:
+                            current_artwork        += 1
 
                         # File naming
                         if item['artwork_type']   == 'extrafanart':
