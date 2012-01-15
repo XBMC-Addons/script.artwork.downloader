@@ -567,6 +567,8 @@ class Main:
                         if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
                             # Add image to download list
                             self.download_list.append(item)
+                            # jump out of the loop
+                            imagefound = True
                         elif image_type == artwork['type']:
                             # Check for set limits
                             limited = self.filters.do_filter( item['artwork_type'], item['media_type'], item['artwork_details'], limit_counter, pref_language )
