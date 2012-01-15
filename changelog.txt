@@ -6,6 +6,7 @@
 - Changed: Use the new TMDB API v3
 - Changed: Use smaller image in GUI dialog for faster loading of images (when posible)
 - Changed: You can now set preferred language. Will always use English as fallback
+- Changed: Show yes/no dialog for faulty settings instead of looping
 - Added: Polish translation (thx cienislaw)
 - Added: Dutch translation (thx Martijn)
 - Added: German translation (thx Suven)
