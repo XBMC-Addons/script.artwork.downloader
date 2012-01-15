@@ -416,5 +416,8 @@ class _settings:
             # Faulty setting found
             if settings_faulty:
                 log('Faulty setting combination found')
-                dialog('okdialog', line1 = __localize__(32003), line2 = __localize__(32004))
-                __addon__.openSettings()
+                if dialog('yesno', line1 = __localize__(32003), line2 = __localize__(32004), background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025)):
+                    __addon__.openSettings()
+                else:
+                    xbmc.abortRequested = True
+                    break
