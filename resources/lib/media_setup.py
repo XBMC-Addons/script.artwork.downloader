@@ -50,9 +50,7 @@ def _media_listing(media_type):
                                 if itempath:
                                     break
                         Seasonitem['seasonpath'] = itempath
-                        Seasonitem['seasonnumber'] = str("%.2d" %i)
-                        if Seasonitem['seasonnumber'] == '00':
-                            Seasonitem['seasonnumber'] = '-specials'
+                        Seasonitem['seasonnumber'] = str( i )
                         #log('Path: %s' %Seasonitem['seasonpath'] )
                         #log('Number: %s'%Seasonitem['seasonnumber'] )
                         if Seasonitem['seasonpath']:
