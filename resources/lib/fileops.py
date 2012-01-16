@@ -16,7 +16,7 @@ THUMBS_CACHE_PATH = xbmc.translatePath( "special://profile/Thumbnails/Video" )
 
 
 ### adjust default timeout to stop script hanging
-timeout = 20
+timeout = 10
 socket.setdefaulttimeout(timeout)
 
 class fileops:

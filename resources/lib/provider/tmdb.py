@@ -29,15 +29,15 @@ class TMDBProvider():
                 info['url'] = self.imageurl + 'original' + item['file_path']    # Original image url
                 info['preview'] = self.imageurl + 'w300' + item['file_path']    # Create a preview url for later use
                 info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
-                info['type'] = 'fanart'                                         # Set standard to 'fanart'
+                info['type'] = ['fanart','extrafanart']                         # Set standard to 'fanart'
                 info['height'] = item['height']
                 info['width'] = item['width']
                 #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
                 # Convert the 'None' value to default 'n/a'
-                if not item['iso_639_1']:
-                    info['language'] = 'n/a'
-                else:
+                if item['iso_639_1']:
                     info['language'] = item['iso_639_1']
+                else:
+                    info['language'] = 'n/a'
                 info['rating'] = 'n/a'                                          # Rating may be integrated at later time
                 # Create Gui string to display
                 info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])
@@ -52,15 +52,15 @@ class TMDBProvider():
                 info['url'] = self.imageurl + 'w780' + item['file_path']    # Original image url
                 info['preview'] = self.imageurl + 'w300' + item['file_path']    # Create a preview url for later use
                 info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
-                info['type'] = 'thumb'                                         # Set standard to 'fanart'
+                info['type'] = ['thumb','extrathumbs']                          # Set standard to 'fanart'
                 info['height'] = item['height']
                 info['width'] = item['width']
                 #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
                 # Convert the 'None' value to default 'n/a'
-                if not item['iso_639_1']:
-                    info['language'] = 'n/a'
-                else:
+                if item['iso_639_1']:
                     info['language'] = item['iso_639_1']
+                else:
+                    info['language'] = 'n/a'
                 info['rating'] = 'n/a'                                          # Rating may be integrated at later time
                 # Create Gui string to display
                 info['generalinfo'] = 'Language: %s  |  Rating: %s   ' %(info['language'], info['rating'])
@@ -75,15 +75,15 @@ class TMDBProvider():
                 info['url'] = self.imageurl + 'original' + item['file_path']    # Original image url
                 info['preview'] = self.imageurl + 'w185' + item['file_path']    # Create a preview url for later use
                 info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
-                info['type'] = 'poster'                                         # Set standard to 'fanart'
+                info['type'] = ['poster']                                         # Set standard to 'fanart'
                 info['height'] = item['height']
                 info['width'] = item['width']
                 #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
                 # Convert the 'None' value to default 'n/a'
-                if not item['iso_639_1']:
-                    info['language'] = 'n/a'
-                else:
+                if item['iso_639_1']:
                     info['language'] = item['iso_639_1']
+                else:
+                    info['language'] = 'n/a'
                 info['rating'] = 'n/a'                                          # Rating may be integrated at later time
                 # Create Gui string to display
                 info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])

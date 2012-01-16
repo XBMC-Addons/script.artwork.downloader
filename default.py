@@ -156,7 +156,6 @@ class Main:
         self.mode = ''
         self.silent = ''
         self.gui_selected_type = ''
-        self.gui_imagelist = ''
         self.failed_items = []
         self.download_list = []
         self._download_art_succes = False
@@ -277,7 +276,7 @@ class Main:
         else:
             dialog('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
         # Container refresh
-        if self.mode == 'gui' or self.mode == 'customgui':
+        if self.mode in ['gui','customgui']:
             if self._download_art_succes:
                 xbmc.executebuiltin( "Container.Refresh" )
                 #xbmc.executebuiltin( 'XBMC.ReloadSkin()' )
@@ -293,15 +292,10 @@ class Main:
         if self.mode == 'custom':
             self.settings.movie_enable = True
             self.settings.tvshow_enable = True
-        if itemtype == 'movie':
-            log("## Solo mode: Movie...")
-            self.Medialist = media_listing('movie')
-        elif itemtype == 'tvshow':
-            self.Medialist = media_listing('tvshow')
-            log("## Solo mode: TV Show...")
-        elif itemtype == 'musicvideo':
-            self.Medialist = media_listing('musicvideo')
-            log("## Solo mode: Musicvideo...")
+            self.settings.musicvideo_enable = True
+        if itemtype in ['movie','tvshow','musicvideo']:
+            log("## Solo mode: %s..." %itemtype)
+            self.Medialist = media_listing( itemtype )
         else:
             log("Error: type must be one of 'movie', 'tvshow', 'musicvideo'...... aborting", xbmc.LOGERROR)
             return False
@@ -469,44 +463,29 @@ class Main:
         for item in self.settings.available_arttypes:
             if item['art_type'] in self.download_arttypes and ((self.settings.movie_enable and self.mediatype == item['media_type']) or (self.settings.tvshow_enable and self.mediatype == item['media_type']) or (self.settings.musicvideo_enable and self.mediatype == item['media_type']) ):
                 if item['art_type'] == 'extrafanart':
-                    self._download_art(item['art_type'], 'fanart', item['filename'], self.target_extrafanartdirs,  item['gui_string'])
-                elif item['art_type'] == 'defaultthumb' and not self.mediatype == 'tvshow':
-                    self._download_art(item['art_type'], 'poster', item['filename'], self.target_artworkdir,  item['gui_string'])    
-                elif item['art_type'] == 'defaultthumb' and self.mediatype == 'tvshow':
-                    self._download_art(item['art_type'],  str.lower(self.settings.tvshow_defaultthumb_type), item['filename'], self.target_artworkdir,  item['gui_string'])
+                    self._download_art(item['art_type'], item['filename'], self.target_extrafanartdirs,  item['gui_string'])
                 elif item['art_type'] == 'extrathumbs':
-                    self._download_art(item['art_type'], 'thumb', item['filename'], self.target_extrathumbsdirs,  item['gui_string'])
+                    self._download_art(item['art_type'], item['filename'], self.target_extrathumbsdirs,  item['gui_string'])
                 else:
-                    self._download_art(item['art_type'], item['art_type'], item['filename'], self.target_artworkdir,  item['gui_string'])
+                    self._download_art(item['art_type'], item['filename'], self.target_artworkdir,  item['gui_string'])
 
 
     ### Retrieves imagelist for GUI solo mode
     def _gui_imagelist(self, art_type):
-        image_type = art_type
         log('- Retrieving image list for GUI')
-        self.gui_imagelist = []
-        # do some check for special cases
-        if art_type == 'defaultthumb' and self.mediatype == 'tvshow':
-            image_type = str.lower(self.settings.tvshow_defaultthumb_type)
-        elif art_type == 'defaultthumb' and self.mediatype == 'movie':
-            image_type = 'poster'
-        elif art_type == 'extrafanart':
-            image_type == 'fanart'
-        elif art_type == 'extrathumbs':
-            image_type == 'fanart'
+        filteredlist = []
         #retrieve list
         for artwork in self.image_list:
-            if  artwork['type'] == image_type:
-                self.gui_imagelist.append(artwork)
-        if self.gui_imagelist == '':
-            return False
-        else:
-            return True
+            if  art_type in artwork['type']:
+                filteredlist.append(artwork)
+        return filteredlist
+ 
 
     ### Artwork downloading
-    def _download_art(self, art_type, image_type, filename, targetdirs, msg):
+    def _download_art(self, art_type, filename, targetdirs, msg):
         log('* Image type: %s' %art_type)
         self.settings.failcount = 0
+        seasonfile_presents = []
         current_artwork = 0 # Used in progras dialog
         limit_counter = 0   # Used for limiting on number
         pref_language = language.get_abbrev()         # get abbreviation
@@ -514,10 +493,7 @@ class Main:
         imagefound = False  # Set found image false
         final_image_list = []
         if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
-            item = {}
-            item['url']  = self.image_url
-            item['type'] = image_type
-            final_image_list.append(item)
+            final_image_list.append(self.image_item)
         else:
             final_image_list = self.image_list
         if len(final_image_list) == 0:
@@ -532,7 +508,7 @@ class Main:
                     log('! No matching %s artwork found. Searching for English backup' %self.settings.limit_preferred_language, xbmc.LOGNOTICE)
                 # loop through image list
                 for artwork in final_image_list:
-                    if image_type ==  artwork['type']:
+                    if art_type in artwork['type']:
                         ### check if script has been cancelled by user
                         if dialog('iscanceled', background = self.settings.background):
                             dialog('close', background = self.settings.background)
@@ -545,22 +521,18 @@ class Main:
                         item['url']             = artwork['url']
                         item['targetdirs']      = targetdirs
                         item['media_name']      = self.media_name
-                        item['media_type']      = self.mediatype
-                        item['artwork_type']    = art_type
                         item['artwork_string']  = msg
                         item['artwork_details'] = artwork
                         if i != 1:
                             current_artwork        += 1
 
                         # File naming
-                        if item['artwork_type']   == 'extrafanart':
+                        if art_type   == 'extrafanart':
                             item['filename'] = ('%s.jpg'% artwork['id'])
-                        elif item['artwork_type']   == 'extrathumbs':
-                            item['filename'] = (filename+'%s.jpg' % str(limit_counter + 1))
-                        elif item['artwork_type']   == 'seasonthumbs' or item['artwork_type'] == 'seasonbanner':
-                            item['filename'] = (filename+'%s.jpg' % artwork['season'])
-                        elif item['artwork_type']   == 'seasonposter':
-                            item['filename'] = (filename+'%s.jpg' % artwork['season'])
+                        elif art_type == 'extrathumbs':
+                            item['filename'] = ( filename % str(limit_counter + 1) )
+                        elif art_type == 'seasonthumb' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
+                            item['filename'] = ( filename % artwork['season'] )
                         else:
                             item['filename'] = filename
 
@@ -570,19 +542,19 @@ class Main:
                             self.download_list.append(item)
                             # jump out of the loop
                             imagefound = True
-                        elif image_type == artwork['type']:
+                        else:
                             # Check for set limits
-                            limited = self.filters.do_filter( item['artwork_type'], item['media_type'], item['artwork_details'], limit_counter, pref_language )
+                            limited = self.filters.do_filter( art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language )
                             # Delete extrafanart when below settings and parsing the reason message
-                            if limited[0] and not i == 1 and item['artwork_type'] in [ 'extrafanart', 'extrathumbs' ]:
-                                self.fileops._delete_file_in_dirs( item['filename'], item['targetdirs'], limited[1],item['media_name'] )
+                            if limited[0] and not i == 1 and art_type in [ 'extrafanart', 'extrathumbs' ]:
+                                self.fileops._delete_file_in_dirs( item['filename'], item['targetdirs'], limited[1],self.media_name )
                             # Just ignore image when it's below settings
                             elif limited[0]:
                                 log( " - Ignoring (%s): %s" % ( limited[1], item['filename']) )
                                 # Check if artwork doesn't exist and the ones available are below settings
                                 for targetdir in item['targetdirs']:
                                     if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not art_type in ['extrafanart', 'extrathumbs']:
-                                        self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,item['artwork_type']) )
+                                        self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,art_type) )
                             else:
                                 # Always add to list when set to overwrite
                                 if self.settings.files_overwrite:
@@ -604,8 +576,17 @@ class Main:
                                         imagefound = True
                                         log(" - Ignoring (Exists in all target directories): %s" % item['filename'] )
                                 # Raise limit counter because image was added to list or it already existed
-                                limit_counter += 1
-                        else: pass
+                                # Do some special check on season artwork
+                                if art_type == 'seasonthumbs' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
+                                    if artwork['season'] in seasonfile_presents:
+                                        log('seasonnumber: %s' %artwork['season'] )
+                                        limit_counter += 1
+                                    else:
+                                        seasonfile_presents.append( artwork['season'] )
+                                        log('Seasons present: %s' %seasonfile_presents )
+                                        limit_counter = 0
+                                else:
+                                    limit_counter += 1
                 # Counter to make the loop twice when nothing found
                 i += 1
             # Add to failed items if 0
@@ -665,6 +646,7 @@ class Main:
         # Close the 'checking for artwork' dialog before opening the GUI list
         dialog('close', background = self.settings.background)
         self.GUI_type_list = []
+        imagelist = False
         # Fill GUI art type list
         for item in self.settings.available_arttypes:
             if item['solo_enabled'] == 'true' and self.mediatype == item['media_type']:
@@ -674,19 +656,20 @@ class Main:
         if len(self.GUI_type_list) == 1:
             self.GUI_type_list[0] = "True"
         if ( len(self.GUI_type_list) == 1 ) or self._choice_type():
-            self.gui_imagelist = False
             
-            self._gui_imagelist(self.gui_selected_type)
-            log('- Image put to GUI: %s' %self.gui_imagelist)
+            imagelist = self._gui_imagelist(self.gui_selected_type)
+            # Some debug log output
+            for item in imagelist:
+                log('- Image put to GUI: %s' %item)
         
         # Download the selected image
-        if self.gui_imagelist:
-            if self._choose_image():
-                self._download_art(self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
+        if imagelist:
+            if self._choose_image(imagelist):
+                self._download_art(self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
                 self._batch_download(self.download_list)
                 if not self._download_art_succes:
                     dialog('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007) )
-        if not self.gui_imagelist and not self.gui_selected_type == '':
+        if not imagelist and not self.gui_selected_type == '':
             log('- No artwork found')
             dialog('okdialog', line1 = self.media_name , line2 = self.gui_selected_msg + ' ' + __localize__(32022) )
         elif self._download_art_succes:
@@ -719,27 +702,25 @@ class Main:
         for item in sys.argv:
             for type in self.settings.available_arttypes:
                 if item == type['art_type'] and self.mediatype == type['media_type']:
-                    log('- Custom mode arttype: %s' %type['art_type'])
+                    log( '- Custom %s mode arttype: %s' %(type['media_type'],type['art_type']) )
                     self.download_arttypes.append(item)
 
-        # If only one specified
-        if len(self.download_arttypes) == 1 and not self.medianame == '':
-            log('- Start custom solomode')
-            for types in self.download_arttypes:
-                gui_arttype = types
-            self._gui_imagelist(gui_arttype)
-            log('- Number of images: %s' %len(self.gui_imagelist))
-            if len(self.gui_imagelist) > 1:
+        # If only one specified and not extrafanart/extrathumbs
+        if (len(self.download_arttypes) == 1) and not self.medianame == '' and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
+            # Get image list for that specific imagetype
+            for gui_arttype in self.download_arttypes:
+                imagelist = self._gui_imagelist(gui_arttype)
+            log('- Number of images: %s' %len(imagelist))
+            # If more images than 1 found show GUI selection
+            if len(imagelist) > 1:
                 self.mode = 'customgui'
                 log('- Image list larger than 1')
-                if self._choose_image():
-                    log('- Chosen: %s'%self.image_url)
+                if self._choose_image(imagelist):
+                    log('- Chosen: %s'%self.image_item)
                     for item in self.settings.available_arttypes:
-                        if gui_arttype == item['art_type'] and self.mediatype == item['media_type']:
-                            self.gui_selected_type = item['art_type']
-                            self.gui_selected_filename = item['filename']
-                            self.gui_selected_msg = item['gui_string']
-                    self._download_art(self.gui_selected_type, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
+                        if gui_arttype == item['art_type']:
+                            self._download_art(item['art_type'], item['filename'], self.target_artworkdir, item['gui_string'])
+                            break
                     self._batch_download(self.download_list)
                     if not self._download_art_succes:
                         dialog('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007) )
@@ -758,10 +739,12 @@ class Main:
             self._download_process()
 
     # Return the selected url to the GUI part
-    def _choose_image(self):
-        log( "### image list: %s" % self.gui_imagelist)
-        self.image_url = self.MyDialog(self.gui_imagelist)
-        if self.image_url:
+    def _choose_image(self, imagelist):
+        # Some debuglog output
+        for item in imagelist:
+            log( "### image list: %s" % item)
+        self.image_item = self.MyDialog(imagelist)
+        if self.image_item:
             return True
         else:
             return False
@@ -771,11 +754,12 @@ class Main:
         w = MainGui( "DialogSelect.xml", __addonpath__, listing=image_list )
         w.doModal()
         try:
+            selected_item = False
             # Go through the image list and match the chooosen image id and return the image url
             for item in image_list:
                 if w.selected_id == item['id']:
-                    selected_url = item['url']
-            return selected_url
+                    selected_item = item
+            return selected_item
         except: 
             print_exc()
             return False
@@ -787,6 +771,7 @@ class MainGui( xbmcgui.WindowXMLDialog ):
         xbmc.executebuiltin( "Skin.Reset(AnimeWindowXMLDialogClose)" )
         xbmc.executebuiltin( "Skin.SetBool(AnimeWindowXMLDialogClose)" )
         self.listing = kwargs.get( "listing" )
+        self.selected_id = ''
 
     def onInit(self):
         try :

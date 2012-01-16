@@ -65,7 +65,7 @@
     <!-- Add-on settings: TV Show section id=32081 to 32090 -->
         <string id="32081">Seriale TV</string>
         <string id="32082">[B]Opcje pobierania grafik Seriali TV[/B]</string>
-        <string id="32083">Wybierz typ grafiki dla miniatur domyślnych:</string>
+        <string id="32083">-</string>
 
     <!-- Add-on settings: Music section id=32091 to 32100 -->
         <string id="32091">Teledyski</string>
@@ -96,7 +96,7 @@
         <string id="32130">Miniatura</string>
         <string id="32131">ExtraMiniatury</string>
         <string id="32132">Grafika płyty</string>
-        <string id="32133">Miniatura domyślna</string>
+        <string id="32133">-</string>
         <string id="32134">Miniatury sezonu</string>
 
     <!-- Add-on messages: Image types not found id=32141 to 32160 -->

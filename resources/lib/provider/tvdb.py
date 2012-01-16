@@ -32,21 +32,21 @@ class TVDBProvider():
                 info['id'] = image.findtext('id')
                 # process fanarts
                 if image.findtext('BannerType') == 'fanart':
-                    info['type'] = 'fanart'
+                    info['type'] = ['fanart','extrafanart']
                 # process posters
                 elif image.findtext('BannerType') == 'poster':
-                    info['type'] = 'poster'
+                    info['type'] = ['poster']
                 # process banners
                 elif image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
-                    info['type'] = 'banner'
+                    info['type'] = ['banner']
                 # process seasonposters
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
-                    info['type'] = 'seasonposter'
+                    info['type'] = ['seasonposter']
                 # process seasonbanners
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
-                    info['type'] = 'seasonbanner'
+                    info['type'] = ['seasonbanner']
                 else:
-                    info['type'] = ''
+                    info['type'] = ['']
                 # convert image size ...x... in Bannertype2
                 if image.findtext('BannerType2'):
                     try:
@@ -63,7 +63,7 @@ class TVDBProvider():
                 if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
                     info['rating'] = float( "%.1f" % float( image.findtext('Rating')) ) #output string with one decimal
                 else:
-                    info['rating'] = 0
+                    info['rating'] = 'n/a'
 
                 # find season info
                 if image.findtext('Season') != '':

@@ -30,7 +30,7 @@ class FTV_TVProvider():
                     info['id'] = image.get('id')
                     info['url'] = urllib.quote(image.get('url'), ':/')
                     info['preview'] = info['url']
-                    info['type'] = imagetype
+                    info['type'] = [imagetype]
                     info['rating'] = 'n/a'
                     info['language'] = 'n/a'
                     '''
