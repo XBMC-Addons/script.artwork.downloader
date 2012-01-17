@@ -350,8 +350,8 @@ class Main:
             log('Processing media:  %s' % self.media_name, xbmc.LOGNOTICE)
             # do some id conversions 
             if not self.mediatype == 'tvshow' and self.media_id in ['','tt0000000','0']:
+                log('No IMDB ID found, trying to search themoviedb.org for matching title.', xbmc.LOGNOTICE)
                 self.media_id = tmdb._search_movie(self.media_name,currentmedia["year"])
-                log('No IMDB ID found, try searching themoviedb.org. Found TMDB ID: %s' % self.media_id, xbmc.LOGNOTICE)
             elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
                 self.media_id_old = self.media_id
                 self.media_id = "tt%.7d" % int(self.media_id)

@@ -116,5 +116,7 @@ def _search_movie(medianame,year=''):
     except Exception, e:
         log( str( e ), xbmc.LOGERROR )
     if tmdb_id == '':
-        log('TMDB API search found no ID')
+        log('TMDB API search found no ID', xbmc.LOGNOTICE)
+    else:
+        log('TMDB API search found ID: %s' %tmdb_id, xbmc.LOGNOTICE)
     return tmdb_id
