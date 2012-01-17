@@ -248,6 +248,7 @@ class Main:
         provider_msg1 = __localize__(32001)
         provider_msg2 = __localize__(32184) + " | " + __localize__(32185) + " | " + __localize__(32186)
         # Close dialog in case it was open before doing a notification
+        time.sleep(2)
         dialog('close', background = self.settings.background)
         # Print the self.reportdata log message
         log('Failed items report: %s' % self.reportdata.replace('[B]', '').replace('[/B]', '') )
@@ -348,8 +349,9 @@ class Main:
             log('########################################################')
             log('Processing media:  %s' % self.media_name, xbmc.LOGNOTICE)
             # do some id conversions 
-            if not self.mediatype == 'tvshow' and self.media_id == '':
+            if not self.mediatype == 'tvshow' and self.media_id in ['','tt0000000','0']:
                 self.media_id = tmdb._search_movie(self.media_name,currentmedia["year"])
+                log('No IMDB ID found, try searching themoviedb.org. Found TMDB ID: %s' % self.media_id, xbmc.LOGNOTICE)
             elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
                 self.media_id_old = self.media_id
                 self.media_id = "tt%.7d" % int(self.media_id)
