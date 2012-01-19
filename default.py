@@ -700,6 +700,7 @@ class Main:
 
     def _custom_mode(self):
         self.download_arttypes = []
+        dialog('close', background = self.settings.background)
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in self.settings.available_arttypes:

@@ -2,6 +2,7 @@
 - Fixed: After doing ID conversion it skipped that movie
 - Fixed: Some mayor bug that no ones has noticed so far
 - Fixed: When no exact title match was found it downloaded the entire library
+- Fixed: Close progress dialog before opening the image selection window
 - Changed: Reverted old change of using image ID from tmdb as filename. This is not available any more in new API v3
 - Changed: Use the new TMDB API v3
 - Changed: Use smaller image in GUI dialog for faster loading of images (when posible)
