@@ -333,10 +333,11 @@ class Main:
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
                 log('XBMC abort requested, aborting')
+                self.reportdata += ( '\n - add-on aborted because of XBMC shutting down: %s' %time.strftime('%d %B %Y - %H:%M') )
                 break
             ### check if script has been cancelled by user
             if dialog('iscanceled', background = self.settings.background):
-                self.reportdata += ( '\n - add-on cancelled: %s' %time.strftime('%d %B %Y - %H:%M') )
+                self.reportdata += ( '\n - add-on cancelled while searching for %s artwork: %s' %(self.mediatype, time.strftime('%d %B %Y - %H:%M')) )
                 break
             if not self.settings.failcount < self.settings.failthreshold:
                 self.reportdata += ( '\n - add-on aborted because of problems. Check the log: %s' %time.strftime('%d %B %Y - %H:%M') )
@@ -517,7 +518,6 @@ class Main:
                             break
                         if not self.settings.failcount < self.settings.failthreshold:
                             break   
-
                         # Create an image info list
                         item = {}
                         item['url']             = artwork['url']
@@ -610,7 +610,12 @@ class Main:
             # Download artwork that passed the limit check
             for item in image_list:
                 # Check if cancel has been called to break the loop
+                if xbmc.abortRequested:
+                    log('XBMC abort requested, aborting')
+                    self.reportdata += ( '\n - add-on aborted because of XBMC shutting down: %s' %time.strftime('%d %B %Y - %H:%M') )
+                    break
                 if dialog('iscanceled', background = self.settings.background):
+                    self.reportdata += ( '\n - add-on cancelled during downloading artwork: %s' %time.strftime('%d %B %Y - %H:%M') )
                     break
                 # Update the dialog
                 dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
