@@ -31,7 +31,6 @@ class _settings:
         self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs")     == 'true'
         self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
         self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
-        self.movie_defaultthumb     = __addon__.getSetting("movie_defaultthumb")    == 'true'
 
         self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
         self.tvshow_poster          = __addon__.getSetting("tvshow_poster")         == 'true'
@@ -45,8 +44,6 @@ class _settings:
         self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner")     == 'true'
         self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner")   == 'true'
         self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart")   == 'true'
-        self.tvshow_defaultthumb    = __addon__.getSetting("tvshow_defaultthumb")   == 'true'
-        self.tvshow_defaultthumb_type    = __addon__.getSetting("tvshow_defaultthumb_type")
 
         self.musicvideo_enable      = __addon__.getSetting("musicvideo_enable")     == 'true'
         self.musicvideo_poster      = __addon__.getSetting("musicvideo_poster")     == 'true'
@@ -55,8 +52,11 @@ class _settings:
         self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs")== 'true'
 
         # temporary force these to false
-        #self.tvshow_seasonposter    = False
-        #self.tvshow_seasonbanner    = False
+        self.movie_logo             = False
+        self.movie_discart          = False
+        
+        self.tvshow_seasonposter    = False
+        self.tvshow_seasonbanner    = False
         self.tvshow_seasonthumbs    = False
         
     ### Initial genral vars
