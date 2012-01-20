@@ -494,6 +494,7 @@ class Main:
         pref_language = language.get_abbrev()         # get abbreviation
         i = 0               # Set loop counter
         imagefound = False  # Set found image false
+        imageignore = False      # Set ignaore image false
         final_image_list = []
         if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
             final_image_list.append(self.image_item)
@@ -552,12 +553,10 @@ class Main:
                                 self.fileops._delete_file_in_dirs( item['filename'], item['targetdirs'], limited[1],self.media_name )
                             # Just ignore image when it's below settings
                             elif limited[0]:
+                                imageignore = True
                                 log( " - Ignoring (%s): %s" % ( limited[1], item['filename']) )
-                                # Check if artwork doesn't exist and the ones available are below settings
-                                for targetdir in item['targetdirs']:
-                                    if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not art_type in ['extrafanart', 'extrathumbs']:
-                                        self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,art_type) )
                             else:
+                                imageignore = False
                                 # Always add to list when set to overwrite
                                 if self.settings.files_overwrite:
                                     log(" - Adding to download list (overwrite enabled): %s" % item['filename'] )
@@ -589,6 +588,11 @@ class Main:
                                         limit_counter = 0
                                 else:
                                     limit_counter += 1
+                                # Check if artwork doesn't exist and the ones available are below settings even after searching for English fallback                                   
+                                if limited[0] and imageignore and i == 1:
+                                    for targetdir in item['targetdirs']:
+                                        if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not art_type in ['extrafanart', 'extrathumbs']:
+                                            self.failed_items.append('[%s] Skipping %s - Below limit setting' % (self.media_name,art_type) )
                 # Counter to make the loop twice when nothing found
                 i += 1
             # Add to failed items if 0
