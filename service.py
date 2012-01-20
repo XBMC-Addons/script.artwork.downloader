@@ -38,10 +38,7 @@ def autostart():
             xbmcvfs.rmdir(tempdir)
             log('Removing temp folder from previous run.')
         if settings.service_startup:
-            if settings.service_startupdelay != '--':
-                xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:%s:00,silent)' %settings.service_startupdelay) 
-            else:
-                xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:00:20,silent)') 
+            xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:%s:15,silent)' %settings.service_startupdelay) 
         if settings.service_enable:
             while (not xbmc.abortRequested):
                 xbmc.sleep(5000)

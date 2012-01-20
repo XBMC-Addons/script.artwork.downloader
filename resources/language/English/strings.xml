@@ -19,7 +19,7 @@
         <string id="32016">downloaded</string>
         <string id="32017">Cancelled</string>
         <string id="32018">Download canceled by user</string>
-        <string id="32019">Delayed start in minutes: [I]( -- is none ) [/I]</string>
+        <string id="32019">Delayed start in minutes:</string>
         <string id="32020">Downloaded</string>
         <string id="32021">Processing Artwork</string>
         <string id="32022">not found!</string>
