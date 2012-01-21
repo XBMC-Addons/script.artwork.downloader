@@ -34,10 +34,15 @@ def autostart():
         log('Service - Delayed startup: %s minutes'%settings.service_startupdelay, xbmc.LOGNOTICE)   
         log('Service - Run as service: %s'%settings.service_enable, xbmc.LOGNOTICE)
         log('Service - Time: %s'%service_runtime, xbmc.LOGNOTICE)
+        # Check if tempdir exists and remove it
         if xbmcvfs.exists(tempdir):
             xbmcvfs.rmdir(tempdir)
-            log('Removing temp folder from previous run.')
-        if settings.service_startup:
+            log('Removing temp folder from previous aborted run.')
+            xbmc.sleep(5000)
+        # Run script when enabled and check on existence of tempdir.
+        # This because it is possible that script was running even when we previously deleted it.
+        # Could happen when switching profiles and service gets triggered again
+        if settings.service_startup and not xbmcvfs.exists(tempdir):
             xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:%s:15,silent)' %settings.service_startupdelay) 
         if settings.service_enable:
             while (not xbmc.abortRequested):
