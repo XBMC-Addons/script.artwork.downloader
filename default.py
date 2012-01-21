@@ -515,7 +515,7 @@ class Main:
                     if art_type in artwork['type']:
                         ### check if script has been cancelled by user
                         if dialog('iscanceled', background = self.settings.background):
-                            dialog('close', background = self.settings.background)
+                            #dialog('close', background = self.settings.background)
                             break
                         if not self.settings.failcount < self.settings.failthreshold:
                             break   
@@ -676,6 +676,7 @@ class Main:
         # Download the selected image
         if imagelist:
             if self._choose_image(imagelist):
+                dialog('create')
                 self._download_art(self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
                 self._batch_download(self.download_list)
                 if not self._download_art_succes:
@@ -709,7 +710,6 @@ class Main:
 
     def _custom_mode(self):
         self.download_arttypes = []
-        dialog('close', background = self.settings.background)
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in self.settings.available_arttypes:
@@ -725,10 +725,12 @@ class Main:
             log('- Number of images: %s' %len(imagelist))
             # If more images than 1 found show GUI selection
             if len(imagelist) > 1:
+                dialog('close', background = self.settings.background)
                 self.mode = 'customgui'
                 log('- Image list larger than 1')
                 if self._choose_image(imagelist):
                     log('- Chosen: %s'%self.image_item)
+                    dialog('create')
                     for item in self.settings.available_arttypes:
                         if gui_arttype == item['art_type']:
                             self._download_art(item['art_type'], item['filename'], self.target_artworkdir, item['gui_string'])
