@@ -33,18 +33,28 @@ class TMDBProvider():
                 info['height'] = item['height']
                 info['width'] = item['width']
                 #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
+
                 # Convert the 'None' value to default 'n/a'
                 if item['iso_639_1']:
                     info['language'] = item['iso_639_1']
                 else:
                     info['language'] = 'n/a'
-                info['rating'] = 'n/a'                                          # Rating may be integrated at later time
+
+                # find image ratings
+                if int(item['vote_count']) >= 1:
+                    info['rating'] = float( "%.1f" % float( item['vote_count']) ) #output string with one decimal
+                    info['votes'] = item['vote_count']
+                else:
+                    info['rating'] = 'n/a'
+                    info['votes'] = 'n/a'
+
                 # Create Gui string to display
-                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Votes: %s  |  Size: %sx%s  |  ' %(info['language'], info['rating'], info['votes'], info['width'],info['height'])
+
                 if info:
                     image_list.append(info)
         except Exception, e:
-            log( str( e ), xbmc.LOGNOTICE )
+            log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
         # Get thumbs
         try:
             for item in data['backdrops']:
@@ -56,18 +66,28 @@ class TMDBProvider():
                 info['height'] = item['height']
                 info['width'] = item['width']
                 #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
+
                 # Convert the 'None' value to default 'n/a'
                 if item['iso_639_1']:
                     info['language'] = item['iso_639_1']
                 else:
                     info['language'] = 'n/a'
-                info['rating'] = 'n/a'                                          # Rating may be integrated at later time
+
+                # find image ratings
+                if int(item['vote_count']) >= 1:
+                    info['rating'] = float( "%.1f" % float( item['vote_count']) ) #output string with one decimal
+                    info['votes'] = item['vote_count']
+                else:
+                    info['rating'] = 'n/a'
+                    info['votes'] = 'n/a'
+
                 # Create Gui string to display
-                info['generalinfo'] = 'Language: %s  |  Rating: %s   ' %(info['language'], info['rating'])
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Votes: %s  |  Size: %sx%s  |  ' %(info['language'], info['rating'], info['votes'], info['width'],info['height'])
+
                 if info:
                     image_list.append(info)
         except Exception, e:
-            log( str( e ), xbmc.LOGNOTICE )
+            log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
         # Get posters
         try:
             for item in data['posters']:
@@ -79,18 +99,28 @@ class TMDBProvider():
                 info['height'] = item['height']
                 info['width'] = item['width']
                 #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
+
                 # Convert the 'None' value to default 'n/a'
                 if item['iso_639_1']:
                     info['language'] = item['iso_639_1']
                 else:
                     info['language'] = 'n/a'
-                info['rating'] = 'n/a'                                          # Rating may be integrated at later time
+
+                # find image ratings
+                if int(item['vote_count']) >= 1:
+                    info['rating'] = float( "%.1f" % float( item['vote_count']) ) #output string with one decimal
+                    info['votes'] = item['vote_count']
+                else:
+                    info['rating'] = 'n/a'
+                    info['votes'] = 'n/a'
+
                 # Create Gui string to display
-                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Size: %sx%s   ' %(info['language'], info['rating'], info['width'],info['height'])
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Votes: %s  |  Size: %sx%s  |  ' %(info['language'], info['rating'], info['votes'], info['width'],info['height'])
+
                 if info:
                     image_list.append(info)
         except Exception, e:
-            log( str( e ), xbmc.LOGNOTICE )
+            log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
         if image_list == []:
             raise NoFanartError(media_id)
         else:

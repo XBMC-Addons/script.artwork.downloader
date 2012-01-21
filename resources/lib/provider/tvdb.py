@@ -60,21 +60,23 @@ class TVDBProvider():
                 info['series_name'] = image.findtext('SeriesName') == 'true'
 
                 # find image ratings
-                if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
+                if int(image.findtext('RatingCount')) >= 1:
                     info['rating'] = float( "%.1f" % float( image.findtext('Rating')) ) #output string with one decimal
+                    info['votes'] = image.findtext('RatingCount')
                 else:
                     info['rating'] = 'n/a'
+                    info['votes'] = 'n/a'
 
                 # find season info
                 if image.findtext('Season') != '':
                     info['season'] = image.findtext('Season')
                 # Create Gui string to display
-                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  ' %( info['language'], info['rating'] )
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Votes: %s  |  ' %( info['language'], info['rating'], info['votes'] )
                 if 'season'in info:
                     info['generalinfo'] += 'Season: %s  |  ' %( info['season'] )
-                    #info['generalinfo'] += 'Season: %s  |  ' %( info['season'].replace('-','') )
                 if 'height' in info:
                     info['generalinfo'] += 'Size: %sx%s  |  ' %( info['height'], info['width'] )
+
             if info:
                 image_list.append(info)
         if image_list == []:
