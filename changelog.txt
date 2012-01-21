@@ -14,7 +14,8 @@
 - Added: German translation (thx Suven)
 - Added: Download report is accessible from the add-on settings window
 - Added: Download report is accessible from the yes/no dialog when finished (not when background/silent/custom run)
-- Added: Extra info to gui dialog (language, rating and size)
+- Added: Extra info to gui dialog (language, rating, votes, season and size)
+- Added: Ratings for movie artwork 
 - Added: Now tries to look up the 'tmdb ID' if no 'imdb ID' is found and retrieves artwork using that
 - Added: Added musicvideo section that uses the title to search for artwork on TMDB
          Needs extra argument from skin (see runscript.txt)
