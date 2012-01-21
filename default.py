@@ -625,7 +625,7 @@ class Main:
                 dialog('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
                 # Try downloading the file and catch errors while trying to
                 try:
-                    self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'])
+                    self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
                 except HTTP404Error, e:
                     log("URL not found: %s" % str(e), xbmc.LOGERROR)
                     self._download_art_succes = False
