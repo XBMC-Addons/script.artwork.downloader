@@ -2,9 +2,10 @@
 <addon
 	id="script.extrafanartdownloader"
 	name="Extrafanart Downloader"
-	version="0.4.1"
+	version="0.4.2"
 	provider-name="paddycarey, putneyj, Machine-Sanctum"
     branch="Eden">
+  <broken>Too much work to maintain and merged into Artwork Downloader</broken>
   <requires>
     <import addon="xbmc.python" version="2.0"/>
     <import addon="script.module.elementtree"/>
