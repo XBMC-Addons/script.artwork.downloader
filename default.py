@@ -354,9 +354,14 @@ class Main:
                 log('No IMDB ID found, trying to search themoviedb.org for matching title.', xbmc.LOGNOTICE)
                 self.media_id = tmdb._search_movie(self.media_name,currentmedia["year"])
             elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
+                log('No valid ID found, trying to search themoviedb.org for matching title.', xbmc.LOGNOTICE)
+                self.media_id = tmdb._search_movie(self.media_name,currentmedia["year"])
+            '''
+            elif self.mediatype == 'movie' and not self.media_id == '' and not self.media_id.startswith('tt'):
                 self.media_id_old = self.media_id
                 self.media_id = "tt%.7d" % int(self.media_id)
                 log('No IMDB ID found, try ID conversion: %s -> %s' % (self.media_id_old,self.media_id), xbmc.LOGNOTICE)
+            '''
             log('Provider ID:       %s' % self.media_id)
             log('Media path:        %s' % self.media_path)
             # Declare the target folders
