@@ -19,11 +19,11 @@
         <string id="32016">heruntergeladen</string>
         <string id="32017">abgebrochen</string>
         <string id="32018">Download vom Benutzer abgebrochen</string>
-        <string id="32019">Verzögerter Start in Minuten: [I]( -- ist keine ) [/I]</string>
+        <string id="32019">Verzögerter Start in Minuten:</string>
         <string id="32020">Heruntergeladen</string>
         <string id="32021">Verarbeite Artwork</string>
         <string id="32022">nicht gefunden!</string>
-        <string id="32023">Führe Add-On beim Start / Login aus</string>
+        <string id="32023">Führe Add-On beim Login aus</string>
         <string id="32024">Führe Add-On als Service aus</string>
         <string id="32025">Ja</string>
         <string id="32026">Nein</string>
@@ -65,7 +65,7 @@
     <!-- Add-on settings: TV Show section id=32081 to 32090 -->
         <string id="32081">TV Serien</string>
         <string id="32082">[B]Optionen für herunterzuladenes Serien-Artwork[/B]</string>
-        <string id="32083">Art für Standard-Thumbs:</string>
+        <string id="32083">-</string>
 
     <!-- Add-on settings: Music section id=32091 to 32100 -->
         <string id="32091">Musikvideos</string>
@@ -93,11 +93,11 @@
         <string id="32127">Character Art</string>
         <string id="32128">Poster</string>
         <string id="32129">Staffel-Poster</string>
-        <string id="32130">Thumb</string>
+        <string id="32130">Thumb 16:9</string>
         <string id="32131">Extrathumbs</string>
         <string id="32132">CD-Art</string>
-        <string id="32133">Standard-Thumb</string>
-        <string id="32134">Staffel-Thumb</string>
+        <string id="32133">-</string>
+        <string id="32134">Staffel-Thumb 16:9</string>
 
     <!-- Add-on messages: Image types not found id=32141 to 32160 -->
         <string id="32141">-</string>

@@ -16,7 +16,7 @@ THUMBS_CACHE_PATH = xbmc.translatePath( "special://profile/Thumbnails/Video" )
 
 
 ### adjust default timeout to stop script hanging
-timeout = 20
+timeout = 10
 socket.setdefaulttimeout(timeout)
 
 class fileops:
@@ -107,7 +107,7 @@ class fileops:
             log("[%s] Copied successfully: %s" % (media_name, targetpath) )
 
     # download file
-    def _downloadfile(self, url, filename, targetdirs, media_name):
+    def _downloadfile(self, url, filename, targetdirs, media_name, mode = ""):
 
         """
         Download url to filename and place in all targetdirs.
@@ -138,5 +138,5 @@ class fileops:
             for targetdir in targetdirs:
                 targetpath = os.path.join(targetdir, filename)
                 self._copyfile(temppath, targetpath, media_name)
-                if self.settings.xbmc_caching_enabled:
+                if self.settings.xbmc_caching_enabled or mode in ['gui','customgui']:
                     self.erase_current_cache(targetpath)

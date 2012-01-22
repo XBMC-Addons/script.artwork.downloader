@@ -70,7 +70,7 @@ Available options "<art_type>"
     List of options a skinners can chose from
     Movie:      poster, fanart, extrafanart, extrathumbs, defaultthumb
     Musicvideo: poster, fanart, extrafanart, extrathumbs, defaultthumb
-    TV Show:    poster, fanart, extrafanart, clearart, clearlogo, tvthumb, banner, characterart, defaultthumb
+    TV Show:    poster, fanart, extrafanart, clearart, clearlogo, tvthumb, banner, characterart, defaultthumb, seasonbanner, seasonposter
 	NOTE:   when chosen 'clearlogo'  this will download 'logo.png'
 	NOTE:   'defaultthumb' is 'folder.jpg'
 

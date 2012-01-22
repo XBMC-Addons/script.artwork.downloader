@@ -19,11 +19,11 @@
         <string id="32016">downloaded</string>
         <string id="32017">Cancelled</string>
         <string id="32018">Download canceled by user</string>
-        <string id="32019">Delayed start in minutes: [I]( -- is none ) [/I]</string>
+        <string id="32019">Delayed start in minutes:</string>
         <string id="32020">Downloaded</string>
         <string id="32021">Processing Artwork</string>
         <string id="32022">not found!</string>
-        <string id="32023">Run add-on at start-up / login</string>
+        <string id="32023">Run add-on at login</string>
         <string id="32024">Run add-on as a service</string>
         <string id="32025">Yes</string>
         <string id="32026">No</string>
@@ -65,7 +65,7 @@
     <!-- Add-on settings: TV Show section id=32081 to 32090 -->
         <string id="32081">TV Shows</string>
         <string id="32082">[B]Options for downloading TV Show artwork[/B]</string>
-        <string id="32083">Choose what type to use for default thumb:</string>
+        <string id="32083">-</string>
 
     <!-- Add-on settings: Music section id=32091 to 32100 -->
         <string id="32091">Musicvideo</string>
@@ -93,11 +93,11 @@
         <string id="32127">Character Art</string>
         <string id="32128">Poster</string>
         <string id="32129">Season Posters</string>
-        <string id="32130">Thumb</string>
+        <string id="32130">Thumb 16:9</string>
         <string id="32131">Extrathumbs</string>
         <string id="32132">Disc Art</string>
-        <string id="32133">Default Thumb</string>
-        <string id="32134">Season Thumbs</string>
+        <string id="32133">-</string>
+        <string id="32134">Season Thumbs 16:9</string>
 
     <!-- Add-on messages: Image types not found id=32141 to 32160 -->
         <string id="32141">-</string>

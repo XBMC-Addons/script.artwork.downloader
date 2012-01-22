@@ -32,21 +32,21 @@ class TVDBProvider():
                 info['id'] = image.findtext('id')
                 # process fanarts
                 if image.findtext('BannerType') == 'fanart':
-                    info['type'] = 'fanart'
+                    info['type'] = ['fanart','extrafanart']
                 # process posters
                 elif image.findtext('BannerType') == 'poster':
-                    info['type'] = 'poster'
+                    info['type'] = ['poster']
                 # process banners
                 elif image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
-                    info['type'] = 'banner'
+                    info['type'] = ['banner']
                 # process seasonposters
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
-                    info['type'] = 'seasonposter'
+                    info['type'] = ['seasonposter']
                 # process seasonbanners
                 elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
-                    info['type'] = 'seasonbanner'
+                    info['type'] = ['seasonbanner']
                 else:
-                    info['type'] = ''
+                    info['type'] = ['']
                 # convert image size ...x... in Bannertype2
                 if image.findtext('BannerType2'):
                     try:
@@ -60,21 +60,23 @@ class TVDBProvider():
                 info['series_name'] = image.findtext('SeriesName') == 'true'
 
                 # find image ratings
-                if image.findtext('RatingCount') and int(image.findtext('RatingCount')) >= 1:
+                if int(image.findtext('RatingCount')) >= 1:
                     info['rating'] = float( "%.1f" % float( image.findtext('Rating')) ) #output string with one decimal
+                    info['votes'] = image.findtext('RatingCount')
                 else:
-                    info['rating'] = 0
+                    info['rating'] = 'n/a'
+                    info['votes'] = 'n/a'
 
                 # find season info
                 if image.findtext('Season') != '':
                     info['season'] = image.findtext('Season')
                 # Create Gui string to display
-                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  ' %( info['language'], info['rating'] )
+                info['generalinfo'] = 'Language: %s  |  Rating: %s  |  Votes: %s  |  ' %( info['language'], info['rating'], info['votes'] )
                 if 'season'in info:
                     info['generalinfo'] += 'Season: %s  |  ' %( info['season'] )
-                    #info['generalinfo'] += 'Season: %s  |  ' %( info['season'].replace('-','') )
                 if 'height' in info:
                     info['generalinfo'] += 'Size: %sx%s  |  ' %( info['height'], info['width'] )
+
             if info:
                 image_list.append(info)
         if image_list == []:
