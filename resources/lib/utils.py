@@ -58,6 +58,13 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 
 # Define dialogs
 def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025) ):
+    # Fix possible unicode errors 
+    line0 = _normalize_string(line0)
+    line1 = _normalize_string(line1)
+    line2 = _normalize_string(line2)
+    line3 = _normalize_string(line3)
+
+    # Dialog logic
     if not line0 == '':
         line0 = __addonname__ + line0
     else:
