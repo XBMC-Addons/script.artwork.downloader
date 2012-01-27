@@ -19,6 +19,7 @@ __addonpath__   = __addon__.getAddonInfo('path')
 __addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 __icon__        = __addon__.getAddonInfo('icon')
 __localize__    = __addon__.getLocalizedString
+dbg = False # Set to false if you don't want debugging for commoncache function
 
 ### import libraries
 from traceback import print_exc
