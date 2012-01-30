@@ -4,22 +4,22 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 import unicodedata
-import simplejson
 import urllib2
 import sys
+try:
+    import json as simplejson
+except:
+    import simplejson
 
 ### get addon info
 __addon__       = ( sys.modules[ "__main__" ].__addon__ )
-__addonid__     = ( sys.modules[ "__main__" ].__addonid__ )
 __addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
 __icon__        = ( sys.modules[ "__main__" ].__icon__ )
 __localize__    = ( sys.modules[ "__main__" ].__localize__ )
-__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 
 ### import libraries
 from urllib2 import HTTPError, URLError, urlopen
 from resources.lib.script_exceptions import *
-#HTTP404Error, HTTP503Error, DownloadError, HTTPTimeout
 
 # Commoncache plugin import
 try:
@@ -113,6 +113,7 @@ def _getUniq(seq):
 
 # Retrieve JSON data from cache function
 def _get_json(url):
+    _log('API: %s'% url)
     result = cache.cacheFunction( _get_json_new, url )
     if len(result) == 0:
         result = []
@@ -122,7 +123,7 @@ def _get_json(url):
 
 # Retrieve JSON data from site
 def _get_json_new(url):
-    _log('API: %s'% url)
+    _log('Cache expired. Retrieving new data')
     try:
         request = urllib2.Request(url)
         request.add_header("Accept", "application/json")
@@ -146,6 +147,7 @@ def _get_json_new(url):
 
 # Retrieve XML data from cache function
 def _get_xml(url):
+    _log('API: %s'% url)
     result = cache.cacheFunction( _get_xml_new, url )
     if len(result) == 0:
         result = []
@@ -155,6 +157,7 @@ def _get_xml(url):
 
 # Retrieve XML data from site
 def _get_xml_new(url):
+    _log('Cache expired. Retrieving new data')
     try:
         client  = urlopen(url)
         data    = client.read()

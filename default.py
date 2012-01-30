@@ -10,7 +10,7 @@ import urllib
 import time
 
 ### get addon info
-__addon__       = xbmcaddon.Addon()
+__addon__       = xbmcaddon.Addon(id='script.artwork.downloader')
 __addonid__     = __addon__.getAddonInfo('id')
 __addonname__   = __addon__.getAddonInfo('name')
 __author__      = __addon__.getAddonInfo('author')
@@ -19,7 +19,6 @@ __addonpath__   = __addon__.getAddonInfo('path')
 __addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 __icon__        = __addon__.getAddonInfo('icon')
 __localize__    = __addon__.getLocalizedString
-dbg = False # Set to false if you don't want debugging for commoncache function
 
 ### import libraries
 from traceback import print_exc
@@ -763,9 +762,6 @@ class Main:
 
     # Return the selected url to the GUI part
     def _choose_image(self, imagelist):
-        # Some debuglog output
-        for item in imagelist:
-            log( "### image list: %s" % item)
         self.image_item = self.MyDialog(imagelist)
         if self.image_item:
             return True
