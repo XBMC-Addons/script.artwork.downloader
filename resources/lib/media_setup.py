@@ -11,10 +11,28 @@ except:
 from resources.lib.utils import _normalize_string as normalize_string
 from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
+# Commoncache plugin import
+try:
+    import StorageServer
+except:
+    import storageserverdummy as StorageServer
+
+cacheMedia = StorageServer.StorageServer("ArtworkDownloader")
+cacheMedia.timeout = 600 # In seconds
+
+# Retrieve JSON data from cache function
+def _media_listing(media_type):
+    result = cacheMedia.cacheFunction( _media_listing_new, media_type )
+    if len(result) == 0:
+        result = []
+        return result
+    else:
+        return result
 
 ### get list of all tvshows and movies with their imdbnumber from library
 # Retrieve JSON list
-def _media_listing(media_type):
+
+def _media_listing_new(media_type):
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     try:

@@ -119,7 +119,7 @@ def _get_json(url):
         result = []
         return result
     else:
-        return result[0]
+        return result
 
 # Retrieve JSON data from site
 def _get_json_new(url):
@@ -143,7 +143,7 @@ def _get_json_new(url):
         parsed_json = simplejson.loads(json_string)
     except:
         parsed_json = []
-    return [parsed_json]
+    return parsed_json
 
 # Retrieve XML data from cache function
 def _get_xml(url):
@@ -153,7 +153,7 @@ def _get_xml(url):
         result = []
         return result
     else:
-        return result[0]
+        return result
 
 # Retrieve XML data from site
 def _get_xml_new(url):
@@ -162,7 +162,7 @@ def _get_xml_new(url):
         client  = urlopen(url)
         data    = client.read()
         client.close()
-        return [data]
+        return data
     except HTTPError, e:
         if e.code   == 404:
             raise HTTP404Error( url )

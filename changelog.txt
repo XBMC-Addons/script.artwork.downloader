@@ -1,4 +1,7 @@
-[B]1.0.7[/B]
+[B]1.0.8[/B]
+- Added: Increased speed by using commingcache for library JSON when using custom/gui mode (expires after 10 minutes)
+
+[B]1.0.7[/B] 
 - Changed: Revert 1.0.6 because dependencies are now met. Meaning options from 1.0.5 are now active
 - Fixed: Limit TMDB by rating not by number of votes
 
