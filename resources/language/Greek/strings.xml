@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <strings>
     <!-- Add-on messages id=32001 to 32030 -->
-        <string id="32001">Παρακαλούμε βοηθήστε στην απόκτηση περισσότερων εικόνων ή συνδράμετε στα:</string>
+        <string id="32001">Βοηθήστε στην επαύξηση των εικόνων ή συνδράμετε στα:</string>
         <string id="32002">Προγραμματισμένη εκτέλεση σε χρόνο: (24h)</string>
         <string id="32003">Βρέθηκε λανθασμένος/άδειος συνδυασμός ρυθμίσεων!</string>
         <string id="32004">Επιλέξτε τις προτιμήσεις σας και πατήστε OK για αποθήκευση</string>
@@ -14,13 +14,13 @@
         <string id="32011">Εντοπίστηκε σφάλμα δικτύου</string>
         <string id="32012">Ολοκληρώθηκε</string>
         <string id="32013">Ενεργοποίηση λήψης</string>
-        <string id="32014">Total Artwork</string>
+        <string id="32014">Σύνολο Εικόνων</string>
         <string id="32015">Παρακαλώ επιλέξτε</string>
-        <string id="32016">Failed items</string>
+        <string id="32016">Αντικείμενα που απέτυχαν</string>
         <string id="32017">Ακυρώθηκε</string>
         <string id="32018">Η λήψη ακυρώθηκε από το χρήστη</string>
         <string id="32019">Καθυστερημένη έναρξη σε λεπτά:</string>
-        <string id="32020">Έγινε λήψη</string>
+        <string id="32020">Ελήφθησαν</string>
         <string id="32021">Επεξεργασία Εικόνων</string>
         <string id="32022">δεν βρέθηκαν!</string>
         <string id="32023">Εκτέλεση του πρόσθετου κατά την εκκίνηση</string>
@@ -106,13 +106,13 @@
         <string id="32144">Κύκλος</string>
         <string id="32145">Μέγεθος</string>
         <string id="32146">-</string>
-        <string id="32147">below limit setting</string>
-        <string id="32148">Time of finish</string>
-        <string id="32149">No failed or missing items found</string>
-        <string id="32150">add-on aborted because of XBMC shutting down</string>
-        <string id="32151">add-on cancelled while searching for Artwork</string>
-        <string id="32152">add-on aborted because of problems</string>
-        <string id="32153">add-on cancelled while downloading Artwork</string>
+        <string id="32147">κάτω του ορίου ρύθμιση</string>
+        <string id="32148">Χρόνος τέλους</string>
+        <string id="32149">Δεν βρέθηκαν αποτυχημένα ή απόντα αντικείμενα</string>
+        <string id="32150">το πρόσθετο διεκόπη λόγω τερματισμού του XBMC</string>
+        <string id="32151">το πρόσθετο ακυρώθηκε κατά την αναζήτηση Εικόνων</string>
+        <string id="32152">το πρόσθετο διεκόπη λόγω προβλημάτων</string>
+        <string id="32153">το πρόσθετο ακυρώθηκε κατά τη λήψη Εικόνων</string>
         <string id="32154">-</string>
         
     <!-- Add-on settings: Info section id=32181 to 32190-->   
