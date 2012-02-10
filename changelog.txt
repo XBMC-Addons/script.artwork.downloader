@@ -1,6 +1,7 @@
 [B]1.0.8[/B]
 - Added: Increased speed by using commingcache for library JSON when using custom/gui mode (expires after 10 minutes)
 - Added: Greek translation (thx CutSickAss)
+- Added: Localization of the download report
 - Fixed: Don't run script twice when it was started on service time caused by the speed increase by using commoncach
 
 [B]1.0.7[/B] 
