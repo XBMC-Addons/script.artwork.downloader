@@ -69,10 +69,10 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 # Define dialogs
 def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025) ):
     # Fix possible unicode errors 
-    line0 = _unicode(line0)
-    line1 = _unicode(line1)
-    line2 = _unicode(line2)
-    line3 = _unicode(line3)
+    line0 = line0.encode( 'utf-8', 'ignore' )
+    line1 = line1.encode( 'utf-8', 'ignore' )
+    line2 = line2.encode( 'utf-8', 'ignore' )
+    line3 = line3.encode( 'utf-8', 'ignore' )
 
     # Dialog logic
     if not line0 == '':
