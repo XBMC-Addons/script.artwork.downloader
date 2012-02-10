@@ -2,9 +2,12 @@
 import os
 import xbmc
 import urllib
-try:
+import sys
+
+# Use json instead of simplejson when python v2.7 or greater
+if sys.version_info < (2, 7):
     import json as simplejson
-except:
+else:
     import simplejson
 
 ### import libraries

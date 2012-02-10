@@ -6,9 +6,11 @@ import xbmcaddon
 import unicodedata
 import urllib2
 import sys
-try:
+
+# Use json instead of simplejson when python v2.7 or greater
+if sys.version_info < (2, 7):
     import json as simplejson
-except:
+else:
     import simplejson
 
 ### get addon info
