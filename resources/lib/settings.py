@@ -40,7 +40,7 @@ class _settings:
         self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart")       == 'true'
         self.tvshow_logo            = __addon__.getSetting("tvshow_logo")           == 'true'
         self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb")          == 'true'
-        self.tvshow_seasonthumb     = __addon__.getSetting("tvshow_seasonthumb")   == 'true'
+        self.tvshow_seasonthumb     = __addon__.getSetting("tvshow_seasonthumb")    == 'true'
         self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner")     == 'true'
         self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner")   == 'true'
         self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart")   == 'true'
@@ -80,7 +80,7 @@ class _settings:
         self.limit_extrafanart_rating   = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_size_moviefanart     = int(__addon__.getSetting("limit_size_moviefanart"))
         self.limit_size_tvshowfanart    = int(__addon__.getSetting("limit_size_tvshowfanart"))
-        self.limit_extrathumbs          = 'true'
+        self.limit_extrathumbs          = True
         self.limit_extrathumbs_max      = 4
         self.limit_artwork_max          = 1
         self.limit_preferred_language   = __addon__.getSetting("limit_preferred_language")
@@ -88,12 +88,10 @@ class _settings:
 
     ### Initial startup vars
     def _vars(self):
-        self.failcount                  = 0
-        self.failthreshold              = 3
-        self.xmlfailthreshold           = 5
-        self.api_timedelay              = 5000  #msec
-        self.mediatype                  = ''
-        self.medianame                  = ''
+        self.failcount                  = 0     # Initial fail count
+        self.failthreshold              = 3     # Abbort when this many fails
+        self.xmlfailthreshold           = 5     # Abbort when this many fails
+        self.api_timedelay              = 5000  # in msec
 
     ### Log settings in debug mode
     def _initiallog(self):
@@ -388,8 +386,10 @@ class _settings:
             # Faulty setting found
             if settings_faulty:
                 log('Faulty setting combination found')
+                # when faulty setting detected ask to open the settings window
                 if dialog('yesno', line1 = __localize__(32003), line2 = __localize__(32004), background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025)):
                     __addon__.openSettings()
+                # if not cancel the script
                 else:
                     xbmc.abortRequested = True
                     break

@@ -76,8 +76,10 @@ class Main:
                         self.solo_mode(self.mediatype, self.medianame, self.mediapath)
                         if not dialog('iscanceled', background = self.settings.background) and not self.mode == 'customgui':
                             self._batch_download(self.download_list)
-                # No medianame specified
+                
                 else:
+                    # If no medianame specified
+                    # 1. Check what media type was specified, 2. Retrieve library list, 3. Enable the correct type, 4. Do the API stuff
                     if self.mediatype == 'movie':
                         log("Bulk mode: movie")
                         self.Medialist = media_listing('movie')
@@ -110,6 +112,8 @@ class Main:
                     self.settings.musicvideo_enable = True
                 
                 # Normal oprations check
+                # 1. Check if enable, 2. Get library list, 3. Set mediatype, 4. Do the API stuff
+                # Do this for each media type
                 if self.settings.movie_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
@@ -130,6 +134,7 @@ class Main:
                     self.download_artwork(self.Medialist, self.musicvideo_providers)
                 else:
                     log('Musicvideo fanart disabled, skipping', xbmc.LOGINFO)
+                # If not cancelled throw the whole downloadlist into the batch downloader
                 if not dialog('iscanceled', background = self.settings.background):
                     self._batch_download(self.download_list)
         else:
@@ -141,23 +146,23 @@ class Main:
 
     ### Declare standard vars   
     def initial_vars(self):
-        providers = provider.get_providers()
-        self.settings = _settings()
-        self.filters = apply_filters()
-        self.movie_providers = providers['movie_providers']
-        self.tv_providers = providers['tv_providers']
-        self.musicvideo_providers = providers['musicvideo_providers']
-        self.download_counter = {}
+        providers       = provider.get_providers()
+        self.settings   = _settings()
+        self.filters    = apply_filters()
+        self.movie_providers        = providers['movie_providers']
+        self.tv_providers           = providers['tv_providers']
+        self.musicvideo_providers   = providers['musicvideo_providers']
+        self.download_counter       = {}
         self.download_counter['Total Artwork'] = 0
-        self.reportdata = '[B]Artwork Downloader:[/B]'
-        self.mediatype = ''
-        self.medianame = ''
-        self.mediapath = ''
-        self.mode = ''
-        self.silent = ''
+        self.reportdata             = '[B]Artwork Downloader:[/B]'
+        self.mediatype  = ''
+        self.medianame  = ''
+        self.mediapath  = ''
+        self.mode       = ''
+        self.silent     = ''
         self.gui_selected_type = ''
-        self.failed_items = []
-        self.download_list = []
+        self.failed_items   = []
+        self.download_list  = []
         self._download_art_succes = False
 
     ### load settings and initialise needed directories
