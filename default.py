@@ -113,21 +113,24 @@ class Main:
                 if self.settings.movie_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
-                    self.download_artwork(self.Medialist, self.movie_providers)
+                    if self.Medialist != 'Empty':
+                        self.download_artwork(self.Medialist, self.movie_providers)
                 else:
                     log('Movie fanart disabled, skipping', xbmc.LOGINFO)
                 
                 if self.settings.tvshow_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('tvshow')
                     self.mediatype = 'tvshow'
-                    self.download_artwork(self.Medialist, self.tv_providers)
+                    if self.Medialist != 'Empty':
+                        self.download_artwork(self.Medialist, self.tv_providers)
                 else:
                     log('TV fanart disabled, skipping', xbmc.LOGINFO)
                 
                 if self.settings.musicvideo_enable and not dialog('iscanceled', background = True):
                     self.Medialist = media_listing('musicvideo')
                     self.mediatype = 'musicvideo'
-                    self.download_artwork(self.Medialist, self.musicvideo_providers)
+                    if self.Medialist != 'Empty':
+                        self.download_artwork(self.Medialist, self.musicvideo_providers)
                 else:
                     log('Musicvideo fanart disabled, skipping', xbmc.LOGINFO)
                 if not dialog('iscanceled', background = self.settings.background):
