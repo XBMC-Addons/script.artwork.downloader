@@ -26,7 +26,7 @@ cacheMedia.timeout = 600 # In seconds
 # Retrieve JSON data from cache function
 def _media_listing(media_type):
     result = cacheMedia.cacheFunction( _media_listing_new, media_type )
-    if len(result) == 0:
+    if len(result) == 0 or result == 'Empty':
         result = []
         return result
     else:
@@ -121,7 +121,7 @@ def _media_listing_new(media_type):
         Medialist = 'Empty'
         log('No %s found in your library' %media_type)
     except Exception, e:
-    	Medialist = 'Empty'
+        Medialist = 'Empty'
         log( str( e ), xbmc.LOGERROR )
     return Medialist
 
