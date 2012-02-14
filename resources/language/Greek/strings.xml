@@ -96,7 +96,7 @@
         <string id="32130">Στιγμιότυπο 16:9</string>
         <string id="32131">Επιπλέον στιγμιότυπα</string>
         <string id="32132">Εικόνες Δίσκων</string>
-        <string id="32133">Artwork</string>
+        <string id="32133">Εικόνες</string>
         <string id="32134">Στιγμιότυπα Κύκλων 16:9</string>
 
     <!-- Add-on messages: -->
@@ -105,8 +105,8 @@
         <string id="32143">Ψήφοι</string>
         <string id="32144">Κύκλος</string>
         <string id="32145">Μέγεθος</string>
-        <string id="32146">-</string>
-        <string id="32147">κάτω του ορίου ρύθμιση</string>
+        <string id="32146"></string>
+        <string id="32147">ρύθμιση κάτω του ορίου</string>
         <string id="32148">Χρόνος τέλους</string>
         <string id="32149">Δεν βρέθηκαν αποτυχημένα ή απόντα αντικείμενα</string>
         <string id="32150">το πρόσθετο διεκόπη λόγω τερματισμού του XBMC</string>
