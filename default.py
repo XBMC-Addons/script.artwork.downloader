@@ -537,6 +537,8 @@ class Main:
                         item['media_name']      = self.media_name
                         item['artwork_string']  = msg
                         item['artwork_details'] = artwork
+
+                        # raise artwork counter only on first loop
                         if i != 1:
                             current_artwork        += 1
 
@@ -557,6 +559,7 @@ class Main:
                             # jump out of the loop
                             imagefound = True
                         else:
+
                             # Check for set limits
                             limited = self.filters.do_filter( art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language )
                             # Delete extrafanart when below settings and parsing the reason message
@@ -588,22 +591,27 @@ class Main:
                                         imagefound = True
                                         log(" - Ignoring (Exists in all target directories): %s" % item['filename'] )
                                 # Raise limit counter because image was added to list or it already existed
-                                # Do some special check on season artwork
-                                if art_type == 'seasonthumbs' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
-                                    if artwork['season'] in seasonfile_presents:
-                                        log('seasonnumber: %s' %artwork['season'] )
-                                        limit_counter += 1
-                                    else:
-                                        seasonfile_presents.append( artwork['season'] )
-                                        log('Seasons present: %s' %seasonfile_presents )
-                                        limit_counter = 0
-                                else:
-                                    limit_counter += 1
+                                limit_counter += 1
                                 # Check if artwork doesn't exist and the ones available are below settings even after searching for English fallback                                   
                                 if limited[0] and imageignore and i == 1:
                                     for targetdir in item['targetdirs']:
                                         if not self.fileops._exists(os.path.join (targetdir, item['filename']) ) and not art_type in ['extrafanart', 'extrathumbs']:
                                             self.failed_items.append('[%s] %s %s' % (self.media_name, art_type, __localize__(32147)) )
+                            # Do some special check on season artwork
+                            if art_type == 'seasonthumbs' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
+                                # If already present in list set limit on 1 so it is skipped
+                                if artwork['season'] in seasonfile_presents:
+                                    log('seasonnumber: %s' %artwork['season'] )
+                                    limit_counter = 1
+                                # If not present in list but found image add it to list and reset counter limit
+                                elif imagefound:
+                                    seasonfile_presents.append( artwork['season'] )
+                                    log('Seasons present: %s' %seasonfile_presents )
+                                    limit_counter = 0
+                                # if not found and not already in list set limit to zero and image found false
+                                else:
+                                    limit_counter = 0
+                                    imagefound = False
                 # Counter to make the loop twice when nothing found
                 i += 1
                 # Not loop when preferred language is English because that the same as the backup
