@@ -362,7 +362,7 @@ class _settings:
                 else: check_movie = True
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
-                if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart:
+                if not self.tvshow_poster and not self.tvshow_seasonposter and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True
