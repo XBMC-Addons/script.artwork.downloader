@@ -4,7 +4,7 @@
 - Added: Spanish translation (thx PatOso)
 - Added: Localization of the download report
 - Added: TV Show Season Posters
-- Fixed: Don't run script twice when it was started on service time caused by the speed increase by using commoncach
+- Fixed: Don't run script twice when it was started on service time caused by the speed increase by using commoncache
 
 [B]1.0.7[/B] 
 - Changed: Revert 1.0.6 because dependencies are now met. Meaning options from 1.0.5 are now active
