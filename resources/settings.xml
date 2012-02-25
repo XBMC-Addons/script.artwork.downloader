@@ -53,7 +53,7 @@
         <setting type="sep" />
         <setting label="32013" type="bool"      id="tvshow_enable"              default="true" />
         <setting label="32128" type="bool"      id="tvshow_poster"              subsetting="true" enable="eq(-1,true)"  default="true" />
-        <setting label="32129" type="bool"      id="tvshow_seasonposter"        subsetting="true" enable="false"        default="false" />
+        <setting label="32129" type="bool"      id="tvshow_seasonposter"        subsetting="true" enable="eq(-2,true)"  default="false" />
         <setting label="32121" type="bool"      id="tvshow_fanart"              subsetting="true" enable="eq(-3,true)"  default="true" />
         <setting label="32122" type="bool"      id="tvshow_extrafanart"         subsetting="true" enable="eq(-4,true)"  default="true" />
         <setting label="32125" type="bool"      id="tvshow_clearart"            subsetting="true" enable="eq(-5,true)"  default="true" />

@@ -3,6 +3,7 @@
 - Added: Greek translation (thx CutSickAss)
 - Added: Spanish translation (thx PatOso)
 - Added: Localization of the download report
+- Added: TV Show Season Posters
 - Fixed: Don't run script twice when it was started on service time caused by the speed increase by using commoncach
 
 [B]1.0.7[/B] 

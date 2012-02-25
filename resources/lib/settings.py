@@ -55,7 +55,6 @@ class _settings:
         self.movie_logo             = False
         self.movie_discart          = False
         
-        self.tvshow_seasonposter    = False
         self.tvshow_seasonthumbs    = False
         
     ### Initial genral vars
@@ -222,7 +221,7 @@ class _settings:
         info = {}
         info['media_type']      = 'tvshow'
         info['bulk_enabled']    = self.tvshow_seasonposter
-        info['solo_enabled']    = 'false'
+        info['solo_enabled']    = 'true'
         info['gui_string']      = __localize__(32129)
         info['art_type']        = 'seasonposter'
         info['filename']        = 'season%s-poster.jpg'
