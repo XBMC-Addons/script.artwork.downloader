@@ -23,6 +23,7 @@
     <summary lang="el">Κατεβάζει Εικόνες για τις Τηλεοπτικές Σειρές, τις Ταινίες και τα Μουσικά Βίντεο Κλιπ της συλλογής σας</summary>
 	<summary lang="es">Descargue Artwork de Series, Películas y Videoclips a su biblioteca</summary>
 	<summary lang="pt">Transfira Artwork de Seriados, Filmes e Concertos para sua biblioteca</summary>
+    <summary lang="fr">Téléchargez les Artworks pour les séries TV, les films and les vidéos musicales de votre bibliothèque</summary>
     <description lang="en">
 	Downloads all available artwork for TV shows, Movies and Musicvideos in your library. Check the options for supported artwork[CR]
 	Artwork sources:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]
@@ -64,6 +65,12 @@
 	Fontes do Artwork:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]
 	Nota:[CR]Verifique na skin, quais os tipos de ilustrações (artworks) a mesma suporta![CR]Cada Seriado/Filme deve ter sua própria pasta![CR]
 	Integração nas skins:[CR]Ver o arquivo readme
+	</description>
+    <description lang="fr">
+    Téléchargez tous les artworks disponibles pour les séries TV, les films et les vidéos musicales de votre bibliothèque. Regardez les options pour les artsworks supportés[CR]
+	Sources des Artworks:[CR]www.fanart.tv[CR]www.thetvdb.com[CR]www.themoviedb.org[CR]
+	Remarques : [CR]Vérifiez votre thème pour savoir quel type d'artwork est supporté ![CR]Chaque Série TV/Film doit avoir son propre dossier ![CR]
+	Intégration dans un thème :[CR]Regardez le fichier rea dme.txt
 	</description>
     <disclaimer lang="en">For bugs, requests or general questions visit the Artwork Downloader thread on the XBMC forum.</disclaimer>
     <disclaimer lang="nl">Voor fouten, verzoeken of algemene vragen kan je terecht op Artwork Downloader thread op het XBMC forum.</disclaimer>

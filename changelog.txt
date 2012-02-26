@@ -2,7 +2,8 @@
 - Added: Increased speed by using commingcache for library JSON when using custom/gui mode (expires after 10 minutes)
 - Added: Greek translation (thx CutSickAss)
 - Added: Spanish translation (thx PatOso)
-- added: Portuguese (Brazil) (thx Wanilton)
+- added: Portuguese translation (Brazil) (thx Wanilton)
+- added: French translation (thx mikebzh44)
 - Added: Localization of the download report
 - Added: TV Show Season Posters
 - Fixed: Don't run script twice when it was started on service time caused by the speed increase by using commoncache
