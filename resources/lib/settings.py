@@ -30,6 +30,7 @@ class _settings:
         self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart")     == 'true'
         self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs")     == 'true'
         self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
+        self.movie_clearart         = __addon__.getSetting("tvshow_clearart")       == 'true'
         self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
 
         self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
@@ -50,11 +51,17 @@ class _settings:
         self.musicvideo_fanart      = __addon__.getSetting("musicvideo_fanart")     == 'true'
         self.musicvideo_extrafanart = __addon__.getSetting("musicvideo_extrafanart")== 'true'
         self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs")== 'true'
+        self.musicvideo_logo       = __addon__.getSetting("musicvideo_logo")       == 'true'
+        self.musicvideo_clearart        = __addon__.getSetting("tvshow_clearart")       == 'true'
+        self.musicvideo_discart    = __addon__.getSetting("musicvideo_discart")    == 'true'
 
         # temporary force these to false
         self.movie_logo             = False
+        self.movie_clearart         = False
         self.movie_discart          = False
-        
+        self.musicvideo_logo        = False
+        self.musicvideo_clearart    = False
+        self.musicvideo_discart     = False
         self.tvshow_seasonthumbs    = False
         
     ### Initial genral vars
@@ -130,6 +137,9 @@ class _settings:
         log('## - Fanart                = %s' % str(self.musicvideo_fanart))
         log('## - ExtraFanart           = %s' % str(self.musicvideo_extrafanart))
         log('## - ExtraThumbs           = %s' % str(self.musicvideo_extrathumbs))
+        log('## - Logo                  = %s' % str(self.movie_logo))
+        log('## - Clearart              = %s' % str(self.movie_clearart))
+        log('## - DiscArt               = %s' % str(self.movie_discart))
         log('##')
         log('## Centralize Extrafanart  = %s' % str(self.centralize_enable))
         log('## - Movies Folder         = %s' % str(self.centralfolder_movies))
@@ -197,6 +207,15 @@ class _settings:
         info['gui_string']      = __localize__(32126)
         info['art_type']        = 'clearlogo'
         info['filename']        = 'logo.png'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'movie'
+        info['bulk_enabled']    = self.movie_clearart
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32125)
+        info['art_type']        = 'clearart'
+        info['filename']        = 'clearart.png'
         self.available_arttypes.append(info)
 
         info = {}
@@ -345,6 +364,33 @@ class _settings:
         info['filename']        = 'thumb%s.jpg'
         self.available_arttypes.append(info)
 
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_logo
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32126)
+        info['art_type']        = 'clearlogo'
+        info['filename']        = 'logo.png'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_clearart
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32125)
+        info['art_type']        = 'clearart'
+        info['filename']        = 'clearart.png'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_discart
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32132)
+        info['art_type']        = 'discart'
+        info['filename']        = 'disc.png'
+        self.available_arttypes.append(info)
+        
     ### Check for faulty setting combinations
     def _check(self):
         settings_faulty = True
