@@ -37,7 +37,7 @@
         <string id="32032">[B]Ajustes Gerais usado para Transferir Artwork[/B]</string>
         <string id="32033">Executar em Segundo Plano</string>        
         <string id="32034">Mostrar diálogo ao finalizar/erros</string>
-        <string id="32035">Substituir todos os artworks existentes [I](será automaticly desativado após o download) [/I]</string>
+        <string id="32035">Substituir todos os artworks existentes [I](automaticamente desativado após o download) [/I]</string>
         <string id="32036">Centralizar extrafanart [I](Pode ser usado para o slideshow extrafanart) [/I]</string>
         <string id="32037">Diretório Central extrafanart Seriados</string>
         <string id="32038">Diretório Central extrafanart Filmes</string>
@@ -73,11 +73,11 @@
 
     <!-- Add-on settings: Advanced settings section id=32101 to 32020 -->   
         <string id="32101">Avançado</string>
-        <string id="32102">[B]Algumas configurações mais avançadas para ser usadas[/B]</string>
+        <string id="32102">[B]Configurações Avançadas[/B]</string>
         <string id="32103">-</string>
         <string id="32104">-</string>
         <string id="32105">-</string>
-        <string id="32106">Use XBMC pre-cache [I](guarda imagens na pasta da miniaturas enquanto downloading) [/I]</string>
+        <string id="32106">Use XBMC pre-cache [I](salvar imagens na pasta da miniaturas enquanto downloading) [/I]</string>
         <string id="32107">-</string>
         <string id="32108">-</string>
         <string id="32109">-</string>
@@ -117,7 +117,7 @@
         
     <!-- Add-on settings: Info section id=32181 to 32190-->   
         <string id="32181">Info</string>
-        <string id="32182">Por favor, doe ou contribuir para os seguintes sites para mostrar seu apoio:</string>
+        <string id="32182">Por favor, doe ou contribuia para os seguintes sites, para mostrar seu apoio:</string>
         <string id="32183">[I]www.xbmc.org [/I]</string>
         <string id="32184">[I]fanart.tv [/I]</string>
         <string id="32185">[I]www.thetvdb.com [/I]</string>
