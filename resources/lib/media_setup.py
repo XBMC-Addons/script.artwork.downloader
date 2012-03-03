@@ -2,25 +2,46 @@
 import os
 import xbmc
 import urllib
-try:
+import sys
+
+# Use json instead of simplejson when python v2.7 or greater
+if sys.version_info < (2, 7):
     import json as simplejson
-except:
+else:
     import simplejson
 
 ### import libraries
 from resources.lib.utils import _normalize_string as normalize_string
 from resources.lib.utils import _log as log
 from elementtree import ElementTree as ET
+# Commoncache plugin import
+try:
+    import StorageServer
+except:
+    import storageserverdummy as StorageServer
+
+cacheMedia = StorageServer.StorageServer("ArtworkDownloader")
+cacheMedia.timeout = 600 # In seconds
+
+# Retrieve JSON data from cache function
+def _media_listing(media_type):
+    result = cacheMedia.cacheFunction( _media_listing_new, media_type )
+    if len(result) == 0 or result == 'Empty':
+        result = []
+        return result
+    else:
+        return result
 
 ### get list of all tvshows and movies with their imdbnumber from library
 # Retrieve JSON list
-def _media_listing(media_type):
+
+def _media_listing_new(media_type):
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     try:
         if media_type == 'tvshow':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
-            json_response = unicode(json_response,'utf-8', errors='ignore')
+            json_response.decode('utf-8')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('tvshows'):
                 for item in jsonobject['result']['tvshows']:
@@ -31,14 +52,21 @@ def _media_listing(media_type):
                     Media['tvshowid']   = item['tvshowid']
 
                     # Search for season information
-                    json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"tvshowid":%s }, "id": 1}' %Media['tvshowid'])
+                    json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %Media['tvshowid'])
                     jsonobject_season = simplejson.loads(json_response_season)
+                    # Get start/end and total seasons
                     if jsonobject_season['result'].has_key('limits'):
                         limits = jsonobject_season['result']['limits']
                         Media['seasontotal'] = limits['total']
                         Media['seasonstart'] = limits['start']
                         Media['seasonend'] = limits['end']
-            
+                    # Get the season numbers
+                    if jsonobject_season['result'].has_key('seasons'):
+                        seasons = jsonobject_season['result']['seasons']
+                        Media['seasons'] =[]
+                        for season in seasons:
+                            Media['seasons'].append(season['season'])            
+                    '''
                     # Retrieve season folder path
                     i = Media['seasonstart']
                     Media['seasonpaths'] = []
@@ -59,12 +87,13 @@ def _media_listing(media_type):
                         if Seasonitem['seasonpath']:
                             Media['seasonpaths'].append(Seasonitem)
                         i += 1
+                    '''
                     #log(Media)
                     Medialist.append(Media)
         
         elif media_type == 'movie':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer"], "sort": { "method": "label" } }, "id": 1}')
-            json_response = unicode(json_response,'utf-8', errors='ignore')
+            json_response.decode('utf-8')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
@@ -79,7 +108,7 @@ def _media_listing(media_type):
 
         elif media_type == 'musicvideo':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre"], "sort": { "method": "album" } }, "id": 1}')
-            json_response = unicode(json_response,'utf-8', errors='ignore')
+            json_response.decode('utf-8')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('musicvideos'):
                 for item in jsonobject['result']['musicvideos']:
@@ -97,8 +126,10 @@ def _media_listing(media_type):
         else:
             log('No JSON results found')
     except Exception, NoneType:
+        Medialist = 'Empty'
         log('No %s found in your library' %media_type)
     except Exception, e:
+        Medialist = 'Empty'
         log( str( e ), xbmc.LOGERROR )
     return Medialist
 

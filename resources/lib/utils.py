@@ -6,9 +6,11 @@ import xbmcaddon
 import unicodedata
 import urllib2
 import sys
-try:
+
+# Use json instead of simplejson when python v2.7 or greater
+if sys.version_info < (2, 7):
     import json as simplejson
-except:
+else:
     import simplejson
 
 ### get addon info
@@ -67,10 +69,10 @@ def _log(txt, severity=xbmc.LOGDEBUG):
 # Define dialogs
 def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025) ):
     # Fix possible unicode errors 
-    line0 = _normalize_string(line0)
-    line1 = _normalize_string(line1)
-    line2 = _normalize_string(line2)
-    line3 = _normalize_string(line3)
+    line0 = line0.encode( 'utf-8', 'ignore' )
+    line1 = line1.encode( 'utf-8', 'ignore' )
+    line2 = line2.encode( 'utf-8', 'ignore' )
+    line3 = line3.encode( 'utf-8', 'ignore' )
 
     # Dialog logic
     if not line0 == '':
@@ -119,7 +121,7 @@ def _get_json(url):
         result = []
         return result
     else:
-        return result[0]
+        return result
 
 # Retrieve JSON data from site
 def _get_json_new(url):
@@ -143,7 +145,7 @@ def _get_json_new(url):
         parsed_json = simplejson.loads(json_string)
     except:
         parsed_json = []
-    return [parsed_json]
+    return parsed_json
 
 # Retrieve XML data from cache function
 def _get_xml(url):
@@ -153,7 +155,7 @@ def _get_xml(url):
         result = []
         return result
     else:
-        return result[0]
+        return result
 
 # Retrieve XML data from site
 def _get_xml_new(url):
@@ -162,7 +164,7 @@ def _get_xml_new(url):
         client  = urlopen(url)
         data    = client.read()
         client.close()
-        return [data]
+        return data
     except HTTPError, e:
         if e.code   == 404:
             raise HTTP404Error( url )

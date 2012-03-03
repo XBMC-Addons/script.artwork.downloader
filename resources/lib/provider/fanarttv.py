@@ -27,37 +27,40 @@ class FTV_TVProvider():
         log('API:               %s ' % xml_url)
         image_list = []
         data = get_xml(xml_url)
-        tree = ET.fromstring(data)
-        for imagetype in self.imagetypes:
-            imageroot = imagetype + 's'
-            for images in tree.findall(imageroot):
-                for image in images:
-                    info = {}
-                    info['id'] = image.get('id')
-                    info['url'] = urllib.quote(image.get('url'), ':/')
-                    info['preview'] = info['url']
-                    info['type'] = [imagetype]
-                    info['rating'] = 'n/a'
-                    info['language'] = 'n/a'
-                    '''
-                    info['preview'] = urllib.quote(image.get('preview'), ':/')
-                    info['language'] = image.get('lang')
-                    info['likes'] = image.get('likes')
-                    if imagetype == 'seasonthumb':
-                        seasonxx = "%.2d" % int(image.findtext('season')) #ouput is double digit int
-                        if seasonxx == '00':
-                            info['season'] = '-specials'
+        try:
+            tree = ET.fromstring(data)
+            for imagetype in self.imagetypes:
+                imageroot = imagetype + 's'
+                for images in tree.findall(imageroot):
+                    for image in images:
+                        info = {}
+                        info['id'] = image.get('id')
+                        info['url'] = urllib.quote(image.get('url'), ':/')
+                        info['preview'] = info['url']
+                        info['type'] = [imagetype]
+                        info['rating'] = 'n/a'
+                        info['language'] = 'n/a'
+                        '''
+                        info['preview'] = urllib.quote(image.get('preview'), ':/')
+                        info['language'] = image.get('lang')
+                        info['likes'] = image.get('likes')
+                        if imagetype == 'seasonthumb':
+                            seasonxx = "%.2d" % int(image.findtext('season')) #ouput is double digit int
+                            if seasonxx == '00':
+                                info['season'] = '-specials'
+                            else:
+                                info['season'] = str(seasonxx)
+                            info['season'] = "%.2d" % int(image.get('season')) #ouput is double digit int
                         else:
-                            info['season'] = str(seasonxx)
-                        info['season'] = "%.2d" % int(image.get('season')) #ouput is double digit int
-                    else:
-                        info['season'] = 'NA'
-                    info['generalinfo'] = 'Language: %s , Likes: %s   ' %(info['language'], info['likes'])
-                    '''
-                    # Create Gui string to display
-                    info['generalinfo'] = '%s: %s  |  %s: %s   ' %( __localize__(32141), info['language'], __localize__(32142), info['rating'])
-                    if info:
-                        image_list.append(info)
+                            info['season'] = 'NA'
+                        info['generalinfo'] = 'Language: %s , Likes: %s   ' %(info['language'], info['likes'])
+                        '''
+                        # Create Gui string to display
+                        info['generalinfo'] = '%s: %s  |  %s: %s   ' %( __localize__(32141), info['language'], __localize__(32142), info['rating'])
+                        if info:
+                            image_list.append(info)
+        except:
+            raise NoFanartError(media_id)      
         if image_list == []:
             raise NoFanartError(media_id)
         else:

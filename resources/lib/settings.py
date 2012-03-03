@@ -30,6 +30,7 @@ class _settings:
         self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart")     == 'true'
         self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs")     == 'true'
         self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
+        self.movie_clearart         = __addon__.getSetting("tvshow_clearart")       == 'true'
         self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
 
         self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
@@ -40,7 +41,7 @@ class _settings:
         self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart")       == 'true'
         self.tvshow_logo            = __addon__.getSetting("tvshow_logo")           == 'true'
         self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb")          == 'true'
-        self.tvshow_seasonthumb     = __addon__.getSetting("tvshow_seasonthumb")   == 'true'
+        self.tvshow_seasonthumb     = __addon__.getSetting("tvshow_seasonthumb")    == 'true'
         self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner")     == 'true'
         self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner")   == 'true'
         self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart")   == 'true'
@@ -50,12 +51,17 @@ class _settings:
         self.musicvideo_fanart      = __addon__.getSetting("musicvideo_fanart")     == 'true'
         self.musicvideo_extrafanart = __addon__.getSetting("musicvideo_extrafanart")== 'true'
         self.musicvideo_extrathumbs = __addon__.getSetting("musicvideo_extrathumbs")== 'true'
+        self.musicvideo_logo       = __addon__.getSetting("musicvideo_logo")       == 'true'
+        self.musicvideo_clearart        = __addon__.getSetting("tvshow_clearart")       == 'true'
+        self.musicvideo_discart    = __addon__.getSetting("musicvideo_discart")    == 'true'
 
         # temporary force these to false
         self.movie_logo             = False
+        self.movie_clearart         = False
         self.movie_discart          = False
-        
-        self.tvshow_seasonposter    = False
+        self.musicvideo_logo        = False
+        self.musicvideo_clearart    = False
+        self.musicvideo_discart     = False
         self.tvshow_seasonthumbs    = False
         
     ### Initial genral vars
@@ -80,7 +86,7 @@ class _settings:
         self.limit_extrafanart_rating   = int(__addon__.getSetting("limit_extrafanart_rating").rstrip('0').rstrip('.'))
         self.limit_size_moviefanart     = int(__addon__.getSetting("limit_size_moviefanart"))
         self.limit_size_tvshowfanart    = int(__addon__.getSetting("limit_size_tvshowfanart"))
-        self.limit_extrathumbs          = 'true'
+        self.limit_extrathumbs          = True
         self.limit_extrathumbs_max      = 4
         self.limit_artwork_max          = 1
         self.limit_preferred_language   = __addon__.getSetting("limit_preferred_language")
@@ -88,12 +94,10 @@ class _settings:
 
     ### Initial startup vars
     def _vars(self):
-        self.failcount                  = 0
-        self.failthreshold              = 3
-        self.xmlfailthreshold           = 5
-        self.api_timedelay              = 5000  #msec
-        self.mediatype                  = ''
-        self.medianame                  = ''
+        self.failcount                  = 0     # Initial fail count
+        self.failthreshold              = 3     # Abbort when this many fails
+        self.xmlfailthreshold           = 5     # Abbort when this many fails
+        self.api_timedelay              = 5000  # in msec
 
     ### Log settings in debug mode
     def _initiallog(self):
@@ -133,6 +137,9 @@ class _settings:
         log('## - Fanart                = %s' % str(self.musicvideo_fanart))
         log('## - ExtraFanart           = %s' % str(self.musicvideo_extrafanart))
         log('## - ExtraThumbs           = %s' % str(self.musicvideo_extrathumbs))
+        log('## - Logo                  = %s' % str(self.movie_logo))
+        log('## - Clearart              = %s' % str(self.movie_clearart))
+        log('## - DiscArt               = %s' % str(self.movie_discart))
         log('##')
         log('## Centralize Extrafanart  = %s' % str(self.centralize_enable))
         log('## - Movies Folder         = %s' % str(self.centralfolder_movies))
@@ -204,6 +211,15 @@ class _settings:
 
         info = {}
         info['media_type']      = 'movie'
+        info['bulk_enabled']    = self.movie_clearart
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32125)
+        info['art_type']        = 'clearart'
+        info['filename']        = 'clearart.png'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'movie'
         info['bulk_enabled']    = self.movie_discart
         info['solo_enabled']    = 'false'
         info['gui_string']      = __localize__(32132)
@@ -224,7 +240,7 @@ class _settings:
         info = {}
         info['media_type']      = 'tvshow'
         info['bulk_enabled']    = self.tvshow_seasonposter
-        info['solo_enabled']    = 'false'
+        info['solo_enabled']    = 'true'
         info['gui_string']      = __localize__(32129)
         info['art_type']        = 'seasonposter'
         info['filename']        = 'season%s-poster.jpg'
@@ -348,6 +364,33 @@ class _settings:
         info['filename']        = 'thumb%s.jpg'
         self.available_arttypes.append(info)
 
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_logo
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32126)
+        info['art_type']        = 'clearlogo'
+        info['filename']        = 'logo.png'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_clearart
+        info['solo_enabled']    = 'true'
+        info['gui_string']      = __localize__(32125)
+        info['art_type']        = 'clearart'
+        info['filename']        = 'clearart.png'
+        self.available_arttypes.append(info)
+
+        info = {}
+        info['media_type']      = 'musicvideo'
+        info['bulk_enabled']    = self.musicvideo_discart
+        info['solo_enabled']    = 'false'
+        info['gui_string']      = __localize__(32132)
+        info['art_type']        = 'discart'
+        info['filename']        = 'disc.png'
+        self.available_arttypes.append(info)
+        
     ### Check for faulty setting combinations
     def _check(self):
         settings_faulty = True
@@ -365,7 +408,7 @@ class _settings:
                 else: check_movie = True
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
-                if not self.tvshow_poster and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart:
+                if not self.tvshow_poster and not self.tvshow_seasonposter and not self.tvshow_fanart and not self.tvshow_extrafanart  and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_clearart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_thumb and not self.tvshow_characterart:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True
@@ -388,8 +431,10 @@ class _settings:
             # Faulty setting found
             if settings_faulty:
                 log('Faulty setting combination found')
+                # when faulty setting detected ask to open the settings window
                 if dialog('yesno', line1 = __localize__(32003), line2 = __localize__(32004), background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025)):
                     __addon__.openSettings()
+                # if not cancel the script
                 else:
                     xbmc.abortRequested = True
                     break
