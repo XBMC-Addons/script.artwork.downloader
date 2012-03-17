@@ -201,11 +201,11 @@ class Main:
             # Check for medianame
             match = re.search("medianame=(.*)" , item)
             if match:
-                self.medianame = match.group(1)
+                self.medianame = match.group(1).lstrip(' " ').rstrip(' " ')
             # Check for mediapath
             match = re.search("mediapath=(.*)" , item)
             if match:
-                self.mediapath = (match.group(1).rstrip(' /\ '))
+                self.mediapath = match.group(1).lstrip(' " ').rstrip(' /\" ')
                 log('matchgroup: %s' %self.mediapath)
         try:
             # Creates temp folder
