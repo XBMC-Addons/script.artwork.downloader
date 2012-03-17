@@ -137,7 +137,7 @@ def _media_listing_new(media_type):
 def media_path(path):
     # Check for stacked movies
     try:
-        path = os.path.split(path)[0].rsplit(' , ', 1)[1]
+        path = os.path.split(path)[0].rsplit(' , ', 1)[1].replace(",,",",")
     except:
         path = os.path.split(path)[0]
     # Fixes problems with rared movies
