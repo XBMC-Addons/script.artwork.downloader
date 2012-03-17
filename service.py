@@ -15,19 +15,18 @@ __version__     = __addon__.getAddonInfo('version')
 __addonpath__   = __addon__.getAddonInfo('path')
 __icon__        = __addon__.getAddonInfo('icon')
 __localize__    = __addon__.getLocalizedString
-__addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
+__addonprofile__= xbmc.translatePath( __addon__.getAddonInfo('profile') ).decode('utf-8')
 
 #import libraries
-from resources.lib import utils
-from resources.lib.utils import _log as log
-from resources.lib.settings import _settings
+from resources.lib.utils import *
+from resources.lib.settings import settings
 
 # starts update/sync
 def autostart():
         xbmcaddon.Addon().setSetting(id="files_overwrite", value='false')
-        settings = _settings()
+        settings = settings()
         settings._get_general()
-        tempdir = os.path.join(__addondir__, 'temp')
+        tempdir = os.path.join(__addonprofile__, 'temp')
         service_runtime  = str(settings.service_runtime + ':00')
         log('## Service - Run at startup: %s'%settings.service_startup, xbmc.LOGNOTICE)        
         log('## Service - Delayed startup: %s minutes'%settings.service_startupdelay, xbmc.LOGNOTICE)   

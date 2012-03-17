@@ -11,8 +11,7 @@ else:
     import simplejson
 
 ### import libraries
-from resources.lib.utils import _normalize_string as normalize_string
-from resources.lib.utils import _log as log
+from resources.lib.utils import *
 from elementtree import ElementTree as ET
 # Commoncache plugin import
 try:
@@ -50,7 +49,6 @@ def _media_listing_new(media_type):
                     Media['path']       = media_path(item['file'])
                     Media['id']         = item['imdbnumber']
                     Media['tvshowid']   = item['tvshowid']
-
                     # Search for season information
                     json_response_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %Media['tvshowid'])
                     jsonobject_season = simplejson.loads(json_response_season)
@@ -92,9 +90,10 @@ def _media_listing_new(media_type):
                     Medialist.append(Media)
         
         elif media_type == 'movie':
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer"], "sort": { "method": "label" } }, "id": 1}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails"], "sort": { "method": "label" } }, "id": 1}')
             json_response.decode('utf-8')
             jsonobject = simplejson.loads(json_response)
+            
             if jsonobject['result'].has_key('movies'):
                 for item in jsonobject['result']['movies']:
                     Media = {}
@@ -102,8 +101,30 @@ def _media_listing_new(media_type):
                     Media['name']       = item['label']
                     Media['year']       = item['year']
                     Media['path']       = media_path(item['file'])
+                    Media['file']       = item['file']
                     Media['trailer']    = item['trailer']
                     Media['id']         = item['imdbnumber']
+                    # Get streamdetails
+                    file = Media['file'].encode('utf-8').lower()
+                    if ( ('dvd') in file and not ('hddvd' or 'hd-dvd') in file ) or ( file.endswith('.vob' or '.ifo') ):
+                        Media['disctype'] = 'dvd'
+                        #log('Match on filename: %s' %Media['disctype'] )
+                    elif '3d' in file:
+                        Media['disctype'] = '3d'
+                        #log('Match on filename: %s' %Media['disctype'] )
+                    elif ( ('bluray' or 'blu-ray' or 'brrip' or 'bdrip') in file ):
+                        Media['disctype'] = 'bluray'
+                        #log('Match on filename: %s' %Media['disctype'] )
+                    elif item['streamdetails'] != None and item['streamdetails'].has_key('video'):
+                        videowidth = item['streamdetails']['video'][0]['width']
+                        videoheight = item['streamdetails']['video'][0]['height']
+                        if videowidth <= 720 and videoheight <= 480:
+                            Media['disctype'] = 'dvd'
+                        else:
+                            Media['disctype'] = 'bluray'
+                        #log('Match on streamdetails: %s' %Media['disctype'] )
+                    else:
+                        Media['disctype'] = 'n/a'
                     Medialist.append(Media)
 
         elif media_type == 'musicvideo':
