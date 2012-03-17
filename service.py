@@ -24,13 +24,13 @@ from resources.lib.settings import settings
 # starts update/sync
 def autostart():
         xbmcaddon.Addon().setSetting(id="files_overwrite", value='false')
-        settings = settings()
-        settings._get_general()
+        setting = settings()
+        setting._get_general()
         tempdir = os.path.join(__addonprofile__, 'temp')
-        service_runtime  = str(settings.service_runtime + ':00')
-        log('## Service - Run at startup: %s'%settings.service_startup, xbmc.LOGNOTICE)        
-        log('## Service - Delayed startup: %s minutes'%settings.service_startupdelay, xbmc.LOGNOTICE)   
-        log('## Service - Run as service: %s'%settings.service_enable, xbmc.LOGNOTICE)
+        service_runtime  = str(setting.service_runtime + ':00')
+        log('## Service - Run at startup: %s'%setting.service_startup, xbmc.LOGNOTICE)        
+        log('## Service - Delayed startup: %s minutes'%setting.service_startupdelay, xbmc.LOGNOTICE)   
+        log('## Service - Run as service: %s'%setting.service_enable, xbmc.LOGNOTICE)
         log('## Service - Time: %s'%service_runtime, xbmc.LOGNOTICE)
         log("##########........................")
         # Check if tempdir exists and remove it
@@ -41,9 +41,9 @@ def autostart():
         # Run script when enabled and check on existence of tempdir.
         # This because it is possible that script was running even when we previously deleted it.
         # Could happen when switching profiles and service gets triggered again
-        if settings.service_startup and not xbmcvfs.exists(tempdir):
-            xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:%s:15,silent)' %settings.service_startupdelay) 
-        if settings.service_enable:
+        if setting.service_startup and not xbmcvfs.exists(tempdir):
+            xbmc.executebuiltin('XBMC.AlarmClock(ArtworkDownloader,XBMC.RunScript(script.artwork.downloader,silent=true),00:%s:15,silent)' %setting.service_startupdelay) 
+        if setting.service_enable:
             while (not xbmc.abortRequested):
                 xbmc.sleep(5000)
                 if not(time.strftime('%H:%M') == service_runtime):

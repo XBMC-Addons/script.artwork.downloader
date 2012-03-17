@@ -108,7 +108,7 @@ class FTV_MovieProvider():
                             # Create Gui string to display
                             info['generalinfo'] = '%s: %s  |  ' %( __localize__(32141), info['language'])
                             if info['disctype'] != 'n/a':
-                                info['generalinfo'] += '%s: %s  |  ' %( __localize__(32135), info['disctype'] )
+                                info['generalinfo'] += '%s: %s (%s)  |  ' %( __localize__(32146), info['discnumber'], info['disctype'] )
                             info['generalinfo'] += '%s: %s  |  ' %( __localize__(32143), info['votes'] )
                             if info:
                                 image_list.append(info)
