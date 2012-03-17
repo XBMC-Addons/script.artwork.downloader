@@ -116,14 +116,6 @@ class fileops:
             temppath = os.path.join(self.tempdir, filename)
             url = url.replace(" ", "%20")
             tempfile = open(temppath, "wb")
-            #temp user/password
-            if url.startswith("http://aowl.fanart.tv"):
-                # create a password manager
-                password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-                password_mgr.add_password(None, "http://aowl.fanart.tv", 'fanart', 'newsite')
-                handler = urllib2.HTTPBasicAuthHandler(password_mgr)
-                opener = urllib2.build_opener(handler)
-                urllib2.install_opener(opener)
             response = urllib2.urlopen(url)
             tempfile.write(response.read())
             tempfile.close()
