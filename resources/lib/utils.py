@@ -135,7 +135,7 @@ def get_json_new(url):
         request = urllib2.Request(url)
         if url.startswith("http://api.themoviedb.org"):
             request.add_header("Accept", "application/json")
-        req = urllib2.urlopen(request) 
+        req = urllib2.urlopen(request)
         json_string = req.read()
         req.close()
     except HTTPError, e:
