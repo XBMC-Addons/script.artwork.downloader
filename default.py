@@ -349,7 +349,7 @@ class Main:
             self.media_id   = currentmedia["id"]
             self.media_name = currentmedia["name"]
             self.media_path = currentmedia["path"]
-            if not self.mediatype == 'tvshow':
+            if self.mediatype == 'movie':
                 self.media_disctype = currentmedia["disctype"]
             else:
                 self.media_disctype = 'n/a'
