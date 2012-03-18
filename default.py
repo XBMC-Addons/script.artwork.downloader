@@ -307,9 +307,9 @@ class Main:
         mediafound = False
         for currentitem in self.Medialist:
             # Check on exact match
-            if itemname == currentitem["name"]:
+            if itemname in currentitem["name"]:
                 # Check on exact path match when provided
-                if itempath == currentitem['path'] or itempath == '':
+                if itempath in currentitem['path'] or itempath == '':
                     self.Medialist = []
                     self.Medialist.append(currentitem)
                     mediafound = True

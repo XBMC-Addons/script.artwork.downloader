@@ -40,7 +40,7 @@ def _media_listing_new(media_type):
     try:
         if media_type == 'tvshow':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
-            json_response.decode('utf-8')
+            json_response = unicode(json_response, 'utf-8', errors='ignore')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('tvshows'):
                 for item in jsonobject['result']['tvshows']:
@@ -91,7 +91,7 @@ def _media_listing_new(media_type):
         
         elif media_type == 'movie':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails"], "sort": { "method": "label" } }, "id": 1}')
-            json_response.decode('utf-8')
+            json_response = unicode(json_response, 'utf-8', errors='ignore')
             jsonobject = simplejson.loads(json_response)
             
             if jsonobject['result'].has_key('movies'):
@@ -129,7 +129,7 @@ def _media_listing_new(media_type):
 
         elif media_type == 'musicvideo':
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre"], "sort": { "method": "album" } }, "id": 1}')
-            json_response.decode('utf-8')
+            json_response = unicode(json_response, 'utf-8', errors='ignore')
             jsonobject = simplejson.loads(json_response)
             if jsonobject['result'].has_key('musicvideos'):
                 for item in jsonobject['result']['musicvideos']:

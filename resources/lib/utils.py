@@ -40,7 +40,7 @@ dialog = xbmcgui.DialogProgress()
 
 
 # Fixes unicode problems
-def unicode( text, encoding='utf-8' ):
+def string_unicode( text, encoding='utf-8' ):
     try:
         text = unicode( text, encoding )
     except:
@@ -49,7 +49,7 @@ def unicode( text, encoding='utf-8' ):
 
 def normalize_string( text ):
     try:
-        text = unicodedata.normalize( 'NFKD', unicode( text ) ).encode( 'ascii', 'ignore' )
+        text = unicodedata.normalize( 'NFKD', string_unicode( text ) ).encode( 'ascii', 'ignore' )
     except:
         pass
     return text
