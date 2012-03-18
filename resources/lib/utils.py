@@ -30,7 +30,7 @@ try:
 except:
     import storageserverdummy as StorageServer
 
-cache = StorageServer.StorageServer("ArtworkDownloader",24)
+cache = StorageServer.StorageServer("ArtworkDownloader",48)
 
 ### adjust default timeout to stop script hanging
 timeout = 20
