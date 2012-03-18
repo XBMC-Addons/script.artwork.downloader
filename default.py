@@ -202,7 +202,7 @@ class Main:
             # Check for mediapath
             match = re.search("mediapath=(.*)" , item)
             if match:
-                self.mediapath = match.group(1).lstrip(' " ').rstrip(' /\" ')
+                self.mediapath = match.group(1).lstrip(' " ').rstrip(' "/\ ')
                 log('matchgroup: %s' %self.mediapath)
         try:
             # Creates temp folder
@@ -308,8 +308,8 @@ class Main:
         for currentitem in self.Medialist:
             # Check on exact match
             if itemname in currentitem["name"]:
-                # Check on exact path match when provided
-                if itempath in currentitem['path'] or itempath == '':
+                # Check on exact path match when provided and normalize the path because of unicode issues
+                if normalize_string(itempath) == normalize_string(currentitem['path']) or itempath == '':
                     self.Medialist = []
                     self.Medialist.append(currentitem)
                     mediafound = True
