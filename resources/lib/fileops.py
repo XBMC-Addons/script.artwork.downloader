@@ -114,7 +114,6 @@ class fileops:
 
         try:
             temppath = os.path.join(self.tempdir, filename)
-            url = url.replace(" ", "%20")
             tempfile = open(temppath, "wb")
             response = urllib2.urlopen(url)
             tempfile.write(response.read())

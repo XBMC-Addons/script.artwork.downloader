@@ -34,8 +34,8 @@ class FTV_TVProvider():
                         # Run through all the items
                         for item in value[art]:
                             info = {}
-                            info['url']         = item['url']              # Original image url
-                            info['preview']     = info['url'] + "/preview" # Create a preview url for later use
+                            info['url']         = urllib.quote(item['url'], ':/')   # Original image url
+                            info['preview']     = info['url'] + "/preview"          # Create a preview url for later use
                             info['id']          = item['id']
                             info['type']        = art
                             if item.has_key('season'):
@@ -85,8 +85,8 @@ class FTV_MovieProvider():
                         # Run through all the items
                         for item in value[art]:
                             info = {}
-                            info['url']         = item['url']              # Original image url
-                            info['preview']     = info['url'] + "/preview" # Create a preview url for later use
+                            info['url']         = urllib.quote(item['url'], ':/')   # Original image url
+                            info['preview']     = info['url'] + "/preview"          # Create a preview url for later use
                             info['id']          = item['id']
                             # Check on what type and use the general tag
                             if art == 'movielogo':
