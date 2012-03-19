@@ -242,7 +242,8 @@ class Main:
         if not self.failed_items:
             self.reportdata += '\n - %s' %__localize__(32149)                                               # No failed or missing items found
         else:
-            for item in getUniq(self.failed_items):
+            # use  list(sorted(set(mylist)))  to get unique items
+            for item in list(sorted(set(self.failed_items))):
                 self.reportdata += '\n - %s' %item
         # Build dialog messages
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32020)

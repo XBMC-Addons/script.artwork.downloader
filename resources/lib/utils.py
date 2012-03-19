@@ -104,17 +104,6 @@ def dialog_msg(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3
                 msg = line1 + ': ' + line2
             xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (line0, msg, __icon__))
 
-# order preserving and get unique entry
-def getUniq(seq):
-    #mylist = list(set(mylist))   this should be an easier way to do this. have not tested it
-    seen = []
-    result = []
-    for item in seq:
-        if item in seen: continue
-        seen.append( item )
-        result.append( item )
-    return result
-
 # Retrieve JSON data from cache function
 def get_json(url):
     log('API: %s'% url)
