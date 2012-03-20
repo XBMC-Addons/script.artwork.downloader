@@ -18,6 +18,7 @@ __addon__       = ( sys.modules[ "__main__" ].__addon__ )
 __addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
 __icon__        = ( sys.modules[ "__main__" ].__icon__ )
 __localize__    = ( sys.modules[ "__main__" ].__localize__ )
+__addonprofile__= ( sys.modules[ "__main__" ].__addonprofile__ )
 
 ### import libraries
 from urllib2 import HTTPError, URLError, urlopen
@@ -29,7 +30,7 @@ try:
 except:
     import storageserverdummy as StorageServer
 
-cache = StorageServer.StorageServer("ArtworkDownloader",24)
+cache = StorageServer.StorageServer("ArtworkDownloader",48)
 
 ### adjust default timeout to stop script hanging
 timeout = 20
@@ -39,35 +40,35 @@ dialog = xbmcgui.DialogProgress()
 
 
 # Fixes unicode problems
-def _unicode( text, encoding='utf-8' ):
+def string_unicode( text, encoding='utf-8' ):
     try:
         text = unicode( text, encoding )
     except:
         pass
     return text
 
-def _normalize_string( text ):
+def normalize_string( text ):
     try:
-        text = unicodedata.normalize( 'NFKD', _unicode( text ) ).encode( 'ascii', 'ignore' )
+        text = unicodedata.normalize( 'NFKD', string_unicode( text ) ).encode( 'ascii', 'ignore' )
     except:
         pass
     return text
 
 # Define log messages
-def _log(txt, severity=xbmc.LOGDEBUG):
+def log(txt, severity=xbmc.LOGDEBUG):
     try:
         message = ('%s: %s' % (__addonname__,txt) )
         xbmc.log(msg=message, level=severity)
     except UnicodeEncodeError:
         try:
-            message = _normalize_string('%s: %s' % (__addonname__,txt) )
+            message = normalize_string('%s: %s' % (__addonname__,txt) )
             xbmc.log(msg=message, level=severity)
         except:
             message = ('%s: UnicodeEncodeError' %__addonname__)
             xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
 # Define dialogs
-def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025) ):
+def dialog_msg(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025) ):
     # Fix possible unicode errors 
     line0 = line0.encode( 'utf-8', 'ignore' )
     line1 = line1.encode( 'utf-8', 'ignore' )
@@ -103,20 +104,13 @@ def _dialog(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = 
                 msg = line1 + ': ' + line2
             xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (line0, msg, __icon__))
 
-# order preserving and get unique entry
-def _getUniq(seq):
-    seen = []
-    result = []
-    for item in seq:
-        if item in seen: continue
-        seen.append( item )
-        result.append( item )
-    return result
-
 # Retrieve JSON data from cache function
-def _get_json(url):
-    _log('API: %s'% url)
-    result = cache.cacheFunction( _get_json_new, url )
+def get_json(url):
+    log('API: %s'% url)
+    try:
+        result = cache.cacheFunction( get_json_new, url )
+    except:
+        result = ''
     if len(result) == 0:
         result = []
         return result
@@ -124,12 +118,13 @@ def _get_json(url):
         return result
 
 # Retrieve JSON data from site
-def _get_json_new(url):
-    _log('Cache expired. Retrieving new data')
+def get_json_new(url):
+    log('Cache expired. Retrieving new data')
     try:
         request = urllib2.Request(url)
-        request.add_header("Accept", "application/json")
-        req = urllib2.urlopen(request) 
+        if url.startswith("http://api.themoviedb.org"):
+            request.add_header("Accept", "application/json")
+        req = urllib2.urlopen(request)
         json_string = req.read()
         req.close()
     except HTTPError, e:
@@ -148,9 +143,9 @@ def _get_json_new(url):
     return parsed_json
 
 # Retrieve XML data from cache function
-def _get_xml(url):
-    _log('API: %s'% url)
-    result = cache.cacheFunction( _get_xml_new, url )
+def get_xml(url):
+    log('API: %s'% url)
+    result = cache.cacheFunction( get_xml_new, url )
     if len(result) == 0:
         result = []
         return result
@@ -158,8 +153,8 @@ def _get_xml(url):
         return result
 
 # Retrieve XML data from site
-def _get_xml_new(url):
-    _log('Cache expired. Retrieving new data')
+def get_xml_new(url):
+    log('Cache expired. Retrieving new data')
     try:
         client  = urlopen(url)
         data    = client.read()
@@ -180,13 +175,13 @@ def _get_xml_new(url):
         raise HTTPTimeout( url )
 
 # Clean filenames for illegal character in the safest way for windows
-def _clean_filename( filename ):
+def clean_filename( filename ):
     illegal_char = '<>:"/\|?*'
     for char in illegal_char:
         filename = filename.replace( char , '' )
     return filename
     
-def _save_nfo_file( data, target ):
+def save_nfo_file( data, target ):
     try:
         # open source path for writing
         file_object = open( target.encode( "utf-8" ), "w" )

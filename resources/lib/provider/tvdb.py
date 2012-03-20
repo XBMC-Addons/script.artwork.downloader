@@ -3,8 +3,7 @@ import sys
 
 #import libraries
 from resources.lib.script_exceptions import NoFanartError
-from resources.lib.utils import _log as log
-from resources.lib.utils import _get_xml as get_xml
+from resources.lib.utils import *
 from elementtree import ElementTree as ET
 from operator import itemgetter
 
@@ -81,11 +80,12 @@ class TVDBProvider():
                         info['season'] = 'n/a'
 
                     # Create Gui string to display
-                    info['generalinfo'] = '%s: %s  |  %s: %s  |  %s: %s  |  ' %( __localize__(32141), info['language'], __localize__(32142), info['rating'], __localize__(32143), info['votes'] )
+                    info['generalinfo'] = '%s: %s  |  ' %( __localize__(32141), info['language'] )
                     if info['season'] != 'n/a':
                         info['generalinfo'] += '%s: %s  |  ' %( __localize__(32144), info['season'] )
                     if 'height' in info:
                         info['generalinfo'] += '%s: %sx%s  |  ' %( __localize__(32145), info['height'], info['width'] )
+                    info['generalinfo'] += '%s: %s  |  %s: %s  |  ' %( __localize__(32142), info['rating'], __localize__(32143), info['votes'] )
 
                 if info:
                     image_list.append(info)
