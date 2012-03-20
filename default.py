@@ -308,7 +308,7 @@ class Main:
         mediafound = False
         for currentitem in self.Medialist:
             # Check on exact match
-            if itemname in currentitem["name"]:
+            if normalize_string(itemname) == normalize_string(currentitem["name"]):
                 # Check on exact path match when provided and normalize the path because of unicode issues
                 if normalize_string(itempath) == normalize_string(currentitem['path']) or itempath == '':
                     self.Medialist = []
