@@ -19,6 +19,7 @@ __addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
 __icon__        = ( sys.modules[ "__main__" ].__icon__ )
 __localize__    = ( sys.modules[ "__main__" ].__localize__ )
 __addonprofile__= ( sys.modules[ "__main__" ].__addonprofile__ )
+__useragent__    = "Mozilla/5.0 (Windows; U; Windows NT 5.1; fr; rv:1.9.0.1) Gecko/2008070208 Firefox/3.6"
 
 ### import libraries
 from urllib2 import HTTPError, URLError, urlopen
@@ -126,9 +127,10 @@ def get_json_new(url):
         # TMDB needs a header to be able to read the data
         if url.startswith("http://api.themoviedb.org"):
             request.add_header("Accept", "application/json")
+        request.add_header("User-Agent", __useragent__)
         # Add some delay to stop trashing the fanart.tv server for now
         elif url.startswith("http://fanart.tv/"):
-            xbmc.sleep(2000)
+            xbmc.sleep(1000)
         req = urllib2.urlopen(request)
         json_string = req.read()
         req.close()
@@ -164,9 +166,11 @@ def get_xml(url):
 def get_xml_new(url):
     log('Cache expired. Retrieving new data')
     try:
-        client  = urlopen(url)
-        data    = client.read()
-        client.close()
+        request = urllib2.Request(url)
+        request.add_header("User-Agent", __useragent__)
+        req = urllib2.urlopen(request)
+        data    = req.read()
+        req.close()
         return data
     except HTTPError, e:
         if e.code   == 404:
