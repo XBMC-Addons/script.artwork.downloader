@@ -38,7 +38,7 @@ class FTV_TVProvider():
                         for item in value[art]:
                             # Create GUI info tag
                             generalinfo = '%s: %s  |  ' %( __localize__(32141), item.get('lang'))
-                            if item.get('season','n/a') != 'n/a':
+                            if item.get('season'):
                                 generalinfo += '%s: %s  |  ' %( __localize__(32144), item.get('season'))
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
                             # Fill list
@@ -82,15 +82,13 @@ class FTV_MovieProvider():
                         # Run through all the items
                         for item in value[art]:
                             # Check on what type and use the general tag
-                            if art == 'movielogo':
-                                type = 'clearlogo'
-                            elif art == 'moviedisc':
-                                type = 'discart'
-                            elif art == 'movieart':
-                                type = 'clearart'
+                            arttypes = {'movielogo': 'clearlogo',
+                                        'moviedisc': 'discart',
+                                        'movieart': 'clearart'}
+                            type = arttypes[art]
                             # Create GUI info tag
                             generalinfo = '%s: %s  |  ' %( __localize__(32141), item.get('lang'))
-                            if item.get('disc_type','n/a') != 'n/a':
+                            if item.get('disc_type'):
                                 generalinfo += '%s: %s (%s)  |  ' %( __localize__(32146), item.get('disc'), item.get('disc_type'))
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
                             # Fill list
