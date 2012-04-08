@@ -127,10 +127,10 @@ def get_json_new(url):
         # TMDB needs a header to be able to read the data
         if url.startswith("http://api.themoviedb.org"):
             request.add_header("Accept", "application/json")
-        request.add_header("User-Agent", __useragent__)
         # Add some delay to stop trashing the fanart.tv server for now
         elif url.startswith("http://fanart.tv/"):
             xbmc.sleep(1000)
+        request.add_header("User-Agent", __useragent__)
         req = urllib2.urlopen(request)
         json_string = req.read()
         req.close()

@@ -23,106 +23,87 @@ class TMDBProvider():
     def get_image_list(self, media_id):
         data = get_json(self.url %(media_id, self.api_key))
         image_list = []
-        if data == "Empty":
+        if data == "Empty" or not data:
             return image_list
         else:
             # Get fanart
             try:
                 for item in data['backdrops']:
-                    info = {}
-                    info['url'] = self.imageurl + 'original' + item['file_path']    # Original image url
-                    info['preview'] = self.imageurl + 'w300' + item['file_path']    # Create a preview url for later use
-                    info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
-                    info['type'] = ['fanart','extrafanart']                         # Set standard to 'fanart'
-                    info['height'] = item['height']
-                    info['width'] = item['width']
-                    #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
-
-                    # Convert the 'None' value to default 'n/a'
-                    if item['iso_639_1']:
-                        info['language'] = item['iso_639_1']
-                    else:
-                        info['language'] = 'n/a'
-
-                    # find image ratings
                     if int(item['vote_count']) >= 1:
-                        info['rating'] = float( "%.1f" % float( item['vote_average']) ) #output string with one decimal
-                        info['votes'] = item['vote_count']
+                        rating = float( "%.1f" % float( item['vote_average']) ) #output string with one decimal
+                        votes = item.get('vote_count','n/a')
                     else:
-                        info['rating'] = 'n/a'
-                        info['votes'] = 'n/a'
-
-                    # Create Gui string to display
-                    info['generalinfo'] = '%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' %( __localize__(32141), info['language'], __localize__(32142), info['rating'], __localize__(32143), info['votes'], __localize__(32145), info['width'], info['height'])
-
-                    if info:
-                        image_list.append(info)
+                        rating = 'n/a'
+                        votes = 'n/a'
+                    image_list.append({'url': self.imageurl + 'original' + item['file_path'],
+                                       'preview': self.imageurl + 'w300' + item['file_path'],
+                                       'id': item.get('file_path').lstrip('/').replace('.jpg', ''),
+                                       'type': ['fanart','extrafanart'],
+                                       'height': item.get('height'),
+                                       'width': item.get('width'),
+                                       'language': item.get('iso_639_1','n/a'),
+                                       'rating': rating,
+                                       'votes': votes,
+                                       # Create Gui string to display
+                                       'generalinfo': ('%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' 
+                                                       %( __localize__(32141), item.get('iso_639_1','n/a'),
+                                                          __localize__(32142), rating,
+                                                          __localize__(32143), votes,
+                                                          __localize__(32145), item.get('width'), item.get('height')))})
             except Exception, e:
                 log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
             # Get thumbs
             try:
                 for item in data['backdrops']:
-                    info = {}
-                    info['url'] = self.imageurl + 'w780' + item['file_path']    # Original image url
-                    info['preview'] = self.imageurl + 'w300' + item['file_path']    # Create a preview url for later use
-                    info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
-                    info['type'] = ['thumb','extrathumbs']                          # Set standard to 'fanart'
-                    info['height'] = item['height']
-                    info['width'] = item['width']
-                    #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
-
-                    # Convert the 'None' value to default 'n/a'
-                    if item['iso_639_1']:
-                        info['language'] = item['iso_639_1']
-                    else:
-                        info['language'] = 'n/a'
-
-                    # find image ratings
                     if int(item['vote_count']) >= 1:
-                        info['rating'] = float( "%.1f" % float( item['vote_average']) ) #output string with one decimal
-                        info['votes'] = item['vote_count']
+                        rating = float( "%.1f" % float( item['vote_average']) ) #output string with one decimal
+                        votes = item.get('vote_count','n/a')
                     else:
-                        info['rating'] = 'n/a'
-                        info['votes'] = 'n/a'
-
-                    # Create Gui string to display
-                    info['generalinfo'] = '%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' %( __localize__(32141), info['language'], __localize__(32142), info['rating'], __localize__(32143), info['votes'], __localize__(32145), info['width'], info['height'])
-
-                    if info:
-                        image_list.append(info)
+                        rating = 'n/a'
+                        votes = 'n/a'
+                    # Fill list
+                    image_list.append({'url': self.imageurl + 'w780' + item['file_path'],
+                                       'preview': self.imageurl + 'w300' + item['file_path'],
+                                       'id': item.get('file_path').lstrip('/').replace('.jpg', ''),
+                                       'type': ['thumb','extrathumbs'],
+                                       'height': item.get('height'),
+                                       'width': item.get('width'),
+                                       'language': item.get('iso_639_1','n/a'),
+                                       'rating': rating,
+                                       'votes': votes,
+                                       # Create Gui string to display
+                                       'generalinfo': ('%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' 
+                                                       %( __localize__(32141), item.get('iso_639_1','n/a'),
+                                                          __localize__(32142), rating,
+                                                          __localize__(32143), votes,
+                                                          __localize__(32145), item.get('width'), item.get('height')))})
             except Exception, e:
                 log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
             # Get posters
             try:
                 for item in data['posters']:
-                    info = {}
-                    info['url'] = self.imageurl + 'original' + item['file_path']    # Original image url
-                    info['preview'] = self.imageurl + 'w185' + item['file_path']    # Create a preview url for later use
-                    info['id'] = item['file_path'].lstrip('/').replace('.jpg', '')  # Strip filename to get an ID
-                    info['type'] = ['poster']                                         # Set standard to 'fanart'
-                    info['height'] = item['height']
-                    info['width'] = item['width']
-                    #info['aspect_ratio'] = item['aspect_ratio']                    # Who knows when we may need it
-
-                    # Convert the 'None' value to default 'n/a'
-                    if item['iso_639_1']:
-                        info['language'] = item['iso_639_1']
-                    else:
-                        info['language'] = 'n/a'
-
-                    # find image ratings
                     if int(item['vote_count']) >= 1:
-                        info['rating'] = float( "%.1f" % float( item['vote_average']) ) #output string with one decimal
-                        info['votes'] = item['vote_count']
+                        rating = float( "%.1f" % float( item['vote_average']) ) #output string with one decimal
+                        votes = item.get('vote_count','n/a')
                     else:
-                        info['rating'] = 'n/a'
-                        info['votes'] = 'n/a'
-
-                    # Create Gui string to display
-                    info['generalinfo'] = '%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' %( __localize__(32141), info['language'], __localize__(32142), info['rating'], __localize__(32143), info['votes'], __localize__(32145), info['width'], info['height'])
-
-                    if info:
-                        image_list.append(info)
+                        rating = 'n/a'
+                        votes = 'n/a'
+                    # Fill list
+                    image_list.append({'url': self.imageurl + 'original' + item['file_path'],
+                                       'preview': self.imageurl + 'w185' + item['file_path'],
+                                       'id': item.get('file_path').lstrip('/').replace('.jpg', ''),
+                                       'type': ['poster'],
+                                       'height': item.get('height'),
+                                       'width': item.get('width'),
+                                       'language': item.get('iso_639_1','n/a'),
+                                       'rating': rating,
+                                       'votes': votes,
+                                       # Create Gui string to display
+                                       'generalinfo': ('%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' 
+                                                       %( __localize__(32141), item.get('iso_639_1','n/a'),
+                                                          __localize__(32142), rating,
+                                                          __localize__(32143), votes,
+                                                          __localize__(32145), item.get('width'), item.get('height')))})
             except Exception, e:
                 log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
             if image_list == []:
