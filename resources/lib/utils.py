@@ -36,6 +36,9 @@ cache = StorageServer.StorageServer("ArtworkDownloader",96)
 ### adjust default timeout to stop script hanging
 timeout = 20
 socket.setdefaulttimeout(timeout)
+DEBUG = __addon__.getSetting("debug_enabled") == 'true'
+CACHE_ON = True
+
 ### Declare dialog
 dialog = xbmcgui.DialogProgress()
 
@@ -57,16 +60,19 @@ def normalize_string( text ):
 
 # Define log messages
 def log(txt, severity=xbmc.LOGDEBUG):
-    try:
-        message = ('%s: %s' % (__addonname__,txt) )
-        xbmc.log(msg=message, level=severity)
-    except UnicodeEncodeError:
+    if severity == xbmc.LOGDEBUG and not DEBUG:
+        pass
+    else:
         try:
-            message = normalize_string('%s: %s' % (__addonname__,txt) )
+            message = ('%s: %s' % (__addonname__,txt) )
             xbmc.log(msg=message, level=severity)
-        except:
-            message = ('%s: UnicodeEncodeError' %__addonname__)
-            xbmc.log(msg=message, level=xbmc.LOGWARNING)
+        except UnicodeEncodeError:
+            try:
+                message = normalize_string('%s: %s' % (__addonname__,txt) )
+                xbmc.log(msg=message, level=severity)
+            except:
+                message = ('%s: UnicodeEncodeError' %__addonname__)
+                xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
 # Define dialogs
 def dialog_msg(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3 = '', background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025) ):
@@ -109,14 +115,15 @@ def dialog_msg(action, percentage = 0, line0 = '', line1 = '', line2 = '', line3
 def get_json(url):
     log('API: %s'% url)
     try:
-        result = cache.cacheFunction( get_json_new, url )
+        if CACHE_ON:
+            result = cache.cacheFunction( get_json_new, url )
+        else:
+            result = get_json_new(url)
     except:
         result = 'Empty'
-    if len(result) == 0:
+    if not result:
         result = 'Empty'
-        return result
-    else:
-        return result
+    return result
 
 # Retrieve JSON data from site
 def get_json_new(url):
@@ -155,12 +162,13 @@ def get_json_new(url):
 # Retrieve XML data from cache function
 def get_xml(url):
     log('API: %s'% url)
-    result = cache.cacheFunction( get_xml_new, url )
+    if CACHE_ON:
+        result = cache.cacheFunction( get_xml_new, url )
+    else:
+        result = get_xml_new(url)
     if len(result) == 0:
         result = []
-        return result
-    else:
-        return result
+    return result
 
 # Retrieve XML data from site
 def get_xml_new(url):
@@ -169,7 +177,7 @@ def get_xml_new(url):
         request = urllib2.Request(url)
         request.add_header("User-Agent", __useragent__)
         req = urllib2.urlopen(request)
-        data    = req.read()
+        data = req.read()
         req.close()
         return data
     except HTTPError, e:

@@ -8,36 +8,33 @@ from resources.lib.script_exceptions import NoFanartError, ItemNotFoundError
 from resources.lib.utils import *
 from elementtree import ElementTree as ET
 from operator import itemgetter
-from resources.lib import language
+from resources.lib.language import *
 
 ### get addon info
 __localize__    = ( sys.modules[ '__main__' ].__localize__ )
+
+API_KEY = '586118be1ac673f74963cc284d46bd8e'
+IMAGE_TYPES = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart','movielogo', 'movieart', 'moviedisc']
 
 class FTV_TVProvider():
 
     def __init__(self):
         self.name = 'fanart.tv - TV API'
-        self.api_key = '586118be1ac673f74963cc284d46bd8e' # ArtworkDownloader-tvshow
         self.url = 'http://fanart.tv/webservice/series/%s/%s/json/all/1/2'
-        self.imagetypes = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart']
 
     def get_image_list(self, media_id):
-        data = get_json(self.url % (self.api_key,media_id))
+        data = get_json(self.url % (API_KEY,media_id))
         image_list = []
         if data == 'Empty' or not data:
             return image_list
         else:
-            # Get fanart
             # split 'name' and 'data'
             for title, value in data.iteritems():
-                # run through specified types
-                for art in self.imagetypes:
-                    # if type has been found
+                for art in IMAGE_TYPES:
                     if value.has_key(art):
-                        # Run through all the items
                         for item in value[art]:
                             # Create GUI info tag
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), item.get('lang'))
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), get_language(item.get('lang')).capitalize())
                             if item.get('season'):
                                 generalinfo += '%s: %s  |  ' %( __localize__(32144), item.get('season'))
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
@@ -62,24 +59,19 @@ class FTV_MovieProvider():
 
     def __init__(self):
         self.name = 'fanart.tv - Movie API'
-        self.api_key = '586118be1ac673f74963cc284d46bd8e' # ArtworkDownloader-movie
         self.url = 'http://fanart.tv/webservice/movie/%s/%s/json/all/1/2/'
-        self.imagetypes = ['movielogo', 'movieart', 'moviedisc']
+        
 
     def get_image_list(self, media_id):
-        data = get_json(self.url % (self.api_key,media_id))
+        data = get_json(self.url %(API_KEY, media_id))
         image_list = []
         if data == 'Empty' or not data:
             return image_list
         else:
-            # Get fanart
             # split 'name' and 'data'
             for title, value in data.iteritems():
-                # run through specified types
-                for art in self.imagetypes:
-                    # if type has been found
+                for art in IMAGE_TYPES:
                     if value.has_key(art):
-                        # Run through all the items
                         for item in value[art]:
                             # Check on what type and use the general tag
                             arttypes = {'movielogo': 'clearlogo',
@@ -87,7 +79,7 @@ class FTV_MovieProvider():
                                         'movieart': 'clearart'}
                             type = arttypes[art]
                             # Create GUI info tag
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), item.get('lang'))
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), get_language(item.get('lang')).capitalize())
                             if item.get('disc_type'):
                                 generalinfo += '%s: %s (%s)  |  ' %( __localize__(32146), item.get('disc'), item.get('disc_type'))
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
