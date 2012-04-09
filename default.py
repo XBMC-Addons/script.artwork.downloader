@@ -81,13 +81,13 @@ class Main:
                         self.settings.tvshow_enable = 'false'
                         self.settings.musicvideo_enable = 'false'
                         self.download_artwork(self.Medialist, self.movie_providers)
-                    if self.mediatype == 'tvshow':
+                    elif self.mediatype == 'tvshow':
                         self.settings.movie_enable = 'false'
                         self.settings.tvshow_enable = 'true'
                         self.settings.musicvideo_enable = 'false'
                         self.Medialist = media_listing('tvshow')
                         self.download_artwork(self.Medialist, self.tv_providers)
-                    if self.mediatype == 'musicvideo':
+                    elif self.mediatype == 'musicvideo':
                         self.Medialist = media_listing('musicvideo')
                         self.settings.movie_enable = 'false'
                         self.settings.tvshow_enable = 'false'
@@ -110,11 +110,11 @@ class Main:
                     self.Medialist = media_listing('movie')
                     self.mediatype = 'movie'
                     self.download_artwork(self.Medialist, self.movie_providers)
-                elif self.settings.tvshow_enable and not dialog_msg('iscanceled', background = True):
+                if self.settings.tvshow_enable and not dialog_msg('iscanceled', background = True):
                     self.Medialist = media_listing('tvshow')
                     self.mediatype = 'tvshow'
                     self.download_artwork(self.Medialist, self.tv_providers)
-                elif self.settings.musicvideo_enable and not dialog_msg('iscanceled', background = True):
+                if self.settings.musicvideo_enable and not dialog_msg('iscanceled', background = True):
                     self.Medialist = media_listing('musicvideo')
                     self.mediatype = 'musicvideo'
                     self.download_artwork(self.Medialist, self.musicvideo_providers)
