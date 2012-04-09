@@ -76,21 +76,18 @@ class Main:
                     # If no medianame specified
                     # 1. Check what media type was specified, 2. Retrieve library list, 3. Enable the correct type, 4. Do the API stuff
                     if self.mediatype == 'movie':
-                        log("Bulk mode: movie")
                         self.Medialist = media_listing('movie')
                         self.settings.movie_enable = 'true'
                         self.settings.tvshow_enable = 'false'
                         self.settings.musicvideo_enable = 'false'
                         self.download_artwork(self.Medialist, self.movie_providers)
-                    elif self.mediatype == 'tvshow':
-                        log("Bulk mode: TV Shows")
+                    if self.mediatype == 'tvshow':
                         self.settings.movie_enable = 'false'
                         self.settings.tvshow_enable = 'true'
                         self.settings.musicvideo_enable = 'false'
                         self.Medialist = media_listing('tvshow')
                         self.download_artwork(self.Medialist, self.tv_providers)
-                    elif self.mediatype == 'musicvideo':
-                        log("Bulk mode: musicvideo")
+                    if self.mediatype == 'musicvideo':
                         self.Medialist = media_listing('musicvideo')
                         self.settings.movie_enable = 'false'
                         self.settings.tvshow_enable = 'false'
