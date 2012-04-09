@@ -31,12 +31,11 @@ try:
 except:
     import storageserverdummy as StorageServer
 
-cache = StorageServer.StorageServer("ArtworkDownloader",96)
+cache = StorageServer.StorageServer("ArtworkDownloader",128)
 
 ### adjust default timeout to stop script hanging
 timeout = 20
 socket.setdefaulttimeout(timeout)
-DEBUG = __addon__.getSetting("debug_enabled") == 'true'
 CACHE_ON = True
 
 ### Declare dialog
@@ -60,7 +59,7 @@ def normalize_string( text ):
 
 # Define log messages
 def log(txt, severity=xbmc.LOGDEBUG):
-    if severity == xbmc.LOGDEBUG and not DEBUG:
+    if severity == xbmc.LOGDEBUG and not __addon__.getSetting("debug_enabled") == 'true':
         pass
     else:
         try:
