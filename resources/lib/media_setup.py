@@ -159,7 +159,11 @@ def media_path(path):
         path = os.path.split(path)[0].rsplit(' , ', 1)[1].replace(",,",",")
     except:
         path = os.path.split(path)[0]
-    # Fixes problems with rared movies
-    if path.startswith("rar"):
+    # Fixes problems with rared movies and multipath
+    if path.startswith("rar://"):
         path = os.path.split(urllib.url2pathname(path.replace("rar://","")))[0]
+    elif path.startswith("multipath://"):
+        path = path.replace("multipath://","").split('%2f/')
+    else:
+        path = [path]
     return path

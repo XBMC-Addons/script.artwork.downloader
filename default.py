@@ -353,12 +353,13 @@ class Main:
             self.target_extrafanartdirs = []
             self.target_extrathumbsdirs = []
             self.target_artworkdir = []
-            artwork_dir = os.path.join(self.media_path + '/')
-            extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
-            extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
-            self.target_artworkdir.append(artwork_dir)
-            self.target_extrafanartdirs.append(extrafanart_dir)
-            self.target_extrathumbsdirs.append(extrathumbs_dir)
+            for item in self.media_path:
+                artwork_dir = urllib.url2pathname(os.path.join(item + '/'))
+                extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
+                extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
+                self.target_artworkdir.append(artwork_dir)
+                self.target_extrafanartdirs.append(extrafanart_dir)
+                self.target_extrathumbsdirs.append(extrathumbs_dir)
             
             # Check if using the centralize option
             if self.settings.centralize_enable:
