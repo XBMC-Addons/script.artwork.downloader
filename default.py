@@ -293,13 +293,14 @@ class Main:
             # Check on exact match
             if normalize_string(itemname) == normalize_string(currentitem["name"]):
                 # Check on exact path match when provided and normalize the path because of unicode issues
-                if normalize_string(urlsplit(currentitem["path"]).path) == normalize_string(urlsplit(itempath).path) or itempath == '':
-                    self.Medialist = []
-                    self.Medialist.append(currentitem)
-                    mediafound = True
-                    break
-                else:
-                    self.Medialist = []
+                for item in currentitem["path"]:
+                    if normalize_string(urlsplit(item).path) == normalize_string(urlsplit(itempath).path) or itempath == '':
+                        self.Medialist = []
+                        self.Medialist.append(currentitem)
+                        mediafound = True
+                        break
+                    else:
+                        self.Medialist = []
             # Empty medialist to prevent running through all media
         if mediafound:
             if itemtype == 'movie':
