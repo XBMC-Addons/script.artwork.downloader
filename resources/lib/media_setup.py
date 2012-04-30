@@ -11,8 +11,7 @@ else:
     import simplejson
 
 ### import libraries
-from resources.lib.utils import *
-from elementtree import ElementTree as ET
+from resources.lib.utils import log
 # Commoncache plugin import
 try:
     import StorageServer
@@ -24,7 +23,8 @@ cacheMedia = StorageServer.StorageServer("ArtworkDownloader",1)
 
 # Retrieve JSON data from cache function
 def _media_listing(media_type):
-    result = cacheMedia.cacheFunction( _media_listing_new, media_type )
+    #result = cacheMedia.cacheFunction( _media_listing_new, media_type )
+    result = _media_listing_new(media_type)
     if len(result) == 0:
         result = []
         return result
@@ -132,7 +132,11 @@ def media_path(path):
     if path.startswith("rar://"):
         path = [os.path.split(urllib.url2pathname(path.replace("rar://","")))[0]]
     elif path.startswith("multipath://"):
-        path = path.replace("multipath://","").split('%2f/')
+        temp_path = path.replace("multipath://","").split('%2f/')
+        path = []
+        for item in temp_path:
+            path.append(urllib.url2pathname(item))
+        print path
     else:
         path = [path]
     return path
