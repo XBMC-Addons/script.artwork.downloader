@@ -28,7 +28,7 @@ class settings:
         self.movie_extrafanart      = __addon__.getSetting("movie_extrafanart")     == 'true'
         self.movie_extrathumbs      = __addon__.getSetting("movie_extrathumbs")     == 'true'
         self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
-        self.movie_clearart         = __addon__.getSetting("tvshow_clearart")       == 'true'
+        self.movie_clearart         = __addon__.getSetting("movie_clearart")       == 'true'
         self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
 
         self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
