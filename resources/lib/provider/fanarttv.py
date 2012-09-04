@@ -17,10 +17,14 @@ API_URL_TV = 'http://fanart.tv/webservice/series/%s/%s/json/all/1/2'
 API_URL_MOVIE = 'http://fanart.tv/webservice/movie/%s/%s/json/all/1/2/'
 
 IMAGE_TYPES = ['clearlogo',
+               'hdtvlogo',
                'clearart',
+               'hdclearart',
                'tvthumb',
                'seasonthumb',
                'characterart',
+               'tvbanner',
+               'seasonbanner',
                'movielogo',
                'hdmovielogo',
                'movieart',
@@ -45,16 +49,36 @@ class FTV_TVProvider():
                 for art in IMAGE_TYPES:
                     if value.has_key(art):
                         for item in value[art]:
+                            # Check on what type and use the general tag
+                            arttypes = {'clearlogo': 'clearlogo',
+                                        'hdtvlogo': 'clearlogo',
+                                        'clearart': 'clearart',
+                                        'hdclearart': 'clearart',
+                                        'tvthumb': 'tvthumb',
+                                        'seasonthumb': 'seasonthumb',
+                                        'characterart': 'characterart',
+                                        'tvbanner': 'tvbanner',
+                                        'seasonbanner': 'seasonbanner',
+                                        }
+                            if art in ['hdtvlogo', 'hdclearart']:
+                                size = 'HD'
+                            elif art in ['clearlogo', 'clearart']:
+                                size = 'SD'
+                            else:
+                                size = ''
                             # Create GUI info tag
                             generalinfo = '%s: %s  |  ' %( __localize__(32141), get_language(item.get('lang')).capitalize())
                             if item.get('season'):
                                 generalinfo += '%s: %s  |  ' %( __localize__(32144), item.get('season'))
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
+                            if art in ['hdtvlogo', 'hdclearart', 'clearlogo', 'clearart']:
+                                generalinfo += '%s: %s  |  ' %( __localize__(32145), size)
                             # Fill list
                             image_list.append({'url': urllib.quote(item.get('url'), ':/'),
                                                'preview': item.get('url') + '/preview',
                                                'id': item.get('id'),
-                                               'type': art,
+                                               'type': arttypes[art],
+                                               'size': size,
                                                'season': item.get('season','n/a'),
                                                'language': item.get('lang'),
                                                'votes': item.get('likes'),
@@ -64,6 +88,7 @@ class FTV_TVProvider():
             else:
                 # Sort the list before return. Last sort method is primary
                 image_list = sorted(image_list, key=itemgetter('votes'), reverse=True)
+                image_list = sorted(image_list, key=itemgetter('size'), reverse=False)
                 image_list = sorted(image_list, key=itemgetter('language'))
                 return image_list
             
