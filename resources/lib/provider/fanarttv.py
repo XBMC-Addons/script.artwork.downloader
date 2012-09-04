@@ -16,7 +16,18 @@ API_KEY = '586118be1ac673f74963cc284d46bd8e'
 API_URL_TV = 'http://fanart.tv/webservice/series/%s/%s/json/all/1/2'
 API_URL_MOVIE = 'http://fanart.tv/webservice/movie/%s/%s/json/all/1/2/'
 
-IMAGE_TYPES = ['clearlogo', 'clearart', 'tvthumb', 'seasonthumb', 'characterart','movielogo', 'movieart', 'moviedisc']
+IMAGE_TYPES = ['clearlogo',
+               'clearart',
+               'tvthumb',
+               'seasonthumb',
+               'characterart',
+               'movielogo',
+               'hdmovielogo',
+               'movieart',
+               'moviedisc',
+               'hdmovieclearart',
+               'moviethumb',
+               'moviebanner']
 
 class FTV_TVProvider():
 
@@ -75,18 +86,30 @@ class FTV_MovieProvider():
                             # Check on what type and use the general tag
                             arttypes = {'movielogo': 'clearlogo',
                                         'moviedisc': 'discart',
-                                        'movieart': 'clearart'}
-                            #arttype = arttypes[art]
+                                        'movieart': 'clearart',
+                                        'hdmovielogo': 'clearlogo',
+                                        'hdmovieclearart': 'clearart',
+                                        'moviebanner': 'banner',
+                                        'moviethumb': 'thumb'}
+                            if art in ['hdmovielogo', 'hdmovieclearart']:
+                                size = 'HD'
+                            elif art in ['movielogo', 'movieart']:
+                                size = 'SD'
+                            else:
+                                size = ''
                             # Create GUI info tag
                             generalinfo = '%s: %s  |  ' %( __localize__(32141), get_language(item.get('lang')).capitalize())
                             if item.get('disc_type'):
                                 generalinfo += '%s: %s (%s)  |  ' %( __localize__(32146), item.get('disc'), item.get('disc_type'))
+                            if art in ['hdmovielogo', 'hdmovieclearart', 'movielogo', 'movieclearart']:
+                                generalinfo += '%s: %s  |  ' %( __localize__(32145), size)
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
                             # Fill list
                             image_list.append({'url': urllib.quote(item.get('url'), ':/'),
                                                'preview': item.get('url') + '/preview',
                                                'id': item.get('id'),
                                                'type': arttypes[art],
+                                               'size': size,
                                                'season': item.get('season','n/a'),
                                                'language': item.get('lang'),
                                                'votes': item.get('likes'),
@@ -98,5 +121,6 @@ class FTV_MovieProvider():
             else:
                 # Sort the list before return. Last sort method is primary
                 image_list = sorted(image_list, key=itemgetter('votes'), reverse=True)
+                image_list = sorted(image_list, key=itemgetter('size'), reverse=False)
                 image_list = sorted(image_list, key=itemgetter('language'))
                 return image_list
