@@ -31,7 +31,7 @@ class settings:
         self.movie_clearart         = __addon__.getSetting("movie_clearart")        == 'true'
         self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
         self.movie_thumb            = __addon__.getSetting("movie_thumb")           == 'true'
-        self.movie_banner            = __addon__.getSetting("movie_banner")          == 'true'
+        self.movie_banner           = __addon__.getSetting("movie_banner")          == 'true'
         
         self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
         self.tvshow_poster          = __addon__.getSetting("tvshow_poster")         == 'true'
