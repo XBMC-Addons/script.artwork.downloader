@@ -36,6 +36,74 @@ def _media_listing(media_type):
 
 ### get list of all tvshows and movies with their imdbnumber from library
 # Retrieve JSON list
+def _media_unique(media_type, dbid):
+    log('Using JSON for retrieving %s info' %media_type)
+    Medialist = []
+    if media_type == 'tvshow':
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShowDetails", "params": {"properties": ["file", "studio"], "tvshowid":%s}, "id": 1}' %dbid)
+        print json_query
+        json_query = unicode(json_query, 'utf-8', errors='ignore')
+        jsonobject = simplejson.loads(json_query)
+        if jsonobject['result'].has_key('tvshowdetails'):
+            item = jsonobject['result']['tvshowdetails']
+            # Search for season information
+            json_query_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %item.get('tvshowid',''))
+            jsonobject_season = simplejson.loads(json_query_season)
+            # Get start/end and total seasons
+            if jsonobject_season['result'].has_key('limits'):
+                season_limit = jsonobject_season['result']['limits']
+            # Get the season numbers
+            seasons_list =[]
+            if jsonobject_season['result'].has_key('seasons'):
+                seasons = jsonobject_season['result']['seasons']
+                for season in seasons:
+                    seasons_list.append(season.get('season')) 
+            Medialist.append({'id': item.get('imdbnumber',''),
+                              'dbid': item.get('tvshowid',''),
+                              'name': item.get('label',''),
+                              'path': media_path(item.get('file','')),
+                              'seasontotal': season_limit.get('total',''),
+                              'seasonstart': season_limit.get('start',''),
+                              'seasonend': season_limit.get('end',''),
+                              'seasons': seasons_list})
+
+    elif media_type == 'movie':
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails"], "movieid":%s }, "id": 1}' %dbid)
+        print json_query
+        json_query = unicode(json_query, 'utf-8', errors='ignore')
+        jsonobject = simplejson.loads(json_query)
+        if jsonobject['result'].has_key('moviedetails'):
+            item = jsonobject['result']['moviedetails']
+            disctype = media_disctype(item.get('file','').encode('utf-8').lower(),
+                                      item['streamdetails']['video'])
+            streamdetails = item['streamdetails']['video']
+            Medialist.append({'dbid': item.get('movieid',''),
+                              'id': item.get('imdbnumber',''),
+                              'name': item.get('label',''),
+                              'year': item.get('year',''),
+                              'file': item.get('file',''),
+                              'path': media_path(item.get('file','')),
+                              'trailer': item.get('trailer',''),
+                              'disctype': disctype})
+
+    elif media_type == 'musicvideo':
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideoDetails", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre"], "movieid":%s }, "id": 1}' %dbid)
+        json_query = unicode(json_query, 'utf-8', errors='ignore')
+        jsonobject = simplejson.loads(json_query)
+        if jsonobject['result'].has_key('musicvideodetails'):
+            item = jsonobject['result']['musicvideodetails']
+            Medialist.append({'dbid': item.get('musicvideoid',''),
+                              'id': '',
+                              'name': item.get('label',''),
+                              'artist': item.get('artist',''),
+                              'album': item.get('album',''),
+                              'track': item.get('track',''),
+                              'runtime': item.get('runtime',''),
+                              'year': item.get('year',''),
+                              'path': media_path(item.get('file',''))})
+    else:
+            log('No JSON results found')
+    return Medialist
 
 def _media_listing_new(media_type):
     log('Using JSON for retrieving %s info' %media_type)
@@ -59,7 +127,7 @@ def _media_listing_new(media_type):
                     for season in seasons:
                         seasons_list.append(season.get('season')) 
                 Medialist.append({'id': item.get('imdbnumber',''),
-                                  'databaseid': item.get('tvshowid',''),
+                                  'dbid': item.get('tvshowid',''),
                                   'name': item.get('label',''),
                                   'path': media_path(item.get('file','')),
                                   'seasontotal': season_limit.get('total',''),
@@ -75,7 +143,7 @@ def _media_listing_new(media_type):
             for item in jsonobject['result']['movies']:
                 disctype = media_disctype(item.get('file','').encode('utf-8').lower(),
                                           item['streamdetails']['video'])
-                Medialist.append({'databaseid': item.get('movieid',''),
+                Medialist.append({'dbid': item.get('movieid',''),
                                   'id': item.get('imdbnumber',''),
                                   'name': item.get('label',''),
                                   'year': item.get('year',''),
@@ -90,7 +158,7 @@ def _media_listing_new(media_type):
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('musicvideos'):
             for item in jsonobject['result']['musicvideos']:
-                Medialist.append({'databaseid': item.get('musicvideoid',''),
+                Medialist.append({'dbid': item.get('musicvideoid',''),
                                   'id': '',
                                   'name': item.get('label',''),
                                   'artist': item.get('artist',''),
@@ -102,6 +170,7 @@ def _media_listing_new(media_type):
     else:
             log('No JSON results found')
     return Medialist
+
 def media_disctype(filename, streamdetails):
     if (('dvd') in filename and not ('hddvd' or 'hd-dvd') in filename) or (filename.endswith('.vob' or '.ifo')):
         disctype = 'dvd'
