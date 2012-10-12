@@ -12,36 +12,14 @@ else:
 
 ### import libraries
 from resources.lib.utils import log
-# Commoncache plugin import
-try:
-    import StorageServer
-except:
-    import storageserverdummy as StorageServer
 
-cacheMedia = StorageServer.StorageServer("ArtworkDownloader",1)
-cacheMedia.timeout = 600 # In seconds
-CACHE_ON = True
-
-# Retrieve JSON data from cache function
-def _media_listing(media_type):
-    if CACHE_ON:
-        result = cacheMedia.cacheFunction( _media_listing_new, media_type )
-    else:
-        result = _media_listing_new(media_type)
-    if len(result) == 0:
-        result = []
-        return result
-    else:
-        return result
-
-### get list of all tvshows and movies with their imdbnumber from library
+### get datalist from the unique media item
 # Retrieve JSON list
 def _media_unique(media_type, dbid):
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     if media_type == 'tvshow':
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShowDetails", "params": {"properties": ["file", "studio"], "tvshowid":%s}, "id": 1}' %dbid)
-        print json_query
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('tvshowdetails'):
@@ -69,7 +47,6 @@ def _media_unique(media_type, dbid):
 
     elif media_type == 'movie':
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails"], "movieid":%s }, "id": 1}' %dbid)
-        print json_query
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('moviedetails'):
@@ -105,7 +82,7 @@ def _media_unique(media_type, dbid):
             log('No JSON results found')
     return Medialist
 
-def _media_listing_new(media_type):
+def _media_listing(media_type):
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     if media_type == 'tvshow':
