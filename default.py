@@ -30,6 +30,7 @@ from resources.lib.fileops import fileops
 from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import settings
 from resources.lib.media_setup import _media_listing as media_listing
+from resources.lib.media_setup import _media_unique as media_unique
 from xml.parsers.expat import ExpatError
 
 ### set button actions for GUI
@@ -60,13 +61,18 @@ class Main:
             dialog_msg('create', line1 = __localize__(32008), background = self.settings.background)
             # Check if mediatype is specified
             if not self.mediatype == '':
-                # Check if medianame is specified
-                if not self.medianame == '':
+                # Check if dbid is specified
+                if not self.dbid == '':
                     if self.mode == 'gui':
-                        # GUI mode check is at the end of: 'def download_artwork'
-                        self.solo_mode(self.mediatype, self.medianame, self.mediapath)
+                        self.Medialist = media_unique(self.mediatype,self.dbid)
+                        if  self.mediatype == 'movie':
+                            self.download_artwork(self.Medialist, self.movie_providers)
+                        elif self.mediatype == 'tvshow':
+                            self.download_artwork(self.Medialist, self.tv_providers)
+                        elif self.mediatype == 'musicvideo':
+                            self.download_artwork(self.Medialist, self.musicvideo_providers)
                     else:
-                        self.solo_mode(self.mediatype, self.medianame, self.mediapath)
+                        self.Medialist = media_unique(self.mediatype,self.dbid)
                         if not dialog_msg('iscanceled', background = self.settings.background) and not self.mode == 'customgui':
                             self._batch_download(self.download_list)
                 else:
@@ -78,6 +84,7 @@ class Main:
                     if self.mediatype == 'movie':
                         self.settings.movie_enable = True
                         self.Medialist = media_listing('movie')
+                        self.Medialist = media_unique('movie',self.dbid)
                         self.download_artwork(self.Medialist, self.movie_providers)
                     elif self.mediatype == 'tvshow':
                         self.settings.tvshow_enable = True
@@ -134,6 +141,7 @@ class Main:
         self.mediatype = ''
         self.medianame = ''
         self.mediapath = ''
+        self.dbid = ''
         self.mode = ''
         self.silent = ''
         self.gui_selected_type = ''
@@ -170,6 +178,10 @@ class Main:
                 else:
                     log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
                     return False
+            # Check for download mode
+            match = re.search('dbid=(.*)' , item)
+            if match:
+                self.dbid = match.group(1)
             # Check for medianame
             match = re.search('medianame=(.*)' , item)
             if match:
@@ -260,52 +272,6 @@ class Main:
                 xbmc.executebuiltin('Container.Refresh')
                 #xbmc.executebuiltin('XBMC.ReloadSkin()')
 
-    ### solo mode
-    def solo_mode(self, itemtype, itemname, itempath):
-        log('-----------------')
-        log('Debugging type: %s' %itemtype)
-        log('Debugging name: %s' %itemname)
-        log('Debugging path: %s' %itempath)
-        log('-----------------')
-        # activate both movie/tvshow for custom r
-        if self.mode == 'custom':
-            self.settings.movie_enable = True
-            self.settings.tvshow_enable = True
-            self.settings.musicvideo_enable = True
-        if itemtype in ['movie','tvshow','musicvideo']:
-            log('## Solo mode: %s...' %itemtype)
-            self.Medialist = media_listing(itemtype)
-        else:
-            log('Error: type must be one of movie, tvshow or musicvideo...... aborting', xbmc.LOGERROR)
-            return False
-        log('Retrieving fanart for: %s' % itemname)
-        # Search through the media lists for match
-        mediafound = False
-        for currentitem in self.Medialist:
-            # Check on exact match
-            if normalize_string(itemname) == normalize_string(currentitem['name']):
-                # Check on exact path match when provided and normalize the path because of unicode issues
-                for item in currentitem['path']:
-                    if normalize_string(urlsplit(item).path) == normalize_string(urlsplit(itempath).path) or itempath == '':
-                        self.Medialist = [currentitem]
-                        #self.Medialist = []
-                        #self.Medialist.append(currentitem)
-                        mediafound = True
-                        break
-                    else:
-                        self.Medialist = []
-            # Empty medialist to prevent running through all media
-        if mediafound:
-            if itemtype == 'movie':
-                self.download_artwork(self.Medialist, self.movie_providers)
-            elif itemtype == 'tvshow':
-                self.download_artwork(self.Medialist, self.tv_providers)
-            elif itemtype == 'musicvideo':
-                self.download_artwork(self.Medialist, self.musicvideo_providers)
-        else:
-            log('No matching medianame found in library')
-
-
     ### download media fanart
     def download_artwork(self, media_list, providers):
         self.processeditems = 0
@@ -324,7 +290,8 @@ class Main:
                 self.reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
                 break
             # Declare some vars
-            media_item = {'id': currentmedia['id'],
+            self.media_item = {'id': currentmedia['id'],
+                          'dbid': currentmedia['dbid'],
                           'name': currentmedia['name'],
                           'path': currentmedia['path']}
             self.media_name = currentmedia['name'] #still in use somewhere
@@ -334,26 +301,26 @@ class Main:
                 self.media_disctype = 'n/a'
             dialog_msg('update',
                         percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0),
-                        line1 = media_item['name'],
+                        line1 = self.media_item['name'],
                         line2 = __localize__(32008),
                         line3 = '',
                         background = self.settings.background)
             log('########################################################')
-            log('Processing media:  %s' % media_item['name'])
+            log('Processing media:  %s' % self.media_item['name'])
             # do some id conversions 
-            if not self.mediatype == 'tvshow' and media_item['id'] in ['','tt0000000','0']:
+            if not self.mediatype == 'tvshow' and self.media_item['id'] in ['','tt0000000','0']:
                 log('No IMDB ID found, trying to search themoviedb.org for matching title.')
-                media_item['id'] = tmdb._search_movie(media_item['name'],currentmedia['year'])
-            elif self.mediatype == 'movie' and not media_item['id'] == '' and not media_item['id'].startswith('tt'):
+                self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
+            elif self.mediatype == 'movie' and not self.media_item['id'] == '' and not self.media_item['id'].startswith('tt'):
                 log('No valid ID found, trying to search themoviedb.org for matching title.')
-                media_item['id'] = tmdb._search_movie(media_item['name'],currentmedia['year'])
-            log('Provider ID:       %s' % media_item['id'])
-            log('Media path:        %s' % media_item['path'])
+                self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
+            log('Provider ID:       %s' % self.media_item['id'])
+            log('Media path:        %s' % self.media_item['path'])
             # Declare the target folders
             self.target_extrafanartdirs = []
             self.target_extrathumbsdirs = []
             self.target_artworkdir = []
-            for item in media_item['path']:
+            for item in self.media_item['path']:
                 artwork_dir = os.path.join(item + '/')
                 extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
                 extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
@@ -369,15 +336,15 @@ class Main:
                     self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
 
             # Check for presence of id used by source sites
-            if self.mode == 'gui' and ((media_item['id'] == '') or (self.mediatype == 'tvshow' and media_item['id'].startswith('tt'))):
+            if self.mode == 'gui' and ((self.media_item['id'] == '') or (self.mediatype == 'tvshow' and self.media_item['id'].startswith('tt'))):
                 dialog_msg('close', background = self.settings.background)
-                dialog_msg('okdialog','' ,media_item['name'] , __localize__(32030))
-            elif media_item['id'] == '':
+                dialog_msg('okdialog','' ,self.media_item['name'] , __localize__(32030))
+            elif self.media_item['id'] == '':
                 log('- No ID found, skipping')
-                self.failed_items.append('[%s] ID %s' %(media_item['name'], __localize__(32022)))
-            elif self.mediatype == 'tvshow' and media_item['id'].startswith('tt'):
+                self.failed_items.append('[%s] ID %s' %(self.media_item['name'], __localize__(32022)))
+            elif self.mediatype == 'tvshow' and self.media_item['id'].startswith('tt'):
                 log('- IMDB ID found for TV show, skipping')
-                self.failed_items.append('[%s]: TVDB ID %s' %(media_item['name'], __localize__(32022)))
+                self.failed_items.append('[%s]: TVDB ID %s' %(self.media_item['name'], __localize__(32022)))
             
             # If correct ID found continue
             else:
@@ -393,7 +360,7 @@ class Main:
                         if artwork_result == 'retrying':
                             xbmc.sleep(self.settings.api_timedelay)
                         try:
-                            self.temp_image_list = self.provider.get_image_list(media_item['id'])
+                            self.temp_image_list = self.provider.get_image_list(self.media_item['id'])
                         except HTTP404Error, e:
                             errmsg = '404: File not found'
                             artwork_result = 'skipping'
@@ -404,9 +371,9 @@ class Main:
                         except NoFanartError, e:
                             errmsg = 'No artwork found'
                             artwork_result = 'skipping'
-                            self.failed_items.append('[%s] %s' %(media_item['name'], __localize__(32133)))
+                            self.failed_items.append('[%s] %s' %(self.media_item['name'], __localize__(32133)))
                         except ItemNotFoundError, e:
-                            errmsg = '%s not found' % media_item['id']
+                            errmsg = '%s not found' % self.media_item['id']
                             artwork_result = 'skipping'
                         except ExpatError, e:
                             xmlfailcount += 1
@@ -515,7 +482,9 @@ class Main:
                                 'targetdirs': targetdirs,
                                 'media_name': self.media_name,
                                 'artwork_string': msg,
-                                'artwork_details': artwork}
+                                'artwork_details': artwork,
+                                'dbid':self.media_item['dbid'],
+                                'arttype':art_type}
 
                         # raise artwork counter only on first loop
                         if i != 1:
