@@ -19,7 +19,7 @@ def _media_unique(media_type, dbid):
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     if media_type == 'tvshow':
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShowDetails", "params": {"properties": ["file", "studio"], "tvshowid":%s}, "id": 1}' %dbid)
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShowDetails", "params": {"properties": ["file", "imdbnumber"], "tvshowid":%s}, "id": 1}' %dbid)
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('tvshowdetails'):
