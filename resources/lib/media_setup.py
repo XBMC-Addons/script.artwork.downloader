@@ -73,23 +73,8 @@ def _media_listing_new(media_type):
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('movies'):
             for item in jsonobject['result']['movies']:
-                filename = item.get('file','').encode('utf-8').lower()
-                if (('dvd') in filename and not ('hddvd' or 'hd-dvd') in filename) or (filename.endswith('.vob' or '.ifo')):
-                    disctype = 'dvd'
-                elif '3d' in filename:
-                    disctype = '3d'
-                elif (('bluray' or 'blu-ray' or 'brrip' or 'bdrip') in filename):
-                    disctype = 'bluray'
-                elif item.get('streamdetails') != None and item.get('streamdetails').has_key('video') and item.get('streamdetails').get('video'):
-                    streamdata = item.get('streamdetails').get('video')
-                    videowidth = streamdata[0].get('width')
-                    videoheight = streamdata[0].get('height')
-                    if videowidth <= 720 and videoheight <= 480:
-                        disctype = 'dvd'
-                    else:
-                        disctype = 'bluray'
-                else:
-                    disctype = 'n/a'
+                disctype = media_disctype(item.get('file','').encode('utf-8').lower(),
+                                          item['streamdetails']['video'])
                 Medialist.append({'databaseid': item.get('movieid',''),
                                   'id': item.get('imdbnumber',''),
                                   'name': item.get('label',''),
@@ -117,7 +102,23 @@ def _media_listing_new(media_type):
     else:
             log('No JSON results found')
     return Medialist
-
+def media_disctype(filename, streamdetails):
+    if (('dvd') in filename and not ('hddvd' or 'hd-dvd') in filename) or (filename.endswith('.vob' or '.ifo')):
+        disctype = 'dvd'
+    elif '3d' in filename:
+        disctype = '3d'
+    elif (('bluray' or 'blu-ray' or 'brrip' or 'bdrip') in filename):
+        disctype = 'bluray'
+    elif streamdetails:
+        videowidth = streamdetails[0]['width']
+        videoheight = streamdetails[0]['height']
+        if videowidth <= 720 and videoheight <= 480:
+            disctype = 'dvd'
+        else:
+            disctype = 'bluray'
+    else:
+        disctype = 'n/a'
+    return disctype
 
 def media_path(path):
     # Check for stacked movies
