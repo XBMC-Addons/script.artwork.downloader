@@ -20,10 +20,14 @@ except:
 
 cacheMedia = StorageServer.StorageServer("ArtworkDownloader",1)
 cacheMedia.timeout = 600 # In seconds
+CACHE_ON = True
 
 # Retrieve JSON data from cache function
 def _media_listing(media_type):
-    result = cacheMedia.cacheFunction( _media_listing_new, media_type )
+    if CACHE_ON:
+        result = cacheMedia.cacheFunction( _media_listing_new, media_type )
+    else:
+        result = _media_listing_new(media_type)
     if len(result) == 0:
         result = []
         return result
