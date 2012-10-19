@@ -63,18 +63,15 @@ class Main:
             if not self.mediatype == '':
                 # Check if dbid is specified
                 if not self.dbid == '':
-                    if self.mode == 'gui':
-                        self.Medialist = media_unique(self.mediatype,self.dbid)
-                        if  self.mediatype == 'movie':
-                            self.download_artwork(self.Medialist, self.movie_providers)
-                        elif self.mediatype == 'tvshow':
-                            self.download_artwork(self.Medialist, self.tv_providers)
-                        elif self.mediatype == 'musicvideo':
-                            self.download_artwork(self.Medialist, self.musicvideo_providers)
-                    else:
-                        self.Medialist = media_unique(self.mediatype,self.dbid)
-                        if not dialog_msg('iscanceled', background = self.settings.background) and not self.mode == 'customgui':
-                            self._batch_download(self.download_list)
+                    self.Medialist = media_unique(self.mediatype,self.dbid)
+                    if  self.mediatype == 'movie':
+                        self.download_artwork(self.Medialist, self.movie_providers)
+                    elif self.mediatype == 'tvshow':
+                        self.download_artwork(self.Medialist, self.tv_providers)
+                    elif self.mediatype == 'musicvideo':
+                        self.download_artwork(self.Medialist, self.musicvideo_providers)
+                    if not dialog_msg('iscanceled', background = self.settings.background) and not self.mode == 'customgui' and not self.mode == 'gui':
+                        self._batch_download(self.download_list)
                 else:
                     # If no medianame specified
                     # 1. Check what media type was specified, 2. Retrieve library list, 3. Enable the correct type, 4. Do the API stuff
