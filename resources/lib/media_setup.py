@@ -44,7 +44,8 @@ def _media_unique(media_type, dbid):
                               'seasonstart': season_limit.get('start',''),
                               'seasonend': season_limit.get('end',''),
                               'seasons': seasons_list,
-                              'art' : item.get('art','')})
+                              'art' : item.get('art',''),
+                              'mediatype': media_type})
 
     elif media_type == 'movie':
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails", "art"], "movieid":%s }, "id": 1}' %dbid)
@@ -63,7 +64,8 @@ def _media_unique(media_type, dbid):
                               'path': media_path(item.get('file','')),
                               'trailer': item.get('trailer',''),
                               'disctype': disctype,
-                              'art' : item.get('art','')})
+                              'art' : item.get('art',''),
+                              'mediatype': media_type})
 
     elif media_type == 'musicvideo':
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideoDetails", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre", "art"], "movieid":%s }, "id": 1}' %dbid)
@@ -80,7 +82,8 @@ def _media_unique(media_type, dbid):
                               'runtime': item.get('runtime',''),
                               'year': item.get('year',''),
                               'path': media_path(item.get('file','')),
-                              'art' : item.get('art','')})
+                              'art' : item.get('art',''),
+                              'mediatype': media_type})
     else:
             log('No JSON results found')
     return Medialist
@@ -114,7 +117,8 @@ def _media_listing(media_type):
                                   'seasonstart': season_limit.get('start',''),
                                   'seasonend': season_limit.get('end',''),
                                   'seasons': seasons_list,
-                                  'art' : item.get('art','')})
+                                  'art' : item.get('art',''),
+                                  'mediatype': media_type})
 
     elif media_type == 'movie':
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails", "art"], "sort": { "method": "label" } }, "id": 1}')
@@ -132,7 +136,8 @@ def _media_listing(media_type):
                                   'path': media_path(item.get('file','')),
                                   'trailer': item.get('trailer',''),
                                   'disctype': disctype,
-                                  'art' : item.get('art','')})
+                                  'art' : item.get('art',''),
+                                  'mediatype': media_type})
 
     elif media_type == 'musicvideo':
         json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre", "art"], "sort": { "method": "album" } }, "id": 1}')
@@ -149,7 +154,8 @@ def _media_listing(media_type):
                                   'runtime': item.get('runtime',''),
                                   'year': item.get('year',''),
                                   'path': media_path(item.get('file','')),
-                                  'art' : item.get('art','')})
+                                  'art' : item.get('art',''),
+                                  'mediatype': media_type})
     else:
             log('No JSON results found')
     return Medialist
@@ -186,7 +192,6 @@ def media_path(path):
         path = []
         for item in temp_path:
             path.append(urllib.url2pathname(item))
-        print path
     else:
         path = [path]
     return path
