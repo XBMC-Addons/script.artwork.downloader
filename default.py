@@ -273,6 +273,13 @@ class Main:
     def download_artwork(self, media_list, providers):
         self.processeditems = 0
         for currentmedia in media_list:
+            # Declare some vars
+            self.media_item = {'id': currentmedia['id'],
+                               'dbid': currentmedia['dbid'],
+                               'name': currentmedia['name'],
+                               'path': currentmedia['path'],
+                               'art': currentmedia['art'],
+                               'mediatype': currentmedia['mediatype']}
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
                 log('XBMC abort requested, aborting')
@@ -280,19 +287,14 @@ class Main:
                 break
             ### check if script has been cancelled by user
             if dialog_msg('iscanceled', background = self.settings.background):
-                self.reportdata += ('\n - %s [%s]: %s' %(__localize__(32151), self.mediatype, time.strftime('%d %B %Y - %H:%M')))
+                self.reportdata += ('\n - %s [%s]: %s' %(__localize__(32151), self.media_item['mediatype'], time.strftime('%d %B %Y - %H:%M')))
                 break
             # abort script because of to many failures
             if not self.settings.failcount < self.settings.failthreshold:
                 self.reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
                 break
-            # Declare some vars
-            self.media_item = {'id': currentmedia['id'],
-                          'dbid': currentmedia['dbid'],
-                          'name': currentmedia['name'],
-                          'path': currentmedia['path']}
-            self.media_name = currentmedia['name'] #still in use somewhere
-            if self.mediatype == 'movie':
+
+            if self.media_item['mediatype'] == 'movie':
                 self.media_disctype = currentmedia['disctype']
             else:
                 self.media_disctype = 'n/a'
@@ -305,10 +307,10 @@ class Main:
             log('########################################################')
             log('Processing media:  %s' % self.media_item['name'])
             # do some id conversions 
-            if not self.mediatype == 'tvshow' and self.media_item['id'] in ['','tt0000000','0']:
+            if not self.media_item['mediatype'] == 'tvshow' and self.media_item['id'] in ['','tt0000000','0']:
                 log('No IMDB ID found, trying to search themoviedb.org for matching title.')
                 self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
-            elif self.mediatype == 'movie' and not self.media_item['id'] == '' and not self.media_item['id'].startswith('tt'):
+            elif self.media_item['mediatype'] == 'movie' and not self.media_item['id'] == '' and not self.media_item['id'].startswith('tt'):
                 log('No valid ID found, trying to search themoviedb.org for matching title.')
                 self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
             log('Provider ID:       %s' % self.media_item['id'])
@@ -327,19 +329,19 @@ class Main:
             
             # Check if using the centralize option
             if self.settings.centralize_enable:
-                if self.mediatype == 'tvshow':
+                if self.media_item['mediatype'] == 'tvshow':
                     self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
-                elif self.mediatype == 'movie':
+                elif self.media_item['mediatype'] == 'movie':
                     self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
 
             # Check for presence of id used by source sites
-            if self.mode == 'gui' and ((self.media_item['id'] == '') or (self.mediatype == 'tvshow' and self.media_item['id'].startswith('tt'))):
+            if self.mode == 'gui' and ((self.media_item['id'] == '') or (self.media_item['mediatype'] == 'tvshow' and self.media_item['id'].startswith('tt'))):
                 dialog_msg('close', background = self.settings.background)
                 dialog_msg('okdialog','' ,self.media_item['name'] , __localize__(32030))
             elif self.media_item['id'] == '':
                 log('- No ID found, skipping')
                 self.failed_items.append('[%s] ID %s' %(self.media_item['name'], __localize__(32022)))
-            elif self.mediatype == 'tvshow' and self.media_item['id'].startswith('tt'):
+            elif self.media_item['mediatype'] == 'tvshow' and self.media_item['id'].startswith('tt'):
                 log('- IMDB ID found for TV show, skipping')
                 self.failed_items.append('[%s]: TVDB ID %s' %(self.media_item['name'], __localize__(32022)))
             
@@ -477,15 +479,16 @@ class Main:
                         # Create an image info list
                         item = {'url': artwork['url'],
                                 'targetdirs': targetdirs,
-                                'media_name': self.media_name,
+                                'media_name': self.media_item['name'],
                                 'artwork_string': msg,
                                 'artwork_details': artwork,
                                 'dbid':self.media_item['dbid'],
+                                'art':self.media_item['art'],
                                 'arttype':art_type}
 
                         # raise artwork counter only on first loop
                         if i != 1:
-                            current_artwork        += 1
+                            current_artwork += 1
 
                         # File naming
                         if art_type   == 'extrafanart':
@@ -513,7 +516,7 @@ class Main:
                             
                             # Delete extrafanart when below settings and parsing the reason message
                             if limited[0] and not i == 1 and art_type in ['extrafanart', 'extrathumbs']:
-                                #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],self.media_name)
+                                #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],self.media_item['name'])
                                 pass
                             # Just ignore image when it's below settings
                             elif limited[0]:
@@ -546,7 +549,7 @@ class Main:
                                 if limited[0] and imageignore and i == 1:
                                     for targetdir in item['targetdirs']:
                                         if not self.fileops._exists(os.path.join (targetdir, item['filename'])) and not art_type in ['extrafanart', 'extrathumbs']:
-                                            self.failed_items.append('[%s] %s %s' % (self.media_name, art_type, __localize__(32147)))
+                                            self.failed_items.append('[%s] %s %s' % (self.media_item['name'], art_type, __localize__(32147)))
                             # Do some special check on season artwork
                             if art_type == 'seasonthumbs' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
                                 # If already present in list set limit on 1 so it is skipped
@@ -568,7 +571,7 @@ class Main:
                     i += 2
             # Add to failed items if 0
             if current_artwork == 0:
-                self.failed_items.append('[%s] %s %s' % (self.media_name, art_type, __localize__(32022)))
+                self.failed_items.append('[%s] %s %s' % (self.media_item['name'], art_type, __localize__(32022)))
             # Print log message number of found images per art type
             log(' - Found a total of: %s %s' % (current_artwork, art_type))
 
@@ -660,7 +663,7 @@ class Main:
         # When no images found or nothing selected
         if not imagelist and not self.gui_selected_type == '':
             log('- No artwork found')
-            dialog_msg('okdialog', line1 = self.media_name , line2 = self.gui_selected_msg + ' ' + __localize__(32022))
+            dialog_msg('okdialog', line1 = self.media_item['name'] , line2 = self.gui_selected_msg + ' ' + __localize__(32022))
         # When download succesfull
         elif self.download_art_succes:
             log('- Download succesfull')
