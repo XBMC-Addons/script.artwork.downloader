@@ -19,13 +19,13 @@ def _media_unique(media_type, dbid):
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     if media_type == 'tvshow':
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShowDetails", "params": {"properties": ["file", "imdbnumber"], "tvshowid":%s}, "id": 1}' %dbid)
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShowDetails", "params": {"properties": ["file", "imdbnumber", "art"], "tvshowid":%s}, "id": 1}' %dbid)
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('tvshowdetails'):
             item = jsonobject['result']['tvshowdetails']
             # Search for season information
-            json_query_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %item.get('tvshowid',''))
+            json_query_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season", "art"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %item.get('tvshowid',''))
             jsonobject_season = simplejson.loads(json_query_season)
             # Get start/end and total seasons
             if jsonobject_season['result'].has_key('limits'):
@@ -43,10 +43,11 @@ def _media_unique(media_type, dbid):
                               'seasontotal': season_limit.get('total',''),
                               'seasonstart': season_limit.get('start',''),
                               'seasonend': season_limit.get('end',''),
-                              'seasons': seasons_list})
+                              'seasons': seasons_list,
+                              'art' : item.get('art','')})
 
     elif media_type == 'movie':
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails"], "movieid":%s }, "id": 1}' %dbid)
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails", "art"], "movieid":%s }, "id": 1}' %dbid)
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('moviedetails'):
@@ -61,10 +62,11 @@ def _media_unique(media_type, dbid):
                               'file': item.get('file',''),
                               'path': media_path(item.get('file','')),
                               'trailer': item.get('trailer',''),
-                              'disctype': disctype})
+                              'disctype': disctype,
+                              'art' : item.get('art','')})
 
     elif media_type == 'musicvideo':
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideoDetails", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre"], "movieid":%s }, "id": 1}' %dbid)
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideoDetails", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre", "art"], "movieid":%s }, "id": 1}' %dbid)
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('musicvideodetails'):
@@ -77,7 +79,8 @@ def _media_unique(media_type, dbid):
                               'track': item.get('track',''),
                               'runtime': item.get('runtime',''),
                               'year': item.get('year',''),
-                              'path': media_path(item.get('file',''))})
+                              'path': media_path(item.get('file','')),
+                              'art' : item.get('art','')})
     else:
             log('No JSON results found')
     return Medialist
@@ -86,13 +89,13 @@ def _media_listing(media_type):
     log('Using JSON for retrieving %s info' %media_type)
     Medialist = []
     if media_type == 'tvshow':
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber"], "sort": { "method": "label" } }, "id": 1}')
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["file", "imdbnumber", "art"], "sort": { "method": "label" } }, "id": 1}')
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('tvshows'):
             for item in jsonobject['result']['tvshows']:
                 # Search for season information
-                json_query_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %item.get('tvshowid',''))
+                json_query_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season", "art"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %item.get('tvshowid',''))
                 jsonobject_season = simplejson.loads(json_query_season)
                 # Get start/end and total seasons
                 if jsonobject_season['result'].has_key('limits'):
@@ -110,10 +113,11 @@ def _media_listing(media_type):
                                   'seasontotal': season_limit.get('total',''),
                                   'seasonstart': season_limit.get('start',''),
                                   'seasonend': season_limit.get('end',''),
-                                  'seasons': seasons_list})
+                                  'seasons': seasons_list,
+                                  'art' : item.get('art','')})
 
     elif media_type == 'movie':
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails"], "sort": { "method": "label" } }, "id": 1}')
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties": ["file", "imdbnumber", "year", "trailer", "streamdetails", "art"], "sort": { "method": "label" } }, "id": 1}')
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('movies'):
@@ -127,10 +131,11 @@ def _media_listing(media_type):
                                   'file': item.get('file',''),
                                   'path': media_path(item.get('file','')),
                                   'trailer': item.get('trailer',''),
-                                  'disctype': disctype})
+                                  'disctype': disctype,
+                                  'art' : item.get('art','')})
 
     elif media_type == 'musicvideo':
-        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre"], "sort": { "method": "album" } }, "id": 1}')
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": {"properties": ["file", "artist", "album", "track", "runtime", "year", "genre", "art"], "sort": { "method": "album" } }, "id": 1}')
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         jsonobject = simplejson.loads(json_query)
         if jsonobject['result'].has_key('musicvideos'):
@@ -143,7 +148,8 @@ def _media_listing(media_type):
                                   'track': item.get('track',''),
                                   'runtime': item.get('runtime',''),
                                   'year': item.get('year',''),
-                                  'path': media_path(item.get('file',''))})
+                                  'path': media_path(item.get('file','')),
+                                  'art' : item.get('art','')})
     else:
             log('No JSON results found')
     return Medialist
