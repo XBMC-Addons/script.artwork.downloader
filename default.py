@@ -279,7 +279,8 @@ class Main:
                                'name': currentmedia['name'],
                                'path': currentmedia['path'],
                                'art': currentmedia['art'],
-                               'mediatype': currentmedia['mediatype']}
+                               'mediatype': currentmedia['mediatype'],
+                               'disctype': currentmedia.get('disctype','n/a')}
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
                 log('XBMC abort requested, aborting')
@@ -293,11 +294,6 @@ class Main:
             if not self.settings.failcount < self.settings.failthreshold:
                 self.reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
                 break
-
-            if self.media_item['mediatype'] == 'movie':
-                self.media_disctype = currentmedia['disctype']
-            else:
-                self.media_disctype = 'n/a'
             dialog_msg('update',
                         percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0),
                         line1 = self.media_item['name'],
@@ -451,7 +447,6 @@ class Main:
         i = 0                                   # Set loop counter
         imagefound = False                      # Set found image false
         imageignore = False                     # Set ignaore image false
-        disctype = self.media_disctype          # Set the needed disc type
         final_image_list = []
         if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
             final_image_list.append(self.image_item)
@@ -510,7 +505,7 @@ class Main:
 
                             # Check for set limits
                             if art_type == 'discart':
-                                limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, disctype)
+                                limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, self.media_item['disctype'])
                             else:
                                 limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language)
                             
