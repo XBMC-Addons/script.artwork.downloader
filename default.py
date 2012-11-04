@@ -475,6 +475,7 @@ class Main:
                         item = {'url': artwork['url'],
                                 'targetdirs': targetdirs,
                                 'media_name': self.media_item['name'],
+                                'mediatype':self.media_item['mediatype'],
                                 'artwork_string': msg,
                                 'artwork_details': artwork,
                                 'dbid':self.media_item['dbid'],
@@ -528,8 +529,13 @@ class Main:
                                     # Check if image already exist
                                     missingfiles = False
                                     for targetdir in item['targetdirs']:
-                                        if not self.fileops._exists(os.path.join(targetdir, item['filename'])):
+                                        if (art_type in ['fanart','poster','extrathumbs','extrafanart'] or (art_type =='banner' and item['mediatype'] == 'tvshow')) and self.fileops._exists(os.path.join(targetdir, item['filename'])):
                                             missingfiles = True
+                                    artcheck = item['art']
+                                    if not artcheck.get(art_type):
+                                        missingfiles = True
+                                    else:
+                                        missingfiles = False
                                     if missingfiles:
                                         # If missing add to list
                                         imagefound = True 
@@ -569,7 +575,6 @@ class Main:
                 self.failed_items.append('[%s] %s %s' % (self.media_item['name'], art_type, __localize__(32022)))
             # Print log message number of found images per art type
             log(' - Found a total of: %s %s' % (current_artwork, art_type))
-
             # End of language shit
 
     def _batch_download(self, image_list):
@@ -585,7 +590,30 @@ class Main:
                 dialog_msg('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
                 # Try downloading the file and catch errors while trying to
                 try:
-                    self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
+                    if item['mediatype'] == 'movie':
+                        if item['arttype'] == 'clearlogo':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearlogo": "%s"}}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'clearart':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'discart':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "discart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'landscape':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "landscape": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'banner':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        else:
+                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
+                    if item['mediatype'] == 'tvshow':
+                        if item['arttype'] == 'clearlogo':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearlogo": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'clearart':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'landscape':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "landscape": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'characterart':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "characterart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        else:
+                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
                 except HTTP404Error, e:
                     log('URL not found: %s' % str(e), xbmc.LOGERROR)
                     self.download_art_succes = False
