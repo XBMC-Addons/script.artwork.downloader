@@ -30,7 +30,7 @@ class settings:
         self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
         self.movie_clearart         = __addon__.getSetting("movie_clearart")        == 'true'
         self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
-        self.movie_thumb            = __addon__.getSetting("movie_thumb")           == 'true'
+        self.movie_landscape        = __addon__.getSetting("movie_landscape")           == 'true'
         self.movie_banner           = __addon__.getSetting("movie_banner")          == 'true'
         
         self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
@@ -40,8 +40,8 @@ class settings:
         self.tvshow_extrafanart     = __addon__.getSetting("tvshow_extrafanart")    == 'true'
         self.tvshow_clearart        = __addon__.getSetting("tvshow_clearart")       == 'true'
         self.tvshow_logo            = __addon__.getSetting("tvshow_logo")           == 'true'
-        self.tvshow_thumb           = __addon__.getSetting("tvshow_thumb")          == 'true'
-        self.tvshow_seasonthumb     = __addon__.getSetting("tvshow_seasonthumb")    == 'true'
+        self.tvshow_landscape       = __addon__.getSetting("tvshow_landscape")      == 'true'
+        self.tvshow_seasonlandscape = __addon__.getSetting("tvshow_seasonlandscape")== 'true'
         self.tvshow_showbanner      = __addon__.getSetting("tvshow_showbanner")     == 'true'
         self.tvshow_seasonbanner    = __addon__.getSetting("tvshow_seasonbanner")   == 'true'
         self.tvshow_characterart    = __addon__.getSetting("tvshow_characterart")   == 'true'
@@ -112,7 +112,7 @@ class settings:
         log('## - ExtraThumbs           = %s' % str(self.movie_extrathumbs))
         log('## - Logo                  = %s' % str(self.movie_logo))
         log('## - DiscArt               = %s' % str(self.movie_discart))
-        log('## - Thumbs                = %s' % str(self.movie_thumb))
+        log('## - landscape             = %s' % str(self.movie_landscape))
         log('## - Banner                = %s' % str(self.movie_banner))
         log('##')
         log('## TV Show Artwork         = %s' % str(self.tvshow_enable))
@@ -124,8 +124,8 @@ class settings:
         log('## - Logo                  = %s' % str(self.tvshow_logo))
         log('## - Showbanner            = %s' % str(self.tvshow_showbanner))
         log('## - Seasonbanner          = %s' % str(self.tvshow_seasonbanner))
-        log('## - Thumb                 = %s' % str(self.tvshow_thumb))
-        log('## - Show Seasonthumb      = %s' % str(self.tvshow_seasonthumb))
+        log('## - landscape             = %s' % str(self.tvshow_landscape))
+        log('## - Show Seasonlandscape  = %s' % str(self.tvshow_seasonlandscape))
         log('## - Show Characterart     = %s' % str(self.tvshow_characterart))
         log('##')
         log('## Musicvideo Artwork      = %s' % str(self.musicvideo_enable))
@@ -208,10 +208,10 @@ class settings:
                                     'filename': 'disc.png'},
 
                                     {'media_type': 'movie',
-                                    'bulk_enabled': self.movie_thumb,
+                                    'bulk_enabled': self.movie_landscape,
                                     'solo_enabled': 'true',
                                     'gui_string': __localize__(32130),
-                                    'art_type': 'thumb',
+                                    'art_type': 'landscape',
                                     'filename': 'landscape.jpg'},
                                     
                                     {'media_type': 'movie',
@@ -265,17 +265,17 @@ class settings:
                                     'filename': 'logo.png'},
 
                                     {'media_type': 'tvshow',
-                                    'bulk_enabled': self.tvshow_thumb,
+                                    'bulk_enabled': self.tvshow_landscape,
                                     'solo_enabled': 'true',
                                     'gui_string': __localize__(32130),
-                                    'art_type': 'tvthumb',
+                                    'art_type': 'landscape',
                                     'filename': 'landscape.jpg'},
 
                                     {'media_type': 'tvshow',
-                                    'bulk_enabled': self.tvshow_seasonthumb,
+                                    'bulk_enabled': self.tvshow_seasonlandscape,
                                     'solo_enabled': 'true',
                                     'gui_string': __localize__(32134),
-                                    'art_type': 'seasonthumb',
+                                    'art_type': 'seasonlandscape',
                                     'filename': 'season%s-landscape.jpg'},
 
                                     {'media_type': 'tvshow',
@@ -360,13 +360,13 @@ class settings:
             self._get_artwork()
             # Check if faulty setting in movie section
             if self.movie_enable:
-                if not self.movie_poster and not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_logo and not self.movie_clearart and not self.movie_discart and not self.movie_thumb and not self.movie_banner:
+                if not self.movie_poster and not self.movie_fanart and not self.movie_extrafanart and not self.movie_extrathumbs and not self.movie_logo and not self.movie_clearart and not self.movie_discart and not self.movie_landscape and not self.movie_banner:
                     check_movie = False
                     log('Setting check: No subsetting of movies enabled')
                 else: check_movie = True
             # Check if faulty setting in tvshow section
             if self.tvshow_enable:
-                if not self.tvshow_poster and not self.tvshow_seasonposter and not self.tvshow_fanart and not self.tvshow_extrafanart and not self.tvshow_clearart and not self.tvshow_characterart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_thumb and not self.tvshow_seasonthumb:
+                if not self.tvshow_poster and not self.tvshow_seasonposter and not self.tvshow_fanart and not self.tvshow_extrafanart and not self.tvshow_clearart and not self.tvshow_characterart and not self.tvshow_logo and not self.tvshow_showbanner and not self.tvshow_seasonbanner and not self.tvshow_landscape and not self.tvshow_seasonlandscape:
                     check_tvshow = False
                     log('Setting check: No subsetting of tv shows enabled')
                 else: check_tvshow = True

@@ -54,10 +54,10 @@ class FTV_TVProvider():
                                         'hdtvlogo': 'clearlogo',
                                         'clearart': 'clearart',
                                         'hdclearart': 'clearart',
-                                        'tvthumb': 'tvthumb',
-                                        'seasonthumb': 'seasonthumb',
+                                        'tvthumb': 'landscape',
+                                        'seasonthumb': 'seasonlandscape',
                                         'characterart': 'characterart',
-                                        'tvbanner': 'tvbanner',
+                                        'tvbanner': 'banner',
                                         'seasonbanner': 'seasonbanner',
                                         }
                             if art in ['hdtvlogo', 'hdclearart']:
@@ -77,7 +77,7 @@ class FTV_TVProvider():
                             image_list.append({'url': urllib.quote(item.get('url'), ':/'),
                                                'preview': item.get('url') + '/preview',
                                                'id': item.get('id'),
-                                               'type': arttypes[art],
+                                               'type': [arttypes[art]],
                                                'size': size,
                                                'season': item.get('season','n/a'),
                                                'language': item.get('lang'),
@@ -115,7 +115,7 @@ class FTV_MovieProvider():
                                         'hdmovielogo': 'clearlogo',
                                         'hdmovieclearart': 'clearart',
                                         'moviebanner': 'banner',
-                                        'moviethumb': 'thumb'}
+                                        'moviethumb': 'landscape'}
                             if art in ['hdmovielogo', 'hdmovieclearart']:
                                 size = 'HD'
                             elif art in ['movielogo', 'movieart']:
@@ -133,7 +133,7 @@ class FTV_MovieProvider():
                             image_list.append({'url': urllib.quote(item.get('url'), ':/'),
                                                'preview': item.get('url') + '/preview',
                                                'id': item.get('id'),
-                                               'type': arttypes[art],
+                                               'type': [arttypes[art]],
                                                'size': size,
                                                'season': item.get('season','n/a'),
                                                'language': item.get('lang'),
