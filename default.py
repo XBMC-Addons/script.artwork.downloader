@@ -593,8 +593,9 @@ class Main:
                 dialog_msg('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
                 # Try downloading the file and catch errors while trying to
                 try:
-                    if self.settings.files_local:
-                        self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
+                    if self.settings.files_local and not item['arttype'] in ['extrafanart', 'extrathumbs']:
+                        if not self.fileops._exists(item['localfilename']):
+                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
                         item['url'] = item['localfilename']
                     if item['mediatype'] == 'movie':
                         if item['arttype'] == 'poster':
