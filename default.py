@@ -495,6 +495,9 @@ class Main:
                             item['filename'] = (filename % artwork['season'])
                         else:
                             item['filename'] = filename
+                        for targetdir in item['targetdirs']:
+                            item['localfilename'] = os.path.join(targetdir, item['filename'])
+                            break
 
                         # Continue
                         if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
@@ -529,7 +532,6 @@ class Main:
                                     # Check if image already exist local
                                     missingfiles = False
                                     artcheck = item['art']
-                                    #if (art_type in ['fanart','poster','extrathumbs','extrafanart'] or (art_type == 'banner' and item['mediatype'] == 'tvshow')):
                                     if art_type in ['extrathumbs','extrafanart']:
                                         for targetdir in item['targetdirs']:
                                             if not self.fileops._exists(os.path.join(targetdir, item['filename'])):
@@ -591,6 +593,9 @@ class Main:
                 dialog_msg('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
                 # Try downloading the file and catch errors while trying to
                 try:
+                    if self.settings.files_local:
+                        self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
+                        item['url'] = item['localfilename']
                     if item['mediatype'] == 'movie':
                         if item['arttype'] == 'poster':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))

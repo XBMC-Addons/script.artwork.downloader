@@ -74,7 +74,7 @@
     <!-- Add-on settings: Advanced settings section id=32101 to 32020 -->   
         <string id="32101">Advanced</string>
         <string id="32102">[B]Some more advanced settings to be used[/B]</string>
-        <string id="32103">-</string>
+        <string id="32103">Use local files</string>
         <string id="32104">-</string>
         <string id="32105">-</string>
         <string id="32106">Use XBMC pre-caching [I](caches images to thumbnails folder while downloading) [/I]</string>

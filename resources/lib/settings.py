@@ -30,7 +30,7 @@ class settings:
         self.movie_logo             = __addon__.getSetting("movie_logo")            == 'true'
         self.movie_clearart         = __addon__.getSetting("movie_clearart")        == 'true'
         self.movie_discart          = __addon__.getSetting("movie_discart")         == 'true'
-        self.movie_landscape        = __addon__.getSetting("movie_landscape")           == 'true'
+        self.movie_landscape        = __addon__.getSetting("movie_landscape")       == 'true'
         self.movie_banner           = __addon__.getSetting("movie_banner")          == 'true'
         
         self.tvshow_enable          = __addon__.getSetting("tvshow_enable")         == 'true'
@@ -68,6 +68,7 @@ class settings:
         self.service_enable         = __addon__.getSetting("service_enable")        == 'true'
         self.service_runtime        = __addon__.getSetting("service_runtime")
         self.files_overwrite        = __addon__.getSetting("files_overwrite")       == 'true'
+        self.files_local            = __addon__.getSetting("files_local")           == 'true'
         self.xbmc_caching_enabled   = __addon__.getSetting("xbmc_caching_enabled")  == 'true'
         self.debug_enabled          = __addon__.getSetting("debug_enabled")         == 'true'
         self.service_startup        = False

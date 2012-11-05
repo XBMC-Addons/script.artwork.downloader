@@ -26,7 +26,7 @@
         <setting label="32052" type="lsep" />
         <setting type="sep" />
         <setting label="32051" type="bool"      id="limit_artwork"               default="true"/>
-        <setting label="32053" type="slider"    id="limit_extrafanart_maximum"       subsetting="true" enable="eq(-1,true)" visible="eq(-1,true)" default="5"     range="5,5,20"  option="int" />
+        <setting label="32053" type="slider"    id="limit_extrafanart_maximum"   subsetting="true" enable="eq(-1,true)" visible="eq(-1,true)" default="5"     range="5,5,20"  option="int" />
         <setting label="32054" type="slider"    id="limit_extrafanart_rating"    subsetting="true" enable="eq(-2,true)" visible="eq(-2,true)" default="5"      range="0,10"  option="int" />
         <setting label="32055" type="labelenum" id="limit_preferred_language"    subsetting="true" enable="eq(-3,true)" visible="eq(-3,true)" default="English" values="Chinese|Dutch|English|Finnish|French|German|Hungarian|Italian|Japanese|Polish|Portuguese|Russian|Spanish|Swedish" />
         <setting label="32056" type="bool"      id="limit_notext"                subsetting="true" enable="eq(-4,true)" visible="eq(-4,true)" default="true" />
@@ -48,7 +48,7 @@
         <setting label="32125" type="bool"      id="movie_clearart"             subsetting="true" enable="eq(-6,true)"  default="true" />
         <setting label="32132" type="bool"      id="movie_discart"              subsetting="true" enable="eq(-7,true)"  default="false"/>
         <setting label="32123" type="bool"      id="movie_banner"               subsetting="true" enable="eq(-8,true)"  default="false" />
-        <setting label="32130" type="bool"      id="movie_thumb"                subsetting="true" enable="eq(-9,true)"  default="false"/>
+        <setting label="32130" type="bool"      id="movie_landscape"            subsetting="true" enable="eq(-9,true)"  default="false"/>
     </category>
     
 <!-- Plugin settings: TV Show section -->
@@ -66,8 +66,8 @@
         <setting label="32126" type="bool"      id="tvshow_logo"                subsetting="true" enable="eq(-7,true)"  default="true" />
         <setting label="32123" type="bool"      id="tvshow_showbanner"          subsetting="true" enable="eq(-8,true)"  default="true" />
         <setting label="32124" type="bool"      id="tvshow_seasonbanner"        subsetting="true" enable="eq(-9,true)"  default="false"/>
-        <setting label="32130" type="bool"      id="tvshow_thumb"               subsetting="true" enable="eq(-10,true)" default="true" />
-        <setting label="32134" type="bool"      id="tvshow_seasonthumb"         subsetting="true" enable="eq(-11,true)" default="false"/>
+        <setting label="32130" type="bool"      id="tvshow_landscape"           subsetting="true" enable="eq(-10,true)" default="true" />
+        <setting label="32134" type="bool"      id="tvshow_seasonlandscape"     subsetting="true" enable="eq(-11,true)" default="false"/>
     </category>
 
 <!-- Plugin settings: Musicvideo section -->
@@ -91,6 +91,7 @@
         <setting label="32102" type="lsep" />
         <setting type="sep" />
         <setting label="32035" type="bool"      id="files_overwrite"            default="false"/>
+        <setting label="32103" type="bool"      id="files_local"                default="false"/>
         <setting type="sep" />
         <setting label="32036" type="bool"      id="centralize_enable"          default="false"/>
         <setting label="32038" type="folder"    id="centralfolder_movies"       default=""      subsetting="true"    source="auto" option="writeable" enable="eq(-1,true)" visible="eq(-1,true)"/>
