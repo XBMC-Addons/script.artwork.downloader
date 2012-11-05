@@ -431,7 +431,7 @@ class Main:
         filteredlist = []
         #retrieve list
         for artwork in self.image_list:
-            if  art_type in artwork['type']:
+            if  art_type == artwork['type'][0]:
                 filteredlist.append(artwork)
         return filteredlist
  
@@ -526,16 +526,17 @@ class Main:
                                     self.download_list.append(item)
                                     imagefound = True
                                 else:
-                                    # Check if image already exist
+                                    # Check if image already exist local
                                     missingfiles = False
-                                    for targetdir in item['targetdirs']:
-                                        if (art_type in ['fanart','poster','extrathumbs','extrafanart'] or (art_type =='banner' and item['mediatype'] == 'tvshow')) and self.fileops._exists(os.path.join(targetdir, item['filename'])):
-                                            missingfiles = True
                                     artcheck = item['art']
-                                    if not artcheck.get(art_type):
+                                    #if (art_type in ['fanart','poster','extrathumbs','extrafanart'] or (art_type == 'banner' and item['mediatype'] == 'tvshow')):
+                                    if art_type in ['extrathumbs','extrafanart']:
+                                        for targetdir in item['targetdirs']:
+                                            if not self.fileops._exists(os.path.join(targetdir, item['filename'])):
+                                                missingfiles = True
+                                    # Check if image already exist in database
+                                    elif not artcheck.get(art_type):
                                         missingfiles = True
-                                    else:
-                                        missingfiles = False
                                     if missingfiles:
                                         # If missing add to list
                                         imagefound = True 
@@ -591,20 +592,30 @@ class Main:
                 # Try downloading the file and catch errors while trying to
                 try:
                     if item['mediatype'] == 'movie':
-                        if item['arttype'] == 'clearlogo':
+                        if item['arttype'] == 'poster':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'fanart':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "fanart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'banner':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'clearlogo':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearlogo": "%s"}}, "id": 1 }' %(item['dbid'], item['url']))
                         elif item['arttype'] == 'clearart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'discart':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "discart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         elif item['arttype'] == 'landscape':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "landscape": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'banner':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'discart':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "discart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         else:
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
                     if item['mediatype'] == 'tvshow':
-                        if item['arttype'] == 'clearlogo':
+                        if item['arttype'] == 'poster':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'fanart':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "fanart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'banner':
+                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
+                        elif item['arttype'] == 'clearlogo':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearlogo": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         elif item['arttype'] == 'clearart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
@@ -644,7 +655,7 @@ class Main:
     def _hasimages(self, art_type):
         found = False
         for artwork in self.image_list:
-            if  art_type in artwork['type']:
+            if  art_type == artwork['type'][0]:
                 found = True
                 break
             else: pass
