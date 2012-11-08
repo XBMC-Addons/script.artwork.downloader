@@ -596,7 +596,7 @@ class Main:
                     if self.settings.files_local and not item['arttype'] in ['extrafanart', 'extrathumbs']:
                         if not self.fileops._exists(item['localfilename']):
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
-                        item['url'] = item['localfilename']
+                        item['url'] = item['localfilename'].replace('\\','\\\\') 
                     if item['mediatype'] == 'movie':
                         if item['arttype'] == 'poster':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
