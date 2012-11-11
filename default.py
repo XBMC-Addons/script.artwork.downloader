@@ -70,7 +70,7 @@ class Main:
                         self.download_artwork(self.Medialist, self.tv_providers)
                     elif self.mediatype == 'musicvideo':
                         self.download_artwork(self.Medialist, self.musicvideo_providers)
-                    if not dialog_msg('iscanceled', background = self.settings.background) and not self.mode == 'customgui' and not self.mode == 'gui':
+                    if not dialog_msg('iscanceled', background = self.settings.background) and not (self.mode == 'customgui' or self.mode == 'gui'):
                         self._batch_download(self.download_list)
                 else:
                     # If no medianame specified
