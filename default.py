@@ -594,9 +594,9 @@ class Main:
                 # Try downloading the file and catch errors while trying to
                 try:
                     if self.settings.files_local and not item['arttype'] in ['extrafanart', 'extrathumbs']:
-                        if not self.fileops._exists(item['localfilename']):
+                        if not self.fileops._exists(item['localfilename']) or self.mode == 'customgui' or self.mode == 'gui':
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
-                        item['url'] = item['localfilename'].replace('\\','\\\\') 
+                        item['url'] = item['localfilename'].replace('\\','\\\\')
                     if item['mediatype'] == 'movie':
                         if item['arttype'] == 'poster':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
