@@ -1,3 +1,6 @@
+[B]12.0.5[/B]
+- Force overwrite when using GUI mode
+
 [B]12.0.4[/B]
 - Directly add the image URL to the databse
 - Option to override with local file
