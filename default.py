@@ -496,7 +496,7 @@ class Main:
                         else:
                             item['filename'] = filename
                         for targetdir in item['targetdirs']:
-                            item['localfilename'] = os.path.join(targetdir, item['filename'])
+                            item['localfilename'] = os.path.join(targetdir, item['filename']).encode('utf-8')
                             break
 
                         # Continue
