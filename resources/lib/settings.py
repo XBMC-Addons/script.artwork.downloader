@@ -235,7 +235,7 @@ class settings:
                                     'solo_enabled': 'true',
                                     'gui_string': __localize__(32129),
                                     'art_type': 'seasonposter',
-                                    'filename': 'season%s-poster.jpg'},
+                                    'filename': 'season%02d-poster.jpg'},
 
                                     {'media_type': 'tvshow',
                                     'bulk_enabled': self.tvshow_fanart,
@@ -291,7 +291,7 @@ class settings:
                                     'solo_enabled': 'true',
                                     'gui_string': __localize__(32124),
                                     'art_type': 'seasonbanner',
-                                    'filename': 'season%s-banner.jpg'},
+                                    'filename': 'season%02d-banner.jpg'},
 
                                     {'media_type': 'tvshow',
                                     'bulk_enabled': self.tvshow_characterart,

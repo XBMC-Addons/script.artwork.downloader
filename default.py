@@ -491,7 +491,21 @@ class Main:
                             item['filename'] = ('%s.jpg'% artwork['id'])
                         elif art_type == 'extrathumbs':
                             item['filename'] = (filename % str(limit_counter + 1))
-                        elif art_type in ['seasonthumb','seasonbanner','seasonposter']:
+                        elif art_type in ['seasonposter']:
+                            if artwork['season'] == '0':
+                                item['filename'] = "season-specials-poster.jpg"
+                            elif artwork['season'] == 'all':
+                                item['filename'] = "season-all-poster.jpg"
+                            else:
+                                item['filename'] = (filename % int(artwork['season']))
+                        elif art_type in ['seasonbanner']:
+                            if artwork['season'] == '0':
+                                item['filename'] = "season-specials-banner.jpg"
+                            elif artwork['season'] == 'all':
+                                item['filename'] = "season-all-banner.jpg"
+                            else:
+                                item['filename'] = (filename % int(artwork['season']))
+                        elif art_type in ['seasonthumb']:
                             item['filename'] = (filename % artwork['season'])
                         else:
                             item['filename'] = filename
