@@ -44,11 +44,11 @@
         <setting label="32121" type="bool"      id="movie_fanart"               subsetting="true" enable="eq(-2,true)"  default="true" />
         <setting label="32122" type="bool"      id="movie_extrafanart"          subsetting="true" enable="eq(-3,true)"  default="true" />
         <setting label="32131" type="bool"      id="movie_extrathumbs"          subsetting="true" enable="eq(-4,true)"  default="true" />
-        <setting label="32126" type="bool"      id="movie_logo"                 subsetting="true" enable="eq(-5,true)"  default="false"/>
+        <setting label="32126" type="bool"      id="movie_logo"                 subsetting="true" enable="eq(-5,true)"  default="true"/>
         <setting label="32125" type="bool"      id="movie_clearart"             subsetting="true" enable="eq(-6,true)"  default="true" />
-        <setting label="32132" type="bool"      id="movie_discart"              subsetting="true" enable="eq(-7,true)"  default="false"/>
-        <setting label="32123" type="bool"      id="movie_banner"               subsetting="true" enable="eq(-8,true)"  default="false" />
-        <setting label="32130" type="bool"      id="movie_landscape"            subsetting="true" enable="eq(-9,true)"  default="false"/>
+        <setting label="32132" type="bool"      id="movie_discart"              subsetting="true" enable="eq(-7,true)"  default="true"/>
+        <setting label="32123" type="bool"      id="movie_banner"               subsetting="true" enable="eq(-8,true)"  default="true" />
+        <setting label="32130" type="bool"      id="movie_landscape"            subsetting="true" enable="eq(-9,true)"  default="true"/>
     </category>
     
 <!-- Plugin settings: TV Show section -->
@@ -62,7 +62,7 @@
         <setting label="32121" type="bool"      id="tvshow_fanart"              subsetting="true" enable="eq(-3,true)"  default="true" />
         <setting label="32122" type="bool"      id="tvshow_extrafanart"         subsetting="true" enable="eq(-4,true)"  default="true" />
         <setting label="32125" type="bool"      id="tvshow_clearart"            subsetting="true" enable="eq(-5,true)"  default="true" />
-        <setting label="32127" type="bool"      id="tvshow_characterart"        subsetting="true" enable="eq(-6,true)"  default="false"/>
+        <setting label="32127" type="bool"      id="tvshow_characterart"        subsetting="true" enable="eq(-6,true)"  default="true"/>
         <setting label="32126" type="bool"      id="tvshow_logo"                subsetting="true" enable="eq(-7,true)"  default="true" />
         <setting label="32123" type="bool"      id="tvshow_showbanner"          subsetting="true" enable="eq(-8,true)"  default="true" />
         <setting label="32124" type="bool"      id="tvshow_seasonbanner"        subsetting="true" enable="eq(-9,true)"  default="false"/>
