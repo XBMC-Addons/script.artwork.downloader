@@ -373,7 +373,7 @@ class settings:
                 else: check_tvshow = True
             # Check if faulty setting in musicvideo section
             if self.musicvideo_enable:
-                if not self.musicvideo_fanart and not self.musicvideo_extrafanart and not self.musicvideo_extrathumbs and not self.musicvideo_poster:
+                if not self.musicvideo_poster and not self.musicvideo_fanart and not self.musicvideo_extrafanart and not self.musicvideo_extrathumbs and not self.musicvideo_logo and not self.musicvideo_clearart and not self.musicvideo_discart:
                     check_musicvideo = False
                     log('Setting check: No subsetting of musicvideo enabled')
                 else: check_musicvideo = True
