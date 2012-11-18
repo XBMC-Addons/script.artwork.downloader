@@ -81,7 +81,6 @@ class Main:
                     if self.mediatype == 'movie':
                         self.settings.movie_enable = True
                         self.Medialist = media_listing('movie')
-                        self.Medialist = media_unique('movie',self.dbid)
                         self.download_artwork(self.Medialist, self.movie_providers)
                     elif self.mediatype == 'tvshow':
                         self.settings.tvshow_enable = True
