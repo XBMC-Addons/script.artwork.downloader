@@ -505,8 +505,8 @@ class Main:
                                 item['filename'] = "season-all-banner.jpg"
                             else:
                                 item['filename'] = (filename % int(artwork['season']))
-                        elif art_type in ['seasonthumb']:
-                            item['filename'] = (filename % artwork['season'])
+                        elif art_type in ['seasonlandscape']:
+                            item['filename'] = (filename % int(artwork['season']))
                         else:
                             item['filename'] = filename
                         for targetdir in item['targetdirs']:
