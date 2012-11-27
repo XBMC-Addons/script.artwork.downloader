@@ -455,6 +455,21 @@ class Main:
         if len(final_image_list) == 0:
             log(' - Nothing to download')
         else:
+            # This total hack adds temporary ability to use local images that are not on fanart.tv
+            # This should be removed asap when rewrite is done
+            arttypes = ['clearlogo','clearart','landscape','discart']
+            if self.settings.files_local and art_type in arttypes:
+                for targetdir in targetdirs:
+                    localfile = os.path.join(targetdir, filename).encode('utf-8')
+                    if self.fileops._exists(localfile):
+                        final_image_list.append({'url': localfile,
+                                                 'type': [art_type],
+                                                 'language': pref_language,
+                                                 'discnumber': '1',
+                                                 'disctype': self.media_item['disctype']})
+                    break
+            # End of hack
+
             # Do some language shit
             # loop two times than skip
             while (i < 2 and not imagefound):
@@ -481,7 +496,6 @@ class Main:
                                 'dbid':self.media_item['dbid'],
                                 'art':self.media_item['art'],
                                 'arttype':art_type}
-
                         # raise artwork counter only on first loop
                         if i != 1:
                             current_artwork += 1
