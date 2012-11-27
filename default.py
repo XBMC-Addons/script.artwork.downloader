@@ -446,6 +446,7 @@ class Main:
         i = 0                                   # Set loop counter
         imagefound = False                      # Set found image false
         imageignore = False                     # Set ignaore image false
+        missingfiles = False
         final_image_list = []
         if self.mode in ['gui', 'customgui'] and not art_type in ['extrafanart', 'extrathumbs']:
             final_image_list.append(self.image_item)
@@ -522,7 +523,6 @@ class Main:
                             # jump out of the loop
                             imagefound = True
                         else:
-
                             # Check for set limits
                             if art_type == 'discart':
                                 limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, self.media_item['disctype'])
@@ -538,22 +538,20 @@ class Main:
                                 imageignore = True
                                 log(' - Ignoring (%s): %s' % (limited[1], item['filename']))
                             else:
-                                imageignore = False
                                 # Always add to list when set to overwrite
                                 if self.settings.files_overwrite:
                                     log(' - Adding to download list (overwrite enabled): %s' % item['filename'])
                                     self.download_list.append(item)
                                     imagefound = True
                                 else:
-                                    # Check if image already exist local
-                                    missingfiles = False
                                     artcheck = item['art']
+                                    # Check if extrathumbs/extrafanart image already exist local
                                     if art_type in ['extrathumbs','extrafanart']:
                                         for targetdir in item['targetdirs']:
                                             if not self.fileops._exists(os.path.join(targetdir, item['filename'])):
                                                 missingfiles = True
                                     # Check if image already exist in database
-                                    elif not artcheck.get(art_type):
+                                    elif not art_type in['seasonlandscape','seasonbanner','seasonposter'] and not artcheck.get(art_type):
                                         missingfiles = True
                                     if missingfiles:
                                         # If missing add to list
@@ -571,7 +569,7 @@ class Main:
                                         if not self.fileops._exists(os.path.join (targetdir, item['filename'])) and not art_type in ['extrafanart', 'extrathumbs']:
                                             self.failed_items.append('[%s] %s %s' % (self.media_item['name'], art_type, __localize__(32147)))
                             # Do some special check on season artwork
-                            if art_type == 'seasonthumbs' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
+                            if art_type == 'seasonlandscape' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
                                 # If already present in list set limit on 1 so it is skipped
                                 limit_counter = 0
                                 if artwork['season'] in seasonfile_presents:
