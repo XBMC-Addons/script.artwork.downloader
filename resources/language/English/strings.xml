@@ -75,13 +75,7 @@
         <string id="32101">Advanced</string>
         <string id="32102">[B]Some more advanced settings to be used[/B]</string>
         <string id="32103">Use local files</string>
-        <string id="32104">-</string>
-        <string id="32105">-</string>
         <string id="32106">Use XBMC pre-caching [I](caches images to thumbnails folder while downloading) [/I]</string>
-        <string id="32107">-</string>
-        <string id="32108">-</string>
-        <string id="32109">-</string>
-        <string id="32110">-</string>
 
     <!-- Add-on messages: Image types id=32121 to 32140 -->
         <string id="32121">Fanart</string>
@@ -113,7 +107,6 @@
         <string id="32151">add-on cancelled while searching for</string>
         <string id="32152">add-on aborted because of problems</string>
         <string id="32153">add-on cancelled while downloading Artwork</string>
-        <string id="32154">-</string>
         
     <!-- Add-on settings: Info section id=32181 to 32190-->   
         <string id="32181">Info</string>
