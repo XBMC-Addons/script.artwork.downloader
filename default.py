@@ -389,21 +389,21 @@ class Main:
                             artwork_result = 'skipping'
                         if not artwork_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (self.provider.name, errmsg, artwork_result))
-                if len(self.image_list) > 0:
-                    if (self.settings.limit_artwork and self.settings.limit_extrafanart_max < len(self.image_list)):
-                        self.download_max = self.settings.limit_extrafanart_max
-                    else:
-                        self.download_max = len(self.image_list)
-                    # Check for GUI mode
-                    if self.mode == 'gui':
-                        log('- Using GUI mode')
-                        self._gui_mode()
-                    elif self.mode == 'custom':
-                        log('- Using custom mode')
-                        self._custom_mode()
-                    else:
-                        #log('- Using bulk mode')
-                        self._download_process()
+            if len(self.image_list) > 0:
+                if (self.settings.limit_artwork and self.settings.limit_extrafanart_max < len(self.image_list)):
+                    self.download_max = self.settings.limit_extrafanart_max
+                else:
+                    self.download_max = len(self.image_list)
+                # Check for GUI mode
+                if self.mode == 'gui':
+                    log('- Using GUI mode')
+                    self._gui_mode()
+                elif self.mode == 'custom':
+                    log('- Using custom mode')
+                    self._custom_mode()
+                else:
+                    #log('- Using bulk mode')
+                    self._download_process()
             self.processeditems += 1
 
     ### Processes the bulk mode downloading of files
