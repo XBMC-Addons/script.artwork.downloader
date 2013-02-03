@@ -318,7 +318,7 @@ class Main:
                 artwork_dir = os.path.join(item + '/')
                 extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
                 extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
-                self.target_artworkdir.append(artwork_dir)
+                self.target_artworkdir.append(artwork_dir.replace('BDMV','').replace('VIDEO_TS',''))
                 self.target_extrafanartdirs.append(extrafanart_dir)
                 self.target_extrathumbsdirs.append(extrathumbs_dir)
             
@@ -339,7 +339,7 @@ class Main:
             elif self.media_item['mediatype'] == 'tvshow' and self.media_item['id'].startswith('tt'):
                 log('- IMDB ID found for TV show, skipping')
                 self.failed_items.append('[%s]: TVDB ID %s' %(self.media_item['name'], __localize__(32022)))
-            
+
             # If correct ID found continue
             else:
                 self.temp_image_list = []
