@@ -37,17 +37,25 @@ class local():
             target_extrathumbsdirs.append(extrathumbs_dir)
         ### Processes the bulk mode downloading of files
         i = 0
+        j = 0
+        k = 0
         for item in self.settings.available_arttypes:
             add_new = False
-            if media_item['mediatype'] == item['media_type']:
+            if item['bulk_enabled'] and media_item['mediatype'] == item['media_type']:
+                log('finding: %s'%item['art_type'])
+                j += 1
+                log('counter: %s'%j)
                 # File naming
                 if item['art_type']   == 'extrafanart':
+                    k += 1
                     pass
                     #item['filename'] = ('%s.jpg'% artwork['id'])
                 elif item['art_type'] == 'extrathumbs':
+                    k += 1
                     pass
                     #item['filename'] = (filename % str(limit_counter + 1))
                 elif item['art_type'] in ['seasonposter']:
+                    k += 1
                     pass
                     '''
                     if artwork['season'] == '0':
@@ -60,6 +68,7 @@ class local():
                         item['filename'] = (filename % int(artwork['season']))
                     '''
                 elif item['art_type'] in ['seasonbanner']:
+                    k += 1
                     pass
                     '''
                     if artwork['season'] == '0':
@@ -72,6 +81,7 @@ class local():
                         item['filename'] = (filename % int(artwork['season']))
                     '''
                 elif item['art_type'] in ['seasonlandscape']:
+                    k += 1
                     pass
                     '''
                     if artwork['season'] == 'all' or artwork['season'] == '':
@@ -87,6 +97,7 @@ class local():
                             add_new = True
                         break
                 if add_new:
+                    k += 1
                     generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
                     '''
                     if item.get('season'):
@@ -96,6 +107,7 @@ class local():
                     generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
                     # Fill list
                     i += 1
+                    log ('found: %s'%url)
                     image_list.append({'url': url,
                                        'preview': url,
                                        'id': 'local%s'%i,
@@ -105,11 +117,19 @@ class local():
                                        'language': 'EN',
                                        'votes': '0',
                                        'generalinfo': generalinfo})
+        log('total needed: %s'%j)
+        log('total found:  %s'%k)
+        if j > k:
+            log('scan providers for more')
+            scan_more = True
+        else:
+            print ('don''t scan for more')
+            scan_more = False
         if image_list == []:
-            return image_list
+            return image_list, scan_more
         else:
             # Sort the list before return. Last sort method is primary
             image_list = sorted(image_list, key=itemgetter('votes'), reverse=True)
             image_list = sorted(image_list, key=itemgetter('size'), reverse=False)
             image_list = sorted(image_list, key=itemgetter('language'))
-            return image_list
+            return image_list, scan_more
