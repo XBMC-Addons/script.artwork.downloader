@@ -311,11 +311,11 @@ class Main:
                 self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
             log('Provider ID:       %s' % self.media_item['id'])
             log('Media path:        %s' % self.media_item['path'])
-            list = []
-            list = local().get_image_list(self.media_item)
+            local_list = []
+            local_list, scan_more = local().get_image_list(self.media_item)
             # append local artwork
             self.image_list = []
-            for item in list:
+            for item in local_list:
                 self.image_list.append(item)            
             # Declare the target folders
             self.target_extrafanartdirs = []
@@ -356,11 +356,14 @@ class Main:
                         break
                     artwork_result = ''
                     xmlfailcount = 0
+                    if not scan_more and not self.mode in ['gui', 'custom']:
+                        artwork_result = 'pass'
                     while not artwork_result == 'pass' and not artwork_result == 'skipping':
                         if artwork_result == 'retrying':
                             xbmc.sleep(self.settings.api_timedelay)
                         try:
                             self.temp_image_list = self.provider.get_image_list(self.media_item['id'])
+                            #pass
                         except HTTP404Error, e:
                             errmsg = '404: File not found'
                             artwork_result = 'skipping'
