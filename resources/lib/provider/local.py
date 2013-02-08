@@ -29,94 +29,134 @@ class local():
         target_extrathumbsdirs = []
         target_artworkdir = []
         for item in media_item['path']:
-            artwork_dir = os.path.join(item + '/')
-            extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
-            extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
-            target_artworkdir.append(artwork_dir.replace('BDMV','').replace('VIDEO_TS',''))
-            target_extrafanartdirs.append(extrafanart_dir)
-            target_extrathumbsdirs.append(extrathumbs_dir)
+            target_artworkdir = os.path.join(item + '/').replace('BDMV','').replace('VIDEO_TS','')
+            target_extrafanartdirs = os.path.join(item + 'extrafanart' + '/')
+            target_extrathumbsdirs = os.path.join(item + 'extrathumbs' + '/')
+            break
+        file_list = xbmcvfs.listdir(target_artworkdir)[1]
         ### Processes the bulk mode downloading of files
         i = 0
         j = 0
         for item in self.settings.available_arttypes:
-            add_new = False
             if item['bulk_enabled'] and media_item['mediatype'] == item['media_type']:
-                log('finding: %s, arttype counter: %s'%(item['art_type'], j))
+                #log('finding: %s, arttype counter: %s'%(item['art_type'], j))
                 j += 1
-                # File naming
+                # File checking
                 if item['art_type'] == 'extrafanart':
                     i += 1
-                    file_list = ''
-                    for targetdir in target_extrafanartdirs:
-                        if xbmcvfs.exists(targetdir):
-                            file_list = xbmcvfs.listdir(extrafanart_dir)[1]
-                            log('list of extrafanart files: %s'%file_list)
-                            break
-                    log('extrafanart found: %s'%len(file_list))
-                    if len(file_list) <= self.settings.limit_extrafanart_max:
-                        add_new = True
+                    extrafanart_file_list = ''
+                    if xbmcvfs.exists(target_extrafanartdirs):
+                        extrafanart_file_list = xbmcvfs.listdir(extrafanart_dir)[1]
+                        #log('list of extrafanart files: %s'%file_list)
+                    #log('extrafanart found: %s'%len(file_list))
+                    if len(extrafanart_file_list) <= self.settings.limit_extrafanart_max:
+                        i += 1
+
                 elif item['art_type'] == 'extrathumbs':
                     i += 1
-                    file_list = ''
-                    for targetdir in target_extrathumbsdirs:
-                        if xbmcvfs.exists(targetdir):
-                            file_list = xbmcvfs.listdir(extrathumbs_dir)[1]
-                            log('list of extrathumbs files: %s'%file_list)
-                            break
-                    log('extrathumbs found: %s'%len(file_list))
-                    if len(file_list) <= self.settings.limit_extrathumbs_max:
-                        add_new = True
+                    extrathumbs_file_list = ''
+                    if xbmcvfs.exists(target_extrathumbsdirs):
+                        extrathumbs_file_list = xbmcvfs.listdir(extrathumbs_dir)[1]
+                        #log('list of extrathumbs files: %s'%file_list)
+                    #log('extrathumbs found: %s'%len(file_list))
+                    if len(extrathumbs_file_list) <= self.settings.limit_extrathumbs_max:
+                        i += 1
+
                 elif item['art_type'] in ['seasonposter']:
-                    i += 1
-                    '''
-                    if artwork['season'] == '0':
-                        item['filename'] = "season-specials-poster.jpg"
-                    elif artwork['season'] == 'all':
-                        item['filename'] = "season-all-poster.jpg"
-                    elif artwork['season'] == 'n/a':
-                        break
-                    else:
-                        item['filename'] = (filename % int(artwork['season']))
-                    '''
+                    for season in media_item['seasons']:
+                        if season == '0':
+                            filename = "season-specials-poster.jpg"
+                        elif season == 'all':
+                            filename = "season-all-poster.jpg"
+                        else:
+                            filename = (item['filename'] % int(season))
+                        url = os.path.join(target_artworkdir, filename).encode('utf-8')
+                        if url in file_list:
+                            i += 1
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                            generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
+                            generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                            # Fill list
+                            #log ('found: %s'%url)
+                            image_list.append({'url': url,
+                                               'preview': url,
+                                               'id': 'local%s'%i,
+                                               'type': [item['art_type']],
+                                               'size': '0',
+                                               'season': season,
+                                               'language': 'EN',
+                                               'votes': '0',
+                                               'generalinfo': generalinfo})
+                        else:
+                            pass
+
                 elif item['art_type'] in ['seasonbanner']:
-                    i += 1
-                    '''
-                    if artwork['season'] == '0':
-                        item['filename'] = "season-specials-banner.jpg"
-                    elif artwork['season'] == 'all':
-                        item['filename'] = "season-all-banner.jpg"
-                    elif artwork['season'] == 'n/a':
-                        break
-                    else:
-                        item['filename'] = (filename % int(artwork['season']))
-                    '''
+                    for season in media_item['seasons']:
+                        if season == '0':
+                            filename = "season-specials-banner.jpg"
+                        elif season == 'all':
+                            filename = "season-all-banner.jpg"
+                        else:
+                            filename = (item['filename'] % int(season))
+                        url = os.path.join(target_artworkdir, filename).encode('utf-8')
+                        if url in file_list:
+                            i += 1
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                            generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
+                            generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                            # Fill list
+                            #log ('found: %s'%url)
+                            image_list.append({'url': url,
+                                               'preview': url,
+                                               'id': 'local%s'%i,
+                                               'type': [item['art_type']],
+                                               'size': '0',
+                                               'season': season,
+                                               'language': 'EN',
+                                               'votes': '0',
+                                               'generalinfo': generalinfo})
+                        else:
+                            pass
+
                 elif item['art_type'] in ['seasonlandscape']:
-                    i += 1
-                    '''
-                    if artwork['season'] == 'all' or artwork['season'] == '':
-                        item['filename'] = "season-all-landscape.jpg"
-                    else:
-                        item['filename'] = (filename % int(artwork['season'])
-                    '''
+                    for season in media_item['seasons']:
+                        if season == 'all' or season == '':
+                            filename = "season-all-landscape.jpg"
+                        else:
+                            filename = (item['filename'] % int(season))
+                        url = os.path.join(target_artworkdir, filename).encode('utf-8')
+                        if url in file_list:
+                            i += 1
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                            generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
+                            generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                            # Fill list
+                            #log ('found: %s'%url)
+                            image_list.append({'url': url,
+                                               'preview': url,
+                                               'id': 'local%s'%i,
+                                               'type': [item['art_type']],
+                                               'size': '0',
+                                               'season': season,
+                                               'language': 'EN',
+                                               'votes': '0',
+                                               'generalinfo': generalinfo})
+                        else:
+                            pass
+
                 else:
                     filename = item['filename']
-                    for targetdir in target_artworkdir:
-                        url = os.path.join(targetdir, filename).encode('utf-8')
-                        if xbmcvfs.exists(url):
-                            add_new = True
-                        break
-                if add_new:
-                    i += 1
-                    if item['art_type'] not in ['extrafanart', 'extrathumbs']:
+                    url = os.path.join(target_artworkdir, filename).encode('utf-8')
+                    if url in file_list:
+                        i += 1
                         generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
-                        '''
-                        if item.get('season'):
-                            generalinfo += '%s: %s  |  ' %( __localize__(32144), item.get('season'))
-                        '''
                         generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
                         generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
                         # Fill list
-                        log ('found: %s'%url)
+                        #log ('found: %s'%url)
                         image_list.append({'url': url,
                                            'preview': url,
                                            'id': 'local%s'%i,
@@ -126,13 +166,13 @@ class local():
                                            'language': 'EN',
                                            'votes': '0',
                                            'generalinfo': generalinfo})
-        log('total needed: %s'%j)
-        log('total found:  %s'%i)
+        log('total local files needed: %s'%j)
+        log('total local files found:  %s'%i)
         if j > i:
-            log('scan providers for more')
+            #log('scan providers for more')
             scan_more = True
         else:
-            print ('don''t scan for more')
+            #log('don''t scan for more')
             scan_more = False
         if image_list == []:
             return image_list, scan_more
