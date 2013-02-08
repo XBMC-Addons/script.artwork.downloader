@@ -38,25 +38,36 @@ class local():
         ### Processes the bulk mode downloading of files
         i = 0
         j = 0
-        k = 0
         for item in self.settings.available_arttypes:
             add_new = False
             if item['bulk_enabled'] and media_item['mediatype'] == item['media_type']:
-                log('finding: %s'%item['art_type'])
+                log('finding: %s, arttype counter: %s'%(item['art_type'], j))
                 j += 1
-                log('counter: %s'%j)
                 # File naming
-                if item['art_type']   == 'extrafanart':
-                    k += 1
-                    pass
-                    #item['filename'] = ('%s.jpg'% artwork['id'])
+                if item['art_type'] == 'extrafanart':
+                    i += 1
+                    file_list = ''
+                    for targetdir in target_extrafanartdirs:
+                        if xbmcvfs.exists(targetdir):
+                            file_list = xbmcvfs.listdir(extrafanart_dir)[1]
+                            log('list of extrafanart files: %s'%file_list)
+                            break
+                    log('extrafanart found: %s'%len(file_list))
+                    if len(file_list) <= self.settings.limit_extrafanart_max:
+                        add_new = True
                 elif item['art_type'] == 'extrathumbs':
-                    k += 1
-                    pass
-                    #item['filename'] = (filename % str(limit_counter + 1))
+                    i += 1
+                    file_list = ''
+                    for targetdir in target_extrathumbsdirs:
+                        if xbmcvfs.exists(targetdir):
+                            file_list = xbmcvfs.listdir(extrathumbs_dir)[1]
+                            log('list of extrathumbs files: %s'%file_list)
+                            break
+                    log('extrathumbs found: %s'%len(file_list))
+                    if len(file_list) <= self.settings.limit_extrathumbs_max:
+                        add_new = True
                 elif item['art_type'] in ['seasonposter']:
-                    k += 1
-                    pass
+                    i += 1
                     '''
                     if artwork['season'] == '0':
                         item['filename'] = "season-specials-poster.jpg"
@@ -68,8 +79,7 @@ class local():
                         item['filename'] = (filename % int(artwork['season']))
                     '''
                 elif item['art_type'] in ['seasonbanner']:
-                    k += 1
-                    pass
+                    i += 1
                     '''
                     if artwork['season'] == '0':
                         item['filename'] = "season-specials-banner.jpg"
@@ -81,8 +91,7 @@ class local():
                         item['filename'] = (filename % int(artwork['season']))
                     '''
                 elif item['art_type'] in ['seasonlandscape']:
-                    k += 1
-                    pass
+                    i += 1
                     '''
                     if artwork['season'] == 'all' or artwork['season'] == '':
                         item['filename'] = "season-all-landscape.jpg"
@@ -97,29 +106,29 @@ class local():
                             add_new = True
                         break
                 if add_new:
-                    k += 1
-                    generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
-                    '''
-                    if item.get('season'):
-                        generalinfo += '%s: %s  |  ' %( __localize__(32144), item.get('season'))
-                    '''
-                    generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
-                    generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
-                    # Fill list
                     i += 1
-                    log ('found: %s'%url)
-                    image_list.append({'url': url,
-                                       'preview': url,
-                                       'id': 'local%s'%i,
-                                       'type': [item['art_type']],
-                                       'size': '0',
-                                       'season': 'n/a',
-                                       'language': 'EN',
-                                       'votes': '0',
-                                       'generalinfo': generalinfo})
+                    if item['art_type'] not in ['extrafanart', 'extrathumbs']:
+                        generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                        '''
+                        if item.get('season'):
+                            generalinfo += '%s: %s  |  ' %( __localize__(32144), item.get('season'))
+                        '''
+                        generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
+                        generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                        # Fill list
+                        log ('found: %s'%url)
+                        image_list.append({'url': url,
+                                           'preview': url,
+                                           'id': 'local%s'%i,
+                                           'type': [item['art_type']],
+                                           'size': '0',
+                                           'season': 'n/a',
+                                           'language': 'EN',
+                                           'votes': '0',
+                                           'generalinfo': generalinfo})
         log('total needed: %s'%j)
-        log('total found:  %s'%k)
-        if j > k:
+        log('total found:  %s'%i)
+        if j > i:
             log('scan providers for more')
             scan_more = True
         else:
