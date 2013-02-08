@@ -73,7 +73,7 @@ class local():
                         if filename in file_list:
                             url = os.path.join(target_artworkdir, filename).encode('utf-8')
                             i += 1
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
                             generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
                             generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
@@ -81,7 +81,7 @@ class local():
                             #log ('found: %s'%url)
                             image_list.append({'url': url,
                                                'preview': url,
-                                               'id': 'local%s'%i,
+                                               'id': filename,
                                                'type': [item['art_type']],
                                                'size': '0',
                                                'season': season,
@@ -102,7 +102,7 @@ class local():
                         if filename in file_list:
                             url = os.path.join(target_artworkdir, filename).encode('utf-8')
                             i += 1
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
                             generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
                             generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
@@ -110,7 +110,7 @@ class local():
                             #log ('found: %s'%url)
                             image_list.append({'url': url,
                                                'preview': url,
-                                               'id': 'local%s'%i,
+                                               'id': filename,
                                                'type': [item['art_type']],
                                                'size': '0',
                                                'season': season,
@@ -129,7 +129,7 @@ class local():
                         if filename in file_list:
                             url = os.path.join(target_artworkdir, filename).encode('utf-8')
                             i += 1
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
                             generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
                             generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
@@ -137,7 +137,7 @@ class local():
                             log ('found: %s'%url)
                             image_list.append({'url': url,
                                                'preview': url,
-                                               'id': 'local%s'%i,
+                                               'id': filename,
                                                'type': [item['art_type']],
                                                'size': '0',
                                                'season': season,
@@ -152,14 +152,14 @@ class local():
                     if filename in file_list:
                         url = os.path.join(target_artworkdir, filename).encode('utf-8')
                         i += 1
-                        generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
+                        generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
                         generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
                         generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
                         # Fill list
                         #log ('found: %s'%url)
                         image_list.append({'url': url,
                                            'preview': url,
-                                           'id': 'local%s'%i,
+                                           'id': filename,
                                            'type': [item['art_type']],
                                            'size': '0',
                                            'season': 'n/a',
