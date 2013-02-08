@@ -311,12 +311,16 @@ class Main:
                 self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
             log('Provider ID:       %s' % self.media_item['id'])
             log('Media path:        %s' % self.media_item['path'])
-            local_list = []
-            local_list, scan_more = local().get_image_list(self.media_item)
-            # append local artwork
+            
+            # this part check for local files when enabled
+            scan_more = True
             self.image_list = []
-            for item in local_list:
-                self.image_list.append(item)            
+            if self.settings.files_local:
+                local_list = []
+                local_list, scan_more = local().get_image_list(currentmedia)
+                # append local artwork
+                for item in local_list:
+                    self.image_list.append(item)            
             # Declare the target folders
             self.target_extrafanartdirs = []
             self.target_extrathumbsdirs = []
@@ -356,6 +360,7 @@ class Main:
                         break
                     artwork_result = ''
                     xmlfailcount = 0
+                    #skip skanning for more if local files have been found and not run in gui / custom mode
                     if not scan_more and not self.mode in ['gui', 'custom']:
                         artwork_result = 'pass'
                     while not artwork_result == 'pass' and not artwork_result == 'skipping':
@@ -552,7 +557,7 @@ class Main:
                             imagefound = True
                         else:
                             # Check for set limits
-                            if not item['url'].startswith('http'):
+                            if self.settings.files_local and not item['url'].startswith('http') and not art_type in ['extrafanart', 'extrathumbs']:
                                 # if it's a local file use this first
                                 limited = [False, 'This is your local file']
                             elif art_type == 'discart':
