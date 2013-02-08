@@ -32,6 +32,7 @@ from resources.lib.settings import settings
 from resources.lib.media_setup import _media_listing as media_listing
 from resources.lib.media_setup import _media_unique as media_unique
 from xml.parsers.expat import ExpatError
+from resources.lib.provider.local import local
 
 ### set button actions for GUI
 ACTION_PREVIOUS_MENU = (9, 10, 92, 216, 247, 257, 275, 61467, 61448,)
@@ -310,6 +311,12 @@ class Main:
                 self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
             log('Provider ID:       %s' % self.media_item['id'])
             log('Media path:        %s' % self.media_item['path'])
+            list = []
+            list = local().get_image_list(self.media_item)
+            # append local artwork
+            self.image_list = []
+            for item in list:
+                self.image_list.append(item)            
             # Declare the target folders
             self.target_extrafanartdirs = []
             self.target_extrathumbsdirs = []
@@ -343,7 +350,6 @@ class Main:
             # If correct ID found continue
             else:
                 self.temp_image_list = []
-                self.image_list = []
                 # Run through all providers getting their imagelisting
                 for self.provider in providers:
                     if not self.settings.failcount < self.settings.failthreshold:
@@ -389,6 +395,7 @@ class Main:
                             artwork_result = 'skipping'
                         if not artwork_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (self.provider.name, errmsg, artwork_result))
+
             if len(self.image_list) > 0:
                 if (self.settings.limit_artwork and self.settings.limit_extrafanart_max < len(self.image_list)):
                     self.download_max = self.settings.limit_extrafanart_max
@@ -542,11 +549,13 @@ class Main:
                             imagefound = True
                         else:
                             # Check for set limits
-                            if art_type == 'discart':
+                            if not item['url'].startswith('http'):
+                                # if it's a local file use this first
+                                limited = [False, 'This is your local file']
+                            elif art_type == 'discart':
                                 limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, self.media_item['disctype'])
                             else:
                                 limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language)
-                            
                             # Delete extrafanart when below settings and parsing the reason message
                             if limited[0] and not i == 1 and art_type in ['extrafanart', 'extrathumbs']:
                                 #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],self.media_item['name'])
@@ -626,7 +635,7 @@ class Main:
                 # Try downloading the file and catch errors while trying to
                 try:
                     if self.settings.files_local and not item['arttype'] in ['extrafanart', 'extrathumbs']:
-                        if not self.fileops._exists(item['localfilename']) or self.mode == 'customgui' or self.mode == 'gui':
+                        if (not self.fileops._exists(item['localfilename']) or self.mode == 'customgui' or self.mode == 'gui') and item['url'].startswith('http'):
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
                         item['url'] = item['localfilename'].replace('\\','\\\\')
                     if item['mediatype'] == 'movie':

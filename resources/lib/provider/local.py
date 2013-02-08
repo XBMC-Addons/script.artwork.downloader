@@ -106,7 +106,7 @@ class local():
                                        'votes': '0',
                                        'generalinfo': generalinfo})
         if image_list == []:
-            raise NoFanartError(media_id)
+            return image_list
         else:
             # Sort the list before return. Last sort method is primary
             image_list = sorted(image_list, key=itemgetter('votes'), reverse=True)
