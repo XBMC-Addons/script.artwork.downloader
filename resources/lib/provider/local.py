@@ -70,8 +70,8 @@ class local():
                             filename = "season-all-poster.jpg"
                         else:
                             filename = (item['filename'] % int(season))
-                        url = os.path.join(target_artworkdir, filename).encode('utf-8')
-                        if url in file_list:
+                        if filename in file_list:
+                            url = os.path.join(target_artworkdir, filename).encode('utf-8')
                             i += 1
                             generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
                             generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
@@ -99,8 +99,8 @@ class local():
                             filename = "season-all-banner.jpg"
                         else:
                             filename = (item['filename'] % int(season))
-                        url = os.path.join(target_artworkdir, filename).encode('utf-8')
-                        if url in file_list:
+                        if filename in file_list:
+                            url = os.path.join(target_artworkdir, filename).encode('utf-8')
                             i += 1
                             generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
                             generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
@@ -126,15 +126,15 @@ class local():
                             filename = "season-all-landscape.jpg"
                         else:
                             filename = (item['filename'] % int(season))
-                        url = os.path.join(target_artworkdir, filename).encode('utf-8')
-                        if url in file_list:
+                        if filename in file_list:
+                            url = os.path.join(target_artworkdir, filename).encode('utf-8')
                             i += 1
                             generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
                             generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
                             generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
                             generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
                             # Fill list
-                            #log ('found: %s'%url)
+                            log ('found: %s'%url)
                             image_list.append({'url': url,
                                                'preview': url,
                                                'id': 'local%s'%i,
@@ -149,8 +149,8 @@ class local():
 
                 else:
                     filename = item['filename']
-                    url = os.path.join(target_artworkdir, filename).encode('utf-8')
-                    if url in file_list:
+                    if filename in file_list:
+                        url = os.path.join(target_artworkdir, filename).encode('utf-8')
                         i += 1
                         generalinfo = '%s: %s  |  ' %( __localize__(32141), 'English')
                         generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
