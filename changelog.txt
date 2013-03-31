@@ -1,3 +1,7 @@
+[B]12.0.15[/B]
+- Fixed custom mode
+- Added option to show image selection directly if type is specified
+
 [B]12.0.14[/B]
 - Fixed missing brackets
 
