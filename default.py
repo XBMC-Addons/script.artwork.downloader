@@ -890,15 +890,13 @@ class MainGui(xbmcgui.WindowXMLDialog):
     def onInit(self):
         try :
             self.img_list = self.getControl(6)
-            self.img_list.controlLeft(self.img_list)
-            self.img_list.controlRight(self.img_list)
             self.getControl(3).setVisible(False)
         except :
             print_exc()
             self.img_list = self.getControl(3)
 
-        self.getControl(5).setVisible(False)
         self.getControl(1).setLabel(__localize__(32015))
+        self.getControl(5).setLabel(__localize__(32027))
 
         for image in self.listing:
             listitem = xbmcgui.ListItem('%s' %(image['generalinfo']))
@@ -919,6 +917,8 @@ class MainGui(xbmcgui.WindowXMLDialog):
             log('# GUI position: %s' % num)
             self.selected_id = self.img_list.getSelectedItem().getLabel2()
             log('# GUI selected image ID: %s' % self.selected_id)
+            self.close()
+        if controlID == 5:
             self.close()
 
     def onFocus(self, controlID):
