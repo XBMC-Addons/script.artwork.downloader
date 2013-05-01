@@ -6,9 +6,9 @@ import sys
 
 # Use json instead of simplejson when python v2.7 or greater
 if sys.version_info < (2, 7):
-    import json as simplejson
-else:
     import simplejson
+else:
+    import json as simplejson
 
 ### import libraries
 from resources.lib.utils import log
