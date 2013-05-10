@@ -254,7 +254,7 @@ class Main:
             else:
                 # When chosen no in the 'yes/no' dialog execute the viewer.py and parse 'downloadreport'
                 if dialog_msg('yesno', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background, nolabel = __localize__(32027), yeslabel = __localize__(32028)):
-                    runcmd = os.path.join(__addonpath__, 'resources/lib/viewer.py')
+                    runcmd = os.path.join(__addonpath__, 'lib/viewer.py')
                     xbmc.executebuiltin('XBMC.RunScript (%s,%s) '%(runcmd, 'downloadreport'))
                     
         else:
