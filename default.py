@@ -21,6 +21,7 @@ __localize__    = __addon__.getLocalizedString
 ### import libraries
 from lib import language
 from lib.apply_filters import filter
+from lib.settings import get_limit
 from urlparse import urlsplit
 from traceback import print_exc
 from resources.lib import provider
@@ -34,13 +35,14 @@ from resources.lib.media_setup import _media_unique as media_unique
 from xml.parsers.expat import ExpatError
 from resources.lib.provider.local import local
 
+setting = get_limit()
+
 class Main:
 
     def __init__(self):
         self.initial_vars() 
         self.settings._get_general()    # Get settings from settings.xml
         self.settings._get_artwork()    # Get settings from settings.xml
-        self.settings._get_limit()      # Get settings from settings.xml
         self.settings._check()          # Check if there are some faulty combinations present
         self.settings._vars()           # Get some settings vars
         self.settings._artype_list()    # Fill out the GUI and Arttype lists with enabled options
@@ -400,8 +402,8 @@ class Main:
                             log('Error getting data from %s (%s): %s' % (self.provider.name, errmsg, artwork_result))
 
             if len(self.image_list) > 0:
-                if (self.settings.limit_artwork and self.settings.limit_extrafanart_max < len(self.image_list)):
-                    self.download_max = self.settings.limit_extrafanart_max
+                if (setting.get('limit_artwork') and setting.get('limit_extrafanart_max') < len(self.image_list)):
+                    self.download_max = setting.get('limit_extrafanart_max')
                 else:
                     self.download_max = len(self.image_list)
                 # Check for GUI mode
@@ -486,7 +488,7 @@ class Main:
                 # when no image found found after one imagelist loop set to english
                 if not imagefound and i == 1:
                     pref_language = 'en'
-                    log('! No matching %s artwork found. Searching for English backup' %self.settings.limit_preferred_language)
+                    log('! No matching %s artwork found. Searching for English backup' %setting.get('limit_preferred_language'))
                 # loop through image list
                 for artwork in final_image_list:
                     if art_type in artwork['type']:
