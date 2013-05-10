@@ -19,10 +19,10 @@ __icon__        = __addon__.getAddonInfo('icon')
 __localize__    = __addon__.getLocalizedString
 
 ### import libraries
+from lib import language
 from lib.apply_filters import apply_filters
 from urlparse import urlsplit
 from traceback import print_exc
-from resources.lib import language
 from resources.lib import provider
 from resources.lib.provider import tmdb # import on behalf of searching when there's no ID
 from resources.lib.utils import *
