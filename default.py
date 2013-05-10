@@ -34,10 +34,6 @@ from resources.lib.media_setup import _media_unique as media_unique
 from xml.parsers.expat import ExpatError
 from resources.lib.provider.local import local
 
-### set button actions for GUI
-ACTION_PREVIOUS_MENU = (9, 10, 92, 216, 247, 257, 275, 61467, 61448,)
-
-
 class Main:
 
     def __init__(self):
@@ -859,71 +855,12 @@ class Main:
 
     # Return the selected url to the GUI part
     def _choose_image(self, imagelist):
-        self.image_item = self.MyDialog(imagelist)
+        from resources.lib.gui import MyDialog
+        self.image_item = MyDialog(imagelist)
         if self.image_item:
             return True
         else:
             return False
-
-    # Pass the imagelist to the dialog and return the selection
-    def MyDialog(self, image_list):
-        w = MainGui('DialogSelect.xml', __addonpath__, listing=image_list)
-        w.doModal()
-        try:
-            selected_item = False
-            # Go through the image list and match the chooosen image id and return the image url
-            for item in image_list:
-                if w.selected_id == item['id']:
-                    selected_item = item
-            return selected_item
-        except: 
-            print_exc()
-            return False
-        del w
-
-class MainGui(xbmcgui.WindowXMLDialog):
-    def __init__(self, *args, **kwargs):
-        xbmcgui.WindowXMLDialog.__init__(self)
-        self.listing = kwargs.get('listing')
-        self.selected_id = ''
-
-    def onInit(self):
-        try :
-            self.img_list = self.getControl(6)
-            self.getControl(3).setVisible(False)
-        except :
-            print_exc()
-            self.img_list = self.getControl(3)
-
-        self.getControl(1).setLabel(__localize__(32015))
-        self.getControl(5).setLabel(__localize__(32027))
-
-        for image in self.listing:
-            listitem = xbmcgui.ListItem('%s' %(image['generalinfo']))
-            listitem.setIconImage(image['preview'])
-            listitem.setLabel2(image['id'])
-            self.img_list.addItem(listitem)
-        self.setFocus(self.img_list)
-
-    def onAction(self, action):
-        if action in ACTION_PREVIOUS_MENU:
-            self.close()
-
-
-    def onClick(self, controlID):
-        log('# GUI control: %s' % controlID)
-        if controlID == 6 or controlID == 3: 
-            num = self.img_list.getSelectedPosition()
-            log('# GUI position: %s' % num)
-            self.selected_id = self.img_list.getSelectedItem().getLabel2()
-            log('# GUI selected image ID: %s' % self.selected_id)
-            self.close()
-        if controlID == 5:
-            self.close()
-
-    def onFocus(self, controlID):
-        pass
-
 
 ### Start of script
 if (__name__ == '__main__'):
