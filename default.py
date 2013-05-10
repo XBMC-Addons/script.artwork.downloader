@@ -22,7 +22,7 @@ __localize__    = __addon__.getLocalizedString
 from lib import language
 from lib.apply_filters import filter
 from lib.art_list import artype_list
-from lib.settings import get_limit
+from lib.settings import get_limit, get
 from urlparse import urlsplit
 from traceback import print_exc
 from resources.lib import provider
@@ -37,27 +37,25 @@ from xml.parsers.expat import ExpatError
 from resources.lib.provider.local import local
 
 limit = get_limit()
+setting = get()
 artype_list = artype_list()
 
 class Main:
 
     def __init__(self):
         self.initial_vars() 
-        self.settings._get_general()    # Get settings from settings.xml
-        self.settings._get_artwork()    # Get settings from settings.xml
         self.settings._check()          # Check if there are some faulty combinations present
-        self.settings._vars()           # Get some settings vars
         if self.initialise():
             # Check for silent background mode
             if self.silent:
-                self.settings.background = True
-                self.settings.notify = False
+                setting.replace('background', True)
+                setting.replace('notify', False)
             # Check for gui mode
             elif self.mode == 'gui':
-                self.settings.background = False
-                self.settings.notify = False
-                self.settings.files_overwrite = True
-            dialog_msg('create', line1 = __localize__(32008), background = self.settings.background)
+                setting.replace('background', False)
+                setting.replace('notify', False)
+                setting.replace('files_overwrite', True)
+            dialog_msg('create', line1 = __localize__(32008), background = setting.get('background'))
             # Check if mediatype is specified
             if not self.mediatype == '':
                 # Check if dbid is specified
@@ -69,52 +67,52 @@ class Main:
                         self.download_artwork(self.Medialist, self.tv_providers)
                     elif self.mediatype == 'musicvideo':
                         self.download_artwork(self.Medialist, self.musicvideo_providers)
-                    if not dialog_msg('iscanceled', background = self.settings.background) and not (self.mode == 'customgui' or self.mode == 'gui'):
+                    if not dialog_msg('iscanceled', background = setting.get('background')) and not (self.mode == 'customgui' or self.mode == 'gui'):
                         self._batch_download(self.download_list)
                 else:
                     # If no medianame specified
                     # 1. Check what media type was specified, 2. Retrieve library list, 3. Enable the correct type, 4. Do the API stuff
-                    self.settings.movie_enable = False
-                    self.settings.tvshow_enable = False
-                    self.settings.musicvideo_enable = False
+                    setting.replace('movie_enable', False)
+                    setting.replace('tvshow_enable', False)
+                    setting.replace('musicvideo_enable', False)
                     if self.mediatype == 'movie':
-                        self.settings.movie_enable = True
+                        setting.replace('movie_enable', True)
                         self.Medialist = media_listing('movie')
                         self.download_artwork(self.Medialist, self.movie_providers)
                     elif self.mediatype == 'tvshow':
-                        self.settings.tvshow_enable = True
+                        setting.replace('tvshow_enable', True)
                         self.Medialist = media_listing('tvshow')
                         self.download_artwork(self.Medialist, self.tv_providers)
                     elif self.mediatype == 'musicvideo':
-                        self.settings.musicvideo_enable = True
+                        setting.replace('musicvideo_enable', True)
                         self.Medialist = media_listing('musicvideo')
                         self.download_artwork(self.Medialist, self.musicvideo_providers)
-                    if not dialog_msg('iscanceled', background = self.settings.background):
+                    if not dialog_msg('iscanceled', background = setting.get('background')):
                         self._batch_download(self.download_list)
             # No mediatype is specified
             else:
                 # activate movie/tvshow/musicvideo for custom run
                 if self.mode == 'custom':
-                    self.settings.movie_enable = True
-                    self.settings.tvshow_enable = True
-                    self.settings.musicvideo_enable = True
+                    setting.replace('movie_enable', True)
+                    setting.replace('tvshow_enable', True)
+                    setting.replace('musicvideo_enable', True)
                 # Normal oprations check
                 # 1. Check if enable, 2. Get library list, 3. Set mediatype, 4. Do the API stuff
                 # Do this for each media type
-                if self.settings.movie_enable and not dialog_msg('iscanceled', background = True):
+                if setting.get('movie_enable') and not dialog_msg('iscanceled', background = True):
                     self.mediatype = 'movie'
                     self.Medialist = media_listing(self.mediatype)
                     self.download_artwork(self.Medialist, self.movie_providers)
-                if self.settings.tvshow_enable and not dialog_msg('iscanceled', background = True):
+                if setting.get('tvshow_enable') and not dialog_msg('iscanceled', background = True):
                     self.mediatype = 'tvshow'
                     self.Medialist = media_listing(self.mediatype)
                     self.download_artwork(self.Medialist, self.tv_providers)
-                if self.settings.musicvideo_enable and not dialog_msg('iscanceled', background = True):
+                if setting.get('musicvideo_enable') and not dialog_msg('iscanceled', background = True):
                     self.mediatype = 'musicvideo'
                     self.Medialist = media_listing(self.mediatype)
                     self.download_artwork(self.Medialist, self.musicvideo_providers)
                 # If not cancelled throw the whole downloadlist into the batch downloader
-                if not dialog_msg('iscanceled', background = self.settings.background):
+                if not dialog_msg('iscanceled', background = setting.get('background')):
                     self._batch_download(self.download_list)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
@@ -197,7 +195,7 @@ class Main:
 
     def cleanup(self):
         if self.fileops._exists(self.fileops.tempdir):
-            dialog_msg('update', percentage = 100, line1 = __localize__(32005), background = self.settings.background)
+            dialog_msg('update', percentage = 100, line1 = __localize__(32005), background = setting.get('background'))
             log('Cleaning up temp files')
             for x in os.listdir(self.fileops.tempdir):
                 tempfile = os.path.join(self.fileops.tempdir, x)
@@ -234,33 +232,33 @@ class Main:
         provider_msg2 = __localize__(32184) + ' | ' + __localize__(32185) + ' | ' + __localize__(32186)
         # Close dialog in case it was open before doing a notification
         time.sleep(2)
-        dialog_msg('close', background = self.settings.background)
+        dialog_msg('close', background = setting.get('background'))
         # Print the self.reportdata log message
         #log('Failed items report: %s' % self.reportdata.replace('[B]', '').replace('[/B]', ''))
         # Safe the downloadreport to settings folder using save function
         save_nfo_file(self.reportdata, os.path.join(__addonprofile__ , 'downloadreport.txt'))
         # Some dialog checks
-        if self.settings.notify:
+        if setting.get('notify'):
             log('Notify on finished/error enabled')
-            self.settings.background = False
+            setting.replace('background', False)
         if xbmc.Player().isPlayingVideo() or self.silent or self.mode == 'gui' or self.mode == 'customgui' or self.mode == 'custom':
             log('Silent finish because of playing a video or silent mode')
-            self.settings.background = True
-        if not self.settings.failcount < self.settings.failthreshold:
+            setting.replace('background', True)
+        if not setting.get('failcount') < setting.get('failthreshold'):
             log('Network error detected, script aborted', xbmc.LOGERROR)
-            dialog_msg('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = self.settings.background)
+            dialog_msg('okdialog', line1 = __localize__(32010), line2 = __localize__(32011), background = setting.get('background'))
         if not xbmc.abortRequested:
             # Show dialog/notification
-            if self.settings.background:
-                dialog_msg('okdialog', line0 = summary_notify, line1 = provider_msg1 + ' ' + provider_msg2, background = self.settings.background, cancelled = self.cancelled)
+            if setting.get('background'):
+                dialog_msg('okdialog', line0 = summary_notify, line1 = provider_msg1 + ' ' + provider_msg2, background = setting.get('background'), cancelled = self.cancelled)
             else:
                 # When chosen no in the 'yes/no' dialog execute the viewer.py and parse 'downloadreport'
-                if dialog_msg('yesno', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = self.settings.background, nolabel = __localize__(32027), yeslabel = __localize__(32028)):
+                if dialog_msg('yesno', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = setting.get('background'), nolabel = __localize__(32027), yeslabel = __localize__(32028)):
                     runcmd = os.path.join(__addonpath__, 'lib/viewer.py')
                     xbmc.executebuiltin('XBMC.RunScript (%s,%s) '%(runcmd, 'downloadreport'))
                     
         else:
-            dialog_msg('okdialog', line1 = __localize__(32010), line2 = summary, background = self.settings.background)
+            dialog_msg('okdialog', line1 = __localize__(32010), line2 = summary, background = setting.get('background'))
         # Container refresh
         if self.mode in ['gui','customgui']:
             if self.download_art_succes:
@@ -285,11 +283,11 @@ class Main:
                 self.reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
                 break
             ### check if script has been cancelled by user
-            if dialog_msg('iscanceled', background = self.settings.background):
+            if dialog_msg('iscanceled', background = setting.get('background')):
                 self.reportdata += ('\n - %s [%s]: %s' %(__localize__(32151), currentmedia['mediatype'], time.strftime('%d %B %Y - %H:%M')))
                 break
             # abort script because of to many failures
-            if not self.settings.failcount < self.settings.failthreshold:
+            if not setting.get('failcount') < setting.get('failthreshold'):
                 self.reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
                 break
             dialog_msg('update',
@@ -297,7 +295,7 @@ class Main:
                         line1 = currentmedia['name'],
                         line2 = __localize__(32008),
                         line3 = '',
-                        background = self.settings.background)
+                        background = setting.get('background'))
             log('########################################################')
             log('Processing media:  %s' % currentmedia['name'])
             # do some id conversions 
@@ -313,7 +311,7 @@ class Main:
             # this part check for local files when enabled
             scan_more = True
             self.image_list = []
-            if self.settings.files_local:
+            if setting.get('files_local'):
                 local_list = []
                 local_list, scan_more = local().get_image_list(currentmedia)
                 # append local artwork
@@ -332,15 +330,15 @@ class Main:
                 self.target_extrathumbsdirs.append(extrathumbs_dir)
             
             # Check if using the centralize option
-            if self.settings.centralize_enable:
+            if setting.get('centralize_enable'):
                 if currentmedia['mediatype'] == 'tvshow':
-                    self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
+                    self.target_extrafanartdirs.append(setting.get('centralfolder_tvshows'))
                 elif currentmedia['mediatype'] == 'movie':
-                    self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
+                    self.target_extrafanartdirs.append(setting.get('centralfolder_movies'))
 
             # Check for presence of id used by source sites
             if self.mode == 'gui' and ((currentmedia['id'] == '') or (currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'))):
-                dialog_msg('close', background = self.settings.background)
+                dialog_msg('close', background = setting.get('background'))
                 dialog_msg('okdialog','' ,currentmedia['name'] , __localize__(32030))
             elif currentmedia['id'] == '':
                 log('- No ID found, skipping')
@@ -353,8 +351,9 @@ class Main:
             else:
                 self.temp_image_list = []
                 # Run through all providers getting their imagelisting
+                failcount = 0
                 for self.provider in providers:
-                    if not self.settings.failcount < self.settings.failthreshold:
+                    if not failcount < setting.get('failthreshold'):
                         break
                     artwork_result = ''
                     xmlfailcount = 0
@@ -363,7 +362,7 @@ class Main:
                         artwork_result = 'pass'
                     while not artwork_result == 'pass' and not artwork_result == 'skipping':
                         if artwork_result == 'retrying':
-                            xbmc.sleep(self.settings.api_timedelay)
+                            xbmc.sleep(setting.get('api_timedelay'))
                         try:
                             self.temp_image_list = self.provider.get_image_list(currentmedia['id'])
                             #pass
@@ -386,18 +385,18 @@ class Main:
                             errmsg = 'Error parsing xml: %s' % str(e)
                             artwork_result = 'retrying'
                         except HTTPTimeout, e:
-                            self.settings.failcount += 1
+                            failcount += 1
                             errmsg = 'Timed out'
                             artwork_result = 'skipping'
                         except DownloadError, e:
-                            self.settings.failcount += 1
+                            failcount += 1
                             errmsg = 'Possible network error: %s' % str(e)
                             artwork_result = 'skipping'
                         else:
                             artwork_result = 'pass'
                             for item in self.temp_image_list:
                                 self.image_list.append(item)
-                        if not xmlfailcount < self.settings.xmlfailthreshold:
+                        if not xmlfailcount < setting.get('xmlfailthreshold'):
                             artwork_result = 'skipping'
                         if not artwork_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (self.provider.name, errmsg, artwork_result))
@@ -429,7 +428,7 @@ class Main:
                     self.download_arttypes.append(item['art_type'])
 
         for item in artype_list:
-            if item['art_type'] in self.download_arttypes and ((self.settings.movie_enable and self.mediatype == item['media_type']) or (self.settings.tvshow_enable and self.mediatype == item['media_type']) or (self.settings.musicvideo_enable and self.mediatype == item['media_type'])):
+            if item['art_type'] in self.download_arttypes and ((setting.get('movie_enable') and self.mediatype == item['media_type']) or (setting.get('tvshow_enable') and self.mediatype == item['media_type']) or (setting.get('musicvideo_enable') and self.mediatype == item['media_type'])):
                 if item['art_type'] == 'extrafanart':
                     self._download_art(item['art_type'], item['filename'], self.target_extrafanartdirs,  __localize__(item['gui_string']))
                 elif item['art_type'] == 'extrathumbs':
@@ -452,7 +451,6 @@ class Main:
     ### Artwork downloading
     def _download_art(self, art_type, filename, targetdirs, msg):
         log('* Image type: %s' %art_type)
-        self.settings.failcount = 0
         seasonfile_presents = []
         current_artwork = 0                     # Used in progras dialog
         limit_counter = 0                       # Used for limiting on number
@@ -472,7 +470,7 @@ class Main:
             # This total hack adds temporary ability to use local images that are not on fanart.tv
             # This should be removed asap when rewrite is done
             arttypes = ['clearlogo','clearart','landscape','discart']
-            if self.settings.files_local and art_type in arttypes:
+            if setting.get('files_local') and art_type in arttypes:
                 for targetdir in targetdirs:
                     localfile = os.path.join(targetdir, filename).encode('utf-8')
                     if self.fileops._exists(localfile):
@@ -495,11 +493,9 @@ class Main:
                 for artwork in final_image_list:
                     if art_type in artwork['type']:
                         ### check if script has been cancelled by user
-                        if dialog_msg('iscanceled', background = self.settings.background):
-                            #dialog('close', background = self.settings.background)
+                        if dialog_msg('iscanceled', background = setting.get('background')):
+                            #dialog('close', background = setting.get('background'))
                             break
-                        if not self.settings.failcount < self.settings.failthreshold:
-                            break   
                         # Create an image info list
                         item = {'url': artwork['url'],
                                 'targetdirs': targetdirs,
@@ -556,7 +552,7 @@ class Main:
                             imagefound = True
                         else:
                             # Check for set limits
-                            if self.settings.files_local and not item['url'].startswith('http') and not art_type in ['extrafanart', 'extrathumbs']:
+                            if setting.get('files_local') and not item['url'].startswith('http') and not art_type in ['extrafanart', 'extrathumbs']:
                                 # if it's a local file use this first
                                 limited = [False, 'This is your local file']
                             elif art_type == 'discart':
@@ -573,7 +569,7 @@ class Main:
                                 log(' - Ignoring (%s): %s' % (limited[1], item['filename']))
                             else:
                                 # Always add to list when set to overwrite
-                                if self.settings.files_overwrite:
+                                if setting.get('files_overwrite'):
                                     log(' - Adding to download list (overwrite enabled): %s' % item['filename'])
                                     self.download_list.append(item)
                                     imagefound = True
@@ -631,17 +627,18 @@ class Main:
     def _batch_download(self, image_list):
         log('########################################################')
         if not len(image_list) == 0:
+            failcount = 0
             for item in image_list:
                 if xbmc.abortRequested:
                     self.reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
                     break
-                if dialog_msg('iscanceled', background = self.settings.background):
+                if dialog_msg('iscanceled', background = setting.get('background')):
                     self.reportdata += ('\n - %s: %s' %(__localize__(32153), time.strftime('%d %B %Y - %H:%M')))
                     break
-                dialog_msg('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = self.settings.background)
+                dialog_msg('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + item['artwork_string'], line3 = item['filename'], background = setting.get('background'))
                 # Try downloading the file and catch errors while trying to
                 try:
-                    if self.settings.files_local and not item['arttype'] in ['extrafanart', 'extrathumbs']:
+                    if setting.get('files_local') and not item['arttype'] in ['extrafanart', 'extrathumbs']:
                         if (not self.fileops._exists(item['localfilename']) or self.mode == 'customgui' or self.mode == 'gui') and item['url'].startswith('http'):
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
                         item['url'] = item['localfilename'].replace('\\','\\\\')
@@ -683,7 +680,7 @@ class Main:
                     log('URL not found: %s' % str(e), xbmc.LOGERROR)
                     self.download_art_succes = False
                 except HTTPTimeout, e:
-                    self.settings.failcount += 1
+                    failcount += 1
                     log('Download timed out: %s' % str(e), xbmc.LOGERROR)
                     self.download_art_succes = False
                 except CreateDirectoryError, e:
@@ -693,7 +690,7 @@ class Main:
                     log('Could not copy file (Destination may be read only), skipping: %s' % str(e), xbmc.LOGWARNING)
                     self.download_art_succes = False
                 except DownloadError, e:
-                    self.settings.failcount += 1
+                    failcount += 1
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (item['url'], str(e)), xbmc.LOGERROR)
                     self.download_art_succes = False
                 else:
@@ -718,7 +715,7 @@ class Main:
     ### This handles the GUI image type selector part
     def _gui_mode(self):
         # Close the 'checking for artwork' dialog before opening the GUI list
-        dialog_msg('close', background = self.settings.background)
+        dialog_msg('close', background = setting.get('background'))
         
         self.download_arttypes = []
         # Look for argument matching artwork types
@@ -828,7 +825,7 @@ class Main:
             log('- Number of images: %s' %len(imagelist))
             # If more images than 1 found show GUI selection
             if len(imagelist) > 1:
-                dialog_msg('close', background = self.settings.background)
+                dialog_msg('close', background = setting.get('background'))
                 self.mode = 'customgui'
                 log('- Image list larger than 1')
                 if self._choose_image(imagelist):
