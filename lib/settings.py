@@ -25,7 +25,7 @@ import lib.common
 ### get addon info
 __addon__        = lib.common.__addon__
 
-    ### Initial genral vars
+### General seetting variables
 def get():
     setting = {'failcount':                0,     # Initial fail count
                'failthreshold':            3,     # Abbort when this many fails

@@ -21,6 +21,7 @@ __localize__    = __addon__.getLocalizedString
 ### import libraries
 from lib import language
 from lib.apply_filters import filter
+from lib.art_list import artype_list
 from lib.settings import get_limit
 from urlparse import urlsplit
 from traceback import print_exc
@@ -36,6 +37,7 @@ from xml.parsers.expat import ExpatError
 from resources.lib.provider.local import local
 
 setting = get_limit()
+artype_list = artype_list()
 
 class Main:
 
@@ -45,7 +47,6 @@ class Main:
         self.settings._get_artwork()    # Get settings from settings.xml
         self.settings._check()          # Check if there are some faulty combinations present
         self.settings._vars()           # Get some settings vars
-        self.settings._artype_list()    # Fill out the GUI and Arttype lists with enabled options
         if self.initialise():
             # Check for silent background mode
             if self.silent:
@@ -422,18 +423,18 @@ class Main:
     def _download_process(self):
         if not self.mode == 'custom':
             self.download_arttypes = []
-            for item in self.settings.available_arttypes:
+            for item in artype_list:
                 if item['bulk_enabled'] and self.mediatype == item['media_type']:
                     self.download_arttypes.append(item['art_type'])
 
-        for item in self.settings.available_arttypes:
+        for item in artype_list:
             if item['art_type'] in self.download_arttypes and ((self.settings.movie_enable and self.mediatype == item['media_type']) or (self.settings.tvshow_enable and self.mediatype == item['media_type']) or (self.settings.musicvideo_enable and self.mediatype == item['media_type'])):
                 if item['art_type'] == 'extrafanart':
-                    self._download_art(item['art_type'], item['filename'], self.target_extrafanartdirs,  item['gui_string'])
+                    self._download_art(item['art_type'], item['filename'], self.target_extrafanartdirs,  __localize__(item['gui_string']))
                 elif item['art_type'] == 'extrathumbs':
-                    self._download_art(item['art_type'], item['filename'], self.target_extrathumbsdirs,  item['gui_string'])
+                    self._download_art(item['art_type'], item['filename'], self.target_extrathumbsdirs,  __localize__(item['gui_string']))
                 else:
-                    self._download_art(item['art_type'], item['filename'], self.target_artworkdir,  item['gui_string'])
+                    self._download_art(item['art_type'], item['filename'], self.target_artworkdir,  __localize__(item['gui_string']))
 
 
     ### Retrieves imagelist for GUI solo mode
@@ -721,7 +722,7 @@ class Main:
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
-            for type in self.settings.available_arttypes:
+            for type in artype_list:
                 if item == type['art_type'] and self.mediatype == type['media_type']:
                     log('- Custom %s mode arttype: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
@@ -735,10 +736,10 @@ class Main:
                 break
             # Add parse the image restraints
             if self.gui_selected_type != '':
-                for item in self.settings.available_arttypes:
+                for item in artype_list:
                     if self.gui_selected_type == item['art_type'] and self.mediatype == item['media_type']:
                         self.gui_selected_filename = item['filename']
-                        self.gui_selected_msg = item['gui_string']
+                        self.gui_selected_msg = __localize__(item['gui_string'])
                         # Get image list for that specific imagetype
                         imagelist = self._gui_imagelist(self.gui_selected_type)
                         # Some debug log output
@@ -750,9 +751,9 @@ class Main:
             self.GUI_type_list = []
             imagelist = False
             # Fill GUI art type list
-            for item in self.settings.available_arttypes:
+            for item in artype_list:
                 if item['solo_enabled'] == 'true' and self.mediatype == item['media_type'] and self._hasimages(item['art_type']):
-                    gui = item['gui_string']
+                    gui = __localize__(item['gui_string'])
                     self.GUI_type_list.append (gui)
             # Not sure what this does again
             if len(self.GUI_type_list) == 1:
@@ -800,11 +801,11 @@ class Main:
         # If some selection was made
         else:
             # Check what artwork type has been chosen and parse the image restraints
-            for item in self.settings.available_arttypes:
-                if self.GUI_type_list[select] == item['gui_string'] and self.mediatype == item['media_type']:
+            for item in artype_list:
+                if self.GUI_type_list[select] == __localize__(item['gui_string']) and self.mediatype == item['media_type']:
                     self.gui_selected_type = item['art_type']
                     self.gui_selected_filename = item['filename']
-                    self.gui_selected_msg = item['gui_string']
+                    self.gui_selected_msg = __localize__(item['gui_string'])
                     return True
             else:
                 return False
@@ -813,7 +814,7 @@ class Main:
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
-            for type in self.settings.available_arttypes:
+            for type in artype_list:
                 if item == type['art_type'] and self.mediatype == type['media_type']:
                     log('- Custom %s mode arttype: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
@@ -832,9 +833,9 @@ class Main:
                 if self._choose_image(imagelist):
                     log('- Chosen: %s'%self.image_item)
                     dialog_msg('create')
-                    for item in self.settings.available_arttypes:
+                    for item in artype_list:
                         if gui_arttype == item['art_type']:
-                            self._download_art(item['art_type'], item['filename'], self.target_artworkdir, item['gui_string'])
+                            self._download_art(item['art_type'], item['filename'], self.target_artworkdir, __localize__(item['gui_string']))
                             break
                     self._batch_download(self.download_list)
                     if not self.download_art_succes:
