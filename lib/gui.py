@@ -19,7 +19,6 @@
 
 #import modules
 import lib.common
-import sys
 import xbmcgui
 from resources.lib.utils import log
 
