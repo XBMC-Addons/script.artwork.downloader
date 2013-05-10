@@ -284,7 +284,7 @@ class Main:
                 break
             ### check if script has been cancelled by user
             if dialog_msg('iscanceled', background = self.settings.background):
-                self.reportdata += ('\n - %s [%s]: %s' %(__localize__(32151), self.media_item['mediatype'], time.strftime('%d %B %Y - %H:%M')))
+                self.reportdata += ('\n - %s [%s]: %s' %(__localize__(32151), currentmedia['mediatype'], time.strftime('%d %B %Y - %H:%M')))
                 break
             # abort script because of to many failures
             if not self.settings.failcount < self.settings.failthreshold:
@@ -292,21 +292,21 @@ class Main:
                 break
             dialog_msg('update',
                         percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0),
-                        line1 = self.media_item['name'],
+                        line1 = currentmedia['name'],
                         line2 = __localize__(32008),
                         line3 = '',
                         background = self.settings.background)
             log('########################################################')
-            log('Processing media:  %s' % self.media_item['name'])
+            log('Processing media:  %s' % currentmedia['name'])
             # do some id conversions 
-            if not self.media_item['mediatype'] == 'tvshow' and self.media_item['id'] in ['','tt0000000','0']:
+            if not currentmedia['mediatype'] == 'tvshow' and currentmedia['id'] in ['','tt0000000','0']:
                 log('No IMDB ID found, trying to search themoviedb.org for matching title.')
-                self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
-            elif self.media_item['mediatype'] == 'movie' and not self.media_item['id'] == '' and not self.media_item['id'].startswith('tt'):
+                currentmedia['id'] = tmdb._search_movie(currentmedia['name'],currentmedia['year'])
+            elif currentmedia['mediatype'] == 'movie' and not currentmedia['id'] == '' and not currentmedia['id'].startswith('tt'):
                 log('No valid ID found, trying to search themoviedb.org for matching title.')
-                self.media_item['id'] = tmdb._search_movie(self.media_item['name'],currentmedia['year'])
-            log('Provider ID:       %s' % self.media_item['id'])
-            log('Media path:        %s' % self.media_item['path'])
+                currentmedia['id'] = tmdb._search_movie(currentmedia['name'],currentmedia['year'])
+            log('Provider ID:       %s' % currentmedia['id'])
+            log('Media path:        %s' % currentmedia['path'])
             
             # this part check for local files when enabled
             scan_more = True
@@ -321,7 +321,7 @@ class Main:
             self.target_extrafanartdirs = []
             self.target_extrathumbsdirs = []
             self.target_artworkdir = []
-            for item in self.media_item['path']:
+            for item in currentmedia['path']:
                 artwork_dir = os.path.join(item + '/')
                 extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
                 extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
@@ -331,21 +331,21 @@ class Main:
             
             # Check if using the centralize option
             if self.settings.centralize_enable:
-                if self.media_item['mediatype'] == 'tvshow':
+                if currentmedia['mediatype'] == 'tvshow':
                     self.target_extrafanartdirs.append(self.settings.centralfolder_tvshows)
-                elif self.media_item['mediatype'] == 'movie':
+                elif currentmedia['mediatype'] == 'movie':
                     self.target_extrafanartdirs.append(self.settings.centralfolder_movies)
 
             # Check for presence of id used by source sites
-            if self.mode == 'gui' and ((self.media_item['id'] == '') or (self.media_item['mediatype'] == 'tvshow' and self.media_item['id'].startswith('tt'))):
+            if self.mode == 'gui' and ((currentmedia['id'] == '') or (currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'))):
                 dialog_msg('close', background = self.settings.background)
-                dialog_msg('okdialog','' ,self.media_item['name'] , __localize__(32030))
-            elif self.media_item['id'] == '':
+                dialog_msg('okdialog','' ,currentmedia['name'] , __localize__(32030))
+            elif currentmedia['id'] == '':
                 log('- No ID found, skipping')
-                self.failed_items.append('[%s] ID %s' %(self.media_item['name'], __localize__(32022)))
-            elif self.media_item['mediatype'] == 'tvshow' and self.media_item['id'].startswith('tt'):
+                self.failed_items.append('[%s] ID %s' %(currentmedia['name'], __localize__(32022)))
+            elif currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'):
                 log('- IMDB ID found for TV show, skipping')
-                self.failed_items.append('[%s]: TVDB ID %s' %(self.media_item['name'], __localize__(32022)))
+                self.failed_items.append('[%s]: TVDB ID %s' %(currentmedia['name'], __localize__(32022)))
 
             # If correct ID found continue
             else:
@@ -363,7 +363,7 @@ class Main:
                         if artwork_result == 'retrying':
                             xbmc.sleep(self.settings.api_timedelay)
                         try:
-                            self.temp_image_list = self.provider.get_image_list(self.media_item['id'])
+                            self.temp_image_list = self.provider.get_image_list(currentmedia['id'])
                             #pass
                         except HTTP404Error, e:
                             errmsg = '404: File not found'
@@ -375,9 +375,9 @@ class Main:
                         except NoFanartError, e:
                             errmsg = 'No artwork found'
                             artwork_result = 'skipping'
-                            self.failed_items.append('[%s] %s' %(self.media_item['name'], __localize__(32133)))
+                            self.failed_items.append('[%s] %s' %(currentmedia['name'], __localize__(32133)))
                         except ItemNotFoundError, e:
-                            errmsg = '%s not found' % self.media_item['id']
+                            errmsg = '%s not found' % currentmedia['id']
                             artwork_result = 'skipping'
                         except ExpatError, e:
                             xmlfailcount += 1
