@@ -855,8 +855,8 @@ class Main:
 
     # Return the selected url to the GUI part
     def _choose_image(self, imagelist):
-        from resources.lib.gui import MyDialog
-        self.image_item = MyDialog(imagelist)
+        from lib.gui import dialog_select
+        self.image_item = dialog_select(imagelist)
         if self.image_item:
             return True
         else:

@@ -18,21 +18,21 @@
 #
 
 #import modules
+import lib.common
 import sys
 import xbmcgui
 from resources.lib.utils import log
 
 ### get addon info
-__addon__       = ( sys.modules[ "__main__" ].__addon__ )
-__addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
-__localize__    = ( sys.modules[ "__main__" ].__localize__ )
-__addonpath__   = ( sys.modules[ "__main__" ].__addonpath__ )
+__addonpath__    = lib.common.__addonpath__
+__localize__     = lib.common.__localize__
+
 ### set button actions for GUI
 ACTION_PREVIOUS_MENU = (9, 10, 92, 216, 247, 257, 275, 61467, 61448)
 
 # Pass the imagelist to the dialog and return the selection
 def dialog_select(image_list):
-    w = MainGui('DialogSelect.xml', __addonpath__, listing=image_list)
+    w = dialog_select_UI('DialogSelect.xml', __addonpath__, listing=image_list)
     w.doModal()
     selected_item = False
     try:
@@ -46,7 +46,7 @@ def dialog_select(image_list):
         return selected_item
     del w
 
-class MainGui(xbmcgui.WindowXMLDialog):
+class dialog_select_UI(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
         xbmcgui.WindowXMLDialog.__init__(self)
         self.listing = kwargs.get('listing')
