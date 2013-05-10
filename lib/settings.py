@@ -21,9 +21,11 @@
 import xbmc
 import xbmcaddon
 import lib.common
+from resources.lib.utils import dialog_msg, log
 
 ### get addon info
 __addon__        = lib.common.__addon__
+__localize__     = lib.common.__localize__
 
 ### General seetting variables
 def get():
@@ -94,3 +96,52 @@ def get_limit():
                'limit_preferred_language': __addon__.getSetting("limit_preferred_language"),
                'limit_notext':             __addon__.getSetting("limit_notext")           == 'true'}
     return setting
+    
+### Check for faulty setting combinations
+def check():
+    setting = get()
+    settings_faulty = True
+    while settings_faulty:
+        settings_faulty = True
+        check_movie = check_tvshow = check_musicvideo = check_centralize = True
+        # re-check settings after posible change
+        setting = get()
+        # Check if faulty setting in movie section
+        if setting.get('movie_enable'):
+            if not setting.get('movie_poster') and not setting.get('movie_fanart') and not setting.get('movie_extrafanart') and not setting.get('movie_extrathumbs') and not setting.get('movie_logo') and not setting.get('movie_clearart') and not setting.get('movie_discart') and not setting.get('movie_landscape') and not setting.get('movie_banner'):
+                check_movie = False
+                log('Setting check: No subsetting of movies enabled')
+            else: check_movie = True
+        # Check if faulty setting in tvshow section
+        if setting.get('tvshow_enable'):
+            if not setting.get('tvshow_poster') and not setting.get('tvshow_seasonposter') and not setting.get('tvshow_fanart') and not setting.get('tvshow_extrafanart') and not setting.get('tvshow_clearart') and not setting.get('tvshow_characterart') and not setting.get('tvshow_logo') and not setting.get('tvshow_showbanner') and not setting.get('tvshow_seasonbanner') and not setting.get('tvshow_landscape') and not setting.get('tvshow_seasonlandscape'):
+                check_tvshow = False
+                log('Setting check: No subsetting of tv shows enabled')
+            else: check_tvshow = True
+        # Check if faulty setting in musicvideo section
+        if setting.get('musicvideo_enable'):
+            if not setting.get('musicvideo_poster') and not setting.get('musicvideo_fanart') and not setting.get('musicvideo_extrafanart') and not setting.get('musicvideo_extrathumbs') and not setting.get('musicvideo_logo') and not setting.get('musicvideo_clearart') and not setting.get('musicvideo_discart'):
+                check_musicvideo = False
+                log('Setting check: No subsetting of musicvideo enabled')
+            else: check_musicvideo = True
+        # Check if faulty setting in centralize section
+        if setting.get('centralize_enable'):
+            if setting.get('centralfolder_movies') == '' and setting.get('centralfolder_tvshows') == '':
+                check_centralize = False
+                log('Setting check: No centralized folder chosen')
+            else: check_centralize = True
+        # Compare all setting check
+        if check_movie and check_tvshow and check_musicvideo and check_centralize:
+            settings_faulty = False
+        else: settings_faulty = True
+        # Faulty setting found
+        if settings_faulty:
+            log('Faulty setting combination found')
+            # when faulty setting detected ask to open the settings window
+            if dialog_msg('yesno', line1 = __localize__(32003), line2 = __localize__(32004), background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025)):
+                __addon__.openSettings()
+            # if not cancel the script
+            else:
+                return False
+        else:
+            return True

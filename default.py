@@ -22,7 +22,7 @@ __localize__    = __addon__.getLocalizedString
 from lib import language
 from lib.apply_filters import filter
 from lib.art_list import artype_list
-from lib.settings import get_limit, get
+from lib.settings import get_limit, get, check
 from urlparse import urlsplit
 from traceback import print_exc
 from resources.lib import provider
@@ -30,7 +30,6 @@ from resources.lib.provider import tmdb # import on behalf of searching when the
 from resources.lib.utils import *
 from resources.lib.script_exceptions import *
 from resources.lib.fileops import fileops
-from resources.lib.settings import settings
 from resources.lib.media_setup import _media_listing as media_listing
 from resources.lib.media_setup import _media_unique as media_unique
 from xml.parsers.expat import ExpatError
@@ -44,7 +43,8 @@ class Main:
 
     def __init__(self):
         self.initial_vars() 
-        self.settings._check()          # Check if there are some faulty combinations present
+        if not check():          # Check if there are some faulty combinations present
+            sys.exit(1)
         if self.initialise():
             # Check for silent background mode
             if self.silent:
@@ -123,7 +123,6 @@ class Main:
     ### Declare standard vars   
     def initial_vars(self):
         providers       = provider.get_providers()
-        self.settings   = settings()
         self.movie_providers        = providers['movie_providers']
         self.tv_providers           = providers['tv_providers']
         self.musicvideo_providers   = providers['musicvideo_providers']
