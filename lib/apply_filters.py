@@ -19,7 +19,7 @@
 
 ### import libraries
 from lib.settings import get_limit
-setting = get_limit()
+limit = get_limit()
 
 def filter(art_type, mediatype, artwork, downloaded_artwork, language, disctype = ''):
 
@@ -79,24 +79,24 @@ def fanart(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number fanart reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number fanart reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Minimal size
-    elif setting.get('limit_artwork') and 'height' in data.get('artwork') and (data.get('mediatype') == 'movie' and data.get('artwork')['height'] < setting.get('limit_size_moviefanart')) or (data.get('mediatype') == 'tvshow' and data.get('artwork')['height'] < setting.get('limit_size_tvshowfanart')):
+    elif limit.get('limit_artwork') and 'height' in data.get('artwork') and (data.get('mediatype') == 'movie' and data.get('artwork')['height'] < limit.get('limit_size_moviefanart')) or (data.get('mediatype') == 'tvshow' and data.get('artwork')['height'] < limit.get('limit_size_tvshowfanart')):
         reason = 'Size was to small: %s' % data.get('artwork')['height'] 
         limited = True
     # Minimal rating
-    elif setting.get('limit_artwork') and data.get('artwork')['rating'] < setting.get('limit_extrafanart_rating'):
+    elif limit.get('limit_artwork') and data.get('artwork')['rating'] < limit.get('limit_extrafanart_rating'):
         reason = 'Rating too low: %s' % data.get('artwork')['rating']
         limited = True
     # Has text       
-    elif setting.get('limit_artwork') and 'series_name' in data.get('artwork') and setting.get('limit_notext') and data.get('artwork')['series_name']:
+    elif limit.get('limit_artwork') and 'series_name' in data.get('artwork') and limit.get('limit_notext') and data.get('artwork')['series_name']:
         reason = 'Has text'
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
     
@@ -104,24 +104,24 @@ def extrafanart(data):
     limited = False
     reason = ''
     # Maximum number
-    if setting.get('limit_artwork') and data.get('downloaded_artwork') >= setting.get('limit_extrafanart_max'):
-        reason = 'Max number extrafanart reached: %s' % setting.get('limit_extrafanart_max')
+    if limit.get('limit_artwork') and data.get('downloaded_artwork') >= limit.get('limit_extrafanart_max'):
+        reason = 'Max number extrafanart reached: %s' % limit.get('limit_extrafanart_max')
         limited = True
     # Minimal size
-    elif setting.get('limit_artwork') and 'height' in data.get('artwork') and (data.get('mediatype') == 'movie' and data.get('artwork')['height'] < setting.get('limit_size_moviefanart')) or (data.get('mediatype') == 'tvshow' and data.get('artwork')['height'] < setting.get('limit_size_tvshowfanart')):
+    elif limit.get('limit_artwork') and 'height' in data.get('artwork') and (data.get('mediatype') == 'movie' and data.get('artwork')['height'] < limit.get('limit_size_moviefanart')) or (data.get('mediatype') == 'tvshow' and data.get('artwork')['height'] < limit.get('limit_size_tvshowfanart')):
         reason = 'Size was to small: %s' % data.get('artwork')['height'] 
         limited = True
     # Minimal rating
-    elif setting.get('limit_artwork') and data.get('artwork')['rating'] < setting.get('limit_extrafanart_rating'):
+    elif limit.get('limit_artwork') and data.get('artwork')['rating'] < limit.get('limit_extrafanart_rating'):
         reason = 'Rating too low: %s' % data.get('artwork')['rating']
         limited = True
     # Has text
-    elif setting.get('limit_artwork') and 'series_name' in data.get('artwork') and setting.get('limit_notext') and data.get('artwork')['series_name']:
+    elif limit.get('limit_artwork') and 'series_name' in data.get('artwork') and limit.get('limit_notext') and data.get('artwork')['series_name']:
         reason = 'Has text'
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
 
@@ -129,11 +129,11 @@ def extrathumbs(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_extrathumbs_max'):
-        reason = 'Max number extrathumbs reached: %s' % setting.get('limit_extrathumbs_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_extrathumbs_max'):
+        reason = 'Max number extrathumbs reached: %s' % limit.get('limit_extrathumbs_max')
         limited = True
     # Minimal size
-    elif setting.get('limit_extrathumbs') and 'height' in data.get('artwork') and data.get('artwork')['height'] < int('169'):
+    elif limit.get('limit_extrathumbs') and 'height' in data.get('artwork') and data.get('artwork')['height'] < int('169'):
         reason = 'Size was to small: %s' % data.get('artwork')['height']
         limited = True
     return [limited, reason]
@@ -142,16 +142,16 @@ def poster(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number poster reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number poster reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Minimal size
-    elif setting.get('limit_extrathumbs') and 'height' in data.get('artwork') and data.get('artwork')['height'] < int('169'):
+    elif limit.get('limit_extrathumbs') and 'height' in data.get('artwork') and data.get('artwork')['height'] < int('169'):
         reason = 'Size was to small: %s' % data.get('artwork')['height']
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
 
@@ -159,16 +159,16 @@ def seasonposter(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number seasonposter reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number seasonposter reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Minimal size
-    elif setting.get('limit_extrathumbs') and 'height' in data.get('artwork') and data.get('artwork')['height'] < int('169'):
+    elif limit.get('limit_extrathumbs') and 'height' in data.get('artwork') and data.get('artwork')['height'] < int('169'):
         reason = 'Size was to small: %s' % data.get('artwork')['height']
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
 
@@ -176,12 +176,12 @@ def banner(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number banner reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number banner reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
     
@@ -189,16 +189,16 @@ def seasonbanner(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number seasonbanner reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number seasonbanner reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Has season
     if not 'season' in data.get('artwork'):
         reason = 'No season'
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language')]:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
     
@@ -206,12 +206,12 @@ def clearlogo(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number logos reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number logos reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
     
@@ -219,12 +219,12 @@ def clearart(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number clearart reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number clearart reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
 
@@ -232,12 +232,12 @@ def characterart(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number characterart reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number characterart reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
     
@@ -245,12 +245,12 @@ def landscape(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number landscape reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number landscape reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
     
@@ -258,12 +258,12 @@ def seasonlandscape(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number seasonthumb reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number seasonthumb reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
 
@@ -271,12 +271,12 @@ def defaultthumb(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number defaultthumb reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number defaultthumb reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]        
 
@@ -284,8 +284,8 @@ def discart(data):
     limited = False
     reason = ''
     # Maximum number
-    if data.get('downloaded_artwork') >= setting.get('limit_artwork_max'):
-        reason = 'Max number discart reached: %s' % setting.get('limit_artwork_max')
+    if data.get('downloaded_artwork') >= limit.get('limit_artwork_max'):
+        reason = 'Max number discart reached: %s' % limit.get('limit_artwork_max')
         limited = True
     # Correct discnumber
     elif not data.get('artwork')['discnumber'] == '1':
@@ -296,7 +296,7 @@ def discart(data):
         reason = "Doesn't match preferred disctype: %s" % data.get('disctype')
         limited = True
     # Correct language
-    elif setting.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
-        reason = "Doesn't match preferred language: %s" % setting.get('limit_preferred_language')
+    elif limit.get('limit_artwork') and not data.get('artwork')['language'] in [data.get('language'), 'n/a']:
+        reason = "Doesn't match preferred language: %s" % limit.get('limit_preferred_language')
         limited = True
     return [limited, reason]
