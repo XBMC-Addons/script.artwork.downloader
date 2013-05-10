@@ -1,3 +1,22 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+#     Copyright (C) 2011-2013 Martijn Kaijser
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
 #import modules
 import sys
 import os
@@ -6,6 +25,8 @@ import xbmcvfs
 
 ### import libraries
 #from resources.lib.provider.base import BaseProvider
+from lib.art_list import artype_list
+from lib.settings import get_limit
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import *
 from operator import itemgetter
@@ -14,16 +35,11 @@ from resources.lib.fileops import fileops
 
 ### get addon info
 __localize__    = ( sys.modules[ "__main__" ].__localize__ )
-
+artype_list = artype_list()
+limit = get_limit()
 
 class local():
     def get_image_list(self,media_item):
-        self.settings = settings()
-        self.settings._get_general()    # Get settings from settings.xml
-        self.settings._get_artwork()    # Get settings from settings.xml
-        self.settings._get_limit()      # Get settings from settings.xml
-        self.settings._vars()           # Get some settings vars
-        self.settings._artype_list()    # Fill out the GUI and Arttype lists with enabled options
         image_list = []
         target_extrafanartdirs = []
         target_extrathumbsdirs = []
@@ -37,7 +53,7 @@ class local():
         ### Processes the bulk mode downloading of files
         i = 0
         j = 0
-        for item in self.settings.available_arttypes:
+        for item in artype_list:
             if item['bulk_enabled'] and media_item['mediatype'] == item['media_type']:
                 #log('finding: %s, arttype counter: %s'%(item['art_type'], j))
                 j += 1
@@ -49,7 +65,7 @@ class local():
                         extrafanart_file_list = xbmcvfs.listdir(extrafanart_dir)[1]
                         #log('list of extrafanart files: %s'%file_list)
                     #log('extrafanart found: %s'%len(file_list))
-                    if len(extrafanart_file_list) <= self.settings.limit_extrafanart_max:
+                    if len(extrafanart_file_list) <= limit.get('limit_extrafanart_max'):
                         i += 1
 
                 elif item['art_type'] == 'extrathumbs':
@@ -59,7 +75,7 @@ class local():
                         extrathumbs_file_list = xbmcvfs.listdir(extrathumbs_dir)[1]
                         #log('list of extrathumbs files: %s'%file_list)
                     #log('extrathumbs found: %s'%len(file_list))
-                    if len(extrathumbs_file_list) <= self.settings.limit_extrathumbs_max:
+                    if len(extrathumbs_file_list) <= limit.get('limit_extrathumbs_max'):
                         i += 1
 
                 elif item['art_type'] in ['seasonposter']:
