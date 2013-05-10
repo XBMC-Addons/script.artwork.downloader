@@ -19,6 +19,7 @@ __icon__        = __addon__.getAddonInfo('icon')
 __localize__    = __addon__.getLocalizedString
 
 ### import libraries
+from lib.apply_filters import apply_filters
 from urlparse import urlsplit
 from traceback import print_exc
 from resources.lib import language
@@ -27,7 +28,6 @@ from resources.lib.provider import tmdb # import on behalf of searching when the
 from resources.lib.utils import *
 from resources.lib.script_exceptions import *
 from resources.lib.fileops import fileops
-from resources.lib.apply_filters import apply_filters
 from resources.lib.settings import settings
 from resources.lib.media_setup import _media_listing as media_listing
 from resources.lib.media_setup import _media_unique as media_unique
