@@ -20,7 +20,7 @@ __localize__    = __addon__.getLocalizedString
 
 ### import libraries
 from lib import language
-from lib.apply_filters import apply_filters
+from lib.apply_filters import filter
 from urlparse import urlsplit
 from traceback import print_exc
 from resources.lib import provider
@@ -124,7 +124,6 @@ class Main:
     def initial_vars(self):
         providers       = provider.get_providers()
         self.settings   = settings()
-        self.filters    = apply_filters()
         self.movie_providers        = providers['movie_providers']
         self.tv_providers           = providers['tv_providers']
         self.musicvideo_providers   = providers['musicvideo_providers']
@@ -558,9 +557,9 @@ class Main:
                                 # if it's a local file use this first
                                 limited = [False, 'This is your local file']
                             elif art_type == 'discart':
-                                limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, self.media_item['disctype'])
+                                limited = filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, self.media_item['disctype'])
                             else:
-                                limited = self.filters.do_filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language)
+                                limited = filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language)
                             # Delete extrafanart when below settings and parsing the reason message
                             if limited[0] and not i == 1 and art_type in ['extrafanart', 'extrathumbs']:
                                 #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],self.media_item['name'])
