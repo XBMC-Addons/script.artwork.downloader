@@ -28,13 +28,16 @@ import lib.common
 
 ### import libraries
 from lib.script_exceptions import *
-from lib.utils import log
+from lib.utils import dialog_msg, log
 from traceback import print_exc
 from urllib2 import HTTPError, URLError
 
 ### get addon info
+__addon__        = lib.common.__addon__
 __addonprofile__ = lib.common.__addonprofile__
+__localize__     = lib.common.__localize__
 
+tempdir = os.path.join(__addonprofile__, 'temp')
 THUMBS_CACHE_PATH = xbmc.translatePath( "special://profile/Thumbnails/Video" )
 ### adjust default timeout to stop script hanging
 timeout = 10
@@ -55,13 +58,12 @@ class fileops:
         self._delete = lambda path: xbmcvfs.delete(path)
 
         self.downloadcount = 0
-        self.tempdir = os.path.join(__addonprofile__, 'temp')
-        if not self._exists(self.tempdir):
+        if not self._exists(tempdir):
             if not self._exists(__addonprofile__):
                 if not self._mkdir(__addonprofile__):
                     raise CreateDirectoryError(__addonprofile__)
-            if not self._mkdir(self.tempdir):
-                raise CreateDirectoryError(self.tempdir)
+            if not self._mkdir(tempdir):
+                raise CreateDirectoryError(tempdir)
         
     def _copy(self, source, target):
         return xbmcvfs.copy(source.encode("utf-8"), target.encode("utf-8"))
@@ -124,7 +126,7 @@ class fileops:
     # download file
     def _downloadfile(self, url, filename, targetdirs, media_name, mode = ""):
         try:
-            temppath = os.path.join(self.tempdir, filename)
+            temppath = os.path.join(tempdir, filename)
             tempfile = open(temppath, "wb")
             response = urllib2.urlopen(url)
             tempfile.write(response.read())
@@ -148,3 +150,18 @@ class fileops:
                 #targetpath = os.path.join(urllib.url2pathname(targetdir).replace('|',':'), filename)
                 targetpath = os.path.join(targetdir, filename)
                 self._copyfile(temppath, targetpath, media_name)
+                
+def cleanup():
+    if xbmcvfs.exists(tempdir):
+        dialog_msg('update', percentage = 100, line1 = __localize__(32005), background =  __addon__.getSetting('background'))
+        log('Cleaning up temp files')
+        for x in os.listdir(tempdir):
+            tempfile = os.path.join(tempdir, x)
+            xbmcvfs.delete(tempfile)
+            if xbmcvfs.exists(tempfile):
+                log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
+        xbmcvfs.rmdir(tempdir)
+        if xbmcvfs.exists(tempdir):
+            log('Error deleting temp directory: %s' % tempdir, xbmc.LOGERROR)
+        else:
+            log('Deleted temp directory: %s' % tempdir)

@@ -23,7 +23,7 @@ from lib import language
 from lib import provider
 from lib.apply_filters import filter
 from lib.art_list import artype_list
-from lib.fileops import fileops
+from lib.fileops import fileops, cleanup
 from lib.media_setup import _media_listing as media_listing
 from lib.media_setup import _media_unique as media_unique
 from lib.script_exceptions import *
@@ -117,7 +117,8 @@ class Main:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
         __addon__.setSetting(id='files_overwrite', value='false')
-        self.cleanup()
+        cleanup()
+        self.report()
 
     ### Declare standard vars   
     def initial_vars(self):
@@ -191,21 +192,7 @@ class Main:
         else:
             return True 
 
-    def cleanup(self):
-        if self.fileops._exists(self.fileops.tempdir):
-            dialog_msg('update', percentage = 100, line1 = __localize__(32005), background = setting.get('background'))
-            log('Cleaning up temp files')
-            for x in os.listdir(self.fileops.tempdir):
-                tempfile = os.path.join(self.fileops.tempdir, x)
-                self.fileops._delete(tempfile)
-                if self.fileops._exists(tempfile):
-                    log('Error deleting temp file: %s' % tempfile, xbmc.LOGERROR)
-            self.fileops._rmdir(self.fileops.tempdir)
-            if self.fileops._exists(self.fileops.tempdir):
-                log('Error deleting temp directory: %s' % self.fileops.tempdir, xbmc.LOGERROR)
-            else:
-                log('Deleted temp directory: %s' % self.fileops.tempdir)
-        
+    def report(self):
         ### log results and notify user
         # Download totals to log and to download report
         self.reportdata += ('\n - %s: %s' %(__localize__(32148), time.strftime('%d %B %Y - %H:%M')))      # Time of finish
