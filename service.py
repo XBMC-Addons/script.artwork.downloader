@@ -5,17 +5,15 @@ import time
 import xbmc
 import xbmcaddon
 import xbmcvfs
+import lib.common
 
 ### get addon info
-__addon__       = xbmcaddon.Addon(id='script.artwork.downloader')
-__addonid__     = __addon__.getAddonInfo('id')
-__addonname__   = __addon__.getAddonInfo('name')
-__author__      = __addon__.getAddonInfo('author')
-__version__     = __addon__.getAddonInfo('version')
-__addonpath__   = __addon__.getAddonInfo('path')
-__icon__        = __addon__.getAddonInfo('icon')
-__localize__    = __addon__.getLocalizedString
-__addonprofile__= xbmc.translatePath( __addon__.getAddonInfo('profile') ).decode('utf-8')
+__addon__        = lib.common.__addon__
+__addonpath__    = lib.common.__addonpath__
+__localize__     = lib.common.__localize__
+__addonname__    = lib.common.__addonname__
+__version__      = lib.common.__version__
+__addonprofile__ = lib.common.__addonprofile__
 
 #import libraries
 from resources.lib.utils import log
@@ -59,9 +57,7 @@ def autostart():
                         log('Addon already running, scheduled run aborted', xbmc.LOGNOTICE)
 
 if (__name__ == "__main__"):
-    log("######## Extrafanart Downloader Service: Initializing........................")
-    log('## Add-on ID   = %s' % str(__addonid__))
+    log("######## Artwork Downloader Service: Initializing........................")
     log('## Add-on Name = %s' % str(__addonname__))
-    log('## Authors     = %s' % str(__author__))
     log('## Version     = %s' % str(__version__))
     autostart()
