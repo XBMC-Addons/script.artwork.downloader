@@ -259,13 +259,8 @@ class Main:
         self.processeditems = 0
         for currentmedia in media_list:
             # Declare some vars
-            self.media_item = {'id': currentmedia['id'],
-                               'dbid': currentmedia['dbid'],
-                               'name': currentmedia['name'],
-                               'path': currentmedia['path'],
-                               'art': currentmedia['art'],
-                               'mediatype': currentmedia['mediatype'],
-                               'disctype': currentmedia.get('disctype','n/a')}
+            if not currentmedia.get('disctype'):
+                currentmedia['disctype'] = 'n/a'
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
                 log('XBMC abort requested, aborting')
@@ -398,17 +393,17 @@ class Main:
                 # Check for GUI mode
                 if self.mode == 'gui':
                     log('- Using GUI mode')
-                    self._gui_mode()
+                    self._gui_mode(currentmedia)
                 elif self.mode == 'custom':
                     log('- Using custom mode')
-                    self._custom_mode()
+                    self._custom_mode(currentmedia)
                 else:
                     #log('- Using bulk mode')
-                    self._download_process()
+                    self._download_process(currentmedia)
             self.processeditems += 1
 
     ### Processes the bulk mode downloading of files
-    def _download_process(self):
+    def _download_process(self, currentmedia):
         if not self.mode == 'custom':
             self.download_arttypes = []
             
@@ -419,14 +414,14 @@ class Main:
         for item in artype_list:
             if item['art_type'] in self.download_arttypes and ((setting['movie_enable'] and self.mediatype == item['media_type']) or (setting['tvshow_enable'] and self.mediatype == item['media_type']) or (setting['musicvideo_enable'] and self.mediatype == item['media_type'])):
                 if item['art_type'] == 'extrafanart':
-                    self._download_art(item['art_type'], item['filename'], self.target_extrafanartdirs,  __localize__(item['gui_string']))
+                    self._download_art(currentmedia, item['art_type'], item['filename'], self.target_extrafanartdirs,  __localize__(item['gui_string']))
                 elif item['art_type'] == 'extrathumbs':
-                    self._download_art(item['art_type'], item['filename'], self.target_extrathumbsdirs,  __localize__(item['gui_string']))
+                    self._download_art(currentmedia, item['art_type'], item['filename'], self.target_extrathumbsdirs,  __localize__(item['gui_string']))
                 else:
-                    self._download_art(item['art_type'], item['filename'], self.target_artworkdir,  __localize__(item['gui_string']))
+                    self._download_art(currentmedia, item['art_type'], item['filename'], self.target_artworkdir,  __localize__(item['gui_string']))
 
     ### Artwork downloading
-    def _download_art(self, art_type, filename, targetdirs, msg):
+    def _download_art(self, currentmedia, art_type, filename, targetdirs, msg):
         log('* Image type: %s' %art_type)
         seasonfile_presents = []
         current_artwork = 0                     # Used in progras dialog
@@ -455,7 +450,7 @@ class Main:
                                                  'type': [art_type],
                                                  'language': pref_language,
                                                  'discnumber': '1',
-                                                 'disctype': self.media_item['disctype']})
+                                                 'disctype': currentmedia['disctype']})
                     break
             # End of hack
 
@@ -476,12 +471,12 @@ class Main:
                         # Create an image info list
                         item = {'url': artwork['url'],
                                 'targetdirs': targetdirs,
-                                'media_name': self.media_item['name'],
-                                'mediatype':self.media_item['mediatype'],
+                                'media_name': currentmedia['name'],
+                                'mediatype':currentmedia['mediatype'],
                                 'artwork_string': msg,
                                 'artwork_details': artwork,
-                                'dbid':self.media_item['dbid'],
-                                'art':self.media_item['art'],
+                                'dbid':currentmedia['dbid'],
+                                'art':currentmedia['art'],
                                 'arttype':art_type}
                         # raise artwork counter only on first loop
                         if i != 1:
@@ -533,12 +528,12 @@ class Main:
                                 # if it's a local file use this first
                                 limited = [False, 'This is your local file']
                             elif art_type == 'discart':
-                                limited = filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, self.media_item['disctype'])
+                                limited = filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language, currentmedia['disctype'])
                             else:
                                 limited = filter(art_type, self.mediatype, item['artwork_details'], limit_counter, pref_language)
                             # Delete extrafanart when below settings and parsing the reason message
                             if limited[0] and not i == 1 and art_type in ['extrafanart', 'extrathumbs']:
-                                #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],self.media_item['name'])
+                                #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],currentmedia['name'])
                                 pass
                             # Just ignore image when it's below settings
                             elif limited[0]:
@@ -574,7 +569,7 @@ class Main:
                                 if limited[0] and imageignore and i == 1:
                                     for targetdir in item['targetdirs']:
                                         if not self.fileops._exists(os.path.join (targetdir, item['filename'])) and not art_type in ['extrafanart', 'extrathumbs']:
-                                            self.failed_items.append('[%s] %s %s' % (self.media_item['name'], art_type, __localize__(32147)))
+                                            self.failed_items.append('[%s] %s %s' % (currentmedia['name'], art_type, __localize__(32147)))
                             # Do some special check on season artwork
                             if art_type == 'seasonlandscape' or art_type == 'seasonbanner' or art_type   == 'seasonposter':
                                 # If already present in list set limit on 1 so it is skipped
@@ -596,7 +591,7 @@ class Main:
                     i += 2
             # Add to failed items if 0
             if current_artwork == 0:
-                self.failed_items.append('[%s] %s %s' % (self.media_item['name'], art_type, __localize__(32022)))
+                self.failed_items.append('[%s] %s %s' % (currentmedia['name'], art_type, __localize__(32022)))
             # Print log message number of found images per art type
             log(' - Found a total of: %s %s' % (current_artwork, art_type))
             # End of language shit
@@ -690,7 +685,7 @@ class Main:
         return found
 
     ### This handles the GUI image type selector part
-    def _gui_mode(self):
+    def _gui_mode(self, currentmedia):
         # Close the 'checking for artwork' dialog before opening the GUI list
         dialog_msg('close', background = setting['background'])
         
@@ -746,7 +741,7 @@ class Main:
             if self._choose_image(imagelist):
                 # Create a progress dialog so you can see the progress, Send the selected image for processing, Initiate the batch download
                 dialog_msg('create')
-                self._download_art(self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
+                self._download_art(currentmedia, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
                 self._batch_download(self.download_list)
                 # When not succesfull show failure dialog
                 if not self.download_art_succes:
@@ -754,7 +749,7 @@ class Main:
         # When no images found or nothing selected
         if not imagelist and not self.gui_selected_type == '':
             log('- No artwork found')
-            dialog_msg('okdialog', line1 = self.media_item['name'] , line2 = self.gui_selected_msg + ' ' + __localize__(32022))
+            dialog_msg('okdialog', line1 = currentmedia['name'] , line2 = self.gui_selected_msg + ' ' + __localize__(32022))
         # When download succesfull
         elif self.download_art_succes:
             log('- Download succesfull')
@@ -785,7 +780,7 @@ class Main:
             else:
                 return False
 
-    def _custom_mode(self):
+    def _custom_mode(self, currentmedia):
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
@@ -810,7 +805,7 @@ class Main:
                     dialog_msg('create')
                     for item in artype_list:
                         if gui_arttype == item['art_type']:
-                            self._download_art(item['art_type'], item['filename'], self.target_artworkdir, __localize__(item['gui_string']))
+                            self._download_art(currentmedia, item['art_type'], item['filename'], self.target_artworkdir, __localize__(item['gui_string']))
                             break
                     self._batch_download(self.download_list)
                     if not self.download_art_succes:
@@ -821,13 +816,13 @@ class Main:
                     log('- Cancelled')
                     self.cancelled = True
             else:
-                self._download_process()
+                self._download_process(currentmedia)
                 log('- More than 1 image available')
 
         # If more than one specified
         else:
             log('- Start custom bulkmode')
-            self._download_process()
+            self._download_process(currentmedia)
 
     # Return the selected url to the GUI part
     def _choose_image(self, imagelist):
