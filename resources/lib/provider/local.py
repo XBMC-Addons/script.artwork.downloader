@@ -30,8 +30,6 @@ from lib.settings import get_limit
 from resources.lib.script_exceptions import NoFanartError
 from resources.lib.utils import *
 from operator import itemgetter
-from resources.lib.settings import settings
-from resources.lib.fileops import fileops
 
 ### get addon info
 __localize__    = ( sys.modules[ "__main__" ].__localize__ )
