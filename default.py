@@ -25,10 +25,11 @@ from lib.fileops import fileops, cleanup
 from lib.gui import gui_imagelist
 from lib.media_setup import _media_listing as media_listing
 from lib.media_setup import _media_unique as media_unique
-from lib.script_exceptions import *
-from lib.settings import get_limit, get, check
 from lib.provider import tmdb # import on behalf of searching when there's no ID
 from lib.provider.local import local
+from lib.report import create_report
+from lib.script_exceptions import *
+from lib.settings import get_limit, get, check
 from lib.utils import *
 from traceback import print_exc
 from urlparse import urlsplit
@@ -51,7 +52,6 @@ class Main:
                 setting['notify'] = False
             # Check for gui mode
             elif self.mode == 'gui':
-                setting['background']
                 setting['background'] = True
                 setting['notify'] = False
                 setting['files_overwrite'] = True
@@ -197,21 +197,8 @@ class Main:
         global setting
         ### log results and notify user
         # Download totals to log and to download report
-        self.reportdata += ('\n - %s: %s' %(__localize__(32148), time.strftime('%d %B %Y - %H:%M')))      # Time of finish
-        self.reportdata += ('\n[B]%s:[/B]' %(__localize__(32020)))                                        # Download total header
-        self.reportdata += ('\n - %s: %s' % (__localize__(32014), self.download_counter['Total Artwork']))# Total downloaded items
-        # Cycle through the download totals
-        for artwork_type in self.download_counter:
-            if not artwork_type == 'Total Artwork':
-                self.reportdata += '\n - %s: %s' % (artwork_type, self.download_counter[artwork_type])
-        self.reportdata += '\n[B]%s:[/B]' %__localize__(32016)                                              # Failed items header
-        # Cycle through the download totals
-        if not self.failed_items:
-            self.reportdata += '\n - %s' %__localize__(32149)                                               # No failed or missing items found
-        else:
-            # use  list(sorted(set(mylist)))  to get unique items
-            for item in list(sorted(set(self.failed_items))):
-                self.reportdata += '\n - %s' %item
+        create_report(self.reportdata, self.download_counter, self.failed_items)
+
         # Build dialog messages
         summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32020)
         summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32020)
@@ -220,10 +207,6 @@ class Main:
         # Close dialog in case it was open before doing a notification
         time.sleep(2)
         dialog_msg('close', background = setting['background'])
-        # Print the self.reportdata log message
-        #log('Failed items report: %s' % self.reportdata.replace('[B]', '').replace('[/B]', ''))
-        # Safe the downloadreport to settings folder using save function
-        save_nfo_file(self.reportdata, os.path.join(__addonprofile__ , 'downloadreport.txt'))
         # Some dialog checks
         if setting['notify']:
             log('Notify on finished/error enabled')
@@ -243,7 +226,6 @@ class Main:
                 if dialog_msg('yesno', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = setting['background'], nolabel = __localize__(32027), yeslabel = __localize__(32028)):
                     runcmd = os.path.join(__addonpath__, 'lib/viewer.py')
                     xbmc.executebuiltin('XBMC.RunScript (%s,%s) '%(runcmd, 'downloadreport'))
-                    
         else:
             dialog_msg('okdialog', line1 = __localize__(32010), line2 = summary, background = setting['background'])
         # Container refresh
