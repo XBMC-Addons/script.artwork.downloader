@@ -82,7 +82,6 @@ def get():
                'musicvideo_logo':          __addon__.getSetting("musicvideo_logo")       == 'true',
                'musicvideo_clearart':      __addon__.getSetting("musicvideo_clearart")   == 'true',
                'musicvideo_discart':       __addon__.getSetting("musicvideo_discart")    == 'true'}
-    print setting
     return setting
 
 def get_limit():
