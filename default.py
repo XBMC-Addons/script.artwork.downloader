@@ -302,34 +302,35 @@ class Main:
                 for item in local_list:
                     self.image_list.append(item)            
             # Declare the target folders
-            self.target_extrafanartdirs = []
-            self.target_extrathumbsdirs = []
-            self.target_artworkdir = []
+            artworkdir = []
+            extrafanartdirs = []
+            extrathumbsdirs = []
             for item in currentmedia['path']:
                 artwork_dir = os.path.join(item + '/')
                 extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
                 extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
-                self.target_artworkdir.append(artwork_dir.replace('BDMV','').replace('VIDEO_TS',''))
-                self.target_extrafanartdirs.append(extrafanart_dir)
-                self.target_extrathumbsdirs.append(extrathumbs_dir)
-            
+                artworkdir.append(artwork_dir.replace('BDMV','').replace('VIDEO_TS',''))
+                extrafanartdirs.append(extrafanart_dir)
+                extrathumbsdirs.append(extrathumbs_dir)
             # Check if using the centralize option
             if setting['centralize_enable']:
                 if currentmedia['mediatype'] == 'tvshow':
                     self.target_extrafanartdirs.append(setting['centralfolder_tvshows'])
                 elif currentmedia['mediatype'] == 'movie':
                     self.target_extrafanartdirs.append(setting['centralfolder_movies'])
-
+            currentmedia['artworkdir'] = artworkdir
+            currentmedia['extrafanartdirs'] = extrafanartdirs
+            currentmedia['extrathumbsdirs'] = extrathumbsdirs
             # Check for presence of id used by source sites
             if self.mode == 'gui' and ((currentmedia['id'] == '') or (currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'))):
                 dialog_msg('close', background = setting['background'])
                 dialog_msg('okdialog','' ,currentmedia['name'] , __localize__(32030))
             elif currentmedia['id'] == '':
                 log('- No ID found, skipping')
-                self.failed_items.append('[%s] ID %s' %(currentmedia['name'], __localize__(32022)))
+                failed_items.append('[%s] ID %s' %(currentmedia['name'], __localize__(32022)))
             elif currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'):
                 log('- IMDB ID found for TV show, skipping')
-                self.failed_items.append('[%s]: TVDB ID %s' %(currentmedia['name'], __localize__(32022)))
+                failed_items.append('[%s]: TVDB ID %s' %(currentmedia['name'], __localize__(32022)))
 
             # If correct ID found continue
             else:
@@ -414,11 +415,11 @@ class Main:
         for item in artype_list:
             if item['art_type'] in self.download_arttypes and ((setting['movie_enable'] and self.mediatype == item['media_type']) or (setting['tvshow_enable'] and self.mediatype == item['media_type']) or (setting['musicvideo_enable'] and self.mediatype == item['media_type'])):
                 if item['art_type'] == 'extrafanart':
-                    self._download_art(currentmedia, item['art_type'], item['filename'], self.target_extrafanartdirs,  __localize__(item['gui_string']))
+                    self._download_art(currentmedia, item['art_type'], item['filename'], currentmedia['extrafanartdirs'],  __localize__(item['gui_string']))
                 elif item['art_type'] == 'extrathumbs':
-                    self._download_art(currentmedia, item['art_type'], item['filename'], self.target_extrathumbsdirs,  __localize__(item['gui_string']))
+                    self._download_art(currentmedia, item['art_type'], item['filename'], currentmedia['extrathumbsdirs'],  __localize__(item['gui_string']))
                 else:
-                    self._download_art(currentmedia, item['art_type'], item['filename'], self.target_artworkdir,  __localize__(item['gui_string']))
+                    self._download_art(currentmedia, item['art_type'], item['filename'], currentmedia['artworkdir'],  __localize__(item['gui_string']))
 
     ### Artwork downloading
     def _download_art(self, currentmedia, art_type, filename, targetdirs, msg):
@@ -741,7 +742,7 @@ class Main:
             if self._choose_image(imagelist):
                 # Create a progress dialog so you can see the progress, Send the selected image for processing, Initiate the batch download
                 dialog_msg('create')
-                self._download_art(currentmedia, self.gui_selected_type, self.gui_selected_filename, self.target_artworkdir, self.gui_selected_msg)
+                self._download_art(currentmedia, self.gui_selected_type, self.gui_selected_filename, currentmedia['artworkdir'], self.gui_selected_msg)
                 self._batch_download(self.download_list)
                 # When not succesfull show failure dialog
                 if not self.download_art_succes:
@@ -805,7 +806,7 @@ class Main:
                     dialog_msg('create')
                     for item in artype_list:
                         if gui_arttype == item['art_type']:
-                            self._download_art(currentmedia, item['art_type'], item['filename'], self.target_artworkdir, __localize__(item['gui_string']))
+                            self._download_art(currentmedia, item['art_type'], item['filename'], currentmedia['artworkdir'], __localize__(item['gui_string']))
                             break
                     self._batch_download(self.download_list)
                     if not self.download_art_succes:
