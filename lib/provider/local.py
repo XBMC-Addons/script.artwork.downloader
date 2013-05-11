@@ -26,9 +26,9 @@ import xbmcvfs
 ### import libraries
 #from resources.lib.provider.base import BaseProvider
 from lib.art_list import artype_list
+from lib.script_exceptions import NoFanartError
 from lib.settings import get_limit
-from resources.lib.script_exceptions import NoFanartError
-from resources.lib.utils import *
+from lib.utils import *
 from operator import itemgetter
 
 ### get addon info

@@ -20,7 +20,7 @@
 #import modules
 import lib.common
 import xbmcgui
-from resources.lib.utils import log
+from lib.utils import log
 
 ### get addon info
 __addonpath__    = lib.common.__addonpath__
@@ -28,6 +28,54 @@ __localize__     = lib.common.__localize__
 
 ### set button actions for GUI
 ACTION_PREVIOUS_MENU = (9, 10, 92, 216, 247, 257, 275, 61467, 61448)
+
+# Define dialogs
+def dialog_msg(action,
+               percentage = 0,
+               line0 = '',
+               line1 = '',
+               line2 = '',
+               line3 = '',
+               background = False,
+               nolabel = __localize__(32026),
+               yeslabel = __localize__(32025),
+               cancelled = False):
+    # Fix possible unicode errors 
+    line0 = line0.encode('utf-8', 'ignore')
+    line1 = line1.encode('utf-8', 'ignore')
+    line2 = line2.encode('utf-8', 'ignore')
+    line3 = line3.encode('utf-8', 'ignore')
+
+    # Dialog logic
+    if not line0 == '':
+        line0 = __addonname__ + line0
+    else:
+        line0 = __addonname__
+    if not background:
+        if action == 'create':
+            dialog.create(__addonname__, line1, line2, line3)
+        if action == 'update':
+            dialog.update(percentage, line1, line2, line3)
+        if action == 'close':
+            dialog.close()
+        if action == 'iscanceled':
+            if dialog.iscanceled():
+                return True
+            else:
+                return False
+        if action == 'okdialog':
+            xbmcgui.Dialog().ok(line0, line1, line2, line3)
+        if action == 'yesno':
+            return xbmcgui.Dialog().yesno(line0, line1, line2, line3, nolabel, yeslabel)
+    if background:
+        if (action == 'create' or action == 'okdialog'):
+            if line2 == '':
+                msg = line1
+            else:
+                msg = line1 + ': ' + line2
+            if cancelled == False:
+                xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (line0, msg, __icon__))
+
 
 # Pass the imagelist to the dialog and return the selection
 def dialog_select(image_list):

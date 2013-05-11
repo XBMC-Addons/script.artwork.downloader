@@ -20,27 +20,26 @@ __localize__    = __addon__.getLocalizedString
 
 ### import libraries
 from lib import language
+from lib import provider
 from lib.apply_filters import filter
 from lib.art_list import artype_list
+from lib.fileops import fileops
+from lib.media_setup import _media_listing as media_listing
+from lib.media_setup import _media_unique as media_unique
+from lib.script_exceptions import *
 from lib.settings import get_limit, get, check
-from urlparse import urlsplit
+from lib.provider import tmdb # import on behalf of searching when there's no ID
+from lib.provider.local import local
+from lib.utils import *
 from traceback import print_exc
-from resources.lib import provider
-from resources.lib.provider import tmdb # import on behalf of searching when there's no ID
-from resources.lib.utils import *
-from resources.lib.script_exceptions import *
-from resources.lib.fileops import fileops
-from resources.lib.media_setup import _media_listing as media_listing
-from resources.lib.media_setup import _media_unique as media_unique
+from urlparse import urlsplit
 from xml.parsers.expat import ExpatError
-from resources.lib.provider.local import local
 
 limit = get_limit()
 setting = get()
 artype_list = artype_list()
 
 class Main:
-
     def __init__(self):
         self.initial_vars() 
         if not check():          # Check if there are some faulty combinations present

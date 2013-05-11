@@ -1,21 +1,41 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+#     Copyright (C) 2011-2013 Martijn Kaijser
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
 #import modules
 import os
 import socket
-import urllib2
 import urllib
+import urllib2
 import xbmc
 import xbmcvfs
+import lib.common
 
 ### import libraries
+from lib.script_exceptions import *
+from lib.utils import log
 from traceback import print_exc
 from urllib2 import HTTPError, URLError
-from resources.lib.script_exceptions import *
-from resources.lib import utils
-from resources.lib.settings import settings
-from resources.lib.utils import log
+
+### get addon info
+__addonprofile__ = lib.common.__addonprofile__
+
 THUMBS_CACHE_PATH = xbmc.translatePath( "special://profile/Thumbnails/Video" )
-
-
 ### adjust default timeout to stop script hanging
 timeout = 10
 socket.setdefaulttimeout(timeout)
@@ -29,19 +49,17 @@ class fileops:
 
     def __init__(self):
         log("Setting up fileops")
-        self.settings = settings()
-        self.settings._get_general()
         self._exists = lambda path: xbmcvfs.exists(path)
         self._rmdir = lambda path: xbmcvfs.rmdir(path)
         self._mkdir = lambda path: xbmcvfs.mkdir(path)
         self._delete = lambda path: xbmcvfs.delete(path)
 
         self.downloadcount = 0
-        self.tempdir = os.path.join(utils.__addonprofile__, 'temp')
+        self.tempdir = os.path.join(__addonprofile__, 'temp')
         if not self._exists(self.tempdir):
-            if not self._exists(utils.__addonprofile__):
-                if not self._mkdir(utils.__addonprofile__):
-                    raise CreateDirectoryError(utils.__addonprofile__)
+            if not self._exists(__addonprofile__):
+                if not self._mkdir(__addonprofile__):
+                    raise CreateDirectoryError(__addonprofile__)
             if not self._mkdir(self.tempdir):
                 raise CreateDirectoryError(self.tempdir)
         
@@ -130,5 +148,3 @@ class fileops:
                 #targetpath = os.path.join(urllib.url2pathname(targetdir).replace('|',':'), filename)
                 targetpath = os.path.join(targetdir, filename)
                 self._copyfile(temppath, targetpath, media_name)
-                #if self.settings.xbmc_caching_enabled or mode in ['gui','customgui']:
-                #    self.erase_current_cache(targetpath)
