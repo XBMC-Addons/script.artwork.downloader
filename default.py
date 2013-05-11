@@ -6,17 +6,15 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import time
+import lib.common
 
 ### get addon info
-__addon__       = xbmcaddon.Addon(id='script.artwork.downloader')
-__addonid__     = __addon__.getAddonInfo('id')
-__addonname__   = __addon__.getAddonInfo('name')
-__author__      = __addon__.getAddonInfo('author')
-__version__     = __addon__.getAddonInfo('version')
-__addonpath__   = __addon__.getAddonInfo('path')
-__addonprofile__= xbmc.translatePath(__addon__.getAddonInfo('profile')).decode('utf-8')
-__icon__        = __addon__.getAddonInfo('icon')
-__localize__    = __addon__.getLocalizedString
+__addon__        = lib.common.__addon__
+__addonname__    = lib.common.__addonname__
+__addonpath__    = lib.common.__addonpath__
+__addonprofile__ = lib.common.__addonprofile__
+__localize__     = lib.common.__localize__
+__version__      = lib.common.__version__
 
 ### import libraries
 from lib import language
@@ -840,9 +838,7 @@ class Main:
 ### Start of script
 if (__name__ == '__main__'):
     log('######## Artwork Downloader: Initializing...............................', xbmc.LOGNOTICE)
-    log('## Add-on ID   = %s' % str(__addonid__), xbmc.LOGNOTICE)
     log('## Add-on Name = %s' % str(__addonname__), xbmc.LOGNOTICE)
-    log('## Authors     = %s' % str(__author__), xbmc.LOGNOTICE)
     log('## Version     = %s' % str(__version__), xbmc.LOGNOTICE)
     Main()
     log('script stopped', xbmc.LOGNOTICE)
