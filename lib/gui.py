@@ -93,6 +93,16 @@ def dialog_select(image_list):
         return selected_item
     del w
 
+### Retrieves imagelist for GUI solo mode
+def gui_imagelist(image_list, art_type):
+    log('- Retrieving image list for GUI')
+    filteredlist = []
+    #retrieve list
+    for artwork in image_list:
+        if  art_type == artwork['type'][0]:
+            filteredlist.append(artwork)
+    return filteredlist
+    
 class dialog_select_UI(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
         xbmcgui.WindowXMLDialog.__init__(self)
