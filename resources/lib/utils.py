@@ -1,4 +1,5 @@
 #import modules
+import lib.common
 import socket
 import xbmc
 import xbmcgui
@@ -7,12 +8,10 @@ import urllib2
 import sys
 
 ### get addon info
-__addon__       = ( sys.modules[ "__main__" ].__addon__ )
-__addonname__   = ( sys.modules[ "__main__" ].__addonname__ )
-__icon__        = ( sys.modules[ "__main__" ].__icon__ )
-__localize__    = ( sys.modules[ "__main__" ].__localize__ )
-__addonprofile__= ( sys.modules[ "__main__" ].__addonprofile__ )
-
+__addon__        = lib.common.__addon__
+__addonname__    = lib.common.__addonname__
+__icon__         = lib.common.__icon__
+__localize__     = lib.common.__localize__
 
 ### import libraries
 from urllib2 import HTTPError, URLError
