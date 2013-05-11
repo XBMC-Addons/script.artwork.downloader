@@ -16,8 +16,8 @@ __version__      = lib.common.__version__
 __addonprofile__ = lib.common.__addonprofile__
 
 #import libraries
-from resources.lib.utils import log
 from lib.settings import get
+from lib.utils import log
 setting = get()
 
 # starts update/sync
