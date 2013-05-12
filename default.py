@@ -39,6 +39,7 @@ limit = get_limit()
 setting = get()
 artype_list = artype_list()
 startup = {}
+download_list = []
 
 class Main:
     def __init__(self):
@@ -71,7 +72,7 @@ class Main:
                     elif startup['mediatype'] == 'musicvideo':
                         self.download_artwork(self.Medialist, providers['musicvideo_providers'])
                     if not dialog_msg('iscanceled', background = setting['background']) and not (startup['mode'] == 'customgui' or startup['mode'] == 'gui'):
-                        self._batch_download(self.download_list)
+                        self._batch_download(download_list)
                 else:
                     # If no medianame specified
                     # 1. Check what media type was specified, 2. Retrieve library list, 3. Enable the correct type, 4. Do the API stuff
@@ -91,7 +92,7 @@ class Main:
                         self.Medialist = media_listing('musicvideo')
                         self.download_artwork(self.Medialist, providers['musicvideo_providers'])
                     if not dialog_msg('iscanceled', background = setting['background']):
-                        self._batch_download(self.download_list)
+                        self._batch_download(download_list)
             # No mediatype is specified
             else:
                 # activate movie/tvshow/musicvideo for custom run
@@ -116,7 +117,7 @@ class Main:
                     self.download_artwork(self.Medialist, providers['musicvideo_providers'])
                 # If not cancelled throw the whole downloadlist into the batch downloader
                 if not dialog_msg('iscanceled', background = setting['background']):
-                    self._batch_download(self.download_list)
+                    self._batch_download(download_list)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
@@ -136,7 +137,6 @@ class Main:
         self.reportdata = '[B]Artwork Downloader:[/B]'
         self.gui_selected_type = ''
         self.failed_items = []
-        self.download_list = []
         self.download_art_succes = False
         self.cancelled = False
 
@@ -383,6 +383,7 @@ class Main:
         imagefound = False                      # Set found image false
         imageignore = False                     # Set ignaore image false
         missingfiles = False
+        global download_list
         final_image_list = []
         if startup['mode'] in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
             final_image_list.append(self.image_item)
@@ -471,7 +472,7 @@ class Main:
                         # Continue
                         if startup['mode'] in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
                             # Add image to download list
-                            self.download_list.append(item)
+                            download_list.append(item)
                             # jump out of the loop
                             imagefound = True
                         else:
@@ -495,7 +496,7 @@ class Main:
                                 # Always add to list when set to overwrite
                                 if setting['files_overwrite']:
                                     log(' - Adding to download list (overwrite enabled): %s' % item['filename'])
-                                    self.download_list.append(item)
+                                    download_list.append(item)
                                     imagefound = True
                                 else:
                                     artcheck = item['art']
@@ -511,7 +512,7 @@ class Main:
                                         # If missing add to list
                                         imagefound = True 
                                         log(' - Adding to download list (does not exist in all target directories): %s' % item['filename'])
-                                        self.download_list.append(item)
+                                        download_list.append(item)
                                     else:
                                         imagefound = True
                                         log(' - Ignoring (Exists in all target directories): %s' % item['filename'])
@@ -697,7 +698,7 @@ class Main:
                         'filename': self.gui_selected_filename,
                         'gui_string': self.gui_selected_msg}]
                 self._download_art(currentmedia, item, currentmedia['artworkdir'])
-                self._batch_download(self.download_list)
+                self._batch_download(download_list)
                 # When not succesfull show failure dialog
                 if not self.download_art_succes:
                     dialog_msg('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007))
@@ -763,7 +764,7 @@ class Main:
                         if gui_arttype == item['art_type']:
                             self._download_art(currentmedia, item, currentmedia['artworkdir'])
                             break
-                    self._batch_download(self.download_list)
+                    self._batch_download(download_list)
                     if not self.download_art_succes:
                         dialog_msg('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007))
                 if self.download_art_succes:
