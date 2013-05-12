@@ -38,6 +38,7 @@ from xml.parsers.expat import ExpatError
 limit = get_limit()
 setting = get()
 artype_list = artype_list()
+startup = {}
 
 class Main:
     def __init__(self):
@@ -46,28 +47,29 @@ class Main:
         self.initial_vars()
         if self.initialise():
             global setting
+            global startup
             # Check for silent background mode
-            if self.silent:
+            if startup['silent']:
                 setting['background'] = True
                 setting['notify'] = False
             # Check for gui mode
-            elif self.mode == 'gui':
+            elif startup['mode'] == 'gui':
                 setting['background'] = True
                 setting['notify'] = False
                 setting['files_overwrite'] = True
             dialog_msg('create', line1 = __localize__(32008), background = setting['background'])
             # Check if mediatype is specified
-            if not self.mediatype == '':
+            if startup['mediatype']:
                 # Check if dbid is specified
-                if not self.dbid == '':
-                    self.Medialist = media_unique(self.mediatype,self.dbid)
-                    if  self.mediatype == 'movie':
+                if startup['dbid']:
+                    self.Medialist = media_unique(startup['mediatype'],startup['dbid'])
+                    if startup['mediatype'] == 'movie':
                         self.download_artwork(self.Medialist, self.movie_providers)
-                    elif self.mediatype == 'tvshow':
+                    elif startup['mediatype'] == 'tvshow':
                         self.download_artwork(self.Medialist, self.tv_providers)
-                    elif self.mediatype == 'musicvideo':
+                    elif startup['mediatype'] == 'musicvideo':
                         self.download_artwork(self.Medialist, self.musicvideo_providers)
-                    if not dialog_msg('iscanceled', background = setting['background']) and not (self.mode == 'customgui' or self.mode == 'gui'):
+                    if not dialog_msg('iscanceled', background = setting['background']) and not (startup['mode'] == 'customgui' or startup['mode'] == 'gui'):
                         self._batch_download(self.download_list)
                 else:
                     # If no medianame specified
@@ -75,15 +77,15 @@ class Main:
                     setting['movie_enable'] = False
                     setting['tvshow_enable'] = False
                     setting['musicvideo_enable'] = False
-                    if self.mediatype == 'movie':
+                    if startup['mediatype'] == 'movie':
                         setting['movie_enable'] = True
                         self.Medialist = media_listing('movie')
                         self.download_artwork(self.Medialist, self.movie_providers)
-                    elif self.mediatype == 'tvshow':
+                    elif startup['mediatype'] == 'tvshow':
                         setting['tvshow_enable'] = True
                         self.Medialist = media_listing('tvshow')
                         self.download_artwork(self.Medialist, self.tv_providers)
-                    elif self.mediatype == 'musicvideo':
+                    elif startup['mediatype'] == 'musicvideo':
                         setting['musicvideo_enable'] = True
                         self.Medialist = media_listing('musicvideo')
                         self.download_artwork(self.Medialist, self.musicvideo_providers)
@@ -92,7 +94,7 @@ class Main:
             # No mediatype is specified
             else:
                 # activate movie/tvshow/musicvideo for custom run
-                if self.mode == 'custom':
+                if startup['mode'] == 'custom':
                     setting['movie_enable'] = True
                     setting['tvshow_enable'] = True
                     setting['musicvideo_enable'] = True
@@ -100,16 +102,16 @@ class Main:
                 # 1. Check if enable, 2. Get library list, 3. Set mediatype, 4. Do the API stuff
                 # Do this for each media type
                 if setting['movie_enable'] and not dialog_msg('iscanceled', background = True):
-                    self.mediatype = 'movie'
-                    self.Medialist = media_listing(self.mediatype)
+                    startup['mediatype'] = 'movie'
+                    self.Medialist = media_listing(startup['mediatype'])
                     self.download_artwork(self.Medialist, self.movie_providers)
                 if setting['tvshow_enable'] and not dialog_msg('iscanceled', background = True):
-                    self.mediatype = 'tvshow'
-                    self.Medialist = media_listing(self.mediatype)
+                    startup['mediatype'] = 'tvshow'
+                    self.Medialist = media_listing(startup['mediatype'])
                     self.download_artwork(self.Medialist, self.tv_providers)
                 if setting['musicvideo_enable'] and not dialog_msg('iscanceled', background = True):
-                    self.mediatype = 'musicvideo'
-                    self.Medialist = media_listing(self.mediatype)
+                    startup['mediatype'] = 'musicvideo'
+                    self.Medialist = media_listing(startup['mediatype'])
                     self.download_artwork(self.Medialist, self.musicvideo_providers)
                 # If not cancelled throw the whole downloadlist into the batch downloader
                 if not dialog_msg('iscanceled', background = setting['background']):
@@ -123,6 +125,11 @@ class Main:
 
     ### Declare standard vars   
     def initial_vars(self):
+        global startup
+        startup = {'mediatype': False,
+                   'dbid': False,
+                   'mode': False,
+                   'silent': False}
         providers       = provider.get_providers()
         self.movie_providers        = providers['movie_providers']
         self.tv_providers           = providers['tv_providers']
@@ -130,12 +137,6 @@ class Main:
         self.download_counter       = {}
         self.download_counter['Total Artwork'] = 0
         self.reportdata = '[B]Artwork Downloader:[/B]'
-        self.mediatype = ''
-        self.medianame = ''
-        self.mediapath = ''
-        self.dbid = ''
-        self.mode = ''
-        self.silent = ''
         self.gui_selected_type = ''
         self.failed_items = []
         self.download_list = []
@@ -144,46 +145,19 @@ class Main:
 
     ### load settings and initialise needed directories
     def initialise(self):
-        log('## Checking for script arguments')
-        try:
-            log('## arg 0: %s' % sys.argv[0])
-            log('## arg 1: %s' % sys.argv[1])
-            log('## arg 2: %s' % sys.argv[2])
-            log('## arg 3: %s' % sys.argv[3])
-        except:
-            pass
+        global startup
         log('## Checking for downloading mode...')
+        args = ['silent', 'mode', 'mediatype', 'dbid']
         for item in sys.argv:
-            # Check for download mode
-            match = re.search('silent=(.*)' , item)
-            if match:
-                self.silent = match.group(1)
-            # Check for download mode
-            match = re.search('mode=(.*)' , item)
-            if match:
-                self.mode = match.group(1)
-            # Check for mediatype mode
-            match = re.search('mediatype=(.*)' , item)
-            if match:
-                self.mediatype = match.group(1)
-                if self.mediatype == 'tvshow' or self.mediatype == 'movie' or self.mediatype == 'musicvideo':
-                    pass
-                else:
-                    log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
-                    return False
-            # Check for download mode
-            match = re.search('dbid=(.*)' , item)
-            if match:
-                self.dbid = match.group(1)
-            # Check for medianame
-            match = re.search('medianame=(.*)' , item)
-            if match:
-                self.medianame = match.group(1).lstrip(' " ').rstrip(' " ')
-            # Check for mediapath
-            match = re.search('mediapath=(.*)' , item)
-            if match:
-                self.mediapath = match.group(1).lstrip(' " ').rstrip(' "/\ ')
-                log('matchgroup: %s' %self.mediapath)
+            arg = item.split('=')
+            i = arg[0]
+            if arg[0] in args:
+                j = arg[1]
+                startup.update({arg[0]:arg[1]})
+        print startup['mediatype']
+        if startup['mediatype'] and startup['mediatype'] not in ['tvshow', 'movie', 'musicvideo']:
+            log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
+            return False
         try:
             # Creates temp folder
             self.fileops = fileops()
@@ -211,7 +185,7 @@ class Main:
         if setting['notify']:
             log('Notify on finished/error enabled')
             setting['background'] = False
-        if xbmc.Player().isPlayingVideo() or self.silent or self.mode == 'gui' or self.mode == 'customgui' or self.mode == 'custom':
+        if xbmc.Player().isPlayingVideo() or startup['silent'] or startup['mode'] == 'gui' or startup['mode'] == 'customgui' or startup['mode'] == 'custom':
             log('Silent finish because of playing a video or silent mode')
             setting['background'] = True
         if not setting['failcount'] < setting['failthreshold']:
@@ -229,7 +203,7 @@ class Main:
         else:
             dialog_msg('okdialog', line1 = __localize__(32010), line2 = summary, background = setting['background'])
         # Container refresh
-        if self.mode in ['gui','customgui']:
+        if startup['mode'] in ['gui','customgui']:
             if self.download_art_succes:
                 xbmc.executebuiltin('Container.Refresh')
                 #xbmc.executebuiltin('XBMC.ReloadSkin()')
@@ -302,7 +276,7 @@ class Main:
             currentmedia['extrafanartdirs'] = extrafanartdirs
             currentmedia['extrathumbsdirs'] = extrathumbsdirs
             # Check for presence of id used by source sites
-            if self.mode == 'gui' and ((currentmedia['id'] == '') or (currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'))):
+            if startup['mode'] == 'gui' and ((currentmedia['id'] == '') or (currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'))):
                 dialog_msg('close', background = setting['background'])
                 dialog_msg('okdialog','' ,currentmedia['name'] , __localize__(32030))
             elif currentmedia['id'] == '':
@@ -323,7 +297,7 @@ class Main:
                     artwork_result = ''
                     xmlfailcount = 0
                     #skip skanning for more if local files have been found and not run in gui / custom mode
-                    if not scan_more and not self.mode in ['gui', 'custom']:
+                    if not scan_more and not startup['mode'] in ['gui', 'custom']:
                         artwork_result = 'pass'
                     while not artwork_result == 'pass' and not artwork_result == 'skipping':
                         if artwork_result == 'retrying':
@@ -372,10 +346,10 @@ class Main:
                 else:
                     self.download_max = len(self.image_list)
                 # Check for GUI mode
-                if self.mode == 'gui':
+                if startup['mode'] == 'gui':
                     log('- Using GUI mode')
                     self._gui_mode(currentmedia)
-                elif self.mode == 'custom':
+                elif startup['mode'] == 'custom':
                     log('- Using custom mode')
                     self._custom_mode(currentmedia)
                 else:
@@ -385,15 +359,15 @@ class Main:
 
     ### Processes the bulk mode downloading of files
     def _download_process(self, currentmedia):
-        if not self.mode == 'custom':
+        if not startup['mode'] == 'custom':
             self.download_arttypes = []
             
             for item in artype_list:
-                if item['bulk_enabled'] and self.mediatype == item['media_type']:
+                if item['bulk_enabled'] and startup['mediatype'] == item['media_type']:
                     self.download_arttypes.append(item['art_type'])
 
         for item in artype_list:
-            if item['art_type'] in self.download_arttypes and ((setting['movie_enable'] and self.mediatype == item['media_type']) or (setting['tvshow_enable'] and self.mediatype == item['media_type']) or (setting['musicvideo_enable'] and self.mediatype == item['media_type'])):
+            if item['art_type'] in self.download_arttypes and ((setting['movie_enable'] and startup['mediatype'] == item['media_type']) or (setting['tvshow_enable'] and startup['mediatype'] == item['media_type']) or (setting['musicvideo_enable'] and startup['mediatype'] == item['media_type'])):
                 if item['art_type'] == 'extrafanart':
                     self._download_art(currentmedia, item, currentmedia['extrafanartdirs'])
                 elif item['art_type'] == 'extrathumbs':
@@ -413,7 +387,7 @@ class Main:
         imageignore = False                     # Set ignaore image false
         missingfiles = False
         final_image_list = []
-        if self.mode in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
+        if startup['mode'] in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
             final_image_list.append(self.image_item)
         else:
             final_image_list = self.image_list
@@ -498,7 +472,7 @@ class Main:
                             break
 
                         # Continue
-                        if self.mode in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
+                        if startup['mode'] in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
                             # Add image to download list
                             self.download_list.append(item)
                             # jump out of the loop
@@ -509,9 +483,9 @@ class Main:
                                 # if it's a local file use this first
                                 limited = [False, 'This is your local file']
                             elif art_item['art_type'] == 'discart':
-                                limited = filter(art_item['art_type'], self.mediatype, item['artwork_details'], limit_counter, pref_language, currentmedia['disctype'])
+                                limited = filter(art_item['art_type'], startup['mediatype'], item['artwork_details'], limit_counter, pref_language, currentmedia['disctype'])
                             else:
-                                limited = filter(art_item['art_type'], self.mediatype, item['artwork_details'], limit_counter, pref_language)
+                                limited = filter(art_item['art_type'], startup['mediatype'], item['artwork_details'], limit_counter, pref_language)
                             # Delete extrafanart when below settings and parsing the reason message
                             if limited[0] and not i == 1 and art_item['art_type'] in ['extrafanart', 'extrathumbs']:
                                 #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],currentmedia['name'])
@@ -592,8 +566,8 @@ class Main:
                 # Try downloading the file and catch errors while trying to
                 try:
                     if setting['files_local'] and not item['arttype'] in ['extrafanart', 'extrathumbs']:
-                        if (not self.fileops._exists(item['localfilename']) or self.mode == 'customgui' or self.mode == 'gui') and item['url'].startswith('http'):
-                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
+                        if (not self.fileops._exists(item['localfilename']) or startup['mode'] == 'customgui' or startup['mode'] == 'gui') and item['url'].startswith('http'):
+                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], startup['mode'])
                         item['url'] = item['localfilename'].replace('\\','\\\\')
                     if item['mediatype'] == 'movie':
                         if item['arttype'] == 'poster':
@@ -611,7 +585,7 @@ class Main:
                         elif item['arttype'] == 'discart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "discart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         else:
-                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
+                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], startup['mode'])
                     if item['mediatype'] == 'tvshow':
                         if item['arttype'] == 'poster':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
@@ -628,7 +602,7 @@ class Main:
                         elif item['arttype'] == 'characterart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "characterart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         else:
-                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], self.mode)
+                            self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], startup['mode'])
                 except HTTP404Error, e:
                     log('URL not found: %s' % str(e), xbmc.LOGERROR)
                     self.download_art_succes = False
@@ -674,12 +648,12 @@ class Main:
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in artype_list:
-                if item == type['art_type'] and self.mediatype == type['media_type']:
+                if item == type['art_type'] and startup['mediatype'] == type['media_type']:
                     log('- Custom %s mode arttype: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
         
         # If only one specified and not extrafanart/extrathumbs
-        if (len(self.download_arttypes) == 1) and not self.dbid == '' and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
+        if (len(self.download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
             imagelist = False
             self.gui_selected_type = ''
             for gui_arttype in self.download_arttypes:
@@ -688,7 +662,7 @@ class Main:
             # Add parse the image restraints
             if self.gui_selected_type != '':
                 for item in artype_list:
-                    if self.gui_selected_type == item['art_type'] and self.mediatype == item['media_type']:
+                    if self.gui_selected_type == item['art_type'] and startup['mediatype'] == item['media_type']:
                         self.gui_selected_filename = item['filename']
                         self.gui_selected_msg = __localize__(item['gui_string'])
                         # Get image list for that specific imagetype
@@ -703,7 +677,7 @@ class Main:
             imagelist = False
             # Fill GUI art type list
             for item in artype_list:
-                if item['solo_enabled'] == 'true' and self.mediatype == item['media_type'] and self._hasimages(item['art_type']):
+                if item['solo_enabled'] == 'true' and startup['mediatype'] == item['media_type'] and self._hasimages(item['art_type']):
                     gui = __localize__(item['gui_string'])
                     self.GUI_type_list.append (gui)
             # Not sure what this does again
@@ -756,7 +730,7 @@ class Main:
         else:
             # Check what artwork type has been chosen and parse the image restraints
             for item in artype_list:
-                if self.GUI_type_list[select] == __localize__(item['gui_string']) and self.mediatype == item['media_type']:
+                if self.GUI_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
                     self.gui_selected_type = item['art_type']
                     self.gui_selected_filename = item['filename']
                     self.gui_selected_msg = __localize__(item['gui_string'])
@@ -765,16 +739,17 @@ class Main:
                 return False
 
     def _custom_mode(self, currentmedia):
+        global startup
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in artype_list:
-                if item == type['art_type'] and self.mediatype == type['media_type']:
+                if item == type['art_type'] and startup['mediatype'] == type['media_type']:
                     log('- Custom %s mode arttype: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
 
         # If only one specified and not extrafanart/extrathumbs
-        if (len(self.download_arttypes) == 1) and not self.dbid == '' and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
+        if (len(self.download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
             # Get image list for that specific imagetype
             for gui_arttype in self.download_arttypes:
                 imagelist = gui_imagelist(self.image_list, gui_arttype)
@@ -782,7 +757,7 @@ class Main:
             # If more images than 1 found show GUI selection
             if len(imagelist) > 1:
                 dialog_msg('close', background = setting['background'])
-                self.mode = 'customgui'
+                startup['mode'] = 'customgui'
                 log('- Image list larger than 1')
                 if self._choose_image(imagelist):
                     log('- Chosen: %s'%self.image_item)
