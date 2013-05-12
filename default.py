@@ -35,6 +35,7 @@ from traceback import print_exc
 from urlparse import urlsplit
 from xml.parsers.expat import ExpatError
 
+cancelled = False
 limit = get_limit()
 setting = get()
 artype_list = artype_list()
@@ -138,7 +139,6 @@ class Main:
         self.gui_selected_type = ''
         self.failed_items = []
         self.download_art_succes = False
-        self.cancelled = False
 
     ### load settings and initialise needed directories
     def initialise(self):
@@ -191,7 +191,7 @@ class Main:
         if not xbmc.abortRequested:
             # Show dialog/notification
             if setting['background']:
-                dialog_msg('okdialog', line0 = summary_notify, line1 = provider_msg1 + ' ' + provider_msg2, background = setting['background'], cancelled = self.cancelled)
+                dialog_msg('okdialog', line0 = summary_notify, line1 = provider_msg1 + ' ' + provider_msg2, background = setting['background'], cancelled = cancelled)
             else:
                 # When chosen no in the 'yes/no' dialog execute the viewer.py and parse 'downloadreport'
                 if dialog_msg('yesno', line1 = summary, line2 = provider_msg1, line3 = provider_msg2, background = setting['background'], nolabel = __localize__(32027), yeslabel = __localize__(32028)):
@@ -711,8 +711,8 @@ class Main:
             log('- Download succesfull')
         # Selection was cancelled
         else:
-            log('- Cancelled')
-            self.cancelled = True
+            global cancelled
+            cancelled = True
 
     # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
     def _choice_type(self, gui_type_list):
@@ -771,7 +771,8 @@ class Main:
                     log('- Download succesfull')
                 else:
                     log('- Cancelled')
-                    self.cancelled = True
+                    global cancelled
+                    cancelled = True
             else:
                 self._download_process(currentmedia)
                 log('- More than 1 image available')
