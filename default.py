@@ -625,40 +625,12 @@ class Main:
                             item['url'].startswith('http')):
                             self.fileops._downloadfile(item)
                         item['url'] = item['localfilename'].replace('\\','\\\\')
-                    if item['mediatype'] == 'movie':
-                        if item['art_type'] == 'poster':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'fanart':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "fanart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'banner':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'clearlogo':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearlogo": "%s"}}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'clearart':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'landscape':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "landscape": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'discart':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "discart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        else:
-                            self.fileops._downloadfile(item)
-                    if item['mediatype'] == 'tvshow':
-                        if item['art_type'] == 'poster':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'fanart':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "fanart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'banner':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'clearlogo':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearlogo": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'clearart':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'landscape':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "landscape": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['art_type'] == 'characterart':
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "characterart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        else:
-                            self.fileops._downloadfile(item)
+                    if item['art_type'] in ['extrathumbs', 'extrafanart']:
+                        self.fileops._downloadfile(item)
+                    elif item['mediatype'] == 'movie':
+                        xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(item['dbid'], item['art_type'], item['url']))
+                    elif item['mediatype'] == 'tvshow':
+                        xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(item['dbid'], item['art_type'], item['url']))
                 except HTTP404Error, e:
                     log('URL not found: %s' % str(e), xbmc.LOGERROR)
                     download_succes = False
