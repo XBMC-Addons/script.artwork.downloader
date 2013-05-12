@@ -355,23 +355,24 @@ class Main:
                     self._download_process(currentmedia)
             self.processeditems += 1
 
-    ### Processes the bulk mode downloading of files
+    ### Processes the different modes for downloading of files
     def _download_process(self, currentmedia):
+        # with the exception of cutsom mode run through the art_list to see which ones are enabled and create a list with those
+        # then call _download_art to process it
         if not startup['mode'] == 'custom':
             self.download_arttypes = []
-            
-            for item in artype_list:
-                if item['bulk_enabled'] and startup['mediatype'] == item['media_type']:
-                    self.download_arttypes.append(item['art_type'])
-
-        for item in artype_list:
-            if item['art_type'] in self.download_arttypes and ((setting['movie_enable'] and startup['mediatype'] == item['media_type']) or (setting['tvshow_enable'] and startup['mediatype'] == item['media_type']) or (setting['musicvideo_enable'] and startup['mediatype'] == item['media_type'])):
-                if item['art_type'] == 'extrafanart':
-                    self._download_art(currentmedia, item, currentmedia['extrafanartdirs'])
-                elif item['art_type'] == 'extrathumbs':
-                    self._download_art(currentmedia, item, currentmedia['extrathumbsdirs'])
+            for art_type in artype_list:
+                if art_type['bulk_enabled'] and startup['mediatype'] == art_type['media_type']:
+                    self.download_arttypes.append(art_type['art_type'])
+        # do the same but for custom mode
+        for art_type in artype_list:
+            if art_type['art_type'] in self.download_arttypes and ((setting['movie_enable'] and startup['mediatype'] == art_type['media_type']) or (setting['tvshow_enable'] and startup['mediatype'] == art_type['media_type']) or (setting['musicvideo_enable'] and startup['mediatype'] == art_type['media_type'])):
+                if art_type['art_type'] == 'extrafanart':
+                    self._download_art(currentmedia, art_type, currentmedia['extrafanartdirs'])
+                elif art_type['art_type'] == 'extrathumbs':
+                    self._download_art(currentmedia, art_type, currentmedia['extrathumbsdirs'])
                 else:
-                    self._download_art(currentmedia, item, currentmedia['artworkdir'])
+                    self._download_art(currentmedia, art_type, currentmedia['artworkdir'])
 
     ### Artwork downloading
     def _download_art(self, currentmedia, art_item, targetdirs):
