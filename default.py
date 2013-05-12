@@ -22,7 +22,7 @@ from lib import provider
 from lib.apply_filters import filter
 from lib.art_list import artype_list
 from lib.fileops import fileops, cleanup
-from lib.gui import choose_image, choice_type, gui_imagelist
+from lib.gui import choose_image, choice_type, gui_imagelist, hasimages
 from lib.media_setup import _media_listing as media_listing
 from lib.media_setup import _media_unique as media_unique
 from lib.provider import tmdb # import on behalf of searching when there's no ID
@@ -625,16 +625,6 @@ class Main:
                     download_succes = True
             log('Finished download')
 
-    ### Checks imagelist if it has that type of artwork has got images
-    def _hasimages(self, art_type):
-        found = False
-        for artwork in image_list:
-            if art_type in artwork['art_type']:
-                found = True
-                break
-            else: pass
-        return found
-
     ### This handles the GUI image type selector part
     def _gui_mode(self, currentmedia):
         global image_list
@@ -671,7 +661,7 @@ class Main:
             imagelist = False
             # Fill GUI art type list
             for artype in artype_list:
-                if artype['solo_enabled'] == 'true' and startup['mediatype'] == artype['media_type'] and self._hasimages(artype['art_type']):
+                if artype['solo_enabled'] == 'true' and startup['mediatype'] == artype['media_type'] and hasimages(image_list, artype['art_type']):
                     gui = __localize__(artype['gui_string'])
                     enabled_type_list.append(gui)
             # Not sure what this does again

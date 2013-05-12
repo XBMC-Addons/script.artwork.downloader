@@ -125,6 +125,16 @@ def gui_imagelist(image_list, art_type):
         if  art_type in artwork['art_type']:
             filteredlist.append(artwork)
     return filteredlist
+
+### Checks imagelist if it has that type of artwork has got images
+def hasimages(image_list, art_type):
+    found = False
+    for artwork in image_list:
+        if art_type in artwork['art_type']:
+            found = True
+            break
+        else: pass
+    return found
     
 class dialog_select_UI(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
