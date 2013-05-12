@@ -131,7 +131,7 @@ class Main:
         cleanup()
         self.report()
 
-    ### Declare standard vars   
+    ### Declare standard vars
     def initial_vars(self):
         global startup
         startup = {'mediatype': False,
@@ -161,7 +161,7 @@ class Main:
             log('Could not create directory: %s' % str(e))
             return False
         else:
-            return True 
+            return True
 
     def report(self):
         global setting
@@ -235,7 +235,7 @@ class Main:
                         background = setting['background'])
             log('########################################################')
             log('Processing media:  %s' % currentmedia['name'])
-            # do some id conversions 
+            # do some id conversions
             if not currentmedia['mediatype'] == 'tvshow' and currentmedia['id'] in ['','tt0000000','0']:
                 log('No IMDB ID found, trying to search themoviedb.org for matching title.')
                 currentmedia['id'] = tmdb._search_movie(currentmedia['name'],currentmedia['year'])
@@ -244,7 +244,7 @@ class Main:
                 currentmedia['id'] = tmdb._search_movie(currentmedia['name'],currentmedia['year'])
             log('Provider ID:       %s' % currentmedia['id'])
             log('Media path:        %s' % currentmedia['path'])
-            
+
             # this part check for local files when enabled
             scan_more = True
             if setting['files_local']:
@@ -252,7 +252,7 @@ class Main:
                 local_list, scan_more = local().get_image_list(currentmedia)
                 # append local artwork
                 for item in local_list:
-                    image_list.append(item)            
+                    image_list.append(item)
             # Declare the target folders
             artworkdir = []
             extrafanartdirs = []
@@ -512,7 +512,7 @@ class Main:
                                         missingfiles = True
                                     if missingfiles:
                                         # If missing add to list
-                                        imagefound = True 
+                                        imagefound = True
                                         log(' - Adding to download list (does not exist in all target directories): %s' % item['filename'])
                                         download_list.append(item)
                                     else:
@@ -520,7 +520,7 @@ class Main:
                                         log(' - Ignoring (Exists in all target directories): %s' % item['filename'])
                                 # Raise limit counter because image was added to list or it already existed
                                 limit_counter += 1
-                                # Check if artwork doesn't exist and the ones available are below settings even after searching for English fallback                                   
+                                # Check if artwork doesn't exist and the ones available are below settings even after searching for English fallback
                                 if limited[0] and imageignore and i == 1:
                                     for targetdir in item['targetdirs']:
                                         if not self.fileops._exists(os.path.join (targetdir, item['filename'])) and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
@@ -647,7 +647,7 @@ class Main:
         global image_list
         # Close the 'checking for artwork' dialog before opening the GUI list
         dialog_msg('close', background = setting['background'])
-        
+
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
@@ -655,7 +655,7 @@ class Main:
                 if item == type['art_type'] and startup['mediatype'] == type['media_type']:
                     log('- Custom %s mode art_type: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
-        
+
         # If only one specified and not extrafanart/extrathumbs
         if (len(self.download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
             imagelist = False
@@ -692,7 +692,7 @@ class Main:
                 # Some debug log output
                 for image in imagelist:
                     log('- Image put to GUI: %s' %image)
-        
+
         # Download the selected image
         # If there's a list, send the imagelist to the selection dialog
         if imagelist:
@@ -724,7 +724,7 @@ class Main:
         # Create empty slected image type var
         self.gui_selected_type = ''
         # When nothing is selected from the dialog
-        if select == -1: 
+        if select == -1:
             log('### Canceled by user')
             return False
         # If some selection was made
