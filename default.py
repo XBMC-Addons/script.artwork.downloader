@@ -36,6 +36,7 @@ from urlparse import urlsplit
 from xml.parsers.expat import ExpatError
 
 cancelled = False
+image_list = []
 limit = get_limit()
 setting = get()
 artype_list = artype_list()
@@ -151,7 +152,6 @@ class Main:
             if arg[0] in args:
                 j = arg[1]
                 startup.update({arg[0]:arg[1]})
-        print startup['mediatype']
         if startup['mediatype'] and startup['mediatype'] not in ['tvshow', 'movie', 'musicvideo']:
             log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
             return False
@@ -207,8 +207,10 @@ class Main:
 
     ### download media fanart
     def download_artwork(self, media_list, providers):
+        global image_list
         self.processeditems = 0
         for currentmedia in media_list:
+            image_list = []
             # Declare some vars
             if not currentmedia.get('disctype'):
                 currentmedia['disctype'] = 'n/a'
@@ -245,13 +247,12 @@ class Main:
             
             # this part check for local files when enabled
             scan_more = True
-            self.image_list = []
             if setting['files_local']:
                 local_list = []
                 local_list, scan_more = local().get_image_list(currentmedia)
                 # append local artwork
                 for item in local_list:
-                    self.image_list.append(item)            
+                    image_list.append(item)            
             # Declare the target folders
             artworkdir = []
             extrafanartdirs = []
@@ -331,17 +332,17 @@ class Main:
                         else:
                             artwork_result = 'pass'
                             for item in self.temp_image_list:
-                                self.image_list.append(item)
+                                image_list.append(item)
                         if not xmlfailcount < setting['xmlfailthreshold']:
                             artwork_result = 'skipping'
                         if not artwork_result == 'pass':
                             log('Error getting data from %s (%s): %s' % (self.provider.name, errmsg, artwork_result))
 
-            if len(self.image_list) > 0:
-                if (limit['limit_artwork'] and limit['limit_extrafanart_max'] < len(self.image_list)):
+            if len(image_list) > 0:
+                if (limit['limit_artwork'] and limit['limit_extrafanart_max'] < len(image_list)):
                     self.download_max = limit['limit_extrafanart_max']
                 else:
-                    self.download_max = len(self.image_list)
+                    self.download_max = len(image_list)
                 # Check for GUI mode
                 if startup['mode'] == 'gui':
                     log('- Using GUI mode')
@@ -386,9 +387,10 @@ class Main:
         global download_list
         final_image_list = []
         if startup['mode'] in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
-            final_image_list.append(self.image_item)
+            final_image_list.append(image_list)
         else:
-            final_image_list = self.image_list
+            final_image_list = image_list
+        print final_image_list
         if len(final_image_list) == 0:
             log(' - Nothing to download')
         else:
@@ -400,7 +402,7 @@ class Main:
                     localfile = os.path.join(targetdir, art_item['filename']).encode('utf-8')
                     if self.fileops._exists(localfile):
                         final_image_list.append({'url': localfile,
-                                                 'type': [art_item['art_type']],
+                                                 'art_type': [art_item['art_type']],
                                                  'language': pref_language,
                                                  'discnumber': '1',
                                                  'disctype': currentmedia['disctype']})
@@ -416,7 +418,9 @@ class Main:
                     log('! No matching %s artwork found. Searching for English backup' %limit['limit_preferred_language'])
                 # loop through image list
                 for artwork in final_image_list:
-                    if art_item['art_type'] in artwork['type']:
+                    print art_item
+                    print artwork
+                    if art_item['art_type'] in artwork['art_type']:
                         ### check if script has been cancelled by user
                         if dialog_msg('iscanceled', background = setting['background']):
                             #dialog('close', background = setting['background'])
@@ -430,7 +434,7 @@ class Main:
                                 'artwork_details': artwork,
                                 'dbid':currentmedia['dbid'],
                                 'art':currentmedia['art'],
-                                'arttype':art_item['art_type']}
+                                'art_type':art_item['art_type']}
                         # raise artwork counter only on first loop
                         if i != 1:
                             current_artwork += 1
@@ -563,41 +567,41 @@ class Main:
                 dialog_msg('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + __localize__(item['artwork_string']), line3 = item['filename'], background = setting['background'])
                 # Try downloading the file and catch errors while trying to
                 try:
-                    if setting['files_local'] and not item['arttype'] in ['extrafanart', 'extrathumbs']:
+                    if setting['files_local'] and not item['art_type'] in ['extrafanart', 'extrathumbs']:
                         if (not self.fileops._exists(item['localfilename']) or startup['mode'] == 'customgui' or startup['mode'] == 'gui') and item['url'].startswith('http'):
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], startup['mode'])
                         item['url'] = item['localfilename'].replace('\\','\\\\')
                     if item['mediatype'] == 'movie':
-                        if item['arttype'] == 'poster':
+                        if item['art_type'] == 'poster':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'fanart':
+                        elif item['art_type'] == 'fanart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "fanart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'banner':
+                        elif item['art_type'] == 'banner':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'clearlogo':
+                        elif item['art_type'] == 'clearlogo':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearlogo": "%s"}}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'clearart':
+                        elif item['art_type'] == 'clearart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'landscape':
+                        elif item['art_type'] == 'landscape':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "landscape": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'discart':
+                        elif item['art_type'] == 'discart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "discart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         else:
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], startup['mode'])
                     if item['mediatype'] == 'tvshow':
-                        if item['arttype'] == 'poster':
+                        if item['art_type'] == 'poster':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'fanart':
+                        elif item['art_type'] == 'fanart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "fanart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'banner':
+                        elif item['art_type'] == 'banner':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "banner": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'clearlogo':
+                        elif item['art_type'] == 'clearlogo':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearlogo": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'clearart':
+                        elif item['art_type'] == 'clearart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "clearart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'landscape':
+                        elif item['art_type'] == 'landscape':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "landscape": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
-                        elif item['arttype'] == 'characterart':
+                        elif item['art_type'] == 'characterart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "characterart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         else:
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], startup['mode'])
@@ -629,9 +633,11 @@ class Main:
 
     ### Checks imagelist if it has that type of artwork has got images
     def _hasimages(self, art_type):
+        print art_type
         found = False
-        for artwork in self.image_list:
-            if  art_type == artwork['type'][0]:
+        for artwork in image_list:
+            print artwork
+            if art_type in artwork['art_type']:
                 found = True
                 break
             else: pass
@@ -639,6 +645,7 @@ class Main:
 
     ### This handles the GUI image type selector part
     def _gui_mode(self, currentmedia):
+        global image_list
         # Close the 'checking for artwork' dialog before opening the GUI list
         dialog_msg('close', background = setting['background'])
         
@@ -647,7 +654,7 @@ class Main:
         for item in sys.argv:
             for type in artype_list:
                 if item == type['art_type'] and startup['mediatype'] == type['media_type']:
-                    log('- Custom %s mode arttype: %s' %(type['media_type'],type['art_type']))
+                    log('- Custom %s mode art_type: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
         
         # If only one specified and not extrafanart/extrathumbs
@@ -659,45 +666,42 @@ class Main:
                 break
             # Add parse the image restraints
             if self.gui_selected_type != '':
-                for item in artype_list:
-                    if self.gui_selected_type == item['art_type'] and startup['mediatype'] == item['media_type']:
-                        self.gui_selected_filename = item['filename']
-                        self.gui_selected_msg = __localize__(item['gui_string'])
+                for artype in artype_list:
+                    if self.gui_selected_type == artype['art_type'] and startup['mediatype'] == artype['media_type']:
                         # Get image list for that specific imagetype
-                        imagelist = gui_imagelist(self.image_list, self.gui_selected_type)
+                        imagelist = gui_imagelist(image_list, self.gui_selected_type)
                         # Some debug log output
-                        for item in imagelist:
-                            log('- Image put to GUI: %s' %item)
+                        for image in imagelist:
+                            log('- Image put to GUI: %s' %image)
                         break
         else:
             # Create empty list and set bool to false that there is a list
-            gui_type_list = []
+            enabled_type_list = []
             imagelist = False
             # Fill GUI art type list
-            for item in artype_list:
-                if item['solo_enabled'] == 'true' and startup['mediatype'] == item['media_type'] and self._hasimages(item['art_type']):
-                    gui = __localize__(item['gui_string'])
-                    gui_type_list.append (gui)
+            for artype in artype_list:
+                if artype['solo_enabled'] == 'true' and startup['mediatype'] == artype['media_type'] and self._hasimages(artype['art_type']):
+                    gui = __localize__(artype['gui_string'])
+                    enabled_type_list.append(gui)
             # Not sure what this does again
-            if len(gui_type_list) == 1:
-                gui_type_list[0] = 'True'
+            if len(enabled_type_list) == 1:
+                enabled_type_list[0] = 'True'
             # Fills imagelist with image that fit the selected imagetype
-            if (len(gui_type_list) == 1) or self._choice_type(gui_type_list):
-                imagelist = gui_imagelist(self.image_list, self.gui_selected_type)
+            type_list = self._choice_type(enabled_type_list)
+            if (len(enabled_type_list) == 1) or type_list:
+                imagelist = gui_imagelist(image_list, type_list['art_type'])
                 # Some debug log output
-                for item in imagelist:
-                    log('- Image put to GUI: %s' %item)
+                for image in imagelist:
+                    log('- Image put to GUI: %s' %image)
         
         # Download the selected image
         # If there's a list, send the imagelist to the selection dialog
         if imagelist:
-            if choose_image(imagelist):
+            image_list = choose_image(imagelist)
+            if image_list:
                 # Create a progress dialog so you can see the progress, Send the selected image for processing, Initiate the batch download
                 dialog_msg('create')
-                item = [{'art_type': self.gui_selected_type,
-                        'filename': self.gui_selected_filename,
-                        'gui_string': self.gui_selected_msg}]
-                self._download_art(currentmedia, item, currentmedia['artworkdir'])
+                self._download_art(currentmedia, type_list, currentmedia['artworkdir'])
                 self._batch_download(download_list)
                 # When not succesfull show failure dialog
                 if not self.download_art_succes:
@@ -705,7 +709,7 @@ class Main:
         # When no images found or nothing selected
         if not imagelist and not self.gui_selected_type == '':
             log('- No artwork found')
-            dialog_msg('okdialog', line1 = currentmedia['name'] , line2 = self.gui_selected_msg + ' ' + __localize__(32022))
+            dialog_msg('okdialog', line1 = currentmedia['name'] , line2 = __localize__(artype['gui_string']) + ' ' + __localize__(32022))
         # When download succesfull
         elif self.download_art_succes:
             log('- Download succesfull')
@@ -715,9 +719,9 @@ class Main:
             cancelled = True
 
     # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
-    def _choice_type(self, gui_type_list):
+    def _choice_type(self, enabled_type_list):
         # Send the image type list to the selection dialog
-        select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , gui_type_list)
+        select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , enabled_type_list)
         # Create empty slected image type var
         self.gui_selected_type = ''
         # When nothing is selected from the dialog
@@ -728,37 +732,36 @@ class Main:
         else:
             # Check what artwork type has been chosen and parse the image restraints
             for item in artype_list:
-                if gui_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
-                    self.gui_selected_type = item['art_type']
-                    self.gui_selected_filename = item['filename']
-                    self.gui_selected_msg = __localize__(item['gui_string'])
-                    return True
+                if enabled_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
+                    return item
             else:
                 return False
 
     def _custom_mode(self, currentmedia):
         global startup
+        global image_list
         self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in artype_list:
                 if item == type['art_type'] and startup['mediatype'] == type['media_type']:
-                    log('- Custom %s mode arttype: %s' %(type['media_type'],type['art_type']))
+                    log('- Custom %s mode art_type: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
 
         # If only one specified and not extrafanart/extrathumbs
         if (len(self.download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
             # Get image list for that specific imagetype
             for gui_arttype in self.download_arttypes:
-                imagelist = gui_imagelist(self.image_list, gui_arttype)
+                imagelist = gui_imagelist(image_list, gui_arttype)
             log('- Number of images: %s' %len(imagelist))
             # If more images than 1 found show GUI selection
             if len(imagelist) > 1:
                 dialog_msg('close', background = setting['background'])
                 startup['mode'] = 'customgui'
                 log('- Image list larger than 1')
-                if choose_image(imagelist):
-                    log('- Chosen: %s'%self.image_item)
+                image_list = choose_image(imagelist)
+                if image_list:
+                    log('- Chosen: %s'% image_list)
                     dialog_msg('create')
                     for item in artype_list:
                         if gui_arttype == item['art_type']:

@@ -104,7 +104,7 @@ def gui_imagelist(image_list, art_type):
     filteredlist = []
     #retrieve list
     for artwork in image_list:
-        if  art_type == artwork['type'][0]:
+        if  art_type in artwork['art_type']:
             filteredlist.append(artwork)
     return filteredlist
     

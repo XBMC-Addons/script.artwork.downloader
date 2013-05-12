@@ -59,21 +59,21 @@ class TVDBProvider():
                     info['id'] = image.findtext('id')
                     # process fanarts
                     if image.findtext('BannerType') == 'fanart':
-                        info['type'] = ['fanart','extrafanart']
+                        info['art_type'] = ['fanart','extrafanart']
                     # process posters
                     elif image.findtext('BannerType') == 'poster':
-                        info['type'] = ['poster']
+                        info['art_type'] = ['poster']
                     # process banners
                     elif image.findtext('BannerType') == 'series' and image.findtext('BannerType2') == 'graphical':
-                        info['type'] = ['banner']
+                        info['art_type'] = ['banner']
                     # process seasonposters
                     elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'season':
-                        info['type'] = ['seasonposter']
+                        info['art_type'] = ['seasonposter']
                     # process seasonbanners
                     elif image.findtext('BannerType') == 'season' and image.findtext('BannerType2') == 'seasonwide':
-                        info['type'] = ['seasonbanner']
+                        info['art_type'] = ['seasonbanner']
                     else:
-                        info['type'] = ['']
+                        info['art_type'] = ['']
                     # convert image size ...x... in Bannertype2
                     if image.findtext('BannerType2'):
                         try:
