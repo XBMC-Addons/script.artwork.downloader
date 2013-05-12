@@ -35,13 +35,17 @@ from traceback import print_exc
 from urlparse import urlsplit
 from xml.parsers.expat import ExpatError
 
+artype_list = artype_list()
 cancelled = False
+download_counter = {'Total Artwork': 0}
+download_list = []
+download_succes = False
+failed_items = []
 image_list = []
 limit = get_limit()
+reportdata = '[B]Artwork Downloader:[/B]'
 setting = get()
-artype_list = artype_list()
 startup = {}
-download_list = []
 
 class Main:
     def __init__(self):
@@ -134,12 +138,7 @@ class Main:
                    'dbid': False,
                    'mode': False,
                    'silent': False}
-        self.download_counter       = {}
-        self.download_counter['Total Artwork'] = 0
-        self.reportdata = '[B]Artwork Downloader:[/B]'
         self.gui_selected_type = ''
-        self.failed_items = []
-        self.download_art_succes = False
 
     ### load settings and initialise needed directories
     def initialise(self):
@@ -168,11 +167,11 @@ class Main:
         global setting
         ### log results and notify user
         # Download totals to log and to download report
-        create_report(self.reportdata, self.download_counter, self.failed_items)
+        create_report(reportdata, download_counter, failed_items)
 
         # Build dialog messages
-        summary = __localize__(32012) + ': %s ' % self.download_counter['Total Artwork'] + __localize__(32020)
-        summary_notify = ': %s ' % self.download_counter['Total Artwork'] + __localize__(32020)
+        summary = __localize__(32012) + ': %s ' % download_counter['Total Artwork'] + __localize__(32020)
+        summary_notify = ': %s ' % download_counter['Total Artwork'] + __localize__(32020)
         provider_msg1 = __localize__(32001)
         provider_msg2 = __localize__(32184) + ' | ' + __localize__(32185) + ' | ' + __localize__(32186)
         # Close dialog in case it was open before doing a notification
@@ -201,13 +200,14 @@ class Main:
             dialog_msg('okdialog', line1 = __localize__(32010), line2 = summary, background = setting['background'])
         # Container refresh
         if startup['mode'] in ['gui','customgui']:
-            if self.download_art_succes:
+            if download_succes:
                 xbmc.executebuiltin('Container.Refresh')
                 #xbmc.executebuiltin('XBMC.ReloadSkin()')
 
     ### download media fanart
     def download_artwork(self, media_list, providers):
         global image_list
+        global reportdata
         self.processeditems = 0
         for currentmedia in media_list:
             image_list = []
@@ -217,15 +217,15 @@ class Main:
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
                 log('XBMC abort requested, aborting')
-                self.reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
+                reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
                 break
             ### check if script has been cancelled by user
             if dialog_msg('iscanceled', background = setting['background']):
-                self.reportdata += ('\n - %s [%s]: %s' %(__localize__(32151), currentmedia['mediatype'], time.strftime('%d %B %Y - %H:%M')))
+                reportdata += ('\n - %s [%s]: %s' %(__localize__(32151), currentmedia['mediatype'], time.strftime('%d %B %Y - %H:%M')))
                 break
             # abort script because of to many failures
             if not setting['failcount'] < setting['failthreshold']:
-                self.reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
+                reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
                 break
             dialog_msg('update',
                         percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0),
@@ -279,14 +279,14 @@ class Main:
                 dialog_msg('okdialog','' ,currentmedia['name'] , __localize__(32030))
             elif currentmedia['id'] == '':
                 log('- No ID found, skipping')
-                self.failed_items.append('[%s] ID %s' %(currentmedia['name'], __localize__(32022)))
+                failed_items.append('[%s] ID %s' %(currentmedia['name'], __localize__(32022)))
             elif currentmedia['mediatype'] == 'tvshow' and currentmedia['id'].startswith('tt'):
                 log('- IMDB ID found for TV show, skipping')
-                self.failed_items.append('[%s]: TVDB ID %s' %(currentmedia['name'], __localize__(32022)))
+                failed_items.append('[%s]: TVDB ID %s' %(currentmedia['name'], __localize__(32022)))
 
             # If correct ID found continue
             else:
-                self.temp_image_list = []
+                temp_image_list = []
                 # Run through all providers getting their imagelisting
                 failcount = 0
                 for self.provider in providers:
@@ -301,7 +301,7 @@ class Main:
                         if artwork_result == 'retrying':
                             xbmc.sleep(setting['api_timedelay'])
                         try:
-                            self.temp_image_list = self.provider.get_image_list(currentmedia['id'])
+                            temp_image_list = self.provider.get_image_list(currentmedia['id'])
                             #pass
                         except HTTP404Error, e:
                             errmsg = '404: File not found'
@@ -313,7 +313,7 @@ class Main:
                         except NoFanartError, e:
                             errmsg = 'No artwork found'
                             artwork_result = 'skipping'
-                            self.failed_items.append('[%s] %s' %(currentmedia['name'], __localize__(32133)))
+                            failed_items.append('[%s] %s' %(currentmedia['name'], __localize__(32133)))
                         except ItemNotFoundError, e:
                             errmsg = '%s not found' % currentmedia['id']
                             artwork_result = 'skipping'
@@ -331,7 +331,7 @@ class Main:
                             artwork_result = 'skipping'
                         else:
                             artwork_result = 'pass'
-                            for item in self.temp_image_list:
+                            for item in temp_image_list:
                                 image_list.append(item)
                         if not xmlfailcount < setting['xmlfailthreshold']:
                             artwork_result = 'skipping'
@@ -524,7 +524,7 @@ class Main:
                                 if limited[0] and imageignore and i == 1:
                                     for targetdir in item['targetdirs']:
                                         if not self.fileops._exists(os.path.join (targetdir, item['filename'])) and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
-                                            self.failed_items.append('[%s] %s %s' % (currentmedia['name'], art_item['art_type'], __localize__(32147)))
+                                            failed_items.append('[%s] %s %s' % (currentmedia['name'], art_item['art_type'], __localize__(32147)))
                             # Do some special check on season artwork
                             if art_item['art_type'] == 'seasonlandscape' or art_item['art_type'] == 'seasonbanner' or art_item['art_type']   == 'seasonposter':
                                 # If already present in list set limit on 1 so it is skipped
@@ -546,23 +546,26 @@ class Main:
                     i += 2
             # Add to failed items if 0
             if current_artwork == 0:
-                self.failed_items.append('[%s] %s %s' % (currentmedia['name'], art_item['art_type'], __localize__(32022)))
+                failed_items.append('[%s] %s %s' % (currentmedia['name'], art_item['art_type'], __localize__(32022)))
             # Print log message number of found images per art type
             log(' - Found a total of: %s %s' % (current_artwork, art_item['art_type']))
             # End of language shit
 
     def _batch_download(self, image_list):
         log('########################################################')
+        global download_counter
+        global download_succes
+        global reportdata
         if not len(image_list) == 0:
             failcount = 0
             for item in image_list:
                 if xbmc.abortRequested:
-                    self.reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
+                    reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
                     break
                 if dialog_msg('iscanceled', background = setting['background']):
-                    self.reportdata += ('\n - %s: %s' %(__localize__(32153), time.strftime('%d %B %Y - %H:%M')))
+                    reportdata += ('\n - %s: %s' %(__localize__(32153), time.strftime('%d %B %Y - %H:%M')))
                     break
-                dialog_msg('update', percentage = int(float(self.download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + __localize__(item['artwork_string']), line3 = item['filename'], background = setting['background'])
+                dialog_msg('update', percentage = int(float(download_counter['Total Artwork']) / float(len(image_list)) * 100.0), line1 = item['media_name'], line2 = __localize__(32009) + ' ' + __localize__(item['artwork_string']), line3 = item['filename'], background = setting['background'])
                 # Try downloading the file and catch errors while trying to
                 try:
                     if setting['files_local'] and not item['art_type'] in ['extrafanart', 'extrathumbs']:
@@ -605,28 +608,28 @@ class Main:
                             self.fileops._downloadfile(item['url'], item['filename'], item['targetdirs'], item['media_name'], startup['mode'])
                 except HTTP404Error, e:
                     log('URL not found: %s' % str(e), xbmc.LOGERROR)
-                    self.download_art_succes = False
+                    download_succes = False
                 except HTTPTimeout, e:
                     failcount += 1
                     log('Download timed out: %s' % str(e), xbmc.LOGERROR)
-                    self.download_art_succes = False
+                    download_succes = False
                 except CreateDirectoryError, e:
                     log('Could not create directory, skipping: %s' % str(e), xbmc.LOGWARNING)
-                    self.download_art_succes = False
+                    download_succes = False
                 except CopyError, e:
                     log('Could not copy file (Destination may be read only), skipping: %s' % str(e), xbmc.LOGWARNING)
-                    self.download_art_succes = False
+                    download_succes = False
                 except DownloadError, e:
                     failcount += 1
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (item['url'], str(e)), xbmc.LOGERROR)
-                    self.download_art_succes = False
+                    download_succes = False
                 else:
                     try:
-                        self.download_counter[item['artwork_string']] += 1
+                        download_counter[__localize__(item['artwork_string'])] += 1
                     except KeyError:
-                        self.download_counter[item['artwork_string']] = 1
-                    self.download_counter['Total Artwork'] += 1
-                    self.download_art_succes = True
+                        download_counter[__localize__(item['artwork_string'])] = 1
+                    download_counter['Total Artwork'] += 1
+                    download_succes = True
             log('Finished download')
 
     ### Checks imagelist if it has that type of artwork has got images
@@ -700,14 +703,14 @@ class Main:
                 self._download_art(currentmedia, type_list, currentmedia['artworkdir'])
                 self._batch_download(download_list)
                 # When not succesfull show failure dialog
-                if not self.download_art_succes:
+                if not download_succes:
                     dialog_msg('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007))
         # When no images found or nothing selected
         if not imagelist and not self.gui_selected_type == '':
             log('- No artwork found')
             dialog_msg('okdialog', line1 = currentmedia['name'] , line2 = __localize__(artype['gui_string']) + ' ' + __localize__(32022))
         # When download succesfull
-        elif self.download_art_succes:
+        elif download_succes:
             log('- Download succesfull')
         # Selection was cancelled
         else:
@@ -764,9 +767,9 @@ class Main:
                             self._download_art(currentmedia, item, currentmedia['artworkdir'])
                             break
                     self._batch_download(download_list)
-                    if not self.download_art_succes:
+                    if not download_succes:
                         dialog_msg('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007))
-                if self.download_art_succes:
+                if download_succes:
                     log('- Download succesfull')
                 else:
                     log('- Cancelled')
