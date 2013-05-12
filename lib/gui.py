@@ -23,6 +23,7 @@ import xbmcgui
 from lib.utils import log
 
 ### get addon info
+__addonname__    = lib.common.__addonname__
 __addonpath__    = lib.common.__addonpath__
 __localize__     = lib.common.__localize__
 
@@ -81,6 +82,23 @@ def choose_image(imagelist):
     image_item = False
     image_item = dialog_select(imagelist)
     return image_item 
+
+# This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
+def choice_type(enabled_type_list, startup, artype_list):
+    # Send the image type list to the selection dialog
+    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , enabled_type_list)
+    # When nothing is selected from the dialog
+    if select == -1:
+        log('### Canceled by user')
+        return False
+    # If some selection was made
+    else:
+        # Check what artwork type has been chosen and parse the image restraints
+        for item in artype_list:
+            if enabled_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
+                return item
+        else:
+            return False
 
 # Pass the imagelist to the dialog and return the selection
 def dialog_select(image_list):

@@ -22,7 +22,7 @@ from lib import provider
 from lib.apply_filters import filter
 from lib.art_list import artype_list
 from lib.fileops import fileops, cleanup
-from lib.gui import choose_image, gui_imagelist
+from lib.gui import choose_image, choice_type, gui_imagelist
 from lib.media_setup import _media_listing as media_listing
 from lib.media_setup import _media_unique as media_unique
 from lib.provider import tmdb # import on behalf of searching when there's no ID
@@ -678,7 +678,7 @@ class Main:
             if len(enabled_type_list) == 1:
                 enabled_type_list[0] = 'True'
             # Fills imagelist with image that fit the selected imagetype
-            type_list = self._choice_type(enabled_type_list)
+            type_list = choice_type(enabled_type_list, startup, artype_list)
             if (len(enabled_type_list) == 1) or type_list:
                 imagelist = gui_imagelist(image_list, type_list['art_type'])
                 # Some debug log output
@@ -708,23 +708,6 @@ class Main:
         else:
             global cancelled
             cancelled = True
-
-    # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
-    def _choice_type(self, enabled_type_list):
-        # Send the image type list to the selection dialog
-        select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , enabled_type_list)
-        # When nothing is selected from the dialog
-        if select == -1:
-            log('### Canceled by user')
-            return False
-        # If some selection was made
-        else:
-            # Check what artwork type has been chosen and parse the image restraints
-            for item in artype_list:
-                if enabled_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
-                    return item
-            else:
-                return False
 
     def _custom_mode(self, currentmedia):
         global startup
