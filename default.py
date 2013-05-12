@@ -37,6 +37,7 @@ from xml.parsers.expat import ExpatError
 
 artype_list = artype_list()
 cancelled = False
+download_arttypes = []
 download_counter = {'Total Artwork': 0}
 download_list = []
 download_succes = False
@@ -353,13 +354,14 @@ class Main:
         # with the exception of cutsom mode run through the art_list to see which ones are enabled and create a list with those
         # then call _download_art to process it
         if not startup['mode'] == 'custom':
-            self.download_arttypes = []
+            global download_arttypes
+            download_arttypes = []
             for art_type in artype_list:
                 if art_type['bulk_enabled'] and startup['mediatype'] == art_type['media_type']:
-                    self.download_arttypes.append(art_type['art_type'])
+                    download_arttypes.append(art_type['art_type'])
         # do the same but for custom mode
         for art_type in artype_list:
-            if art_type['art_type'] in self.download_arttypes and ((setting['movie_enable'] and startup['mediatype'] == art_type['media_type']) or (setting['tvshow_enable'] and startup['mediatype'] == art_type['media_type']) or (setting['musicvideo_enable'] and startup['mediatype'] == art_type['media_type'])):
+            if art_type['art_type'] in download_arttypes and ((setting['movie_enable'] and startup['mediatype'] == art_type['media_type']) or (setting['tvshow_enable'] and startup['mediatype'] == art_type['media_type']) or (setting['musicvideo_enable'] and startup['mediatype'] == art_type['media_type'])):
                 if art_type['art_type'] == 'extrafanart':
                     self._download_art(currentmedia, art_type, currentmedia['extrafanartdirs'])
                 elif art_type['art_type'] == 'extrathumbs':
@@ -627,22 +629,21 @@ class Main:
 
     ### This handles the GUI image type selector part
     def _gui_mode(self, currentmedia):
+        global download_arttypes
         global image_list
         # Close the 'checking for artwork' dialog before opening the GUI list
         dialog_msg('close', background = setting['background'])
-
-        self.download_arttypes = []
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in artype_list:
                 if item == type['art_type'] and startup['mediatype'] == type['media_type']:
                     log('- Custom %s mode art_type: %s' %(type['media_type'],type['art_type']))
-                    self.download_arttypes.append(item)
+                    download_arttypes.append(item)
         gui_selected_type = False
         # If only one specified and not extrafanart/extrathumbs
-        if (len(self.download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
+        if (len(download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in download_arttypes and not 'extrafanart' in download_arttypes:
             imagelist = False
-            for gui_arttype in self.download_arttypes:
+            for gui_arttype in download_arttypes:
                 gui_selected_type = gui_arttype
                 break
             # Add parse the image restraints
@@ -700,20 +701,20 @@ class Main:
             cancelled = True
 
     def _custom_mode(self, currentmedia):
-        global startup
+        global download_arttypes
         global image_list
-        self.download_arttypes = []
+        global startup
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in artype_list:
                 if item == type['art_type'] and startup['mediatype'] == type['media_type']:
                     log('- Custom %s mode art_type: %s' %(type['media_type'],type['art_type']))
-                    self.download_arttypes.append(item)
+                    download_arttypes.append(item)
 
         # If only one specified and not extrafanart/extrathumbs
-        if (len(self.download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
+        if (len(download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in download_arttypes and not 'extrafanart' in download_arttypes:
             # Get image list for that specific imagetype
-            for gui_arttype in self.download_arttypes:
+            for gui_arttype in download_arttypes:
                 imagelist = gui_imagelist(image_list, gui_arttype)
             log('- Number of images: %s' %len(imagelist))
             # If more images than 1 found show GUI selection
