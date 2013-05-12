@@ -76,6 +76,11 @@ def dialog_msg(action,
             if cancelled == False:
                 xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (line0, msg, __icon__))
 
+# Return the selected url to the GUI part
+def choose_image(imagelist):
+    image_item = False
+    image_item = dialog_select(imagelist)
+    return image_item 
 
 # Pass the imagelist to the dialog and return the selection
 def dialog_select(image_list):

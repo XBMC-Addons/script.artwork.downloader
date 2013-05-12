@@ -22,7 +22,7 @@ from lib import provider
 from lib.apply_filters import filter
 from lib.art_list import artype_list
 from lib.fileops import fileops, cleanup
-from lib.gui import gui_imagelist
+from lib.gui import choose_image, gui_imagelist
 from lib.media_setup import _media_listing as media_listing
 from lib.media_setup import _media_unique as media_unique
 from lib.provider import tmdb # import on behalf of searching when there's no ID
@@ -691,7 +691,7 @@ class Main:
         # Download the selected image
         # If there's a list, send the imagelist to the selection dialog
         if imagelist:
-            if self._choose_image(imagelist):
+            if choose_image(imagelist):
                 # Create a progress dialog so you can see the progress, Send the selected image for processing, Initiate the batch download
                 dialog_msg('create')
                 item = [{'art_type': self.gui_selected_type,
@@ -757,7 +757,7 @@ class Main:
                 dialog_msg('close', background = setting['background'])
                 startup['mode'] = 'customgui'
                 log('- Image list larger than 1')
-                if self._choose_image(imagelist):
+                if choose_image(imagelist):
                     log('- Chosen: %s'%self.image_item)
                     dialog_msg('create')
                     for item in artype_list:
@@ -780,15 +780,6 @@ class Main:
         else:
             log('- Start custom bulkmode')
             self._download_process(currentmedia)
-
-    # Return the selected url to the GUI part
-    def _choose_image(self, imagelist):
-        from lib.gui import dialog_select
-        self.image_item = dialog_select(imagelist)
-        if self.image_item:
-            return True
-        else:
-            return False
 
 ### Start of script
 if (__name__ == '__main__'):
