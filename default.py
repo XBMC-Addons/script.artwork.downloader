@@ -614,7 +614,8 @@ class Main:
                     break
                 dialog_msg('update',
                            percentage = int(float(download_counter['Total Artwork']) / float(len(image_list)) * 100.0),
-                           line1 = item['media_name'], line2 = __localize__(32009) + ' ' + __localize__(item['artwork_string']),
+                           line1 = item['media_name'],
+                           line2 = __localize__(32009) + ' ' + __localize__(item['artwork_string']),
                            line3 = item['filename'], background = setting['background'])
                 # Try downloading the file and catch errors while trying to
                 try:
@@ -773,7 +774,9 @@ class Main:
                     dialog_msg('create')
                     for item in artype_list:
                         if gui_arttype == item['art_type']:
-                            self._download_art(currentmedia, item, currentmedia['artworkdir'])
+                            self._download_art(currentmedia,
+                                               item,
+                                               currentmedia['artworkdir'])
                             break
                     self._batch_download(download_list)
                     if not download_succes:
