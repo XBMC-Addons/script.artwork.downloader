@@ -48,6 +48,7 @@ class Main:
         if self.initialise():
             global setting
             global startup
+            providers = provider.get_providers()
             # Check for silent background mode
             if startup['silent']:
                 setting['background'] = True
@@ -64,11 +65,11 @@ class Main:
                 if startup['dbid']:
                     self.Medialist = media_unique(startup['mediatype'],startup['dbid'])
                     if startup['mediatype'] == 'movie':
-                        self.download_artwork(self.Medialist, self.movie_providers)
+                        self.download_artwork(self.Medialist, providers['movie_providers'])
                     elif startup['mediatype'] == 'tvshow':
-                        self.download_artwork(self.Medialist, self.tv_providers)
+                        self.download_artwork(self.Medialist, providers['tv_providers'])
                     elif startup['mediatype'] == 'musicvideo':
-                        self.download_artwork(self.Medialist, self.musicvideo_providers)
+                        self.download_artwork(self.Medialist, providers['musicvideo_providers'])
                     if not dialog_msg('iscanceled', background = setting['background']) and not (startup['mode'] == 'customgui' or startup['mode'] == 'gui'):
                         self._batch_download(self.download_list)
                 else:
@@ -80,15 +81,15 @@ class Main:
                     if startup['mediatype'] == 'movie':
                         setting['movie_enable'] = True
                         self.Medialist = media_listing('movie')
-                        self.download_artwork(self.Medialist, self.movie_providers)
+                        self.download_artwork(self.Medialist, providers['movie_providers'])
                     elif startup['mediatype'] == 'tvshow':
                         setting['tvshow_enable'] = True
                         self.Medialist = media_listing('tvshow')
-                        self.download_artwork(self.Medialist, self.tv_providers)
+                        self.download_artwork(self.Medialist, providers['tv_providers'])
                     elif startup['mediatype'] == 'musicvideo':
                         setting['musicvideo_enable'] = True
                         self.Medialist = media_listing('musicvideo')
-                        self.download_artwork(self.Medialist, self.musicvideo_providers)
+                        self.download_artwork(self.Medialist, providers['musicvideo_providers'])
                     if not dialog_msg('iscanceled', background = setting['background']):
                         self._batch_download(self.download_list)
             # No mediatype is specified
@@ -104,15 +105,15 @@ class Main:
                 if setting['movie_enable'] and not dialog_msg('iscanceled', background = True):
                     startup['mediatype'] = 'movie'
                     self.Medialist = media_listing(startup['mediatype'])
-                    self.download_artwork(self.Medialist, self.movie_providers)
+                    self.download_artwork(self.Medialist, providers['movie_providers'])
                 if setting['tvshow_enable'] and not dialog_msg('iscanceled', background = True):
                     startup['mediatype'] = 'tvshow'
                     self.Medialist = media_listing(startup['mediatype'])
-                    self.download_artwork(self.Medialist, self.tv_providers)
+                    self.download_artwork(self.Medialist, providers['tv_providers'])
                 if setting['musicvideo_enable'] and not dialog_msg('iscanceled', background = True):
                     startup['mediatype'] = 'musicvideo'
                     self.Medialist = media_listing(startup['mediatype'])
-                    self.download_artwork(self.Medialist, self.musicvideo_providers)
+                    self.download_artwork(self.Medialist, providers['musicvideo_providers'])
                 # If not cancelled throw the whole downloadlist into the batch downloader
                 if not dialog_msg('iscanceled', background = setting['background']):
                     self._batch_download(self.download_list)
@@ -130,10 +131,6 @@ class Main:
                    'dbid': False,
                    'mode': False,
                    'silent': False}
-        providers       = provider.get_providers()
-        self.movie_providers        = providers['movie_providers']
-        self.tv_providers           = providers['tv_providers']
-        self.musicvideo_providers   = providers['musicvideo_providers']
         self.download_counter       = {}
         self.download_counter['Total Artwork'] = 0
         self.reportdata = '[B]Artwork Downloader:[/B]'
