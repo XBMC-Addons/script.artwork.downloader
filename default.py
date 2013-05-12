@@ -671,18 +671,18 @@ class Main:
                         break
         else:
             # Create empty list and set bool to false that there is a list
-            self.GUI_type_list = []
+            gui_type_list = []
             imagelist = False
             # Fill GUI art type list
             for item in artype_list:
                 if item['solo_enabled'] == 'true' and startup['mediatype'] == item['media_type'] and self._hasimages(item['art_type']):
                     gui = __localize__(item['gui_string'])
-                    self.GUI_type_list.append (gui)
+                    gui_type_list.append (gui)
             # Not sure what this does again
-            if len(self.GUI_type_list) == 1:
-                self.GUI_type_list[0] = 'True'
+            if len(gui_type_list) == 1:
+                gui_type_list[0] = 'True'
             # Fills imagelist with image that fit the selected imagetype
-            if (len(self.GUI_type_list) == 1) or self._choice_type():
+            if (len(gui_type_list) == 1) or self._choice_type(gui_type_list):
                 imagelist = gui_imagelist(self.image_list, self.gui_selected_type)
                 # Some debug log output
                 for item in imagelist:
@@ -715,9 +715,9 @@ class Main:
             self.cancelled = True
 
     # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
-    def _choice_type(self):
+    def _choice_type(self, gui_type_list):
         # Send the image type list to the selection dialog
-        select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , self.GUI_type_list)
+        select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , gui_type_list)
         # Create empty slected image type var
         self.gui_selected_type = ''
         # When nothing is selected from the dialog
@@ -728,7 +728,7 @@ class Main:
         else:
             # Check what artwork type has been chosen and parse the image restraints
             for item in artype_list:
-                if self.GUI_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
+                if gui_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
                     self.gui_selected_type = item['art_type']
                     self.gui_selected_filename = item['filename']
                     self.gui_selected_msg = __localize__(item['gui_string'])
