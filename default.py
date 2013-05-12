@@ -390,7 +390,6 @@ class Main:
             final_image_list.append(image_list)
         else:
             final_image_list = image_list
-        print final_image_list
         if len(final_image_list) == 0:
             log(' - Nothing to download')
         else:
@@ -418,8 +417,6 @@ class Main:
                     log('! No matching %s artwork found. Searching for English backup' %limit['limit_preferred_language'])
                 # loop through image list
                 for artwork in final_image_list:
-                    print art_item
-                    print artwork
                     if art_item['art_type'] in artwork['art_type']:
                         ### check if script has been cancelled by user
                         if dialog_msg('iscanceled', background = setting['background']):
@@ -633,10 +630,8 @@ class Main:
 
     ### Checks imagelist if it has that type of artwork has got images
     def _hasimages(self, art_type):
-        print art_type
         found = False
         for artwork in image_list:
-            print artwork
             if art_type in artwork['art_type']:
                 found = True
                 break
