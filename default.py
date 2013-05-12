@@ -623,11 +623,7 @@ class Main:
                             startup['mode'] == 'customgui' or
                             startup['mode'] == 'gui') and
                             item['url'].startswith('http')):
-                            self.fileops._downloadfile(item['url'],
-                                                       item['filename'],
-                                                       item['targetdirs'],
-                                                       item['media_name'],
-                                                       startup['mode'])
+                            self.fileops._downloadfile(item)
                         item['url'] = item['localfilename'].replace('\\','\\\\')
                     if item['mediatype'] == 'movie':
                         if item['art_type'] == 'poster':
@@ -645,11 +641,7 @@ class Main:
                         elif item['art_type'] == 'discart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "discart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         else:
-                            self.fileops._downloadfile(item['url'],
-                                                       item['filename'],
-                                                       item['targetdirs'],
-                                                       item['media_name'],
-                                                       startup['mode'])
+                            self.fileops._downloadfile(item)
                     if item['mediatype'] == 'tvshow':
                         if item['art_type'] == 'poster':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "poster": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
@@ -666,11 +658,7 @@ class Main:
                         elif item['art_type'] == 'characterart':
                             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "characterart": "%s" }}, "id": 1 }' %(item['dbid'], item['url']))
                         else:
-                            self.fileops._downloadfile(item['url'],
-                                                       item['filename'],
-                                                       item['targetdirs'],
-                                                       item['media_name'],
-                                                       startup['mode'])
+                            self.fileops._downloadfile(item)
                 except HTTP404Error, e:
                     log('URL not found: %s' % str(e), xbmc.LOGERROR)
                     download_succes = False

@@ -124,32 +124,32 @@ class fileops:
             log("[%s] Copied successfully: %s" % (media_name, targetpath) )
 
     # download file
-    def _downloadfile(self, url, filename, targetdirs, media_name, mode = ""):
+    def _downloadfile(self, item, mode = ""):
         try:
-            temppath = os.path.join(tempdir, filename)
+            temppath = os.path.join(tempdir, item['filename'])
             tempfile = open(temppath, "wb")
-            response = urllib2.urlopen(url)
+            response = urllib2.urlopen(item['url'])
             tempfile.write(response.read())
             tempfile.close()
             response.close()
         except HTTPError, e:
             if e.code == 404:
-                raise HTTP404Error(url)
+                raise HTTP404Error(item['url'])
             else:
                 raise DownloadError(str(e))
         except URLError:
-            raise HTTPTimeout(url)
+            raise HTTPTimeout(item['url'])
         except socket.timeout, e:
-            raise HTTPTimeout(url)
+            raise HTTPTimeout(item['url'])
         except Exception, e:
             log(str(e), xbmc.LOGNOTICE)
         else:
-            log("[%s] Downloaded: %s" % (media_name, filename))
+            log("[%s] Downloaded: %s" % (item['media_name'], item['filename']))
             self.downloadcount += 1
-            for targetdir in targetdirs:
+            for targetdir in item['targetdirs']:
                 #targetpath = os.path.join(urllib.url2pathname(targetdir).replace('|',':'), filename)
-                targetpath = os.path.join(targetdir, filename)
-                self._copyfile(temppath, targetpath, media_name)
+                targetpath = os.path.join(targetdir, item['filename'])
+                self._copyfile(temppath, targetpath, item['media_name'])
                 
 def cleanup():
     if xbmcvfs.exists(tempdir):
