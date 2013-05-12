@@ -22,7 +22,7 @@ from lib import provider
 from lib.apply_filters import filter
 from lib.art_list import artype_list
 from lib.fileops import fileops, cleanup
-from lib.gui import choose_image, choice_type, gui_imagelist, hasimages
+from lib.gui import choose_image, dialog_msg, choice_type, gui_imagelist, hasimages
 from lib.media_setup import _media_listing as media_listing
 from lib.media_setup import _media_unique as media_unique
 from lib.provider import tmdb # import on behalf of searching when there's no ID
@@ -225,7 +225,8 @@ class Main:
     def download_artwork(self, media_list, providers):
         global image_list
         global reportdata
-        self.processeditems = 0
+        processeditems = 0
+        media_list_total = len(media_list)
         for currentmedia in media_list:
             image_list = []
             # Declare some vars
@@ -246,7 +247,7 @@ class Main:
                 reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
                 break
             dialog_msg('update',
-                        percentage = int(float(self.processeditems) / float(len(media_list)) * 100.0),
+                        percentage = int(float(processeditems) / float(media_list_total) * 100.0),
                         line1 = currentmedia['name'],
                         line2 = __localize__(32008),
                         line3 = '',
@@ -381,7 +382,7 @@ class Main:
                 else:
                     #log('- Using bulk mode')
                     self._download_process(currentmedia)
-            self.processeditems += 1
+            processeditems += 1
 
     ### Processes the different modes for downloading of files
     def _download_process(self, currentmedia):
@@ -602,7 +603,8 @@ class Main:
         global download_counter
         global download_succes
         global reportdata
-        if not len(image_list) == 0:
+        image_list_total = len(image_list)
+        if not image_list_total == 0:
             failcount = 0
             for item in image_list:
                 if xbmc.abortRequested:
@@ -613,7 +615,7 @@ class Main:
                     reportdata += ('\n - %s: %s' %(__localize__(32153), time.strftime('%d %B %Y - %H:%M')))
                     break
                 dialog_msg('update',
-                           percentage = int(float(download_counter['Total Artwork']) / float(len(image_list)) * 100.0),
+                           percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),
                            line1 = item['media_name'],
                            line2 = __localize__(32009) + ' ' + __localize__(item['artwork_string']),
                            line3 = item['filename'], background = setting['background'])
