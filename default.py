@@ -138,7 +138,6 @@ class Main:
                    'dbid': False,
                    'mode': False,
                    'silent': False}
-        self.gui_selected_type = ''
 
     ### load settings and initialise needed directories
     def initialise(self):
@@ -655,20 +654,19 @@ class Main:
                 if item == type['art_type'] and startup['mediatype'] == type['media_type']:
                     log('- Custom %s mode art_type: %s' %(type['media_type'],type['art_type']))
                     self.download_arttypes.append(item)
-
+        gui_selected_type = False
         # If only one specified and not extrafanart/extrathumbs
         if (len(self.download_arttypes) == 1) and startup['dbid'] and not 'extrathumbs' in self.download_arttypes and not 'extrafanart' in self.download_arttypes:
             imagelist = False
-            self.gui_selected_type = ''
             for gui_arttype in self.download_arttypes:
-                self.gui_selected_type = gui_arttype
+                gui_selected_type = gui_arttype
                 break
             # Add parse the image restraints
-            if self.gui_selected_type != '':
+            if gui_selected_type:
                 for artype in artype_list:
-                    if self.gui_selected_type == artype['art_type'] and startup['mediatype'] == artype['media_type']:
+                    if gui_selected_type == artype['art_type'] and startup['mediatype'] == artype['media_type']:
                         # Get image list for that specific imagetype
-                        imagelist = gui_imagelist(image_list, self.gui_selected_type)
+                        imagelist = gui_imagelist(image_list, gui_selected_type)
                         # Some debug log output
                         for image in imagelist:
                             log('- Image put to GUI: %s' %image)
@@ -706,7 +704,7 @@ class Main:
                 if not download_succes:
                     dialog_msg('okdialog', line1 = __localize__(32006) , line2 = __localize__(32007))
         # When no images found or nothing selected
-        if not imagelist and not self.gui_selected_type == '':
+        if not imagelist and gui_selected_type:
             log('- No artwork found')
             dialog_msg('okdialog', line1 = currentmedia['name'] , line2 = __localize__(artype['gui_string']) + ' ' + __localize__(32022))
         # When download succesfull
@@ -721,8 +719,6 @@ class Main:
     def _choice_type(self, enabled_type_list):
         # Send the image type list to the selection dialog
         select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , enabled_type_list)
-        # Create empty slected image type var
-        self.gui_selected_type = ''
         # When nothing is selected from the dialog
         if select == -1:
             log('### Canceled by user')
