@@ -45,13 +45,15 @@ image_list = []
 limit = get_limit()
 reportdata = '[B]Artwork Downloader:[/B]'
 setting = get()
-startup = {}
+startup = {'mediatype': False,
+           'dbid': False,
+           'mode': False,
+           'silent': False}
 
 class Main:
     def __init__(self):
         if not check():          # Check if there are some faulty combinations present
             sys.exit(1)
-        self.initial_vars()
         if self.initialise():
             global setting
             global startup
@@ -130,14 +132,6 @@ class Main:
         __addon__.setSetting(id='files_overwrite', value='false')
         cleanup()
         self.report()
-
-    ### Declare standard vars
-    def initial_vars(self):
-        global startup
-        startup = {'mediatype': False,
-                   'dbid': False,
-                   'mode': False,
-                   'silent': False}
 
     ### load settings and initialise needed directories
     def initialise(self):
