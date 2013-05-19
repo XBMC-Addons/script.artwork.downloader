@@ -18,7 +18,6 @@
 #
 
 #import modules
-import re
 import os
 import sys
 import xbmc
