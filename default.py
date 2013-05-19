@@ -285,15 +285,6 @@ class Main:
                 currentmedia['id'] = tmdb._search_movie(currentmedia['name'],currentmedia['year'])
             log('Provider ID:       %s' % currentmedia['id'])
             log('Media path:        %s' % currentmedia['path'])
-
-            # this part check for local files when enabled
-            scan_more = True
-            if setting['files_local']:
-                local_list = []
-                local_list, scan_more = local().get_image_list(currentmedia)
-                # append local artwork
-                for item in local_list:
-                    image_list.append(item)
             # Declare the target folders
             artworkdir = []
             extrafanartdirs = []
@@ -314,6 +305,14 @@ class Main:
             currentmedia['artworkdir'] = artworkdir
             currentmedia['extrafanartdirs'] = extrafanartdirs
             currentmedia['extrathumbsdirs'] = extrathumbsdirs
+            # this part check for local files when enabled
+            scan_more = True
+            if setting['files_local']:
+                local_list = []
+                local_list, scan_more = local().get_image_list(currentmedia)
+                # append local artwork
+                for item in local_list:
+                    image_list.append(item)
             # Check for presence of id used by source sites
             if (startup['mode'] == 'gui' and
                 ((currentmedia['id'] == '') or
