@@ -1,3 +1,6 @@
+[B]12.0.16[/B]
+- A lot of code cleanup
+
 [B]12.0.15[/B]
 - Fixed custom mode
 - Added option to show image selection directly if type is specified
