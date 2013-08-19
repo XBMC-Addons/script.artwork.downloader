@@ -141,7 +141,7 @@ def artype_list():
                            'solo_enabled': 'true',
                            'gui_string': 32134,
                            'art_type': 'seasonlandscape',
-                           'filename': 'season%01d-landscape.jpg'},
+                           'filename': 'season%02d-landscape.jpg'},
 
                           {'media_type': 'tvshow',
                            'bulk_enabled': setting.get('tvshow_showbanner'),
