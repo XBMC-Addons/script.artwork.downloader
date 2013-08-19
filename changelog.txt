@@ -1,5 +1,6 @@
 [B]12.0.16[/B]
 - A lot of code cleanup
+- Updated language files from Transifex
 
 [B]12.0.15[/B]
 - Fixed custom mode
