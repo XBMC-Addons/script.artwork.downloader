@@ -292,7 +292,7 @@ class Main:
                 artwork_dir = os.path.join(item + '/')
                 extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
                 extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
-                artworkdir.append(artwork_dir.replace('BDMV','').replace('VIDEO_TS',''))
+                artworkdir.append(artwork_dir.replace('BDMV/','').replace('VIDEO_TS/',''))
                 extrafanartdirs.append(extrafanart_dir)
                 extrathumbsdirs.append(extrathumbs_dir)
             # Check if using the centralize option
