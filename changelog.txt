@@ -1,3 +1,7 @@
+[B]12.0.17[/B]
+- Fixed wrong filename for season landscape
+- Fixed extra slash for BDMV and VIDEO_TS
+
 [B]12.0.16[/B]
 - A lot of code cleanup
 - Updated language files from Transifex
