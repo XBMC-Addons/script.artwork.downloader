@@ -25,7 +25,7 @@ import xbmcvfs
 
 ### import libraries
 #from resources.lib.provider.base import BaseProvider
-from lib.art_list import artype_list
+from lib.art_list import arttype_list
 from lib.script_exceptions import NoFanartError
 from lib.settings import get_limit
 from lib.utils import *
@@ -33,7 +33,7 @@ from operator import itemgetter
 
 ### get addon info
 __localize__    = ( sys.modules[ "__main__" ].__localize__ )
-artype_list = artype_list()
+arttype_list = arttype_list()
 limit = get_limit()
 
 class local():
@@ -43,7 +43,7 @@ class local():
         ### Processes the bulk mode downloading of files
         i = 0
         j = 0
-        for item in artype_list:
+        for item in arttype_list:
             if item['bulk_enabled'] and media_item['mediatype'] == item['media_type']:
                 #log('finding: %s, arttype counter: %s'%(item['art_type'], j))
                 j += 1
