@@ -168,8 +168,13 @@ class Main:
             if arg[0] in args:
                 j = arg[1]
                 startup.update({arg[0]:arg[1]})
-        if startup['mediatype'] and startup['mediatype'] not in ['tvshow', 'movie', 'musicvideo']:
+        if startup['mediatype'] and (startup['mediatype'] not in ['tvshow', 'movie', 'musicvideo']):
             log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
+            return False
+        elif startup['dbid'] == '':
+            dialog_msg('okdialog',
+                       line1 = __localize__(32084))
+            log('Error: no valid dbid recieved, item must be scanned into library.', xbmc.LOGERROR)
             return False
         try:
             # Creates temp folder
