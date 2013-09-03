@@ -745,8 +745,11 @@ class Main:
                 # Create a progress dialog so you can see the progress,
                 #Send the selected image for processing, Initiate the batch download
                 dialog_msg('create')
-                self._download_art(currentmedia, type_list, currentmedia['artworkdir'])
-                self._batch_download(download_list)
+                for art_type in arttype_list:
+                    if image_list['art_type'][0] == art_type['art_type']:
+                        self._download_art(currentmedia, art_type, currentmedia['artworkdir'])
+                        self._batch_download(download_list)
+                        break
                 # When not succesfull show failure dialog
                 if not download_succes:
                     dialog_msg('okdialog',
