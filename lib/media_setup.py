@@ -45,6 +45,7 @@ def _media_unique(media_type, dbid):
             item = jsonobject['result']['tvshowdetails']
             # Search for season information
             json_query_season = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetSeasons", "params": {"properties": ["season", "art"], "sort": { "method": "label" }, "tvshowid":%s }, "id": 1}' %item.get('tvshowid',''))
+            json_query_season = unicode(json_query_season, 'utf-8', errors='ignore')
             jsonobject_season = simplejson.loads(json_query_season)
             # Get start/end and total seasons
             if jsonobject_season['result'].has_key('limits'):
