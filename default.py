@@ -785,9 +785,11 @@ class Main:
                 image_list = choose_image(imagelist)
                 if image_list:
                     log('- Chosen: %s'% image_list)
+                    '''
                     dialog_msg('createBG',
                                line1 = __localize__(32008) + " " + currentmedia['name'],
                                background = setting['background'])
+                    '''
                     for item in arttype_list:
                         if gui_arttype == item['art_type']:
                             self._download_art(currentmedia,
