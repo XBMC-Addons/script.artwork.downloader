@@ -198,3 +198,17 @@ def save_nfo_file(data, target):
     except Exception, e:
         log(str(e), xbmc.LOGERROR)
         return False
+
+def get_abbrev(lang_string):
+    try:
+        language_abbrev = xbmc.convertLanguage(lang_string, xbmc.ISO_639_1)
+    except:
+        language_abbrev = 'en' ### Default to English if conversion fails
+    return language_abbrev
+        
+def get_language(abbrev):
+    try:
+        lang_string = xbmc.convertLanguage(abbrev, xbmc.ENGLISH_NAME)
+    except:
+        lang_string = 'n/a'
+    return lang_string

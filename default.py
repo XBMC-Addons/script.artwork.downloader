@@ -35,7 +35,6 @@ __localize__     = lib.common.__localize__
 __version__      = lib.common.__version__
 
 ### import libraries
-from lib import language
 from lib import provider
 from lib.apply_filters import filter
 from lib.art_list import arttype_list
@@ -64,6 +63,7 @@ image_list = []
 limit = get_limit()
 reportdata = '[B]Artwork Downloader:[/B]'
 setting = get()
+setting_limit = get_limit()
 startup = {'mediatype': False,
            'dbid': False,
            'mode': False,
@@ -438,7 +438,7 @@ class Main:
         seasonfile_presents = []
         current_artwork = 0                     # Used in progras dialog
         limit_counter = 0                       # Used for limiting on number
-        pref_language = language.get_abbrev()   # get abbreviation
+        pref_language = get_abbrev(setting_limit['limit_preferred_language'])
         i = 0                                   # Set loop counter
         imagefound = False                      # Set found image false
         imageignore = False                     # Set ignaore image false

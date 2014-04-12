@@ -23,7 +23,6 @@ import urllib
 
 ### import libraries
 #from lib.provider.base import BaseProvider
-from lib.language import *
 from lib.script_exceptions import NoFanartError
 from lib.utils import *
 from operator import itemgetter
