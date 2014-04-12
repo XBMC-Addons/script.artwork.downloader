@@ -53,7 +53,7 @@ def dialog_msg(action,
 
     # Dialog logic
     if not line0 == '':
-        line0 = __addonname__ + ' : '  + line0
+        line0 = __addonname__ + line0
     else:
         line0 = __addonname__
     if not background:
@@ -75,10 +75,11 @@ def dialog_msg(action,
             else:
                 return False
         elif action == 'createBG':
-            pDialogBG.create(__addonname__,
-                               line1)
+            pDialogBG.create(heading = __addonname__,
+                             message = line1)
         elif action == 'updateBG':
             pDialogBG.update(percent = percentage,
+                             heading = __addonname__,
                              message = line1)
         elif action == 'closeBG':
             pDialogBG.close()
