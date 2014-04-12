@@ -154,7 +154,9 @@ class fileops:
                 
 def cleanup():
     if xbmcvfs.exists(tempdir):
-        dialog_msg('update', percentage = 100, line1 = __localize__(32005), background =  __addon__.getSetting('background'))
+        dialog_msg('updateBG', percentage = 100,
+                   line1 = __localize__(32005),
+                   background =  __addon__.getSetting('background'))
         log('Cleaning up temp files')
         for x in os.listdir(tempdir):
             tempfile = os.path.join(tempdir, x)
