@@ -54,10 +54,6 @@ socket.setdefaulttimeout(20)
 ### Cache bool
 CACHE_ON = True
 
-### Declare dialog
-dialog = xbmcgui.DialogProgress()
-
-
 # Fixes unicode problems
 def string_unicode(text, encoding='utf-8'):
     try:
@@ -89,52 +85,6 @@ def log(txt, severity=xbmc.LOGDEBUG):
                 message = ('%s: UnicodeEncodeError' %__addonname__)
                 xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
-# Define dialogs
-def dialog_msg(action,
-               percentage = 0,
-               line0 = '',
-               line1 = '',
-               line2 = '',
-               line3 = '',
-               background = False,
-               nolabel = __localize__(32026),
-               yeslabel = __localize__(32025),
-               cancelled = False):
-    # Fix possible unicode errors 
-    line0 = line0.encode( 'utf-8', 'ignore' )
-    line1 = line1.encode( 'utf-8', 'ignore' )
-    line2 = line2.encode( 'utf-8', 'ignore' )
-    line3 = line3.encode( 'utf-8', 'ignore' )
-
-    # Dialog logic
-    if not line0 == '':
-        line0 = __addonname__ + line0
-    else:
-        line0 = __addonname__
-    if not background:
-        if action == 'create':
-            dialog.create(__addonname__, line1, line2, line3)
-        if action == 'update':
-            dialog.update(percentage, line1, line2, line3)
-        if action == 'close':
-            dialog.close()
-        if action == 'iscanceled':
-            if dialog.iscanceled():
-                return True
-            else:
-                return False
-        if action == 'okdialog':
-            xbmcgui.Dialog().ok(line0, line1, line2, line3)
-        if action == 'yesno':
-            return xbmcgui.Dialog().yesno(line0, line1, line2, line3, nolabel, yeslabel)
-    if background:
-        if (action == 'create' or action == 'okdialog'):
-            if line2 == '':
-                msg = line1
-            else:
-                msg = line1 + ': ' + line2
-            if cancelled == False:
-                xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (line0, msg, __icon__))
 
 # Retrieve JSON data from cache function
 def get_data(url, data_type ='json'):

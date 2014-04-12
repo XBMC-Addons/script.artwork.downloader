@@ -28,7 +28,8 @@ import lib.common
 
 ### import libraries
 from lib.script_exceptions import *
-from lib.utils import dialog_msg, log
+from lib.gui import dialog_msg
+from lib.utils import log
 from traceback import print_exc
 from urllib2 import HTTPError, URLError
 

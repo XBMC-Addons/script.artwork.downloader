@@ -30,6 +30,9 @@ __localize__     = lib.common.__localize__
 ### set button actions for GUI
 ACTION_PREVIOUS_MENU = (9, 10, 92, 216, 247, 257, 275, 61467, 61448)
 
+pDialog = xbmcgui.DialogProgress()
+pDialogBG = xbmcgui.DialogProgressBG()
+
 # Define dialogs
 def dialog_msg(action,
                percentage = 0,
@@ -49,26 +52,50 @@ def dialog_msg(action,
 
     # Dialog logic
     if not line0 == '':
-        line0 = __addonname__ + line0
+        line0 = __addonname__ + ' : '  + line0
     else:
         line0 = __addonname__
     if not background:
         if action == 'create':
-            dialog.create(__addonname__, line1, line2, line3)
-        if action == 'update':
-            dialog.update(percentage, line1, line2, line3)
-        if action == 'close':
-            dialog.close()
-        if action == 'iscanceled':
-            if dialog.iscanceled():
+            pDialog.create(__addonname__,
+                           line1,
+                           line2,
+                           line3)
+        elif action == 'update':
+            pDialog.update(percentage,
+                           line1,
+                           line2,
+                           line3)
+        elif action == 'close':
+            pDialog.close()
+        elif action == 'iscanceled':
+            if pDialog.iscanceled():
                 return True
             else:
                 return False
-        if action == 'okdialog':
-            xbmcgui.Dialog().ok(line0, line1, line2, line3)
-        if action == 'yesno':
-            return xbmcgui.Dialog().yesno(line0, line1, line2, line3, nolabel, yeslabel)
-    if background:
+        elif action == 'createBG':
+            pDialogBG.create(__addonname__,
+                               line1)
+        elif action == 'updateBG':
+            pDialogBG.update(percent = percentage,
+                             message = line1)
+        elif action == 'closeBG':
+            pDialogBG.close()
+        elif action == 'iscanceledBG':
+            return False
+        elif action == 'okdialog':
+            xbmcgui.Dialog().ok(line0,
+                                line1,
+                                line2,
+                                line3)
+        elif action == 'yesno':
+            return xbmcgui.Dialog().yesno(line0,
+                                          line1,
+                                          line2,
+                                          line3,
+                                          nolabel,
+                                          yeslabel)
+    else:
         if (action == 'create' or action == 'okdialog'):
             if line2 == '':
                 msg = line1
