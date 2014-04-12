@@ -26,6 +26,7 @@ from lib.utils import log
 __addonname__    = lib.common.__addonname__
 __addonpath__    = lib.common.__addonpath__
 __localize__     = lib.common.__localize__
+__icon__         = lib.common.__icon__
 
 ### set button actions for GUI
 ACTION_PREVIOUS_MENU = (9, 10, 92, 216, 247, 257, 275, 61467, 61448)
@@ -101,8 +102,11 @@ def dialog_msg(action,
                 msg = line1
             else:
                 msg = line1 + ': ' + line2
-            if cancelled == False:
-                xbmc.executebuiltin("XBMC.Notification(%s, %s, 7500, %s)" % (line0, msg, __icon__))
+            if not cancelled:
+                xbmcgui.Dialog().notification(line0,
+                                              msg,
+                                              __icon__,
+                                              7500)
 
 # Return the selected url to the GUI part
 def choose_image(imagelist):
