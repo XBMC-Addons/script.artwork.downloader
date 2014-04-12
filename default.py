@@ -153,6 +153,8 @@ class Main:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
         __addon__.setSetting(id='files_overwrite', value='false')
+        dialog_msg('closeBG',
+                   background = setting['background'])
         cleanup()
         self.report()
 
@@ -197,8 +199,6 @@ class Main:
         provider_msg2 = __localize__(32184) + ' | ' + __localize__(32185) + ' | ' + __localize__(32186)
         # Close dialog in case it was open before doing a notification
         time.sleep(2)
-        dialog_msg('closeBG',
-                   background = setting['background'])
         # Some dialog checks
         if setting['notify']:
             log('Notify on finished/error enabled')
@@ -265,9 +265,7 @@ class Main:
                 break
             dialog_msg('updateBG',
                         percentage = int(float(processeditems) / float(media_list_total) * 100.0),
-                        line1 = currentmedia['name'],
-                        line2 = __localize__(32008),
-                        line3 = '',
+                        line1 = __localize__(32008) + " " + currentmedia['name'],
                         background = setting['background'])
             log('########################################################')
             log('Processing media:  %s' % currentmedia['name'])
@@ -402,7 +400,8 @@ class Main:
                     #log('- Using bulk mode')
                     self._download_process(currentmedia)
             processeditems += 1
-
+        dialog_msg('closeBG',
+           background = setting['background'])
     ### Processes the different modes for downloading of files
     def _download_process(self, currentmedia):
         # with the exception of cutsom mode run through the art_list to see which ones are enabled and create a list with those
@@ -609,6 +608,8 @@ class Main:
         global download_succes
         global reportdata
         image_list_total = len(image_list)
+        dialog_msg('createBG',
+                   line1 = __localize__(32009))
         if not image_list_total == 0:
             failcount = 0
             for item in image_list:
@@ -617,9 +618,7 @@ class Main:
                     break
                 dialog_msg('updateBG',
                            percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),
-                           line1 = item['media_name'],
-                           line2 = __localize__(32009) + ' ' + __localize__(item['artwork_string']),
-                           line3 = item['filename'], background = setting['background'])
+                           line1 = __localize__(32009) + " " + item['media_name'] + " : " + __localize__(item['artwork_string']))
                 # Try downloading the file and catch errors while trying to
                 try:
                     if setting['files_local'] and not item['art_type'] in ['extrafanart', 'extrathumbs']:
@@ -659,6 +658,8 @@ class Main:
                         download_counter[__localize__(item['artwork_string'])] = 1
                     download_counter['Total Artwork'] += 1
                     download_succes = True
+            dialog_msg('closeBG',
+               background = setting['background'])
             log('Finished download')
 
     ### This handles the GUI image type selector part
@@ -721,9 +722,14 @@ class Main:
         if imagelist:
             image_list = choose_image(imagelist)
             if image_list:
+                '''
                 # Create a progress dialog so you can see the progress,
                 #Send the selected image for processing, Initiate the batch download
-                dialog_msg('createBG')
+
+                dialog_msg('createBG',
+                           line1 = __localize__(32008) + ": " + currentmedia['name'],
+                           background = setting['background'])
+                '''
                 for art_type in arttype_list:
                     if image_list['art_type'][0] == art_type['art_type']:
                         self._download_art(currentmedia, art_type, currentmedia['artworkdir'])
@@ -731,6 +737,8 @@ class Main:
                         break
                 # When not succesfull show failure dialog
                 if not download_succes:
+                    dialog_msg('closeBG',
+                               background = setting['background'])
                     dialog_msg('okdialog',
                                line1 = __localize__(32006),
                                line2 = __localize__(32007))
@@ -777,7 +785,9 @@ class Main:
                 image_list = choose_image(imagelist)
                 if image_list:
                     log('- Chosen: %s'% image_list)
-                    dialog_msg('createBG')
+                    dialog_msg('createBG',
+                               line1 = __localize__(32008) + " " + currentmedia['name'],
+                               background = setting['background'])
                     for item in arttype_list:
                         if gui_arttype == item['art_type']:
                             self._download_art(currentmedia,

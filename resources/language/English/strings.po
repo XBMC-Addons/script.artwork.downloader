@@ -47,11 +47,11 @@ msgid "Error downloading file"
 msgstr ""
 
 msgctxt "#32008"
-msgid "Searching for artwork"
+msgid "Searching artwork for"
 msgstr ""
 
 msgctxt "#32009"
-msgid "Downloading"
+msgid "Processing artwork for"
 msgstr ""
 
 msgctxt "#32010"
@@ -87,7 +87,7 @@ msgid "Cancelled"
 msgstr ""
 
 msgctxt "#32018"
-msgid "Download canceled by user"
+msgid "Download cancelled by user"
 msgstr ""
 
 msgctxt "#32019"
