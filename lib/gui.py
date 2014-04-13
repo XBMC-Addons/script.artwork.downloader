@@ -64,6 +64,10 @@ def dialog_msg(action,
                                line3)
             elif action == 'update':
                 pDialog.update(percentage,
+                               line1 = "\n",
+                               line2 = "\n",
+                               line3 = "\n")
+                pDialog.update(percentage,
                                line1,
                                line2,
                                line3)
@@ -78,6 +82,9 @@ def dialog_msg(action,
                 pDialogBG.create(heading = __addonname__,
                                  message = line1)
             elif action == 'updateBG':
+                pDialogBG.update(percent = percentage,
+                                 heading = __addonname__,
+                                 message = "\n")
                 pDialogBG.update(percent = percentage,
                                  heading = __addonname__,
                                  message = line1)

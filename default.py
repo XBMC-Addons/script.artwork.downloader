@@ -250,10 +250,6 @@ class Main:
                 break
             dialog_msg('update',
                         percentage = int(float(processeditems) / float(media_list_total) * 100.0),
-                        line1 = "\n",
-                        background = setting['background'])
-            dialog_msg('update',
-                        percentage = int(float(processeditems) / float(media_list_total) * 100.0),
                         line1 = __localize__(32008) + "\n" + currentmedia['name'],
                         background = setting['background'])
             log('########################################################')
@@ -606,10 +602,6 @@ class Main:
                               background = setting['background']):
                     reportdata += ('\n - %s: %s' %(__localize__(32153), time.strftime('%d %B %Y - %H:%M')))
                     break
-                dialog_msg('update',
-                            percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),
-                            line1 = "\n",
-                            background = setting['background'])
                 dialog_msg('update',
                            percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),
                            line1 = __localize__(32009) + "\n" + item['media_name'])
