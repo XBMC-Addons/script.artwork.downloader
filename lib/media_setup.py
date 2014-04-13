@@ -137,6 +137,7 @@ def _media_listing(media_type):
                                   'seasonstart': season_limit.get('start',''),
                                   'seasonend': season_limit.get('end',''),
                                   'seasons': seasons_list,
+                                  'disctype': 'n/a',
                                   'art' : item.get('art',''),
                                   'mediatype': media_type})
 
@@ -179,6 +180,7 @@ def _media_listing(media_type):
                                   'runtime': item.get('runtime',''),
                                   'year': item.get('year',''),
                                   'path': media_path(item.get('file','')),
+                                  'disctype': 'n/a',
                                   'art' : item.get('art',''),
                                   'mediatype': media_type})
     else:

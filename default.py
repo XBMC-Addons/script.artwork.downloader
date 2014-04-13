@@ -227,9 +227,6 @@ class Main:
         for i in media_list:
             currentmedia = media_list.pop(0)
             image_list = []
-            # Declare some vars
-            if not currentmedia.get('disctype'):
-                currentmedia['disctype'] = 'n/a'
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
                 log('XBMC abort requested, aborting')
