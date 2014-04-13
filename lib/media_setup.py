@@ -146,10 +146,15 @@ def _media_listing(media_type):
         jsonobject = simplejson.loads(json_query)
         if jsonobject.has_key('result') and jsonobject['result'].has_key('movies'):
             for item in jsonobject['result']['movies']:
+                imdbnumber = item.get('imdbnumber','')
+                if imdbnumber in ['','tt0000000','0']:
+                    from lib.provider import tmdb # import on behalf of searching when there's no ID
+                    log('No valid ID found, trying to search themoviedb.org for matching title.')
+                    imdbnumber = tmdb._search_movie(item.get('label',''),item.get('year',''))
                 disctype = media_disctype(item.get('file','').encode('utf-8').lower(),
                                           item['streamdetails']['video'])
                 Medialist.append({'dbid': item.get('movieid',''),
-                                  'id': item.get('imdbnumber',''),
+                                  'id': imdbnumber,
                                   'name': item.get('label',''),
                                   'year': item.get('year',''),
                                   'file': item.get('file',''),

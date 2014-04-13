@@ -40,7 +40,6 @@ from lib.fileops import fileops, cleanup
 from lib.gui import choose_image, dialog_msg, choice_type, gui_imagelist, hasimages
 from lib.media_setup import _media_listing as media_listing
 from lib.media_setup import _media_unique as media_unique
-from lib.provider import tmdb # import on behalf of searching when there's no ID
 from lib.provider.local import local
 from lib.report import create_report
 from lib.script_exceptions import *
@@ -254,16 +253,6 @@ class Main:
                         background = setting['background'])
             log('########################################################')
             log('Processing media:  %s' % currentmedia['name'])
-            # do some id conversions
-            if (not currentmedia['mediatype'] == 'tvshow' and
-                currentmedia['id'] in ['','tt0000000','0']):
-                log('No IMDB ID found, trying to search themoviedb.org for matching title.')
-                currentmedia['id'] = tmdb._search_movie(currentmedia['name'],currentmedia['year'])
-            elif (currentmedia['mediatype'] == 'movie' and not
-                  currentmedia['id'] == '' and not
-                  currentmedia['id'].startswith('tt')):
-                log('No valid ID found, trying to search themoviedb.org for matching title.')
-                currentmedia['id'] = tmdb._search_movie(currentmedia['name'],currentmedia['year'])
             log('Provider ID:       %s' % currentmedia['id'])
             log('Media path:        %s' % currentmedia['path'])
             # Declare the target folders
