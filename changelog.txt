@@ -1,3 +1,7 @@
+v12.1.00
+- Always apply language filters else you end up with a random language
+- Use built-in language converter
+
 v12.0.24
 - Fix unicode error in season query
 
