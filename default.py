@@ -275,13 +275,18 @@ class Main:
             currentmedia['extrathumbsdirs'] = extrathumbsdirs
             # this part check for local files when enabled
             scan_more = True
-            missing = False
+            currentmedia['missing_arttypes'] = []
             if setting['files_local']:
                 local_list = []
-                local_list, scan_more, missing = local().get_image_list(currentmedia)
+                local_list, scan_more, currentmedia['missing_arttypes'] = local().get_image_list(currentmedia)
                 # append local artwork
                 for item in local_list:
                     image_list.append(item)
+            else:
+                for i in arttype_list:
+                    if i['bulk_enabled'] and currentmedia['mediatype'] == i['media_type']:
+                        if not currentmedia['art'].has_key(i['art_type']):
+                            currentmedia['missing_arttypes'].append(i['art_type'])
             # Check for presence of id used by source sites
             if (startup['mode'] == 'gui' and
                 ((currentmedia['id'] == '') or
@@ -301,10 +306,13 @@ class Main:
             elif not scan_more and not startup['mode'] in ['gui', 'custom']:
                 log('- Already have all files local')
                 pass
+            elif not currentmedia['missing_arttypes'] and not startup['mode'] in ['gui', 'custom']:
+                log('- Already have all artwork')
+                pass
             # If correct ID found and don't already have all artwork retrieve from providers
             else:
                 log('- Still missing some files')
-                log(missing)
+                log(currentmedia['missing_arttypes'])
                 temp_image_list = []
                 # Run through all providers getting their imagelisting
                 failcount = 0
@@ -373,14 +381,14 @@ class Main:
 
     ### Processes the different modes for downloading of files
     def _download_process(self, currentmedia):
-        # with the exception of cutsom mode run through the art_list to see which ones are enabled and create a list with those
+        # with the exception of custom mode run through the art_list to see which ones are enabled and create a list with those
         # then call _download_art to process it
         if not startup['mode'] == 'custom':
             global download_arttypes
             download_arttypes = []
-            for art_type in arttype_list:
-                if art_type['bulk_enabled'] and startup['mediatype'] == art_type['media_type']:
-                    download_arttypes.append(art_type['art_type'])
+            for art_type in currentmedia['missing_arttypes']:
+                download_arttypes.append(art_type)
+                log('%s: added arttype %s for scanning'%(currentmedia['name'], art_type))
         # do the same but for custom mode
         for art_type in arttype_list:
             if (art_type['art_type'] in download_arttypes and
