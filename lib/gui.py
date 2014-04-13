@@ -50,53 +50,56 @@ def dialog_msg(action,
     line1 = line1.encode('utf-8', 'ignore')
     line2 = line2.encode('utf-8', 'ignore')
     line3 = line3.encode('utf-8', 'ignore')
-
     # Dialog logic
     if not line0 == '':
         line0 = __addonname__ + line0
     else:
         line0 = __addonname__
     if not background:
-        if action == 'create':
-            pDialog.create(__addonname__,
-                           line1,
-                           line2,
-                           line3)
-        elif action == 'update':
-            pDialog.update(percentage,
-                           line1,
-                           line2,
-                           line3)
-        elif action == 'close':
-            pDialog.close()
-        elif action == 'iscanceled':
-            if pDialog.iscanceled():
-                return True
-            else:
+        try:
+            if action == 'create':
+                pDialog.create(__addonname__,
+                               line1,
+                               line2,
+                               line3)
+            elif action == 'update':
+                pDialog.update(percentage,
+                               line1,
+                               line2,
+                               line3)
+            elif action == 'close':
+                pDialog.close()
+            elif action == 'iscanceled':
+                if pDialog.iscanceled():
+                    return True
+                else:
+                    return False
+            elif action == 'createBG':
+                pDialogBG.create(heading = __addonname__,
+                                 message = line1)
+            elif action == 'updateBG':
+                pDialogBG.update(percent = percentage,
+                                 heading = __addonname__,
+                                 message = line1)
+            elif action == 'closeBG':
+                pDialogBG.close()
+            elif action == 'iscanceledBG':
                 return False
-        elif action == 'createBG':
-            pDialogBG.create(heading = __addonname__,
-                             message = line1)
-        elif action == 'updateBG':
-            pDialogBG.update(percent = percentage,
-                             heading = __addonname__,
-                             message = line1)
-        elif action == 'closeBG':
-            pDialogBG.close()
-        elif action == 'iscanceledBG':
-            return False
-        elif action == 'okdialog':
-            xbmcgui.Dialog().ok(line0,
-                                line1,
-                                line2,
-                                line3)
-        elif action == 'yesno':
-            return xbmcgui.Dialog().yesno(line0,
-                                          line1,
-                                          line2,
-                                          line3,
-                                          nolabel,
-                                          yeslabel)
+            elif action == 'okdialog':
+
+                xbmcgui.Dialog().ok(line0,
+                                    line1,
+                                    line2,
+                                    line3)
+            elif action == 'yesno':
+                return xbmcgui.Dialog().yesno(line0,
+                                              line1,
+                                              line2,
+                                              line3,
+                                              nolabel,
+                                              yeslabel)
+        except:
+            pass
     else:
         if (action == 'create' or action == 'okdialog'):
             if line2 == '':
