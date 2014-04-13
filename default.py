@@ -21,8 +21,6 @@
 import os
 import sys
 import xbmc
-import xbmcaddon
-import xbmcgui
 import time
 import lib.common
 
@@ -48,8 +46,6 @@ from lib.report import create_report
 from lib.script_exceptions import *
 from lib.settings import get_limit, get, check
 from lib.utils import *
-from traceback import print_exc
-from urlparse import urlsplit
 from xml.parsers.expat import ExpatError
 
 arttype_list = arttype_list()
@@ -86,7 +82,7 @@ class Main:
                 setting['background'] = True
                 setting['notify'] = False
                 setting['files_overwrite'] = True
-            dialog_msg('createBG',
+            dialog_msg('create',
                        line1 = __localize__(32008),
                        background = setting['background'])
             # Check if mediatype is specified
@@ -100,7 +96,9 @@ class Main:
                         self.download_artwork(mediaList, providers['tv_providers'])
                     elif startup['mediatype'] == 'musicvideo':
                         self.download_artwork(mediaList, providers['musicvideo_providers'])
-                    if (not xbmc.abortRequested and not
+                    if ((not xbmc.abortRequested or not
+                         dialog_msg('iscanceled',
+                                    background = setting['background'])) and not 
                         (startup['mode'] == 'customgui' or
                         startup['mode'] == 'gui')):
                         self._batch_download(download_list)
@@ -122,7 +120,8 @@ class Main:
                         setting['musicvideo_enable'] = True
                         mediaList = media_listing('musicvideo')
                         self.download_artwork(mediaList, providers['musicvideo_providers'])
-                    if not xbmc.abortRequested:
+                    if not xbmc.abortRequested or not dialog_msg('iscanceled',
+                                                                 background = setting['background']):
                         self._batch_download(download_list)
             # No mediatype is specified
             else:
@@ -134,15 +133,18 @@ class Main:
                 # Normal oprations check
                 # 1. Check if enable, 2. Get library list, 3. Set mediatype, 4. Do the API stuff
                 # Do this for each media type
-                if setting['movie_enable'] and not xbmc.abortRequested:
+                if setting['movie_enable'] and not (xbmc.abortRequested or dialog_msg('iscanceled',
+                                                                                      background = setting['background'])):
                     startup['mediatype'] = 'movie'
                     mediaList = media_listing(startup['mediatype'])
                     self.download_artwork(mediaList, providers['movie_providers'])
-                if setting['tvshow_enable'] and not xbmc.abortRequested:
+                if setting['tvshow_enable'] and not (xbmc.abortRequested or dialog_msg('iscanceled',
+                                                                                       background = setting['background'])):
                     startup['mediatype'] = 'tvshow'
                     mediaList = media_listing(startup['mediatype'])
                     self.download_artwork(mediaList, providers['tv_providers'])
-                if setting['musicvideo_enable'] and not xbmc.abortRequested:
+                if setting['musicvideo_enable'] and not (xbmc.abortRequested or dialog_msg('iscanceled',
+                                                                                           background = setting['background'])):
                     startup['mediatype'] = 'musicvideo'
                     mediaList = media_listing(startup['mediatype'])
                     self.download_artwork(mediaList, providers['musicvideo_providers'])
@@ -153,38 +155,12 @@ class Main:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
         __addon__.setSetting(id='files_overwrite', value='false')
-        dialog_msg('closeBG',
+        dialog_msg('close',
                    background = setting['background'])
         cleanup()
         self.report()
 
-    ### load settings and initialise needed directories
-    def initialise(self):
-        global startup
-        log('## Checking for downloading mode...')
-        args = ['silent', 'mode', 'mediatype', 'dbid']
-        for item in sys.argv:
-            arg = item.split('=')
-            i = arg[0]
-            if arg[0] in args:
-                j = arg[1]
-                startup.update({arg[0]:arg[1]})
-        if startup['mediatype'] and (startup['mediatype'] not in ['tvshow', 'movie', 'musicvideo']):
-            log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
-            return False
-        elif startup['dbid'] == '':
-            dialog_msg('okdialog',
-                       line1 = __localize__(32084))
-            log('Error: no valid dbid recieved, item must be scanned into library.', xbmc.LOGERROR)
-            return False
-        try:
-            # Creates temp folder
-            self.fileops = fileops()
-        except CreateDirectoryError, e:
-            log('Could not create directory: %s' % str(e))
-            return False
-        else:
-            return True
+
 
     def report(self):
         global setting
@@ -257,15 +233,28 @@ class Main:
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
                 log('XBMC abort requested, aborting')
-                reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
+                reportdata += ('\n - %s: %s' %(__localize__(32150),
+                                               time.strftime('%d %B %Y - %H:%M')))
+                break
+            ### check if script has been cancelled by user
+            if dialog_msg('iscanceled',
+                          background = setting['background']):
+                reportdata += ('\n - %s [%s]: %s' %(__localize__(32151),
+                                                    currentmedia['mediatype'],
+                                                    time.strftime('%d %B %Y - %H:%M')))
                 break
             # abort script because of to many failures
             if not setting['failcount'] < setting['failthreshold']:
-                reportdata += ('\n - %s: %s' %(__localize__(32152), time.strftime('%d %B %Y - %H:%M')))
+                reportdata += ('\n - %s: %s' %(__localize__(32152),
+                                               time.strftime('%d %B %Y - %H:%M')))
                 break
-            dialog_msg('updateBG',
+            dialog_msg('update',
                         percentage = int(float(processeditems) / float(media_list_total) * 100.0),
-                        line1 = __localize__(32008) + " " + currentmedia['name'],
+                        line1 = "\n",
+                        background = setting['background'])
+            dialog_msg('update',
+                        percentage = int(float(processeditems) / float(media_list_total) * 100.0),
+                        line1 = __localize__(32008) + "\n" + currentmedia['name'],
                         background = setting['background'])
             log('########################################################')
             log('Processing media:  %s' % currentmedia['name'])
@@ -315,8 +304,6 @@ class Main:
                 ((currentmedia['id'] == '') or
                 (currentmedia['mediatype'] == 'tvshow' and
                 currentmedia['id'].startswith('tt')))):
-                dialog_msg('closeBG',
-                           background = setting['background'])
                 dialog_msg('okdialog',
                            '',
                            currentmedia['name'],
@@ -400,8 +387,7 @@ class Main:
                     #log('- Using bulk mode')
                     self._download_process(currentmedia)
             processeditems += 1
-        dialog_msg('closeBG',
-           background = setting['background'])
+
     ### Processes the different modes for downloading of files
     def _download_process(self, currentmedia):
         # with the exception of cutsom mode run through the art_list to see which ones are enabled and create a list with those
@@ -456,8 +442,10 @@ class Main:
                 for artwork in final_image_list:
                     if art_item['art_type'] in artwork['art_type']:
                         ### check if script has been cancelled by user
-                        if xbmc.abortRequested:
-                            #dialog('close', background = setting['background'])
+                        if xbmc.abortRequested or dialog_msg('iscanceled',
+                                                             background = setting['background']):
+                            dialog_msg('close',
+                                       background = setting['background'])
                             break
                         # Create an image info list
                         item = {'url': artwork['url'],
@@ -608,17 +596,23 @@ class Main:
         global download_succes
         global reportdata
         image_list_total = len(image_list)
-        dialog_msg('createBG',
-                   line1 = __localize__(32009))
         if not image_list_total == 0:
             failcount = 0
             for item in image_list:
                 if xbmc.abortRequested:
                     reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
                     break
-                dialog_msg('updateBG',
+                if dialog_msg('iscanceled',
+                              background = setting['background']):
+                    reportdata += ('\n - %s: %s' %(__localize__(32153), time.strftime('%d %B %Y - %H:%M')))
+                    break
+                dialog_msg('update',
+                            percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),
+                            line1 = "\n",
+                            background = setting['background'])
+                dialog_msg('update',
                            percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),
-                           line1 = __localize__(32009) + " " + item['media_name'] + " : " + __localize__(item['artwork_string']))
+                           line1 = __localize__(32009) + "\n" + item['media_name'])
                 # Try downloading the file and catch errors while trying to
                 try:
                     if setting['files_local'] and not item['art_type'] in ['extrafanart', 'extrathumbs']:
@@ -658,8 +652,6 @@ class Main:
                         download_counter[__localize__(item['artwork_string'])] = 1
                     download_counter['Total Artwork'] += 1
                     download_succes = True
-            dialog_msg('closeBG',
-               background = setting['background'])
             log('Finished download')
 
     ### This handles the GUI image type selector part
@@ -667,8 +659,8 @@ class Main:
         global download_arttypes
         global image_list
         # Close the 'checking for artwork' dialog before opening the GUI list
-        dialog_msg('closeBG',
-           background = setting['background'])
+        dialog_msg('close',
+                   background = setting['background'])
         # Look for argument matching artwork types
         for item in sys.argv:
             for type in arttype_list:
@@ -722,14 +714,6 @@ class Main:
         if imagelist:
             image_list = choose_image(imagelist)
             if image_list:
-                '''
-                # Create a progress dialog so you can see the progress,
-                #Send the selected image for processing, Initiate the batch download
-
-                dialog_msg('createBG',
-                           line1 = __localize__(32008) + ": " + currentmedia['name'],
-                           background = setting['background'])
-                '''
                 for art_type in arttype_list:
                     if image_list['art_type'][0] == art_type['art_type']:
                         self._download_art(currentmedia, art_type, currentmedia['artworkdir'])
@@ -737,7 +721,7 @@ class Main:
                         break
                 # When not succesfull show failure dialog
                 if not download_succes:
-                    dialog_msg('closeBG',
+                    dialog_msg('close',
                                background = setting['background'])
                     dialog_msg('okdialog',
                                line1 = __localize__(32006),
@@ -778,18 +762,13 @@ class Main:
             log('- Number of images: %s' %len(imagelist))
             # If more images than 1 found show GUI selection
             if len(imagelist) > 1:
-                dialog_msg('closeBG',
+                dialog_msg('close',
                            background = setting['background'])
                 startup['mode'] = 'customgui'
                 log('- Image list larger than 1')
                 image_list = choose_image(imagelist)
                 if image_list:
                     log('- Chosen: %s'% image_list)
-                    '''
-                    dialog_msg('createBG',
-                               line1 = __localize__(32008) + " " + currentmedia['name'],
-                               background = setting['background'])
-                    '''
                     for item in arttype_list:
                         if gui_arttype == item['art_type']:
                             self._download_art(currentmedia,
@@ -815,6 +794,31 @@ class Main:
         else:
             log('- Start custom bulkmode')
             self._download_process(currentmedia)
+
+    ### load settings and initialise needed directories
+    def initialise(self):
+        global startup
+        log('## Checking for downloading mode...')
+        for item in sys.argv:
+            arg = item.split('=')
+            if arg[0] in ['silent', 'mode', 'mediatype', 'dbid']:
+                startup.update({arg[0]:arg[1]})
+        if startup['mediatype'] and (startup['mediatype'] not in ['tvshow', 'movie', 'musicvideo']):
+            log('Error: invalid mediatype, must be one of movie, tvshow or musicvideo', xbmc.LOGERROR)
+            return False
+        elif startup['dbid'] == '':
+            dialog_msg('okdialog',
+                       line1 = __localize__(32084))
+            log('Error: no valid dbid recieved, item must be scanned into library.', xbmc.LOGERROR)
+            return False
+        try:
+            # Creates temp folder
+            self.fileops = fileops()
+        except CreateDirectoryError, e:
+            log('Could not create directory: %s' % str(e))
+            return False
+        else:
+            return True
 
 ### Start of script
 if (__name__ == '__main__'):
