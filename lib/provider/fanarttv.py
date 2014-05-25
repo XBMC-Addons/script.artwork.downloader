@@ -99,7 +99,7 @@ class FTV_TVProvider():
                                                'size': size,
                                                'season': item.get('season','n/a'),
                                                'language': item.get('lang'),
-                                               'votes': item.get('likes'),
+                                               'votes': int(item.get('likes')),
                                                'generalinfo': generalinfo})
             if image_list == []:
                 raise NoFanartError(media_id)
@@ -155,7 +155,7 @@ class FTV_MovieProvider():
                                                'size': size,
                                                'season': item.get('season','n/a'),
                                                'language': item.get('lang'),
-                                               'votes': item.get('likes'),
+                                               'votes': int(item.get('likes')),
                                                'disctype': item.get('disc_type','n/a'),
                                                'discnumber': item.get('disc','n/a'),
                                                'generalinfo': generalinfo})

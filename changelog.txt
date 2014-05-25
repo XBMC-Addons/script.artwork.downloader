@@ -2,6 +2,7 @@ v12.1.00 (future)
 - Use built-in language converter
 - Vastly improve scanning speed
 - Use Gotham specific features
+- Fix wrong order of listing using votes for artwork from fanart.tv
 
 v12.0.25
 - Always apply language filters else you end up with a random language
