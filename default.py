@@ -224,8 +224,7 @@ class Main:
         global reportdata
         processeditems = 0
         media_list_total = len(media_list)
-        for i in media_list:
-            currentmedia = media_list.pop(0)
+        for currentmedia in media_list:
             image_list = []
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
@@ -589,8 +588,7 @@ class Main:
         image_list_total = len(image_list)
         if not image_list_total == 0:
             failcount = 0
-            for i in image_list:
-                item = image_list.pop(0)
+            for item in image_list:
                 if xbmc.abortRequested:
                     reportdata += ('\n - %s: %s' %(__localize__(32150), time.strftime('%d %B %Y - %H:%M')))
                     break
