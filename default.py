@@ -277,7 +277,7 @@ class Main:
             currentmedia['missing_arttypes'] = []
             if setting['files_local']:
                 local_list = []
-                local_list, scan_more, currentmedia['missing_arttypes'] = local().get_image_list(currentmedia)
+                local_list, scan_more, currentmedia['missing_arttypes'], currentmedia['force_update'] = local().get_image_list(currentmedia)
                 # append local artwork
                 for item in local_list:
                     image_list.append(item)
@@ -480,7 +480,12 @@ class Main:
                             else:
                                 item['filename'] = (art_item['filename'] % int(artwork['season']))
                         else:
-                            item['filename'] = art_item['filename']
+                            # only use <movie_filename>-<art_type>.ext for movies
+                            if item['mediatype'] == 'movie':
+                                item['filename'] = currentmedia['base_name'] + '-' + art_item['filename']
+                            else:
+                                item['filename'] = art_item['filename']
+
                         for targetdir in item['targetdirs']:
                             item['localfilename'] = os.path.join(targetdir, item['filename']).encode('utf-8')
                             break

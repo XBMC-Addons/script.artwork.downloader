@@ -1,4 +1,5 @@
 v12.1.00 (future)
+- Support standard naming scheme <movie_filename>-<art_type>.ext and auto rename old <art_type>.ext to default scheme
 - Use built-in language converter
 - Vastly improve scanning speed
 - Use Gotham specific features

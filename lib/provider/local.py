@@ -38,6 +38,7 @@ limit = get_limit()
 
 class local():
     def get_image_list(self,media_item):
+        force_update = False
         image_list = []
         missing_arttypes =[]
         file_list = xbmcvfs.listdir(media_item['artworkdir'][0])
@@ -160,8 +161,25 @@ class local():
                             missing_arttypes.append(item['art_type'])
 
                 else:
-                    filename = item['filename']
-                    #log ('finding: %s'%filename)
+                    if media_item['mediatype'] == 'tvshow':
+                        filename = item['filename']
+                    else:
+                        # only use <movie_filename>-<art_type>.ext for movies
+                        filename = media_item['base_name'] + '-' + item['filename']
+                        #see if there's still the old <art_type>.ext and rename it
+                        filename_old = item['filename']
+                        if filename_old in file_list[1]:
+                            filename_new_full = os.path.join(media_item['artworkdir'][0], filename)
+                            filename_old_full = os.path.join(media_item['artworkdir'][0], filename_old)
+                            log('Found: %s'%filename_old)
+                            log('Renaming to: %s'%filename)
+                            success = xbmcvfs.rename(filename_old_full,filename_new_full)
+                            if success:
+                                file_list = xbmcvfs.listdir(media_item['artworkdir'][0])
+                                force_update = True
+                            else:
+                                log('Failed to rename : %s'%filename)
+                    #log('Searching for: %s'%filename)
                     if filename in file_list[1]:
                         url = os.path.join(media_item['artworkdir'][0], filename).encode('utf-8')
                         j += 1
@@ -190,10 +208,10 @@ class local():
             #log('don''t scan for more')
             scan_more = False
         if image_list == []:
-            return image_list, scan_more, missing_arttypes
+            return image_list, scan_more, missing_arttypes, force_update
         else:
             # Sort the list before return. Last sort method is primary
             image_list = sorted(image_list, key=itemgetter('votes'), reverse=True)
             image_list = sorted(image_list, key=itemgetter('size'), reverse=False)
             image_list = sorted(image_list, key=itemgetter('language'))
-            return image_list, scan_more, missing_arttypes
+            return image_list, scan_more, missing_arttypes, force_update
