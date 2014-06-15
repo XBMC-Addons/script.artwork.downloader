@@ -437,126 +437,123 @@ class Main:
                             dialog_msg('close',
                                        background = setting['background'])
                             break
-                        # Create an image info list
-                        item = {'url': artwork['url'],
-                                'targetdirs': targetdirs,
-                                'media_name': currentmedia['name'],
-                                'mediatype':currentmedia['mediatype'],
-                                'artwork_string': art_item['gui_string'],
-                                'artwork_details': artwork,
-                                'dbid':currentmedia['dbid'],
-                                'art':currentmedia['art'],
-                                'art_type':art_item['art_type']}
+                        # Add need info to artwork item
+                        artwork['targetdirs'] = targetdirs
+                        artwork['media_name'] = currentmedia['name']
+                        artwork['mediatype'] = currentmedia['mediatype']
+                        artwork['artwork_string'] = art_item['gui_string']
+                        artwork['dbid'] = currentmedia['dbid']
+                        artwork['art'] = currentmedia['art']
                         # raise artwork counter only on first loop
                         if i != 1:
                             current_artwork += 1
 
                         # File naming
                         if art_item['art_type']   == 'extrafanart':
-                            item['filename'] = ('%s.jpg'% artwork['id'])
+                            artwork['filename'] = ('%s.jpg'% artwork['id'])
                         elif art_item['art_type'] == 'extrathumbs':
-                            item['filename'] = (art_item['filename'] % str(limit_counter + 1))
+                            artwork['filename'] = (art_item['filename'] % str(limit_counter + 1))
                         elif art_item['art_type'] in ['seasonposter']:
                             if artwork['season'] == '0':
-                                item['filename'] = "season-specials-poster.jpg"
+                                artwork['filename'] = "season-specials-poster.jpg"
                             elif artwork['season'] == 'all':
-                                item['filename'] = "season-all-poster.jpg"
+                                artwork['filename'] = "season-all-poster.jpg"
                             elif artwork['season'] == 'n/a':
                                 break
                             else:
-                                item['filename'] = (art_item['filename'] % int(artwork['season']))
+                                artwork['filename'] = (art_item['filename'] % int(artwork['season']))
                         elif art_item['art_type'] in ['seasonbanner']:
                             if artwork['season'] == '0':
-                                item['filename'] = "season-specials-banner.jpg"
+                                artwork['filename'] = "season-specials-banner.jpg"
                             elif artwork['season'] == 'all':
-                                item['filename'] = "season-all-banner.jpg"
+                                artwork['filename'] = "season-all-banner.jpg"
                             elif artwork['season'] == 'n/a':
                                 break
                             else:
-                                item['filename'] = (art_item['filename'] % int(artwork['season']))
+                                artwork['filename'] = (art_item['filename'] % int(artwork['season']))
                         elif art_item['art_type'] in ['seasonlandscape']:
                             if artwork['season'] == 'all' or artwork['season'] == '':
-                                item['filename'] = "season-all-landscape.jpg"
+                                artwork['filename'] = "season-all-landscape.jpg"
                             else:
-                                item['filename'] = (art_item['filename'] % int(artwork['season']))
+                                artwork['filename'] = (art_item['filename'] % int(artwork['season']))
                         else:
                             # only use <movie_filename>-<art_type>.ext for movies
-                            if item['mediatype'] == 'movie':
-                                item['filename'] = currentmedia['base_name'] + '-' + art_item['filename']
+                            if artwork['mediatype'] == 'movie':
+                                artwork['filename'] = currentmedia['base_name'] + '-' + art_item['filename']
                             else:
-                                item['filename'] = art_item['filename']
+                                artwork['filename'] = art_item['filename']
 
-                        for targetdir in item['targetdirs']:
-                            item['localfilename'] = os.path.join(targetdir, item['filename']).encode('utf-8')
+                        for targetdir in artwork['targetdirs']:
+                            artwork['localfilename'] = os.path.join(targetdir, artwork['filename']).encode('utf-8')
                             break
 
                         # Continue
                         if startup['mode'] in ['gui', 'customgui'] and not art_item['art_type'] in ['extrafanart', 'extrathumbs']:
                             # Add image to download list
-                            download_list.append(item)
+                            download_list.append(artwork)
                             # jump out of the loop
                             imagefound = True
                         else:
                             # Check for set limits
                             if (setting['files_local'] and not
-                                item['url'].startswith('http') and not
+                                artwork['url'].startswith('http') and not
                                 art_item['art_type'] in ['extrafanart', 'extrathumbs']):
                                 # if it's a local file use this first
                                 limited = [False, 'This is your local file']
                             elif art_item['art_type'] == 'discart':
                                 limited = filter(art_item['art_type'],
                                                  startup['mediatype'],
-                                                 item['artwork_details'],
+                                                 artwork,
                                                  limit_counter,
                                                  pref_language,
                                                  currentmedia['disctype'])
                             else:
                                 limited = filter(art_item['art_type'],
                                                  startup['mediatype'],
-                                                 item['artwork_details'],
+                                                 artwork,
                                                  limit_counter,
                                                  pref_language)
                             # Delete extrafanart when below settings and parsing the reason message
                             if limited[0] and not i == 1 and art_item['art_type'] in ['extrafanart', 'extrathumbs']:
-                                #self.fileops._delete_file_in_dirs(item['filename'], item['targetdirs'], limited[1],currentmedia['name'])
+                                #self.fileops._delete_file_in_dirs(artwork['filename'], artwork['targetdirs'], limited[1],currentmedia['name'])
                                 pass
                             # Just ignore image when it's below settings
                             elif limited[0]:
                                 imageignore = True
-                                log(' - Ignoring (%s): %s' % (limited[1], item['filename']))
+                                log(' - Ignoring (%s): %s' % (limited[1], artwork['filename']))
                             else:
                                 # Always add to list when set to overwrite
                                 if setting['files_overwrite']:
-                                    log(' - Adding to download list (overwrite enabled): %s' % item['filename'])
-                                    download_list.append(item)
+                                    log(' - Adding to download list (overwrite enabled): %s' % artwork['filename'])
+                                    download_list.append(artwork)
                                     imagefound = True
                                 else:
-                                    artcheck = item['art']
+                                    artcheck = artwork['art']
                                     # Check if extrathumbs/extrafanart image already exist local
                                     if art_item['art_type'] in ['extrathumbs','extrafanart']:
-                                        for targetdir in item['targetdirs']:
-                                            if not self.fileops._exists(os.path.join(targetdir, item['filename'])):
+                                        for targetdir in artwork['targetdirs']:
+                                            if not self.fileops._exists(os.path.join(targetdir, artwork['filename'])):
                                                 missingfiles = True
                                     # Check if image already exist in database
                                     elif not art_item['art_type'] in ['seasonlandscape','seasonbanner','seasonposter']:
-                                        if setting['files_local']and not self.fileops._exists(item['localfilename']):
+                                        if setting['files_local']and not self.fileops._exists(artwork['localfilename']):
                                             missingfiles = True
                                         elif not artcheck.get(art_item['art_type']):
                                             missingfiles = True
                                     if missingfiles:
                                         # If missing add to list
                                         imagefound = True
-                                        log(' - Adding to download list (does not exist in all target directories): %s' % item['filename'])
-                                        download_list.append(item)
+                                        log(' - Adding to download list (does not exist in all target directories): %s' % artwork['filename'])
+                                        download_list.append(artwork)
                                     else:
                                         imagefound = True
-                                        log(' - Ignoring (Exists in all target directories): %s' % item['filename'])
+                                        log(' - Ignoring (Exists in all target directories): %s' % artwork['filename'])
                                 # Raise limit counter because image was added to list or it already existed
                                 limit_counter += 1
                                 # Check if artwork doesn't exist and the ones available are below settings even after searching for English fallback
                                 if limited[0] and imageignore and i == 1:
-                                    for targetdir in item['targetdirs']:
-                                        if (not self.fileops._exists(os.path.join (targetdir,item['filename'])) and not
+                                    for targetdir in artwork['targetdirs']:
+                                        if (not self.fileops._exists(os.path.join (targetdir, artwork['filename'])) and not
                                             art_item['art_type'] in ['extrafanart', 'extrathumbs']):
                                             failed_items.append('[%s] %s %s' % (currentmedia['name'], art_item['art_type'], __localize__(32147)))
                             # Do some special check on season artwork
