@@ -607,11 +607,9 @@ class Main:
                 # Try downloading the file and catch errors while trying to
                 try:
                     if setting['files_local'] and not item['art_type'] in ['extrafanart', 'extrathumbs']:
-                        if ((not self.fileops._exists(item['localfilename']) or
-                            startup['mode'] == 'customgui' or
-                            startup['mode'] == 'gui') and
-                            item['url'].startswith('http')):
-                            self.fileops._downloadfile(item)
+                        if item['url'].startswith('http'):
+                            if startup['mode'] in ['customgui','gui'] or not self.fileops._exists(item['localfilename']):
+                                self.fileops._downloadfile(item)
                         item['url'] = item['localfilename'].replace('\\','\\\\')
                     if item['art_type'] in ['extrathumbs', 'extrafanart']:
                         self.fileops._downloadfile(item)
