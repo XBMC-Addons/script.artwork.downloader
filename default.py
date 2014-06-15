@@ -302,10 +302,10 @@ class Main:
                 log('- IMDB ID found for TV show, skipping')
                 failed_items.append('[%s]: TVDB ID %s' %(currentmedia['name'], __localize__(32022)))
             #skip scanning for more if local files have been found and not run in gui / custom mode
-            elif not scan_more and not startup['mode'] in ['gui', 'custom']:
+            elif not (scan_more or currentmedia['force_update']) and not startup['mode'] in ['gui', 'custom']:
                 log('- Already have all files local')
                 pass
-            elif not currentmedia['missing_arttypes'] and not startup['mode'] in ['gui', 'custom']:
+            elif not (currentmedia['missing_arttypes'] or currentmedia['force_update']) and not startup['mode'] in ['gui', 'custom']:
                 log('- Already have all artwork')
                 pass
             # If correct ID found and don't already have all artwork retrieve from providers
@@ -525,6 +525,10 @@ class Main:
                                 # Always add to list when set to overwrite
                                 if setting['files_overwrite']:
                                     log(' - Adding to download list (overwrite enabled): %s' % artwork['filename'])
+                                    download_list.append(artwork)
+                                    imagefound = True
+                                elif currentmedia['force_update']:
+                                    log(' - Adding to download list (rename detected): %s' % artwork['filename'])
                                     download_list.append(artwork)
                                     imagefound = True
                                 else:
