@@ -3,6 +3,7 @@ v12.1.00 (future)
 - Use built-in language converter
 - Vastly improve scanning speed
 - Use Gotham specific features
+- Update to fanart.tv API v3
 
 v12.0.28
 - Don't set simplejson module to optional
