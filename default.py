@@ -225,6 +225,7 @@ class Main:
         processeditems = 0
         media_list_total = len(media_list)
         for currentmedia in media_list:
+            currentmedia['force_update'] = False
             image_list = []
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
