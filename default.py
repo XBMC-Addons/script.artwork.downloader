@@ -95,12 +95,6 @@ class Main:
                         self.download_artwork(mediaList, providers['tv_providers'])
                     elif startup['mediatype'] == 'musicvideo':
                         self.download_artwork(mediaList, providers['musicvideo_providers'])
-                    if ((not xbmc.abortRequested or not
-                         dialog_msg('iscanceled',
-                                    background = setting['background'])) and not 
-                        (startup['mode'] == 'customgui' or
-                        startup['mode'] == 'gui')):
-                        self._batch_download(download_list)
                 else:
                     # If no medianame specified
                     # 1. Check what media type was specified, 2. Retrieve library list, 3. Enable the correct type, 4. Do the API stuff
@@ -119,9 +113,6 @@ class Main:
                         setting['musicvideo_enable'] = True
                         mediaList = media_listing('musicvideo')
                         self.download_artwork(mediaList, providers['musicvideo_providers'])
-                    if not xbmc.abortRequested or not dialog_msg('iscanceled',
-                                                                 background = setting['background']):
-                        self._batch_download(download_list)
             # No mediatype is specified
             else:
                 # activate movie/tvshow/musicvideo for custom run
@@ -147,9 +138,6 @@ class Main:
                     startup['mediatype'] = 'musicvideo'
                     mediaList = media_listing(startup['mediatype'])
                     self.download_artwork(mediaList, providers['musicvideo_providers'])
-                # If not cancelled throw the whole downloadlist into the batch downloader
-                if not xbmc.abortRequested:
-                    self._batch_download(download_list)
         else:
             log('Initialisation error, script aborting', xbmc.LOGERROR)
         # Make sure that files_overwrite option get's reset after downloading
@@ -401,6 +389,7 @@ class Main:
                     self._download_art(currentmedia, art_type, currentmedia['extrathumbsdirs'])
                 else:
                     self._download_art(currentmedia, art_type, currentmedia['artworkdir'])
+        self._batch_download(download_list)
 
     ### Artwork downloading
     def _download_art(self, currentmedia, art_item, targetdirs):
@@ -593,6 +582,7 @@ class Main:
         global download_succes
         global reportdata
         image_list_total = len(image_list)
+        db_update = {}
         if not image_list_total == 0:
             failcount = 0
             for item in image_list:
@@ -615,10 +605,15 @@ class Main:
                         item['url'] = item['localfilename'].replace('\\','\\\\')
                     if item['art_type'] in ['extrathumbs', 'extrafanart']:
                         self.fileops._downloadfile(item)
-                    elif item['mediatype'] == 'movie':
-                        xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(item['dbid'], item['art_type'], item['url']))
-                    elif item['mediatype'] == 'tvshow':
-                        xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(item['dbid'], item['art_type'], item['url']))
+                    else:
+                        db_update[item['art_type'][0]] = str(item["url"])
+                    # add counter
+                    try:
+                        download_counter[localize(item['artwork_string'])] += 1
+                    except KeyError:
+                        download_counter[localize(item['artwork_string'])] = 1
+                    download_counter['Total Artwork'] += 1
+                    download_succes = True
                 except HTTP404Error, e:
                     log('URL not found: %s' % str(e), xbmc.LOGERROR)
                     download_succes = False
@@ -637,12 +632,18 @@ class Main:
                     log('Error downloading file: %s (Possible network error: %s), skipping' % (item['url'], str(e)), xbmc.LOGERROR)
                     download_succes = False
                 else:
-                    try:
-                        download_counter[localize(item['artwork_string'])] += 1
-                    except KeyError:
-                        download_counter[localize(item['artwork_string'])] = 1
-                    download_counter['Total Artwork'] += 1
-                    download_succes = True
+                    continue
+            if db_update is not "":
+                if item['mediatype'] == 'movie':
+                    jsonstring = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": %s}, "id": 1 }' %(item['dbid'], db_update)
+                    jsonstring = jsonstring.replace("'",'"')
+                    log(jsonstring)
+                    xbmc.executeJSONRPC(jsonstring)
+                elif item['mediatype'] == 'tvshow':
+                    jsonstring = ('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s }, "id": 1 }' %(item['dbid'], db_update))
+                    jsonstring = jsonstring.replace("'",'"')
+                    log(jsonstring)
+                    xbmc.executeJSONRPC(jsonstring)
             log('Finished download')
 
     ### This handles the GUI image type selector part
