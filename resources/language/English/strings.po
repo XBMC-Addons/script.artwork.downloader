@@ -160,17 +160,7 @@ msgctxt "#32035"
 msgid "Overwrite all existing artwork [I](will be automaticly disabled after downloading) [/I]"
 msgstr ""
 
-msgctxt "#32036"
-msgid "Centralize extrafanart [I](Can be used for extrafanart slideshow) [/I]"
-msgstr ""
-
-msgctxt "#32037"
-msgid "Central TV extrafanart directory"
-msgstr ""
-
-msgctxt "#32038"
-msgid "Central Movie extrafanart directory"
-msgstr ""
+#empty strings from id 32036 to 32038
 
 msgctxt "#32039"
 msgid "View download report from latest download run"
