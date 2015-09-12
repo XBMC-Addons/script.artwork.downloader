@@ -56,7 +56,6 @@ download_succes = False
 failed_items = []
 image_list = []
 limit = get_limit()
-reportdata = '[B]Artwork Downloader:[/B]'
 setting = get()
 setting_limit = get_limit()
 startup = {'mediatype': False,
@@ -153,7 +152,7 @@ class Main:
         global setting
         ### log results and notify user
         # Download totals to log and to download report
-        create_report(reportdata, download_counter, failed_items)
+        create_report(download_counter, failed_items)
 
         # Build dialog messages
         summary = localize(32012) + ': %s ' % download_counter['Total Artwork'] + localize(32020)
@@ -209,7 +208,6 @@ class Main:
     ### download media fanart
     def download_artwork(self, media_list, providers):
         global image_list
-        global reportdata
         processeditems = 0
         media_list_total = len(media_list)
         for currentmedia in media_list:
@@ -217,21 +215,12 @@ class Main:
             image_list = []
             ### check if XBMC is shutting down
             if xbmc.abortRequested:
-                log('XBMC abort requested, aborting')
-                reportdata += ('\n - %s: %s' %(localize(32150),
-                                               time.strftime('%d %B %Y - %H:%M')))
                 break
             ### check if script has been cancelled by user
-            if dialog_msg('iscanceled',
-                          background = setting['background']):
-                reportdata += ('\n - %s [%s]: %s' %(localize(32151),
-                                                    currentmedia['mediatype'],
-                                                    time.strftime('%d %B %Y - %H:%M')))
+            if dialog_msg('iscanceled', background = setting['background']):
                 break
             # abort script because of to many failures
             if not setting['failcount'] < setting['failthreshold']:
-                reportdata += ('\n - %s: %s' %(localize(32152),
-                                               time.strftime('%d %B %Y - %H:%M')))
                 break
             dialog_msg('update',
                         percentage = int(float(processeditems) / float(media_list_total) * 100.0),
@@ -580,18 +569,14 @@ class Main:
         log('########################################################')
         global download_counter
         global download_succes
-        global reportdata
         image_list_total = len(image_list)
         db_update = {}
         if not image_list_total == 0:
             failcount = 0
             for item in image_list:
                 if xbmc.abortRequested:
-                    reportdata += ('\n - %s: %s' %(localize(32150), time.strftime('%d %B %Y - %H:%M')))
                     break
-                if dialog_msg('iscanceled',
-                              background = setting['background']):
-                    reportdata += ('\n - %s: %s' %(localize(32153), time.strftime('%d %B %Y - %H:%M')))
+                if dialog_msg('iscanceled', background = setting['background']):
                     break
                 dialog_msg('update',
                            percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),

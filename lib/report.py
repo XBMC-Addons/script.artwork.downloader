@@ -26,8 +26,9 @@ from lib.utils import save_nfo_file
 PROFILE_PATH  = lib.common.PROFILE_PATH
 localize      = lib.common.localize
 
-def create_report(data, download_counter, failed_items):
+def create_report(download_counter, failed_items):
     # Download totals to log and to download report
+    data = '[B]Artwork Downloader:[/B]'
     data += ('\n - %s: %s' %(localize(32148), time.strftime('%d %B %Y - %H:%M')))      # Time of finish
     data += ('\n[B]%s:[/B]' %(localize(32020)))                                        # Download total header
     data += ('\n - %s: %s' % (localize(32014), download_counter['Total Artwork']))# Total downloaded items
