@@ -81,38 +81,6 @@ class fileops:
         if not isdeleted:
             log("[%s] Ignoring (%s): %s" % (media_name, reason, filename))
 
-    ### erase old cache file and copy new one
-    def erase_current_cache(self,filename):
-        try: 
-            cached_thumb = self.get_cached_thumb(filename)
-            log( "Cache file %s" % cached_thumb )
-            if xbmcvfs.exists( cached_thumb.replace("png" , "dds").replace("jpg" , "dds") ):
-                xbmcvfs.delete( cached_thumb.replace("png" , "dds").replace("jpg" , "dds") )
-            copy = xbmcvfs.copy( filename , cached_thumb )
-            if copy:
-                log("Cache succesful")
-            else:
-                log("Failed to copy to cached thumb")
-        except :
-            print_exc()
-            log("Cache erasing error")
-
-    # retrieve cache filename
-    def get_cached_thumb(self, filename):
-        if filename.startswith("stack://"):
-            filename = strPath[ 8 : ].split(" , ")[ 0 ]
-        if filename.endswith("folder.jpg"):
-            cachedthumb = xbmc.getCacheThumbName(filename)
-            thumbpath = os.path.join( THUMBS_CACHE_PATH, cachedthumb[0], cachedthumb ).replace( "/Video" , "")
-        else:
-            cachedthumb = xbmc.getCacheThumbName(filename)
-            if ".jpg" in filename:
-                cachedthumb = cachedthumb.replace("tbn" ,"jpg")
-            elif ".png" in filename:
-                cachedthumb = cachedthumb.replace("tbn" ,"png")      
-            thumbpath = os.path.join( THUMBS_CACHE_PATH, cachedthumb[0], cachedthumb ).replace( "/Video" , "")    
-        return thumbpath         
-
     # copy file from temp to final location
     def _copyfile(self, sourcepath, targetpath, media_name = ''):
         targetdir = os.path.dirname(targetpath).encode("utf-8")
