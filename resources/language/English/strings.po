@@ -22,9 +22,7 @@ msgctxt "#32001"
 msgid "Please help get more artwork or donate on:"
 msgstr ""
 
-msgctxt "#32002"
-msgid "Scheduled run at time: (24h)"
-msgstr ""
+#empty strings id 32002
 
 msgctxt "#32003"
 msgid "Faulty/empty settings combination found!"
@@ -90,9 +88,7 @@ msgctxt "#32018"
 msgid "Download cancelled by user"
 msgstr ""
 
-msgctxt "#32019"
-msgid "Delayed start in minutes:"
-msgstr ""
+#empty strings id 32019
 
 msgctxt "#32020"
 msgid "Downloaded"
@@ -106,13 +102,7 @@ msgctxt "#32022"
 msgid "not found!"
 msgstr ""
 
-msgctxt "#32023"
-msgid "Run add-on at login"
-msgstr ""
-
-msgctxt "#32024"
-msgid "Run add-on as a service"
-msgstr ""
+#empty strings from id 32023 to 32024
 
 msgctxt "#32025"
 msgid "Yes"
