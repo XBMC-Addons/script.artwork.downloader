@@ -229,24 +229,27 @@ class Main:
             log('Processing media:  %s' % currentmedia['name'])
             log('Provider ID:       %s' % currentmedia['id'])
             log('Media path:        %s' % currentmedia['path'])
-            # Declare the target folders
-            artworkdir = []
-            extrafanartdirs = []
-            extrathumbsdirs = []
-            for item in currentmedia['path']:
-                artwork_dir = os.path.join(item + '/')
-                extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
-                extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
-                artworkdir.append(artwork_dir.replace('BDMV/','').replace('VIDEO_TS/',''))
-                extrafanartdirs.append(extrafanart_dir)
-                extrathumbsdirs.append(extrathumbs_dir)
-            currentmedia['artworkdir'] = artworkdir
-            currentmedia['extrafanartdirs'] = extrafanartdirs
-            currentmedia['extrathumbsdirs'] = extrathumbsdirs
+            currentmedia['artworkdir'] = []
+            currentmedia['extrafanartdirs'] = []
+            currentmedia['extrathumbsdirs'] = []
             # this part check for local files when enabled
             scan_more = True
             currentmedia['missing_arttypes'] = []
             if setting['files_local']:
+                # Declare the target folders
+                artworkdir = []
+                extrafanartdirs = []
+                extrathumbsdirs = []
+                for item in currentmedia['path']:
+                    artwork_dir = os.path.join(item + '/')
+                    extrafanart_dir = os.path.join(artwork_dir + 'extrafanart' + '/')
+                    extrathumbs_dir = os.path.join(artwork_dir + 'extrathumbs' + '/')
+                    artworkdir.append(artwork_dir.replace('BDMV/','').replace('VIDEO_TS/',''))
+                    extrafanartdirs.append(extrafanart_dir)
+                    extrathumbsdirs.append(extrathumbs_dir)
+                currentmedia['artworkdir'] = artworkdir
+                currentmedia['extrafanartdirs'] = extrafanartdirs
+                currentmedia['extrathumbsdirs'] = extrathumbsdirs
                 local_list = []
                 local_list, scan_more, currentmedia['missing_arttypes'], currentmedia['force_update'] = local().get_image_list(currentmedia)
                 # append local artwork
