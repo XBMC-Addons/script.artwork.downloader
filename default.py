@@ -224,7 +224,7 @@ class Main:
                 break
             dialog_msg('update',
                         percentage = int(float(processeditems) / float(media_list_total) * 100.0),
-                        line1 = localize(32008) + ": " + currentmedia['name'],
+                        line1 = localize(32008) + "\n" + currentmedia['name'],
                         background = setting['background'])
             log('########################################################')
             log('Processing media:  %s' % currentmedia['name'])
@@ -573,9 +573,6 @@ class Main:
                     break
                 if dialog_msg('iscanceled', background = setting['background']):
                     break
-                dialog_msg('update',
-                           percentage = int(float(download_counter['Total Artwork']) / float(image_list_total) * 100.0),
-                           line1 = localize(32009) + "\n" + item['media_name'])
                 # Try downloading the file and catch errors while trying to
                 try:
                     if setting['files_local'] and not item['art_type'] in ['extrafanart', 'extrathumbs']:
