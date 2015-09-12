@@ -203,7 +203,6 @@ class Main:
         if startup['mode'] in ['gui','customgui']:
             if download_succes:
                 xbmc.executebuiltin('Container.Refresh')
-                #xbmc.executebuiltin('XBMC.ReloadSkin()')
 
     ### download media fanart
     def download_artwork(self, media_list, providers):
