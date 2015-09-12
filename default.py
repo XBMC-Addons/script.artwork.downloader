@@ -224,7 +224,7 @@ class Main:
                 break
             dialog_msg('update',
                         percentage = int(float(processeditems) / float(media_list_total) * 100.0),
-                        line1 = localize(32008) + "\n" + currentmedia['name'],
+                        line1 = localize(32008) + ": " + currentmedia['name'],
                         background = setting['background'])
             log('########################################################')
             log('Processing media:  %s' % currentmedia['name'])
