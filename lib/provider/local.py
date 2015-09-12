@@ -32,7 +32,7 @@ from lib.utils import *
 from operator import itemgetter
 
 ### get addon info
-__localize__    = ( sys.modules[ "__main__" ].__localize__ )
+localize      = ( sys.modules[ "__main__" ].localize )
 arttype_list = arttype_list()
 limit = get_limit()
 
@@ -84,10 +84,10 @@ class local():
                         if filename in file_list[1]:
                             url = os.path.join(media_item['artworkdir'][0], filename).encode('utf-8')
                             j += 1
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
-                            generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
-                            generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
-                            generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                            generalinfo = '%s: %s  |  ' %( localize(32141), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( localize(32144), season)
+                            generalinfo += '%s: %s  |  ' %( localize(32143), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( localize(32145), 'n/a')
                             # Fill list
                             #log ('found: %s'%url)
                             image_list.append({'url': url,
@@ -114,10 +114,10 @@ class local():
                         if filename in file_list[1]:
                             url = os.path.join(media_item['artworkdir'][0], filename).encode('utf-8')
                             j += 1
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
-                            generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
-                            generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
-                            generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                            generalinfo = '%s: %s  |  ' %( localize(32141), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( localize(32144), season)
+                            generalinfo += '%s: %s  |  ' %( localize(32143), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( localize(32145), 'n/a')
                             # Fill list
                             #log ('found: %s'%url)
                             image_list.append({'url': url,
@@ -142,10 +142,10 @@ class local():
                         if filename in file_list[1]:
                             url = os.path.join(media_item['artworkdir'][0], filename).encode('utf-8')
                             j += 1
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
-                            generalinfo += '%s: %s  |  ' %( __localize__(32144), season)
-                            generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
-                            generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                            generalinfo = '%s: %s  |  ' %( localize(32141), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( localize(32144), season)
+                            generalinfo += '%s: %s  |  ' %( localize(32143), 'n/a')
+                            generalinfo += '%s: %s  |  ' %( localize(32145), 'n/a')
                             # Fill list
                             #log ('found: %s'%url)
                             image_list.append({'url': url,
@@ -183,9 +183,9 @@ class local():
                     if filename in file_list[1]:
                         url = os.path.join(media_item['artworkdir'][0], filename).encode('utf-8')
                         j += 1
-                        generalinfo = '%s: %s  |  ' %( __localize__(32141), 'n/a')
-                        generalinfo += '%s: %s  |  ' %( __localize__(32143), 'n/a')
-                        generalinfo += '%s: %s  |  ' %( __localize__(32145), 'n/a')
+                        generalinfo = '%s: %s  |  ' %( localize(32141), 'n/a')
+                        generalinfo += '%s: %s  |  ' %( localize(32143), 'n/a')
+                        generalinfo += '%s: %s  |  ' %( localize(32145), 'n/a')
                         # Fill list
                         #log ('found: %s'%url)
                         image_list.append({'url': url,

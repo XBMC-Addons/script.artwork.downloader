@@ -29,7 +29,7 @@ from lib.utils import *
 API_URL = 'http://www.thetvdb.com/api/%s/series/%s/banners.xml'
 
 ### get addon info
-__localize__    = ( sys.modules[ "__main__" ].__localize__ )
+localize    = ( sys.modules[ "__main__" ].localize )
 
 class TVDBProvider():
     """
@@ -100,12 +100,12 @@ class TVDBProvider():
                         info['season'] = 'n/a'
 
                     # Create Gui string to display
-                    info['generalinfo'] = '%s: %s  |  ' %( __localize__(32141), get_language(info['language']).capitalize())
+                    info['generalinfo'] = '%s: %s  |  ' %( localize(32141), get_language(info['language']).capitalize())
                     if info['season'] != 'n/a':
-                        info['generalinfo'] += '%s: %s  |  ' %( __localize__(32144), info['season'] )
+                        info['generalinfo'] += '%s: %s  |  ' %( localize(32144), info['season'] )
                     if 'height' in info:
-                        info['generalinfo'] += '%s: %sx%s  |  ' %( __localize__(32145), info['height'], info['width'] )
-                    info['generalinfo'] += '%s: %s  |  %s: %s  |  ' %( __localize__(32142), info['rating'], __localize__(32143), info['votes'] )
+                        info['generalinfo'] += '%s: %sx%s  |  ' %( localize(32145), info['height'], info['width'] )
+                    info['generalinfo'] += '%s: %s  |  %s: %s  |  ' %( localize(32142), info['rating'], localize(32143), info['votes'] )
 
                 if info:
                     image_list.append(info)

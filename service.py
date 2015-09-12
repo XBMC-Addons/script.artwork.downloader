@@ -26,12 +26,12 @@ import xbmcvfs
 import lib.common
 
 ### get addon info
-__addon__        = lib.common.__addon__
-__addonpath__    = lib.common.__addonpath__
-__localize__     = lib.common.__localize__
-__addonname__    = lib.common.__addonname__
-__version__      = lib.common.__version__
-__addonprofile__ = lib.common.__addonprofile__
+ADDON         = lib.common.ADDON
+ADDON_PATH    = lib.common.ADDON_PATH
+ADDON_NAME    = lib.common.ADDON_NAME
+ADDON_VERSION = lib.common.ADDON_VERSION
+PROFILE_PATH  = lib.common.PROFILE_PATH
+localize      = lib.common.localize
 
 #import libraries
 from lib.settings import get
@@ -41,7 +41,7 @@ setting = get()
 # starts update/sync
 def autostart():
         xbmcaddon.Addon().setSetting(id="files_overwrite", value='false')
-        tempdir = os.path.join(__addonprofile__, 'temp')
+        tempdir = os.path.join(PROFILE_PATH, 'temp')
         service_runtime  = str(setting.get('service_runtime') + ':00')
         log('## Service - Run at startup: %s'% setting.get('service_startup'), xbmc.LOGNOTICE)        
         log('## Service - Delayed startup: %s minutes'% setting.get('service_startupdelay'), xbmc.LOGNOTICE)   
@@ -76,6 +76,6 @@ def autostart():
 
 if (__name__ == "__main__"):
     log("######## Artwork Downloader Service: Initializing........................")
-    log('## Add-on Name = %s' % str(__addonname__))
-    log('## Version     = %s' % str(__version__))
+    log('## Add-on Name = %s' % str(ADDON_NAME))
+    log('## Version     = %s' % str(ADDON_VERSION))
     autostart()

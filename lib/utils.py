@@ -42,10 +42,10 @@ from lib.script_exceptions import *
 from urllib2 import HTTPError, URLError
 
 ### get addon info
-__addon__        = lib.common.__addon__
-__localize__     = lib.common.__localize__
-__addonname__    = lib.common.__addonname__
-__icon__         = lib.common.__icon__
+ADDON         = lib.common.ADDON
+ADDON_NAME    = lib.common.ADDON_NAME
+ADDON_ICON    = lib.common.ADDON_ICON
+localize      = lib.common.localize
 
 cache = StorageServer.StorageServer("ArtworkDownloader",240)
 
@@ -71,18 +71,18 @@ def normalize_string(text):
 
 # Define log messages
 def log(txt, severity=xbmc.LOGDEBUG):
-    if severity == xbmc.LOGDEBUG and not __addon__.getSetting("debug_enabled") == 'true':
+    if severity == xbmc.LOGDEBUG and not ADDON.getSetting("debug_enabled") == 'true':
         pass
     else:
         try:
-            message = ('%s: %s' % (__addonname__,txt) )
+            message = ('%s: %s' % (ADDON_NAME,txt) )
             xbmc.log(msg=message, level=severity)
         except UnicodeEncodeError:
             try:
-                message = normalize_string('%s: %s' % (__addonname__,txt) )
+                message = normalize_string('%s: %s' % (ADDON_NAME,txt) )
                 xbmc.log(msg=message, level=severity)
             except:
-                message = ('%s: UnicodeEncodeError' %__addonname__)
+                message = ('%s: UnicodeEncodeError' %ADDON_NAME)
                 xbmc.log(msg=message, level=xbmc.LOGWARNING)
 
 

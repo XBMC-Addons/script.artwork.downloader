@@ -23,10 +23,10 @@ import xbmcgui
 from lib.utils import log
 
 ### get addon info
-__addonname__    = lib.common.__addonname__
-__addonpath__    = lib.common.__addonpath__
-__localize__     = lib.common.__localize__
-__icon__         = lib.common.__icon__
+ADDON_NAME    = lib.common.ADDON_NAME
+ADDON_PATH    = lib.common.ADDON_PATH
+ADDON_ICON    = lib.common.ADDON_ICON
+localize      = lib.common.localize
 
 ### set button actions for GUI
 ACTION_PREVIOUS_MENU = (9, 10, 92, 216, 247, 257, 275, 61467, 61448)
@@ -42,8 +42,8 @@ def dialog_msg(action,
                line2 = '',
                line3 = '',
                background = False,
-               nolabel = __localize__(32026),
-               yeslabel = __localize__(32025),
+               nolabel = localize(32026),
+               yeslabel = localize(32025),
                cancelled = False):
     # Fix possible unicode errors 
     line0 = line0.encode('utf-8', 'ignore')
@@ -52,13 +52,13 @@ def dialog_msg(action,
     line3 = line3.encode('utf-8', 'ignore')
     # Dialog logic
     if not line0 == '':
-        line0 = __addonname__ + line0
+        line0 = ADDON_NAME + line0
     else:
-        line0 = __addonname__
+        line0 = ADDON_NAME
     if not background:
         try:
             if action == 'create':
-                pDialog.create(__addonname__,
+                pDialog.create(ADDON_NAME,
                                line1,
                                line2,
                                line3)
@@ -79,14 +79,14 @@ def dialog_msg(action,
                 else:
                     return False
             elif action == 'createBG':
-                pDialogBG.create(heading = __addonname__,
+                pDialogBG.create(heading = ADDON_NAME,
                                  message = line1)
             elif action == 'updateBG':
                 pDialogBG.update(percent = percentage,
-                                 heading = __addonname__,
+                                 heading = ADDON_NAME,
                                  message = "\n")
                 pDialogBG.update(percent = percentage,
-                                 heading = __addonname__,
+                                 heading = ADDON_NAME,
                                  message = line1)
             elif action == 'closeBG':
                 pDialogBG.close()
@@ -116,7 +116,7 @@ def dialog_msg(action,
             if not cancelled:
                 xbmcgui.Dialog().notification(line0,
                                               msg,
-                                              __icon__,
+                                              ADDON_ICON,
                                               7500)
 
 # Return the selected url to the GUI part
@@ -128,7 +128,7 @@ def choose_image(imagelist):
 # This creates the art type selection dialog. The string id is the selection constraint for what type has been chosen.
 def choice_type(enabled_type_list, startup, artype_list):
     # Send the image type list to the selection dialog
-    select = xbmcgui.Dialog().select(__addonname__ + ': ' + __localize__(32015) , enabled_type_list)
+    select = xbmcgui.Dialog().select(ADDON_NAME + ': ' + localize(32015) , enabled_type_list)
     # When nothing is selected from the dialog
     if select == -1:
         log('### Canceled by user')
@@ -137,14 +137,14 @@ def choice_type(enabled_type_list, startup, artype_list):
     else:
         # Check what artwork type has been chosen and parse the image restraints
         for item in artype_list:
-            if enabled_type_list[select] == __localize__(item['gui_string']) and startup['mediatype'] == item['media_type']:
+            if enabled_type_list[select] == localize(item['gui_string']) and startup['mediatype'] == item['media_type']:
                 return item
         else:
             return False
 
 # Pass the imagelist to the dialog and return the selection
 def dialog_select(image_list):
-    w = dialog_select_UI('DialogSelect.xml', __addonpath__, listing=image_list)
+    w = dialog_select_UI('DialogSelect.xml', ADDON_PATH, listing=image_list)
     w.doModal()
     selected_item = False
     try:
@@ -195,7 +195,7 @@ class dialog_select_UI(xbmcgui.WindowXMLDialog):
             self.img_list = self.getControl(3)
 
         self.getControl(5).setVisible(False)
-        self.getControl(1).setLabel(__localize__(32015))
+        self.getControl(1).setLabel(localize(32015))
 
         for image in self.listing:
             listitem = xbmcgui.ListItem('%s' %(image['generalinfo']))

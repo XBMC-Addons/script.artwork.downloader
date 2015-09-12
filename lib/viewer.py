@@ -25,9 +25,9 @@ import xbmcgui
 from xbmcaddon import Addon
 
 ### get addon info
-__addon__           = Addon("script.artwork.downloader")
-__addonname__       = __addon__.getAddonInfo( "name" )
-__addonprofile__    = xbmc.translatePath( __addon__.getAddonInfo('profile') ).decode('utf-8')
+ADDON         = Addon("script.artwork.downloader")
+ADDON_NAME    = ADDON.getAddonInfo( "name" )
+PROFILE_PATH  = xbmc.translatePath( ADDON.getAddonInfo('profile') ).decode('utf-8')
 
 class Viewer:
     # constants
@@ -49,16 +49,16 @@ class Viewer:
         #get header, text
         heading, text = self.getText()
         # set heading
-        self.window.getControl(self.CONTROL_LABEL).setLabel("%s - %s" % (heading, __addonname__,))
+        self.window.getControl(self.CONTROL_LABEL).setLabel("%s - %s" % (heading, ADDON_NAME,))
         # set text
         self.window.getControl(self.CONTROL_TEXTBOX).setText(text)
 
     def getText(self):
         try:
             if sys.argv[ 1 ] == "downloadreport":
-                return "Download report", self.readFile(os.path.join(__addonprofile__, "downloadreport.txt"))
+                return "Download report", self.readFile(os.path.join(PROFILE_PATH, "downloadreport.txt"))
         except Exception, e:
-            xbmc.log(__addonname__ + ': ' + str(e), xbmc.LOGERROR)
+            xbmc.log(ADDON_NAME + ': ' + str(e), xbmc.LOGERROR)
         return "", ""
 
     def readFile(self, filename):
@@ -71,12 +71,12 @@ class WebBrowser:
         try:
             url = sys.argv[2]
             # notify user
-            notification(__addonname__, url)
+            notification(ADDON_NAME, url)
             xbmc.sleep(100)
             # launch url
             self.launchUrl(url)
         except Exception, e:
-            xbmc.log(__addonname__ + ': ' + str(e), xbmc.LOGERROR)
+            xbmc.log(ADDON_NAME + ': ' + str(e), xbmc.LOGERROR)
 
     def launchUrl(self, url):
         import webbrowser
@@ -89,7 +89,7 @@ def Main():
         else:
             Viewer()
     except Exception, e:
-        xbmc.log(__addonname__ + ': ' + str(e), xbmc.LOGERROR)
+        xbmc.log(ADDON_NAME + ': ' + str(e), xbmc.LOGERROR)
 
 if (__name__ == "__main__"):
     Main()

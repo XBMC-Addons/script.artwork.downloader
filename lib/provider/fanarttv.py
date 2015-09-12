@@ -28,7 +28,7 @@ from lib.utils import *
 from operator import itemgetter
 
 ### get addon info
-__localize__    = ( sys.modules[ '__main__' ].__localize__ )
+localize      = ( sys.modules[ '__main__' ].localize )
 
 API_KEY = '586118be1ac673f74963cc284d46bd8e'
 API_URL_TV = 'http://webservice.fanart.tv/v3/tv/%s?api_key=%s'
@@ -88,12 +88,12 @@ class FTV_TVProvider():
                             else:
                                 size = ''
                             # Create GUI info tag
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), get_language(item.get('lang')).capitalize())
+                            generalinfo = '%s: %s  |  ' %( localize(32141), get_language(item.get('lang')).capitalize())
                             if item.get('season'):
-                                generalinfo += '%s: %s  |  ' %( __localize__(32144), item.get('season'))
-                            generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
+                                generalinfo += '%s: %s  |  ' %( localize(32144), item.get('season'))
+                            generalinfo += '%s: %s  |  ' %( localize(32143), item.get('likes'))
                             if art in ['hdtvlogo', 'hdclearart', 'clearlogo', 'clearart']:
-                                generalinfo += '%s: %s  |  ' %( __localize__(32145), size)
+                                generalinfo += '%s: %s  |  ' %( localize(32145), size)
                             # Fill list
                             image_list.append({'url': urllib.quote(item.get('url'), ':/'),
                                                'preview': item.get('url') + '/preview',
@@ -143,12 +143,12 @@ class FTV_MovieProvider():
                             else:
                                 size = ''
                             # Create GUI info tag
-                            generalinfo = '%s: %s  |  ' %( __localize__(32141), get_language(item.get('lang')).capitalize())
+                            generalinfo = '%s: %s  |  ' %( localize(32141), get_language(item.get('lang')).capitalize())
                             if item.get('disc_type'):
-                                generalinfo += '%s: %s (%s)  |  ' %( __localize__(32146), item.get('disc'), item.get('disc_type'))
+                                generalinfo += '%s: %s (%s)  |  ' %( localize(32146), item.get('disc'), item.get('disc_type'))
                             if art in ['hdmovielogo', 'hdmovieclearart', 'movielogo', 'movieclearart']:
-                                generalinfo += '%s: %s  |  ' %( __localize__(32145), size)
-                            generalinfo += '%s: %s  |  ' %( __localize__(32143), item.get('likes'))
+                                generalinfo += '%s: %s  |  ' %( localize(32145), size)
+                            generalinfo += '%s: %s  |  ' %( localize(32143), item.get('likes'))
                             # Fill list
                             image_list.append({'url': urllib.quote(item.get('url'), ':/'),
                                                'preview': item.get('url') + '/preview',

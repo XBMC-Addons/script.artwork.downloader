@@ -27,7 +27,7 @@ from lib.utils import *
 from operator import itemgetter
 
 ### get addon info
-__localize__    = ( sys.modules[ "__main__" ].__localize__ )
+localize    = ( sys.modules[ "__main__" ].localize )
 
 API_KEY = '4be68d7eab1fbd1b6fd8a3b80a65a95e'
 API_CFG = 'http://api.themoviedb.org/3/configuration?api_key=%s'
@@ -68,10 +68,10 @@ class TMDBProvider():
                                        'votes': votes,
                                        # Create Gui string to display
                                        'generalinfo': ('%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' 
-                                                       %( __localize__(32141), get_language(item.get('iso_639_1','n/a')).capitalize(),
-                                                          __localize__(32142), rating,
-                                                          __localize__(32143), votes,
-                                                          __localize__(32145), item.get('width'), item.get('height')))})
+                                                       %( localize(32141), get_language(item.get('iso_639_1','n/a')).capitalize(),
+                                                          localize(32142), rating,
+                                                          localize(32143), votes,
+                                                          localize(32145), item.get('width'), item.get('height')))})
             except Exception, e:
                 log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
             # Get thumbs
@@ -95,10 +95,10 @@ class TMDBProvider():
                                        'votes': votes,
                                        # Create Gui string to display
                                        'generalinfo': ('%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' 
-                                                       %( __localize__(32141), get_language(item.get('iso_639_1','n/a')).capitalize(),
-                                                          __localize__(32142), rating,
-                                                          __localize__(32143), votes,
-                                                          __localize__(32145), item.get('width'), item.get('height')))})
+                                                       %( localize(32141), get_language(item.get('iso_639_1','n/a')).capitalize(),
+                                                          localize(32142), rating,
+                                                          localize(32143), votes,
+                                                          localize(32145), item.get('width'), item.get('height')))})
             except Exception, e:
                 log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
             # Get posters
@@ -122,10 +122,10 @@ class TMDBProvider():
                                        'votes': votes,
                                        # Create Gui string to display
                                        'generalinfo': ('%s: %s  |  %s: %s  |  %s: %s  |  %s: %sx%s  |  ' 
-                                                       %( __localize__(32141), get_language(item.get('iso_639_1','n/a')).capitalize(),
-                                                          __localize__(32142), rating,
-                                                          __localize__(32143), votes,
-                                                          __localize__(32145), item.get('width'), item.get('height')))})
+                                                       %( localize(32141), get_language(item.get('iso_639_1','n/a')).capitalize(),
+                                                          localize(32142), rating,
+                                                          localize(32143), votes,
+                                                          localize(32145), item.get('width'), item.get('height')))})
             except Exception, e:
                 log( 'Problem report: %s' %str( e ), xbmc.LOGNOTICE )
             if image_list == []:

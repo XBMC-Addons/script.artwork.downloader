@@ -25,8 +25,8 @@ from lib.gui import dialog_msg
 from lib.utils import log
 
 ### get addon info
-__addon__        = lib.common.__addon__
-__localize__     = lib.common.__localize__
+ADDON         = lib.common.ADDON
+localize      = lib.common.localize
 
 ### General seetting variables
 def get():
@@ -35,67 +35,67 @@ def get():
                'xmlfailthreshold':         5,     # Abbort when this many fails
                'api_timedelay':            5000,  # in msec
 
-               'centralize_enable':        __addon__.getSetting("centralize_enable")      == 'true',
-               'centralfolder_movies':     __addon__.getSetting("centralfolder_movies"),
-               'centralfolder_tvshows':    __addon__.getSetting("centralfolder_tvshows"),
-               'background':               __addon__.getSetting("background")             == 'true',
-               'notify':                   __addon__.getSetting("notify")                 == 'true',
-               'service_startup':          __addon__.getSetting("service_startup")        == 'true',
-               'service_startupdelay':     __addon__.getSetting("service_startupdelay"),
-               'service_enable':           __addon__.getSetting("service_enable")         == 'true',
-               'service_runtime':          __addon__.getSetting("service_runtime"),
-               'files_overwrite':          __addon__.getSetting("files_overwrite")        == 'true',
-               'files_local':              __addon__.getSetting("files_local")            == 'true',
-               'xbmc_caching_enabled':     __addon__.getSetting("xbmc_caching_enabled")   == 'true',
-               'debug_enabled':            __addon__.getSetting("debug_enabled")          == 'true',
+               'centralize_enable':        ADDON.getSetting("centralize_enable")      == 'true',
+               'centralfolder_movies':     ADDON.getSetting("centralfolder_movies"),
+               'centralfolder_tvshows':    ADDON.getSetting("centralfolder_tvshows"),
+               'background':               ADDON.getSetting("background")             == 'true',
+               'notify':                   ADDON.getSetting("notify")                 == 'true',
+               'service_startup':          ADDON.getSetting("service_startup")        == 'true',
+               'service_startupdelay':     ADDON.getSetting("service_startupdelay"),
+               'service_enable':           ADDON.getSetting("service_enable")         == 'true',
+               'service_runtime':          ADDON.getSetting("service_runtime"),
+               'files_overwrite':          ADDON.getSetting("files_overwrite")        == 'true',
+               'files_local':              ADDON.getSetting("files_local")            == 'true',
+               'xbmc_caching_enabled':     ADDON.getSetting("xbmc_caching_enabled")   == 'true',
+               'debug_enabled':            ADDON.getSetting("debug_enabled")          == 'true',
                'service_startup':          False,
                'service_enable':           False,
 
-               'movie_enable':             __addon__.getSetting("movie_enable")           == 'true',
-               'movie_poster':             __addon__.getSetting("movie_poster")           == 'true',
-               'movie_fanart':             __addon__.getSetting("movie_fanart")           == 'true',
-               'movie_extrafanart':        __addon__.getSetting("movie_extrafanart")      == 'true',
-               'movie_extrathumbs':        __addon__.getSetting("movie_extrathumbs")      == 'true',
-               'movie_logo':               __addon__.getSetting("movie_logo")             == 'true',
-               'movie_clearart':           __addon__.getSetting("movie_clearart")         == 'true',
-               'movie_discart':            __addon__.getSetting("movie_discart")          == 'true',
-               'movie_landscape':          __addon__.getSetting("movie_landscape")        == 'true',
-               'movie_banner':             __addon__.getSetting("movie_banner")           == 'true',
+               'movie_enable':             ADDON.getSetting("movie_enable")           == 'true',
+               'movie_poster':             ADDON.getSetting("movie_poster")           == 'true',
+               'movie_fanart':             ADDON.getSetting("movie_fanart")           == 'true',
+               'movie_extrafanart':        ADDON.getSetting("movie_extrafanart")      == 'true',
+               'movie_extrathumbs':        ADDON.getSetting("movie_extrathumbs")      == 'true',
+               'movie_logo':               ADDON.getSetting("movie_logo")             == 'true',
+               'movie_clearart':           ADDON.getSetting("movie_clearart")         == 'true',
+               'movie_discart':            ADDON.getSetting("movie_discart")          == 'true',
+               'movie_landscape':          ADDON.getSetting("movie_landscape")        == 'true',
+               'movie_banner':             ADDON.getSetting("movie_banner")           == 'true',
 
-               'tvshow_enable':            __addon__.getSetting("tvshow_enable")          == 'true',
-               'tvshow_poster':            __addon__.getSetting("tvshow_poster")          == 'true',
-               'tvshow_seasonposter':      __addon__.getSetting("tvshow_seasonposter")    == 'true',
-               'tvshow_fanart':            __addon__.getSetting("tvshow_fanart")          == 'true',
-               'tvshow_extrafanart':       __addon__.getSetting("tvshow_extrafanart")     == 'true',
-               'tvshow_clearart':          __addon__.getSetting("tvshow_clearart")        == 'true',
-               'tvshow_logo':              __addon__.getSetting("tvshow_logo")            == 'true',
-               'tvshow_landscape':         __addon__.getSetting("tvshow_landscape")       == 'true',
-               'tvshow_seasonlandscape':   __addon__.getSetting("tvshow_seasonlandscape") == 'true',
-               'tvshow_showbanner':        __addon__.getSetting("tvshow_showbanner")      == 'true',
-               'tvshow_seasonbanner':      __addon__.getSetting("tvshow_seasonbanner")    == 'true',
-               'tvshow_characterart':      __addon__.getSetting("tvshow_characterart")    == 'true',
+               'tvshow_enable':            ADDON.getSetting("tvshow_enable")          == 'true',
+               'tvshow_poster':            ADDON.getSetting("tvshow_poster")          == 'true',
+               'tvshow_seasonposter':      ADDON.getSetting("tvshow_seasonposter")    == 'true',
+               'tvshow_fanart':            ADDON.getSetting("tvshow_fanart")          == 'true',
+               'tvshow_extrafanart':       ADDON.getSetting("tvshow_extrafanart")     == 'true',
+               'tvshow_clearart':          ADDON.getSetting("tvshow_clearart")        == 'true',
+               'tvshow_logo':              ADDON.getSetting("tvshow_logo")            == 'true',
+               'tvshow_landscape':         ADDON.getSetting("tvshow_landscape")       == 'true',
+               'tvshow_seasonlandscape':   ADDON.getSetting("tvshow_seasonlandscape") == 'true',
+               'tvshow_showbanner':        ADDON.getSetting("tvshow_showbanner")      == 'true',
+               'tvshow_seasonbanner':      ADDON.getSetting("tvshow_seasonbanner")    == 'true',
+               'tvshow_characterart':      ADDON.getSetting("tvshow_characterart")    == 'true',
 
-               'musicvideo_enable':        __addon__.getSetting("musicvideo_enable")     == 'true',
-               'musicvideo_poster':        __addon__.getSetting("musicvideo_poster")     == 'true',
-               'musicvideo_fanart':        __addon__.getSetting("musicvideo_fanart")     == 'true',
-               'musicvideo_extrafanart':   __addon__.getSetting("musicvideo_extrafanart")== 'true',
-               'musicvideo_extrathumbs':   __addon__.getSetting("musicvideo_extrathumbs")== 'true',
-               'musicvideo_logo':          __addon__.getSetting("musicvideo_logo")       == 'true',
-               'musicvideo_clearart':      __addon__.getSetting("musicvideo_clearart")   == 'true',
-               'musicvideo_discart':       __addon__.getSetting("musicvideo_discart")    == 'true'}
+               'musicvideo_enable':        ADDON.getSetting("musicvideo_enable")     == 'true',
+               'musicvideo_poster':        ADDON.getSetting("musicvideo_poster")     == 'true',
+               'musicvideo_fanart':        ADDON.getSetting("musicvideo_fanart")     == 'true',
+               'musicvideo_extrafanart':   ADDON.getSetting("musicvideo_extrafanart")== 'true',
+               'musicvideo_extrathumbs':   ADDON.getSetting("musicvideo_extrathumbs")== 'true',
+               'musicvideo_logo':          ADDON.getSetting("musicvideo_logo")       == 'true',
+               'musicvideo_clearart':      ADDON.getSetting("musicvideo_clearart")   == 'true',
+               'musicvideo_discart':       ADDON.getSetting("musicvideo_discart")    == 'true'}
     return setting
 
 def get_limit():
-    setting = {'limit_artwork':            __addon__.getSetting("limit_artwork")          == "true",
-               'limit_extrafanart_max':    (float(__addon__.getSetting("limit_extrafanart_maximum"))),
-               'limit_extrafanart_rating': int(float(__addon__.getSetting("limit_extrafanart_rating"))),
-               'limit_size_moviefanart':   int(__addon__.getSetting("limit_size_moviefanart")),
-               'limit_size_tvshowfanart':  int(__addon__.getSetting("limit_size_tvshowfanart")),
+    setting = {'limit_artwork':            ADDON.getSetting("limit_artwork")          == "true",
+               'limit_extrafanart_max':    (float(ADDON.getSetting("limit_extrafanart_maximum"))),
+               'limit_extrafanart_rating': int(float(ADDON.getSetting("limit_extrafanart_rating"))),
+               'limit_size_moviefanart':   int(ADDON.getSetting("limit_size_moviefanart")),
+               'limit_size_tvshowfanart':  int(ADDON.getSetting("limit_size_tvshowfanart")),
                'limit_extrathumbs':        True,
                'limit_extrathumbs_max':    4,
                'limit_artwork_max':        1,
-               'limit_preferred_language': __addon__.getSetting("limit_preferred_language"),
-               'limit_notext':             __addon__.getSetting("limit_notext")           == 'true'}
+               'limit_preferred_language': ADDON.getSetting("limit_preferred_language"),
+               'limit_notext':             ADDON.getSetting("limit_notext")           == 'true'}
     return setting
     
 ### Check for faulty setting combinations
@@ -139,8 +139,8 @@ def check():
         if settings_faulty:
             log('Faulty setting combination found')
             # when faulty setting detected ask to open the settings window
-            if dialog_msg('yesno', line1 = __localize__(32003), line2 = __localize__(32004), background = False, nolabel = __localize__(32026), yeslabel = __localize__(32025)):
-                __addon__.openSettings()
+            if dialog_msg('yesno', line1 = localize(32003), line2 = localize(32004), background = False, nolabel = localize(32026), yeslabel = localize(32025)):
+                ADDON.openSettings()
             # if not cancel the script
             else:
                 return False

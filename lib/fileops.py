@@ -34,11 +34,11 @@ from traceback import print_exc
 from urllib2 import HTTPError, URLError
 
 ### get addon info
-__addon__        = lib.common.__addon__
-__addonprofile__ = lib.common.__addonprofile__
-__localize__     = lib.common.__localize__
+ADDON         = lib.common.ADDON
+PROFILE_PATH  = lib.common.PROFILE_PATH
+localize      = lib.common.localize
 
-tempdir = os.path.join(__addonprofile__, 'temp')
+tempdir = os.path.join(PROFILE_PATH, 'temp')
 THUMBS_CACHE_PATH = xbmc.translatePath( "special://profile/Thumbnails/Video" )
 ### adjust default timeout to stop script hanging
 timeout = 10
@@ -60,9 +60,9 @@ class fileops:
 
         self.downloadcount = 0
         if not self._exists(tempdir):
-            if not self._exists(__addonprofile__):
-                if not self._mkdir(__addonprofile__):
-                    raise CreateDirectoryError(__addonprofile__)
+            if not self._exists(PROFILE_PATH):
+                if not self._mkdir(PROFILE_PATH):
+                    raise CreateDirectoryError(PROFILE_PATH)
             if not self._mkdir(tempdir):
                 raise CreateDirectoryError(tempdir)
         
@@ -155,8 +155,8 @@ class fileops:
 def cleanup():
     if xbmcvfs.exists(tempdir):
         dialog_msg('updateBG', percentage = 100,
-                   line1 = __localize__(32005),
-                   background =  __addon__.getSetting('background'))
+                   line1 = localize(32005),
+                   background =  ADDON.getSetting('background'))
         log('Cleaning up temp files')
         for x in os.listdir(tempdir):
             tempfile = os.path.join(tempdir, x)

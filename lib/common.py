@@ -21,12 +21,12 @@ import xbmc
 import xbmcaddon
 
 ### get addon info
-__addon__       = xbmcaddon.Addon(id='script.artwork.downloader')
-__addonid__     = __addon__.getAddonInfo('id')
-__addonname__   = __addon__.getAddonInfo('name')
-__author__      = __addon__.getAddonInfo('author')
-__version__     = __addon__.getAddonInfo('version')
-__addonpath__   = __addon__.getAddonInfo('path')
-__addonprofile__= xbmc.translatePath(__addon__.getAddonInfo('profile')).decode('utf-8')
-__icon__        = __addon__.getAddonInfo('icon')
-__localize__    = __addon__.getLocalizedString
+ADDON         = xbmcaddon.Addon(id='script.artwork.downloader')
+ADDON_ID      = ADDON.getAddonInfo('id')
+ADDON_NAME    = ADDON.getAddonInfo('name')
+ADDON_AUTHOR  = ADDON.getAddonInfo('author')
+ADDON_VERSION = ADDON.getAddonInfo('version')
+ADDON_PATH    = ADDON.getAddonInfo('path')
+PROFILE_PATH  = xbmc.translatePath(ADDON.getAddonInfo('profile')).decode('utf-8')
+ADDON_ICON    = ADDON.getAddonInfo('icon')
+localize      = ADDON.getLocalizedString
