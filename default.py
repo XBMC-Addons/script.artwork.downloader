@@ -240,7 +240,6 @@ class Main:
                 artworkdir.append(artwork_dir.replace('BDMV/','').replace('VIDEO_TS/',''))
                 extrafanartdirs.append(extrafanart_dir)
                 extrathumbsdirs.append(extrathumbs_dir)
-            # Check if using the centralize option
             currentmedia['artworkdir'] = artworkdir
             currentmedia['extrafanartdirs'] = extrafanartdirs
             currentmedia['extrathumbsdirs'] = extrathumbsdirs
