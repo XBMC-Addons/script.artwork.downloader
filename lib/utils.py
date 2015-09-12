@@ -44,8 +44,6 @@ from urllib2 import HTTPError, URLError
 ### get addon info
 ADDON         = lib.common.ADDON
 ADDON_NAME    = lib.common.ADDON_NAME
-ADDON_ICON    = lib.common.ADDON_ICON
-localize      = lib.common.localize
 
 cache = StorageServer.StorageServer("ArtworkDownloader",240)
 
