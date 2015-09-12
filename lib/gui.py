@@ -37,7 +37,7 @@ pDialogBG = xbmcgui.DialogProgressBG()
 # Define dialogs
 def dialog_msg(action,
                percentage = 0,
-               line0 = '',
+               heading = '',
                line1 = '',
                line2 = '',
                line3 = '',
@@ -46,15 +46,15 @@ def dialog_msg(action,
                yeslabel = localize(32025),
                cancelled = False):
     # Fix possible unicode errors 
-    line0 = line0.encode('utf-8', 'ignore')
+    heading = heading.encode('utf-8', 'ignore')
     line1 = line1.encode('utf-8', 'ignore')
     line2 = line2.encode('utf-8', 'ignore')
     line3 = line3.encode('utf-8', 'ignore')
     # Dialog logic
-    if not line0 == '':
-        line0 = ADDON_NAME + line0
+    if not heading == '':
+        heading = ADDON_NAME + heading
     else:
-        line0 = ADDON_NAME
+        heading = ADDON_NAME
     if not background:
         try:
             if action == 'create':
@@ -94,12 +94,12 @@ def dialog_msg(action,
                 return False
             elif action == 'okdialog':
 
-                xbmcgui.Dialog().ok(line0,
+                xbmcgui.Dialog().ok(heading,
                                     line1,
                                     line2,
                                     line3)
             elif action == 'yesno':
-                return xbmcgui.Dialog().yesno(line0,
+                return xbmcgui.Dialog().yesno(heading,
                                               line1,
                                               line2,
                                               line3,
@@ -114,7 +114,7 @@ def dialog_msg(action,
             else:
                 msg = line1 + ': ' + line2
             if not cancelled:
-                xbmcgui.Dialog().notification(line0,
+                xbmcgui.Dialog().notification(heading,
                                               msg,
                                               ADDON_ICON,
                                               7500)

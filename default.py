@@ -192,7 +192,7 @@ class Main:
             # Show dialog/notification
             if setting['background']:
                 dialog_msg('okdialog',
-                           line0 = summary_notify,
+                           heading = summary_notify,
                            line1 = provider_msg1 + ' ' + provider_msg2,
                            background = setting['background'],
                            cancelled = cancelled)
