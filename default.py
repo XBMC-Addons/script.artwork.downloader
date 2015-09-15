@@ -55,6 +55,7 @@ download_list = []
 download_succes = False
 failed_items = []
 image_list = []
+download_list = []
 limit = get_limit()
 setting = get()
 setting_limit = get_limit()
@@ -210,6 +211,8 @@ class Main:
         processeditems = 0
         media_list_total = len(media_list)
         for currentmedia in media_list:
+            global download_list
+            download_list = []
             currentmedia['force_update'] = False
             image_list = []
             ### check if XBMC is shutting down
